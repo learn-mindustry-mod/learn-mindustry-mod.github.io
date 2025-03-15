@@ -1,0 +1,13 @@
+site_name: PlumPedia
+site_url: https://plumpedia.github.io/
+repo_url: https://github.com/plumpedia/PlumPedia
+docs_dir: 'docs'
+theme: 
+  name: material
+  favicon: images/favicon.png
+  logo: images/favicon.png
+  custom_dir: overrides
+  features:
+    - navigation.tracking
+extra_css:
+  - 'stylesheets/style.css'
