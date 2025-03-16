@@ -2,9 +2,10 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  
+
   title: "PlumPedia",
   description: "Mindustry Mod Encyclopedia",
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 
@@ -25,6 +26,11 @@ export default defineConfig({
           ]},
           { text: '必修三 贴图与策划', items:[
             
+          ]},
+          { text: '选修二 图形学', items:[
+            { text: 'OpenGL概述', link: '/opengl/opengl-overall' },
+            { text: '图像是如何被渲染到屏幕上的？', link: '/opengl/how-images-rendered' },
+            { text: '着色器（Shader）', link: '/opengl/about-shader' }
           ]}
         ]
       }
