@@ -19,7 +19,7 @@ export default defineConfig({
         items: [
           { text: '教程序', link: '/' },
           { text: '必修一 源码与构建', items:[
-
+            {text: '使用Android端开发Mod', link:'/building/build-on-android'}
           ]},
           { text: '必修二 数据与代码', items:[
             
