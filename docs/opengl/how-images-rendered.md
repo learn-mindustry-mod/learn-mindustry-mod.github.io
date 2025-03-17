@@ -1,12 +1,12 @@
-# 图像是如何被渲染到屏幕上的？
+## 图像是如何被渲染到屏幕上的？
 
 一般来说，OpenGL图形渲染，会将输入的数据经过其渲染管线的各个阶段后，将图像输出到屏幕上，这是一张老生常谈的GL渲染管线示意图：
 
-![pipeline](/imgs/pipeline.png)
+![pipeline](/imgs/advanceGraphic/pipeline.png)
 
 其中，几何着色器在Arc GL中无法使用，这里，我们会用更直观更容易理解的语言来讲解这个过程。
 
-## Mesh
+### Mesh
 
 在OpenGL中，绘制图形需要向GL提供一组顶点来描述绘制的图像的位置以及其他信息。
 
@@ -27,15 +27,15 @@
 {  
 //顶点坐标        颜色                   纹理坐标
   -0.5f, -0.5f,  color.toFloatBits(),  0f, 0f,
-  0f,    0.5f,   color.toFloatBits(),  0f, 0f,
-  0.5f,  -0.5f,  color.toFloatBits(),  0f, 0f,
+  0f,    0.5f,   color.toFloatBits(),  0.5f, 1f,
+  0.5f,  -0.5f,  color.toFloatBits(),  1f, 0f,
 }
 ```
 
 > OpenGL的绘图坐标以屏幕中心为原点（0, 0），屏幕的左下角（-1, -1），右上角为（1, 1），即**标准化设备坐标（Normalized Device Coordinates）**。
 > <br>
 > 运行平台的实际屏幕尺寸并不受关注，在绘图时这个尺寸会被OpenGL标准化，或者通俗点说绘图坐标会被缩放到从-1到1的范围内进行绘图，超出范围的像素会被丢弃，如下所示为标准化坐标的示意图，上面定义的三角形在标准化坐标中看起来是这样的：
-> ![ndc](/imgs/normalizedCoord.png)
+> ![ndc](/imgs/advanceGraphic/normalizedCoord.png)
 
 而用于提交这些顶点数据的对象为**VAO（Vertex Array Object，顶点数组对象）**或**VBO（Vertex Buffer Object，顶点缓冲对象）**，但是我们通常并不需要使用VAO或者VBO，他们被包装在了一个类型`arc.graphic.Mesh`当中。
 
@@ -74,20 +74,20 @@ Mesh的数据模型定义通过其构造函数的可变参数提供，传入为�
 例如，对于上述的那个三角形序列，定义它的Mesh的方法如下所示：
 
 ```java
-void sample(Color color){
+void example(Color color){
   Mesh mesh = new Mesh(
       true,//isStatic
       3,   //maxVertices
       0,   //maxIndices
-      VertexAttribute.position2,
+      VertexAttribute.position,
       VertexAttribute.color,
       VertexAttribute.texCoords
   );
   mesh.setVertices(new float[]{
-      //顶点坐标  颜色                   纹理坐标
-      0f,   0f,  color.toFloatBits(),  0f, 0f,
-      0.5f, 1f,  color.toFloatBits(),  0f, 0f,
-      1f,   0f,  color.toFloatBits(),  0f, 0f
+      //顶点坐标      颜色                   纹理坐标
+      -0.5f, -0.5f,  color.toFloatBits(),  0f, 0f,
+      0f,    0.5f,   color.toFloatBits(),  0.5f, 1f,
+      0.5f,  -0.5f,  color.toFloatBits(),  1f, 0f
   });
 }
 ```
@@ -98,7 +98,7 @@ void sample(Color color){
 
 直接调用Mesh的`setVertices`方法，就可以将顶点数据序列提交给Mesh，Mesh会自动将顶点数据序列按照数据模型去划分为OpenGL认识的顶点数据序列，在绘制Mesh时提交到OpenGL。
 
-## 图元类型
+### 图元类型
 
 设置好顶点信息的Mesh就已经准备好进行绘制了，通过调用Mesh的`render`方法即可开始提交顶点数据序列到OpenGL。
 
@@ -107,10 +107,13 @@ void sample(Color color){
 而除了需要提供用于绘制该Mesh的着色器程序`Shader`外，最少还需要一个**图元类型**参数来表示如何将顶点组合成几何形状，例如：
 
 ```java
-void sample(Mesh mesh){
+void example(Mesh mesh){
+  shader.bind();
   mesh.render(shader, Gl.triangles);
 }
 ```
+
+其中，`shader.bind()`用于绑定着色器，每次更换着色器之后必须在绘制前进行绑定。
 
 > 另外两个`render`方法的重载只是添加了限定绘制的顶点数据范围以及着色器的自动绑定，在Mesh的源代码中有JavaDoc注释，这里不再赘述。
 
@@ -131,12 +134,13 @@ OpenGL中定义的图元类型有：
 
 以下是各图元的几何组装效果，`v1`-`v6`依次在顶点序列中顺序提交：
 
-![图元类型](/imgs/primitiveType.png)
+![图元类型/imgs/primitiveType.png)
 
 `lines`及其相关的图元类型提供了一些额外的参数，用于控制点的大小和线段的宽度，它们需要Gl的控制流来进行操作，例如：
 
-```
-void sample(Mesh mesh){
+```java
+void example(Mesh mesh){
+  shader.bind();
   Core.gl20.lineWidth(10f);
   mesh.render(shader, Gl.lines);
 }
@@ -144,7 +148,7 @@ void sample(Mesh mesh){
 
 > 很诡异的一点是Arc GL支持`points`图元，却没有设置点图元尺寸的相关函数...
 
-## 光栅化
+### 光栅化
 
 图元只是将顶点组装为抽象的几何形状，而如果要将一个几何形状绘制到屏幕上，还需要将几何形状转化为屏幕上的像素，这个过程就称为**光栅化（Rasterization）**。
 
@@ -154,13 +158,13 @@ void sample(Mesh mesh){
 
 光栅化的示意图：
 
-![光栅化](/imgs/rasterization.png)
+![光栅化/imgs/rasterization.png)
 
 光栅化所涉及到的像素点就被称为**片段（Fragment）**，它们会被传递给片段着色器，由片段着色器对这些像素点进行染色，最后显示到屏幕上。
 
-> 同样也是因为光栅化的原因，几何图形被离散化为像素，这回引起图形失真，即图形边缘的锯齿，OpenGL有许多种抗锯齿技术，详情可见：[LearnOpenGL 抗锯齿](https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/11%20Anti%20Aliasing/)
+> 同样也是因为光栅化的原因，几何图形被离散化为像素，这会引起图形失真，即图形边缘的锯齿，OpenGL有许多种抗锯齿技术，详情可见：[LearnOpenGL 抗锯齿](https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/11%20Anti%20Aliasing/)
 
-## 索引序列
+### 索引序列
 
 在讨论索引序列前，我们先引入一个问题：如果我们要绘制一个矩形，需要几个三角形，几个顶点？
 
@@ -182,7 +186,7 @@ void sample(Mesh mesh){
 
 这与我们的几何直观不符，我们往往认为一个矩形只需要四个顶点，当我们通过绘制两个三角形来绘制一个矩形时，在提交的6个顶点中实际上有两个顶点是重叠了。
 
-![三角形组合](/imgs/triangleRect.png)
+![三角形组合/imgs/triangleRect.png)
 
 这还仅仅是一个矩形，如果我们需要绘制更加复杂的二维或者三维图形，重叠的顶点可能会更多，这可能会浪费大量的内存空间来存放重复的顶点数据。
 
@@ -191,7 +195,7 @@ void sample(Mesh mesh){
 顶点索引是一个并列于顶点序列的索引序列，可以通过Mesh的`setIndices`方法来设置顶点索引：
 
 ```java
-void sample(Mesh mesh) {
+void example(Mesh mesh) {
   mesh.setIndices(new short[]{ 0, 1, 2, 0, 2, 3 });
 }
 ```
@@ -200,14 +204,14 @@ void sample(Mesh mesh) {
 
 但是当我们设置顶点序列时，情况就发生了变化，OpenGL将会按索引序列为基准来处理顶点，依次根据索引序列中的索引来从顶点序列中取出顶点，组装成图元。
 
-![indices](/imgs/indices.png)
+![indices/imgs/indices.png)
 
 具体来说，对于上文的那个四边形顶点定义，如果我们使用索引序列来绘制，那么只需要定义矩形的四个顶点和6个索引组成的序列即可：
 
 ```java
-void sample(){
+void example(){
   Mesh mesh = new Mesh(true, 4, 6,  
-      VertexAttribute.position2,
+      VertexAttribute.position,
       VertexAttribute.color,
       VertexAttribute.texCoords
   );
@@ -222,6 +226,8 @@ void sample(){
       0, 1, 2, //第一个三角形
       0, 2, 3  //第二个三角形
   });
+  
+  shader.bind();
   mesh.render(shader, Gl.triangles);
 }
 ```

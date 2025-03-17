@@ -30,7 +30,8 @@ export default defineConfig({
           { text: '选修二 图形学', items:[
             { text: 'OpenGL概述', link: '/opengl/opengl-overall' },
             { text: '图像是如何被渲染到屏幕上的？', link: '/opengl/how-images-rendered' },
-            { text: '着色器（Shader）', link: '/opengl/about-shader' }
+            { text: '着色器（Shader）', link: '/opengl/about-shader' },
+            { text: '纹理，纹理区域与Pixmap', link: '/opengl/texture-and-pixmap' }
           ]}
         ]
       }
