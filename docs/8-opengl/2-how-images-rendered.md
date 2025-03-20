@@ -1,4 +1,4 @@
-# 图像是如何被渲染到屏幕上的？
+## 图像是如何被渲染到屏幕上的？
 
 一般来说，OpenGL图形渲染，会将输入的数据经过其渲染管线的各个阶段后，将图像输出到屏幕上，这是一张老生常谈的GL渲染管线示意图：
 
@@ -6,7 +6,7 @@
 
 其中，几何着色器在Arc GL中无法使用，这里，我们会用更直观更容易理解的语言来讲解这个过程。
 
-## Mesh
+### Mesh
 
 在OpenGL中，绘制图形需要向GL提供一组顶点来描述绘制的图像的位置以及其他信息。
 
@@ -50,28 +50,32 @@
 - `VertexAttribute.color` - 顶点颜色（colorBits）
 - `VertexAttribute.mixColor` - 顶点的混合颜色（colorBits）
 
-属性也可自定义，构造一个`VertexAttribute`对象需要指定它的顶点属性名称，数据类型，以及数据大小等信息，其中的`normalized`参数会影响数据在传入后是否进行归一化处理，例如：
+属性也可自定义，构造一个`VertexAttribute`对象需要指定它的顶点属性名称，数据类型，以及数据大小等信息，例如：
 
 ```java
 VertexAttribute attr1 = new VertexAttribute(
-    4,             //components
+    4,              //components
     GL.unsignedByte,//type
-    false,         //normalized
-    "attr1"        //alias
-);
+    false,          //normalized
+    "attr1"         //alias
+); 
 
-//也可以使用简化的构造函数，类型默认为Gl.float
+//也可以使用简化的构造函数，类型默认为Gl.floatV
 VertexAttribute attr2 = new VertexAttribute(
     3,             //components
     "attr2"        //alias
 );
 ```
 
+其中的`normalized`参数会影响数据在传入后是否对数据进行归一化处理，将数据从其数据类型的上下界映射到0到1的范围内，例如对于`GL.unsignedByte`类型的数据其上下界为`0-255`，输入`128`时会被归一化到`0.5`。
+
 > 值得注意的是，数据序列中数据的内存会被对齐到`byte`，也就是说，这个`attr1`使用了四个`Gl.unsignedByte`类型的数据，其在顶点的数据序列中只占据一个`float`的位置，这也是传入顶点颜色时rgba只需要一个`float`数据的原因。
 
-Mesh的数据模型定义通过其构造函数的可变参数提供，传入为一个数组序列，依次描述顶点的每一个属性。
+这是顶点模型的序列长度对齐到`byte`的方式：
 
-例如，对于上述的那个三角形序列，定义它的Mesh的方法如下所示：
+![vertexModel](/imgs/advanceGraphic/vertexModel.png)
+
+Mesh的数据模型定义通过其构造函数的可变参数提供，传入为一个数组序列，依次描述顶点的每一个属性，对于上述的那个三角形序列，依次传入顶点属性以定义此Mesh的数据模型，如下所示：
 
 ```java
 void example(Color color){
@@ -85,9 +89,9 @@ void example(Color color){
   );
   mesh.setVertices(new float[]{
       //顶点坐标      颜色                   纹理坐标
-      -0.5f, -0.5f,  color.toFloatBits(),  0f, 0f,
-      0f,    0.5f,   color.toFloatBits(),  0.5f, 1f,
-      0.5f,  -0.5f,  color.toFloatBits(),  1f, 0f
+      -0.5f, -0.5f,  color.toFloatBits(),  0f,   0f,
+       0.0f,  0.5f,  color.toFloatBits(),  0.5f, 1f,
+       0.5f, -0.5f,  color.toFloatBits(),  1f,   0f
   });
 }
 ```
@@ -98,11 +102,11 @@ void example(Color color){
 
 直接调用Mesh的`setVertices`方法，就可以将顶点数据序列提交给Mesh，Mesh会自动将顶点数据序列按照数据模型去划分为OpenGL认识的顶点数据序列，在绘制Mesh时提交到OpenGL。
 
-## 图元类型
+### 图元类型
 
 设置好顶点信息的Mesh就已经准备好进行绘制了，通过调用Mesh的`render`方法即可开始提交顶点数据序列到OpenGL。
 
-绘制Mesh需要提供一个着色器程序，这个着色器程序会定义顶点着色器与片段着色器，用于处理顶点数据并进行像素染色，arc已经将着色器包装为了类型`arc.graphid.Shader`，我们只需要传入这个包装的着色器对象即可，在下一节我们会着重介绍Shader，本篇暂且略过。
+绘制Mesh需要提供一个着色器程序，这个着色器程序会定义顶点着色器与片段着色器，用于处理顶点数据并进行像素染色，arc已经将着色器包装为了类型`arc.graphid.gl.Shader`，我们只需要传入这个包装的着色器对象即可，在下一节我们会着重介绍Shader，本篇暂且略过。
 
 而除了需要提供用于绘制该Mesh的着色器程序`Shader`外，最少还需要一个**图元类型**参数来表示如何将顶点组合成几何形状，例如：
 
@@ -134,7 +138,7 @@ OpenGL中定义的图元类型有：
 
 以下是各图元的几何组装效果，`v1`-`v6`依次在顶点序列中顺序提交：
 
-![图元类型/imgs/primitiveType.png)
+![图元类型](/imgs/advanceGraphic/primitiveType.png)
 
 `lines`及其相关的图元类型提供了一些额外的参数，用于控制点的大小和线段的宽度，它们需要Gl的控制流来进行操作，例如：
 
@@ -148,7 +152,7 @@ void example(Mesh mesh){
 
 > 很诡异的一点是Arc GL支持`points`图元，却没有设置点图元尺寸的相关函数...
 
-## 光栅化
+### 光栅化
 
 图元只是将顶点组装为抽象的几何形状，而如果要将一个几何形状绘制到屏幕上，还需要将几何形状转化为屏幕上的像素，这个过程就称为**光栅化（Rasterization）**。
 
@@ -158,13 +162,13 @@ void example(Mesh mesh){
 
 光栅化的示意图：
 
-![光栅化/imgs/rasterization.png)
+![光栅化](/imgs/advanceGraphic/rasterization.png)
 
 光栅化所涉及到的像素点就被称为**片段（Fragment）**，它们会被传递给片段着色器，由片段着色器对这些像素点进行染色，最后显示到屏幕上。
 
 > 同样也是因为光栅化的原因，几何图形被离散化为像素，这会引起图形失真，即图形边缘的锯齿，OpenGL有许多种抗锯齿技术，详情可见：[LearnOpenGL 抗锯齿](https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/11%20Anti%20Aliasing/)
 
-## 索引序列
+### 索引序列
 
 在讨论索引序列前，我们先引入一个问题：如果我们要绘制一个矩形，需要几个三角形，几个顶点？
 
@@ -186,7 +190,7 @@ void example(Mesh mesh){
 
 这与我们的几何直观不符，我们往往认为一个矩形只需要四个顶点，当我们通过绘制两个三角形来绘制一个矩形时，在提交的6个顶点中实际上有两个顶点是重叠了。
 
-![三角形组合/imgs/triangleRect.png)
+![三角形组合](/imgs/advanceGraphic/triangleRect.png)
 
 这还仅仅是一个矩形，如果我们需要绘制更加复杂的二维或者三维图形，重叠的顶点可能会更多，这可能会浪费大量的内存空间来存放重复的顶点数据。
 
@@ -204,7 +208,7 @@ void example(Mesh mesh) {
 
 但是当我们设置顶点序列时，情况就发生了变化，OpenGL将会按索引序列为基准来处理顶点，依次根据索引序列中的索引来从顶点序列中取出顶点，组装成图元。
 
-![indices/imgs/indices.png)
+![indices](/imgs/advanceGraphic/indices.png)
 
 具体来说，对于上文的那个四边形顶点定义，如果我们使用索引序列来绘制，那么只需要定义矩形的四个顶点和6个索引组成的序列即可：
 
@@ -233,3 +237,9 @@ void example(){
 ```
 
 这样，我们就节约下了两个顶点的内存空间，而在规模更大的问题中，这个数字会更加庞大。
+
+### 思考题
+
+如果我们需要构造一个正六边形，如何用最少的顶点来将它绘制出来？如果要绘制的是很多六边形瓷砖的拼贴图呢？
+
+> ###### 小提示：多个六边形的重叠顶点会非常多。

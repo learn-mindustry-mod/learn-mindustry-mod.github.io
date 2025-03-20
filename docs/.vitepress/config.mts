@@ -39,9 +39,9 @@ export default defineConfig({
           { text: '高级图形效果', items:[
             { text: 'OpenGL概述', link: '/8-opengl/1-opengl-overall' },
             { text: '图像是如何被渲染到屏幕上的？', link: '/8-opengl/2-how-images-rendered' },
-            { text: '着色器（Shader）', link: '/8-opengl/3-about-shader' },
-            { text: '纹理，纹理区域与Pixmap', link: '/8-opengl/4-texture-and-pixmap' },
-            { text: '变换，投影与摄像机（Camera）', link: '/8-opengl/5-transformation-projection-and-camera' }
+            { text: '着色器（Shader）', link: '/8-opengl/3-shader' },
+            { text: '纹理与点阵图（Pixmap）', link: '/8-opengl/4-texture-and-pixmap' },
+            { text: '变换，投影与摄像机（Camera）', link: '/8-opengl/5-transformation-projection-camera' }
           ]}
         ]
       }
