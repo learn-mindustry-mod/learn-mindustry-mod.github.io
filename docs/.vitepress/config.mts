@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
 
-  title: "PlumPedia",
+  title: "Learn Mindustry Mod",
   description: "Mindustry Mod Encyclopedia",
 
   themeConfig: {
@@ -15,7 +15,7 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'PlumPedia',
+        text: 'Learn Mindustry Mod',
         items: [
           { text: 'Java教程序', link: '/' },
           { text: '模组开发环境与部署', items:[
