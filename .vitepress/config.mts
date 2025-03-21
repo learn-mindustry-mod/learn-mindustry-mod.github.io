@@ -3,6 +3,8 @@ import { generateSidebar } from 'vitepress-sidebar'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  markdown: { math: true },
+
   title: "Mindustry Mod教程",
   description: "Mindustry Mod 百科全书",
 
