@@ -5,7 +5,7 @@ import { generateSidebar } from 'vitepress-sidebar'
 export default defineConfig({
   markdown: { math: true },
 
-  title: "Mindustry Mod教程",
+  title: "LearnMindustryMod",
   description: "Mindustry Mod 百科全书",
 
   srcDir: "docs",

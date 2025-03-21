@@ -177,6 +177,7 @@ void main(){
 }
 ```
 
+> [!WARNING]
 > 注意`a_texCoord0`带有0后缀，在`VertexAttribute`中定义的`texCoord`属性的签名带有编号0，应留意这个容易出错的地方。
 
 观察上面的范例，除用于接收顶点属性的三个`attribute`变量外，顶点着色器还定义了两个`varying`变量，**varying**变量的作用是向片段着色器传递数据，这个数据会在光栅化时进行插值，我们后文会详细解释。
