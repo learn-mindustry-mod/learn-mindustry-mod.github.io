@@ -1,12 +1,8 @@
 /.vscode
-/site
-/docs_out
 .obsidian/app.json
 .obsidian/workspace
 .DS_Store
-/docs/.DS_Store
-docs/.vitepress/dist
-docs/.vitepress/cache
-docs/.vitepress/.temp
 /node_modules
-.DS_Store
+.vitepress/dist
+.vitepress/cache
+.vitepress/.temp

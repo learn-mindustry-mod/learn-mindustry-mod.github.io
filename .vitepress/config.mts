@@ -2,17 +2,17 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-
   title: "Learn Mindustry Mod",
   description: "Mindustry Mod Encyclopedia",
 
+  srcDir: "docs",
+  lastUpdated: true,
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-
     nav: [
       { text: 'Java', link: '/' }
     ],
-
     sidebar: [
       {
         text: 'Learn Mindustry Mod',
@@ -48,7 +48,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/learn-mindustry-mod/learn-mindustry-mod.github.io' }
     ]
   }
 })
