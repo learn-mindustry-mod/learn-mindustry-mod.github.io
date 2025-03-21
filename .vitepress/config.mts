@@ -22,6 +22,7 @@ export default defineConfig({
     ],
     sidebar: generateSidebar({
       documentRootPath: 'docs',
+      collapsed: true,
       useTitleFromFileHeading: true,
       useFolderTitleFromIndexFile: true,
       includeEmptyFolder: true,
