@@ -117,7 +117,7 @@ $trn = mat3 \times vec3(vec2, a) = \left [ \begin{matrix} a_{11} & a_{12} & a_{1
 
 另外，矩阵与矩阵也能进行乘法，矩阵与矩阵相乘的结果也是一个矩阵：
 
-$matC = matA \times matB = \left [ \begin{matrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{matrix} \right ] \times \left [ \begin{matrix} b_{11} & b_{12} & b_{13} \\ b_{21} & b_{22} & b_{23} \\ b_{31} & b_{32} & b_{33} \end{matrix} \right ] $
+$matC = matA \times matB = \left [ \begin{matrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{matrix} \right ] \times \left [ \begin{matrix} b_{11} & b_{12} & b_{13} \\ b_{21} & b_{22} & b_{23} \\ b_{31} & b_{32} & b_{33} \end{matrix} \right ]$
 
 矩阵乘法的具体进行方式是，将第一个矩阵的每一行与第二个矩阵的每一列分别相乘，然后将结果相加，以得到新矩阵的对应元素：
 
