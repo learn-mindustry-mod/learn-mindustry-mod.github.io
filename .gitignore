@@ -6,3 +6,4 @@
 .vitepress/dist
 .vitepress/cache
 .vitepress/.temp
+.idea/
