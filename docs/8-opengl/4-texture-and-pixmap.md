@@ -43,7 +43,7 @@ void example(){
 
 例如，我们用这样一张图片去创建一个纹理（是的，这是我头像）：
 
-![avatar](/imgs/advanceGraphic/texture.png)
+![avatar](./imgs/texture.png)
 
 把这张图片保存为文件`texture.png`，然后放入到mod目录下的任意子目录中（不要放在sprites目录下，之后的章节我会解释为什么），例如，我们将这个图片放到mod的根目录下，然后我们可以这样去手动加载这个纹理：
 
@@ -86,7 +86,7 @@ void main() {
 
 纹理空间坐标**uv**是**归一化**的，纹理坐标也被缩放到了0到1之间，以图像的左下角为原点（0, 0），右上角为（1, 1）。
 
-![textureCoord](/imgs/advanceGraphic/textureCoord.png)
+![textureCoord](./imgs/textureCoord.png)
 
 现在，我们为片段着色器补充顶点着色器，并构造一个四边形的`Mesh`，用与上一章相同的方法将这个图像绘制到屏幕上：
 
@@ -149,11 +149,11 @@ class Example{
 
 不出意外你将会得到一张上下颠倒的渲染图像：
 
-![img.png](/imgs/advanceGraphic/example-4.png)
+![img.png](./imgs/example-4.png)
 
 图像会被颠倒是因为计算机上存储图像时，往往是从左上角开始为（0, 0），至图像的右下角为（1，1）。OpenGL并不关注图像的存储方式，当文件被加载到OpenGL纹理后，它始终认为纹理坐标的原点为左下角，因此直接使用OpenGL的纹理坐标采样会使得图像被颠倒。
 
-![flip](/imgs/advanceGraphic/flip.png)
+![flip](./imgs/flip.png)
 
 要解决这个问题也很简单，只需要将纹理坐标的v值取反即可，修改顶点坐标如下：
 
@@ -173,7 +173,7 @@ void example(){
 
 这样就可以得到正确的渲染图像了：
 
-![img.png](/imgs/advanceGraphic/example-5.png)
+![img.png](./imgs/example-5.png)
 
 > 特意强调图像的翻转问题并非多此一举，因为纹理坐标的翻转在后续的纹理区域上被记录，其`v`正是翻转过后的。
 
@@ -201,7 +201,7 @@ void example(Texture tex) {
 
 三种环绕方式的实际效果：
 
-![wrap](/imgs/advanceGraphic/textureWrap.png)
+![wrap](./imgs/textureWrap.png)
 
 我们也可以对纹理的`u`和`v`分别设置不同的环绕方式：
 
@@ -227,7 +227,7 @@ OpenGL也提供了两种基本的纹理过滤方式：
 - `GL.nearest`：最近邻过滤，即采样点会取离采样坐标最近的像素颜色
 - `GL.linear`：线性过滤，即采样点会取离采样坐标最近的四个像素颜色，然后根据距离对它们进行插值混合
 
-![filter](/imgs/advanceGraphic/textureFilter.png)
+![filter](./imgs/textureFilter.png)
 
 与纹理环绕一样，Arc也提供了枚举类`Texture.TextureFilter`来封装这两种纹理过滤方式，默认情况下纹理的过滤方式为`GL.linear`。
 
@@ -242,7 +242,7 @@ void example(Texture tex) {
 
 两种纹理过滤方式会使得采样出来的图像有所差异，`nearest`过滤方式会使得图像的边缘更加锐利，同时会突出边缘的锯齿；而`linear`过滤方式则会使得图像更加平滑，但是会使得图像的边缘模糊，同时会增大采样的开销。
 
-![filterExample](/imgs/advanceGraphic/textureFilterExample.png)
+![filterExample](./imgs/textureFilterExample.png)
 
 ###### （容我从LearnOpenGL搬张图，整这个挺麻烦的）
 
@@ -267,7 +267,7 @@ void example(Texture tex) {
 
 我们不需要去手动绘制这些缩略图，在构造Texture时，通过给构造函数的`mipmap`参数传入true，纹理将会自动为我们创建Mipmap纹理链。
 
-![mipmap](/imgs/advanceGraphic/mipmap.png)
+![mipmap](./imgs/mipmap.png)
 
 而对于多级细节的纹理，它的采样方式是另外四种用于多级细节纹理的过滤方式：
 
@@ -312,7 +312,7 @@ void example() {
 
 在你将纹理绑定到一个非0号的纹理单元后，当前活动的纹理单元不会自动重设为0，而游戏内最普遍使用的是默认的`bind()`方法进行纹理绑定，因此你应该在完成多个纹理的绑定后，将当前活动的纹理单元重设为0，否则后续的绘图纹理会被放入错误的纹理单元从而造成问题。
 
-![textureUnit](/imgs/advanceGraphic/textureUnit.png)
+![textureUnit](./imgs/textureUnit.png)
 
 >你也可以尝试一下不重设纹理单元，看看会发生什么。
 
@@ -332,7 +332,7 @@ void example(Shader shader) {
 
 在`sampler`类的uniform变量上设置的整数值，表示的是这个采样器将从哪个纹理单元中读取纹理数据，同样的，数值只有在`0-31`之间时才能正常工作。
 
-![textureUniform](/imgs/advanceGraphic/textureUniform.png)
+![textureUniform](./imgs/textureUniform.png)
 
 我们现在可以试试传入两个图像，并将它们混合显示，我们这样修改前文范例中的片段着色器：
 
@@ -352,7 +352,7 @@ void main() {
 
 我们把这张图片放入到模组资源根目录，然后将他命名为`texture1.png`：
 
-![texture2](/imgs/advanceGraphic/texture1.png)
+![texture2](./imgs/texture1.png)
 
 接着修改主程序获取两个纹理，并分别将它们传递给着色器：
 
@@ -382,7 +382,7 @@ class Example{
 
 运行它, 看看结果：
 
-![mixTextures](/imgs/advanceGraphic/example-6.png)
+![mixTextures](./imgs/example-6.png)
 
 ### 点阵图（Pixmap）
 
@@ -414,7 +414,7 @@ void example(){
 
 没错，你又得到了一个倒过来的三角形，因为文件的坐标系与点阵图的程序坐标系y轴方向是相反的！
 
-![drawTri](/imgs/advanceGraphic/drawTri.png)
+![drawTri](./imgs/drawTri.png)
 
 你可以通过`Pixmap`的`flipY()`方法来创建一个翻转过来的图像拷贝。
 
@@ -424,7 +424,7 @@ Pixmap flipped = pixmap.flipY();
 
 结果：
 
-![drawTriFlip](/imgs/advanceGraphic/drawTriFlip.png)
+![drawTriFlip](./imgs/drawTriFlip.png)
 
 前面我们有提及过，从点阵图可以创建纹理对象，同样的，我们也可以反过来从纹理对象中提取它的点阵图，然后去对它进行读取颜色，绘图，翻转等操作：
 

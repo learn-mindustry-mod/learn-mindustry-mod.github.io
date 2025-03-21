@@ -156,7 +156,7 @@ vec2 u = b * m; // u = vec2(6.0, 8.0)
 
 还记得在上一节出现的那张OpenGL渲染管线图吗？
 
-![OpenGL渲染管线](/imgs/advanceGraphic/pipeline.png)
+![OpenGL渲染管线](./imgs/pipeline.png)
 
 顶点数据在输入到OpenGL之后，首先就会被提交给顶点着色器去进行顶点处理，在顶点着色器中，通过`attribute`修饰符定义的变量用于接收顶点上描述的属性，而这些属性对应的，就是在上一节中Mesh里定义的顶点模型。
 
@@ -185,7 +185,7 @@ void main(){
 
 `gl_Position`是一个`vec4`类型的内建变量，它是顶点着色器的必要输出变量，在上一节我们讲过顶点会需要通过图元装配和光栅化后才能转换为屏幕上的像素目标，而进行图元装配的过程，所使用的顶点坐标正是对一个顶点经过顶点着色器处理后输出的`gl_Position`，由于我们在进行二维的平面绘制，所以我们可以用`0.0`和`1.0`来填充`gl_Position`的`z`与`w`分量。
 
-![顶点着色器](/imgs/advanceGraphic/glPosition.png)
+![顶点着色器](./imgs/glPosition.png)
 
 > 有关`z`与`w`分量，在光栅化的过程中其实只有x和y分量被用于完成屏幕像素选取，z分量为屏幕空间深度，而w则没有直观的几何意义，用于在投影变换中完成透视除法，我们会在之后3D渲染的章节中进行讲解。
 
@@ -205,7 +205,7 @@ void main(){
 
 事实上，在光栅化时，OpenGL还会对顶点着色器输出的`varying`变量进行插值，具体来说，在构成一个图元的若干顶点之间，GL会根据这个像素距离其图元的几个顶点之间的距离，对这几个顶点上的`varying`变量进行插值，然后传递给片段着色器。
 
-![interpolation](/imgs/advanceGraphic/interpolation.png)
+![interpolation](./imgs/interpolation.png)
 
 是不是听起来比较抽象？我们刚刚编写的顶点着色器不是将颜色信息存储到图元顶点上了么，只需要修改一下我们上一节中的范例，将三角形的三个角颜色变为不同的颜色：
 
@@ -312,7 +312,7 @@ public void init() {
 
 启动游戏，如果你的程序正确，那么你应该在游戏的主界面看到这样一个三角形：
 
-![img.png](/imgs/advanceGraphic/example-1.png)
+![img.png](./imgs/example-1.png)
 
 看懂了吗？顶点着色器向片段着色器传递的`v_color`在光栅化时被插值了！所以在三角形内部的像素颜色是三个顶点颜色的混合。
 
@@ -371,7 +371,7 @@ void draw() {
 
 > 你也可以尝试将输入的颜色更改为其他的看看混合的结果
 
-![img.png](/imgs/advanceGraphic/example-3.png)
+![img.png](./imgs/example-3.png)
 
 ### 优化你的着色器！
 
@@ -423,7 +423,7 @@ void main(){
 
 这个着色器能够正常工作，它会把顶点着色器传递过来的颜色按照距屏幕中心的距离来选择颜色进行混合，然后重新运行范例：
 
-![img.png](/imgs/advanceGraphic/example-2.png)
+![img.png](./imgs/example-2.png)
 
 然而，事实上这个着色器结结实实的把三个分支里的代码**都运行了一遍**，然后最后再根据条件去选择分支计算的颜色！分支语句没有节约任何成本，反而为单个片段增加了不必要的其余分支的计算量！
 
@@ -431,7 +431,7 @@ void main(){
 
 这个概念在OpenGL中被称为**波阵面（Wavefront）**，它形象的描述了数据在GPU中的并行处理过程。
 
-![wavefront](/imgs/advanceGraphic/wavefront.png)
+![wavefront](./imgs/wavefront.png)
 
 但是我们也会遇到很多无法避免的分支语句的需求，面对这类问题有一类有限的解决方案，即利用**阶跃函数**或**钳制函数**来完成可能在分支中对数值的选择操作。
 

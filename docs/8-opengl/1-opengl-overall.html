@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>OpenGL&#x6982;&#x8ff0;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h2 id="opengl概述">OpenGL概述</h2>
+<p>Mindustry的图形后端为OpenGL（在安卓上为OpenGL es, 差异我们在后文会展开），OpenGL是跨平台的图形API，它允许我们使用硬件加速来绘制图形。</p>
+<p>在你阅读本章节前，建议先阅读另一篇OpenGL教程，那会告诉你OpenGL的几乎所有基本概念，以及一些渲染方法（不过那些渲染方法我们大概不会用到）：</p>
+<p><strong>Learn OpenGL： <a href="https://learnopengl-cn.github.io/">https://learnopengl-cn.github.io/</a></strong></p>
+<p>与上述教程不同，本篇重点介绍在Mindustry中的图形绘制方法与技巧，我会避免使用那些复杂的术语和概念，而是直接介绍如何使用OpenGL来绘制图形。</p>
+<h3 id="gl的操作流与工作方式">GL的操作流与工作方式</h3>
+<p>OpenGL是一个“状态机”，本篇我们并不讨论这个概念，你只需要知道操作OpenGL的流程就是在调用OpenGL的操作函数和GL定义的常量，去设置某些数据和资源，然后将这些资源以某种方式绘制出来而已。</p>
+<p>OpenGL的操作函数在Mindustry中由一个单例对象实现，这个单例被存储于<code>arc.Core</code>类中的<code>gl20</code>和<code>gl30</code>字段中，两个字段保存的是同一个对象，但是它们的变量类型不同，分别会记录在OpenGL2.0和OpenGL3.0+上的可用函数与常量值，一般来说你的目标平台都会支持OpenGL3.0的API，但是如果不支持的话，字段<code>gl30</code>会为空，请在调用前做好兼容性检查。</p>
+<p>但是事实上，多数情况下我们只需要使用一个静态调用的工具类<code>arc.graphic.Gl</code>来快速访问<strong>gl20</strong>中的所有行为，<code>gl30</code>则需要访问其单例。</p>
+<p>一个GL的原始工作流形式是这样的：</p>
+<pre><code class="language-java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">example</span><span class="hljs-params">()</span> {
+  Gl.clearColor(<span class="hljs-number">0.2f</span>, <span class="hljs-number">0.3f</span>, <span class="hljs-number">0.3f</span>, <span class="hljs-number">1.0f</span>);
+  Gl.clear(Gl.colorBufferBit);
+
+  Gl.useProgram(shaderProgram);
+  Gl.bindVertexArray(VAO);
+  
+  Gl.drawElements(Gl.trangles, <span class="hljs-number">6</span>, Gl.unsignedInt, <span class="hljs-number">0</span>);
+}
+</code></pre>
+<p>在<code>Gl</code>内定义了大量的操作函数与常量，这些常量会被作为函数的参数被用于描述某些状态，我们现在还不需要去关心这些函数的具体作用，在你使用Gl的工作流时，代码的形式看起来就是这样一条一条对Gl中操作函数的调用。</p>
+<h3 id="mindustry中的gl封装">Mindustry中的GL封装</h3>
+<p>使用原始的Gl工作流是很麻烦的，这会需要管理大量的资源以及令人困惑的整数类型<strong>句柄</strong>，幸运的是在Arc中Gl的常用工作流已经被包装为了更符合Java语言习惯的API，我们可以直接通过这些包装类型来更加方便地使用OpenGL。</p>
+<p>这些包装类型大多被存储在<code>arc.graphics.gl</code>包中，其中<code>Shader</code>、<code>Texture</code>
+、<code>FrameBuffer</code>、<code>Mesh</code>等类型，在我们之后的教程中会频繁用到这些类型，它们的具体用途在后文也会详细介绍。</p>
+<p>除非你需要进行一些很复杂的操作，否则你将很少能用到Gl的默认工作流，常用的封装已经能够满足大多数需求。</p>
+<h3 id="opengl-es-兼容">OpenGL es 兼容</h3>
+<p>OpenGL es是在安卓上做了针对移动平台性能优化的OpenGL，或者说，它其实是一种“阉割版”的OpenGL。</p>
+<p>由于Mindustry的跨平台包含了安卓平台，Arc中的OpenGL API结构是向下兼容了OpenGL es的，这意味着在GL es中被取消的许多API在Arc的GL API中同样被移除了，这会导致你在互联网上查询到的教程与我们在Mindustry中的操作有不同，这些需要考虑如何规避。</p>
+<p>Arc GL与普遍能找到的OpenGL教程所描述的主要不同在与：</p>
+<ol>
+<li>不支持几何着色器与计算着色器，同时强制提供顶点与片段着色器</li>
+<li>完全不支持固定管线</li>
+<li>着色器程序需要定义精度（尽管这同样被包装在了<code>Shader</code>的预处理工作中，往往只需要添加一个宏<code>#HIGHP</code>/<code>#LOWP</code>）</li>
+<li>很多特殊着色器操作都需要添加扩展声明</li>
+<li>很多可能不常用的操作函数被移除</li>
+</ol>
+<p>在你查阅其他资料时，请注意检查其中可能存在的被取消的特性。</p>
+
+            
+            
+        </body>
+        </html>

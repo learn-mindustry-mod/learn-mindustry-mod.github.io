@@ -2,7 +2,7 @@
 
 一般来说，OpenGL图形渲染，会将输入的数据经过其渲染管线的各个阶段后，将图像输出到屏幕上，这是一张老生常谈的GL渲染管线示意图：
 
-![pipeline](/imgs/advanceGraphic/pipeline.png)
+![pipeline](./imgs/pipeline.png)
 
 其中，几何着色器在Arc GL中无法使用，这里，我们会用更直观更容易理解的语言来讲解这个过程。
 
@@ -35,7 +35,7 @@
 > OpenGL的绘图坐标以屏幕中心为原点（0, 0），屏幕的左下角（-1, -1），右上角为（1, 1），即**标准化设备坐标（Normalized Device Coordinates）**。
 > <br>
 > 运行平台的实际屏幕尺寸并不受关注，在绘图时这个尺寸会被OpenGL标准化，或者通俗点说绘图坐标会被缩放到从-1到1的范围内进行绘图，超出范围的像素会被丢弃，如下所示为标准化坐标的示意图，上面定义的三角形在标准化坐标中看起来是这样的：
-> ![ndc](/imgs/advanceGraphic/normalizedCoord.png)
+> ![ndc](./imgs/normalizedCoord.png)
 
 而用于提交这些顶点数据的对象为**VAO（Vertex Array Object，顶点数组对象）**或**VBO（Vertex Buffer Object，顶点缓冲对象）**，但是我们通常并不需要使用VAO或者VBO，他们被包装在了一个类型`arc.graphic.Mesh`当中。
 
@@ -73,7 +73,7 @@ VertexAttribute attr2 = new VertexAttribute(
 
 这是顶点模型的序列长度对齐到`byte`的方式：
 
-![vertexModel](/imgs/advanceGraphic/vertexModel.png)
+![vertexModel](./imgs/vertexModel.png)
 
 Mesh的数据模型定义通过其构造函数的可变参数提供，传入为一个数组序列，依次描述顶点的每一个属性，对于上述的那个三角形序列，依次传入顶点属性以定义此Mesh的数据模型，如下所示：
 
@@ -138,7 +138,7 @@ OpenGL中定义的图元类型有：
 
 以下是各图元的几何组装效果，`v1`-`v6`依次在顶点序列中顺序提交：
 
-![图元类型](/imgs/advanceGraphic/primitiveType.png)
+![图元类型](./imgs/primitiveType.png)
 
 `lines`及其相关的图元类型提供了一些额外的参数，用于控制点的大小和线段的宽度，它们需要Gl的控制流来进行操作，例如：
 
@@ -162,7 +162,7 @@ void example(Mesh mesh){
 
 光栅化的示意图：
 
-![光栅化](/imgs/advanceGraphic/rasterization.png)
+![光栅化](./imgs/rasterization.png)
 
 光栅化所涉及到的像素点就被称为**片段（Fragment）**，它们会被传递给片段着色器，由片段着色器对这些像素点进行染色，最后显示到屏幕上。
 
@@ -190,7 +190,7 @@ void example(Mesh mesh){
 
 这与我们的几何直观不符，我们往往认为一个矩形只需要四个顶点，当我们通过绘制两个三角形来绘制一个矩形时，在提交的6个顶点中实际上有两个顶点是重叠了。
 
-![三角形组合](/imgs/advanceGraphic/triangleRect.png)
+![三角形组合](./imgs/triangleRect.png)
 
 这还仅仅是一个矩形，如果我们需要绘制更加复杂的二维或者三维图形，重叠的顶点可能会更多，这可能会浪费大量的内存空间来存放重复的顶点数据。
 
@@ -208,7 +208,7 @@ void example(Mesh mesh) {
 
 但是当我们设置顶点序列时，情况就发生了变化，OpenGL将会按索引序列为基准来处理顶点，依次根据索引序列中的索引来从顶点序列中取出顶点，组装成图元。
 
-![indices](/imgs/advanceGraphic/indices.png)
+![indices](./imgs/indices.png)
 
 具体来说，对于上文的那个四边形顶点定义，如果我们使用索引序列来绘制，那么只需要定义矩形的四个顶点和6个索引组成的序列即可：
 

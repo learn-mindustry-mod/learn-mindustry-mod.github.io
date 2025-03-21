@@ -10,7 +10,7 @@
 
 其实原因很简单，我们第二节的时候讲过，屏幕的坐标已经被OpenGL转换为了从-1到1的**标准化设备坐标（Normalized Device Coordinates）**，而我们的四边形顶点坐标没有经过任何变换，直接以原始坐标绘制到了屏幕上：
 
-![normalizedTexture](/imgs/advanceGraphic/normalizedTexture.png)
+![normalizedTexture](./imgs/normalizedTexture.png)
 
 而这并不符合我们所需要的效果，如果我们需要正确的将这个正方形绘制到屏幕中，就需要引入**变换（Transform）** 与**投影（Projection）**。
 
@@ -36,11 +36,11 @@ $vec3 = \left ( x, y, z  \right ) $
 
 $vec4 = \left ( x, y, z, w  \right ) $
 
-![vector](/imgs/advanceGraphic/vector.png)
+![vector](./imgs/vector.png)
 
 我们很自然的能想到向量的加法正是将向量首尾串联在一起，而减法则是将它翻转过来再相加，而如果我们将起点为原点的向量作为对象的坐标的话，那么向量的一系列加减法就描述了这个对象的平移过程：
 
-![vectorAdd](/imgs/advanceGraphic/vectorPlus.png)
+![vectorAdd](./imgs/vectorPlus.png)
 
 ```glsl
 vec2 v1 = vec2(x, y);
@@ -123,7 +123,7 @@ $c_{ij} = \sum_{k=1}^{3} a_{ik} \times b_{kj}$
 
 用一个比较形象的图来描述这个过程：
 
-![matrixTimes](/imgs/advanceGraphic/matrixTimes.png)
+![matrixTimes](./imgs/matrixTimes.png)
 
 矩阵的乘法事实上就是将两个矩阵所表示的变换从右向左进行叠加，当输入一个向量去乘以矩阵`matC`时，结果等同于先乘以`matB`再乘以`matA`：
 
@@ -153,7 +153,7 @@ $Tri = \begin{Bmatrix} P1\\ P2\\ P3 \end{Bmatrix}$
 
 $Tri' = \begin{Bmatrix} P1'\\ P2'\\ P3' \end{Bmatrix} = \begin{Bmatrix} mat \times P1^*\\ mat \times P2^*\\ mat \times P3^* \end{Bmatrix} = mat \times Tri$
 
-![transformTriangle](/imgs/advanceGraphic/transformTri.png)
+![transformTriangle](./imgs/transformTri.png)
 
 #### 1. 平移矩阵（Translation）
 
@@ -167,7 +167,7 @@ $vec2 = \left [ \begin{matrix} x \\ y \end{matrix} \right ]$
 
 $trn \times vec2^* = \left [ \begin{matrix} 1 & 0 & dx \\ 0 & 1 & dy \\ 0 & 0 & 1 \end{matrix} \right ] \left [ \begin{matrix} x \\ y \\ 1 \end{matrix} \right ] = \left [ \begin{matrix} x + dx \\ y + dy \\ 1 \end{matrix} \right ]$
 
-![translation](/imgs/advanceGraphic/translation.png)
+![translation](./imgs/translation.png)
 
 #### 2. 缩放矩阵（Scaling）
 
@@ -181,7 +181,7 @@ $vec2 = \left [ \begin{matrix} x \\ y \end{matrix} \right ]$
 
 $scl \times vec2^* = \left [ \begin{matrix} sx & 0 & 0 \\ 0 & sy & 0 \\ 0 & 0 & 1 \end{matrix} \right ] \left [ \begin{matrix} x \\ y \\ 1 \end{matrix} \right ] = \left [ \begin{matrix} sx \times x \\ sy \times y \\ 1 \end{matrix} \right ]$
 
-![scalingMatrix](/imgs/advanceGraphic/scalingMatrix.png) 
+![scalingMatrix](./imgs/scalingMatrix.png) 
 
 #### 3. 旋转矩阵（Rotation）
 
@@ -195,7 +195,7 @@ $vec2 = \left [ \begin{matrix} x \\ y \end{matrix} \right ]$
 
 $rot \times vec2^* = \left [ \begin{matrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{matrix} \right ] \left [ \begin{matrix} x \\ y \\ 1 \end{matrix} \right ] = \left [ \begin{matrix} \cos\theta \times x - \sin\theta \times y \\ \sin\theta \times x + \cos\theta \times y \\ 1 \end{matrix} \right ]$
 
-![rotationMatrix](/imgs/advanceGraphic/rotationMatrix.png)
+![rotationMatrix](./imgs/rotationMatrix.png)
 
 ### 叠加矩阵
 
@@ -217,7 +217,7 @@ $mat = \left [ \begin{matrix} \cos60^{\circ} & -\sin60^{\circ} & 10  \\ \sin60^{
 
 应用这个矩阵与向量进行乘算，图形就会先旋转60度，然后平移到(10, 10)位置：
 
-![combinedMatrix](/imgs/advanceGraphic/combinedMatrix.png)
+![combinedMatrix](./imgs/combinedMatrix.png)
 
 #### 变换是可逆的
 
@@ -317,13 +317,13 @@ class Example{
 
 让我们将它渲染出来，如果你的代码没有错误，那么图像就应该以正确的比例显示在了屏幕中央:
 
-![img.png](/imgs/advanceGraphic/example-7.png)
+![img.png](./imgs/example-7.png)
 
 在这个过程中，我们做的事实际上是将一个坐标系以一定规则去映射到了另一个坐标系中，这个映射关系由这个缩放矩阵描述，而这个映射的过程，则被称为**投影（Projection）**，这个建立映射关系的矩阵就是**投影矩阵（Projection Matrix）**。
 
 这里，我们人为的将未经过投影的顶点坐标定义为**世界坐标（World Coordinate）**，经过投影变换后的坐标被称为**屏幕坐标（Screen Coordinate）**，投影事实上就是在进行世界空间与屏幕空间的坐标系转换：
 
-![projection](/imgs/advanceGraphic/projection.png)
+![projection](./imgs/projection.png)
 
 我们刚刚讲过线性变换是可逆的，在通过投影矩阵将世界坐标映射到屏幕坐标的同时，我们也可以通过投影矩阵的逆矩阵将屏幕坐标映射回世界坐标，这在处理鼠标或者触控事件时非常有用。
 
@@ -339,7 +339,7 @@ class Example{
 
 > 线性组合通俗的理解就是将向量可以表示为多个向量乘以多个系数然后相加，比如向量$vec_1 = (1, 0)$，向量$vec_2 = (0, 1)$，那么对于向量$vec_3 = (2, 3)$就可以表示为$vec_3 = 2 \times vec_1 + 3 \times vec_2$。
 
-![basisVector](/imgs/advanceGraphic/basisVector.png)
+![basisVector](./imgs/basisVector.png)
 
 现在，我们知道，一个坐标系可以被描述为多个互相垂直的基向量，而我们对这个坐标系中的所有向量进行线性变换，事实上等同于我们对这个坐标系的基向量进行线性变换，来得到一个变换后的新坐标系。
 
@@ -351,7 +351,7 @@ $\left [ \begin{matrix} \cos \theta & -\sin \theta & x \\ \sin \theta & \cos \th
 
 这里就出现了一个有趣的性质：**用变换之后的基向量组成一个新的矩阵，这个矩阵能够将变换前坐标系中的任意向量映射到变换后的坐标系中**，而这个矩阵就被称为**仿射矩阵（Affine Matrix）**。
 
-![affine](/imgs/advanceGraphic/affine.png)
+![affine](./imgs/affine.png)
 
 #### 摄像机的原理
 
@@ -416,7 +416,7 @@ void draw(){
 
 然后，你会发现你只是在屏幕上画了一个像素点...
 
-![img.png](/imgs/advanceGraphic/example-emmm.png)
+![img.png](./imgs/example-emmm.png)
 
 原因很简单，我们定义的网格尺寸仅仅只有1x1的场景空间尺寸，而我们的摄像机视角尺寸为屏幕的尺寸，这意味着这只有一个像素的大小。
 
@@ -466,7 +466,7 @@ void draw(){
 
 很好！
 
-![example](/imgs/advanceGraphic/example-8.png)
+![example](./imgs/example-8.png)
 
 现在，图像被正确的显示在了屏幕上，结合我们前面说过的变换矩阵性质，我们可以将物体平移到任何位置，旋转到任何角度，缩放到任何大小，现在我们不妨来试试话很多各角度，位置，大小都不一样的图案：
 
@@ -500,7 +500,7 @@ void draw(){
 
 it work!
 
-![it work!](/imgs/advanceGraphic/example-9.png)
+![it work!](./imgs/example-9.png)
 
 事实上，Arc同样将摄像机也包装为了一个类型`arc.graphic.Camera`，这个类型替我们封装了摄像机的位置和视图尺寸，以及一些投影与反投影相关的工具方法并且已经帮我们将摄像机的半个长宽偏移附加到了坐标上，使用`Camera`编写投影变换会很简单：
 
