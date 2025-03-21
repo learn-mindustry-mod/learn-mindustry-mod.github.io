@@ -1,4 +1,4 @@
-## OpenGL概述
+# OpenGL概述
 
 Mindustry的图形后端为OpenGL（在安卓上为OpenGL es, 差异我们在后文会展开），OpenGL是跨平台的图形API，它允许我们使用硬件加速来绘制图形。
 
