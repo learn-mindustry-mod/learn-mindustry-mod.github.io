@@ -201,7 +201,7 @@
     - 第三章 栈式布局
 :::
 
-::: 第三大纲
+::: details 第三大纲
 本大纲为E.B.Wilson于2025年3月17号撰写。
 Learn Mindustry Mod
 序言
