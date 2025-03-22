@@ -193,7 +193,7 @@ void example(Mesh mesh){
 }
 ```
 
-```kotlin example.java
+```kotlin example.kt
 fun example(mesh: Mesh){
   shader.bind()
   Core.gl20.lineWidth(10f)
@@ -259,7 +259,7 @@ void example(Mesh mesh) {
 }
 ```
 
-```kotlin example.java
+```kotlin example.kt
 fun example(mesh: Mesh) {
   mesh.setIndices(shortArrayOf(0, 1, 2, 0, 2, 3))
 }
@@ -301,7 +301,7 @@ void example(){
 }
 ```
 
-```kotlin
+```kotlin example.kt
 fun example() {
   val mesh = Mesh(true, 4, 6,  
       VertexAttribute.position,
