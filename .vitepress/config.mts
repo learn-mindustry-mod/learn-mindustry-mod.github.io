@@ -1,9 +1,14 @@
 import { defineConfig } from 'vitepress'
 import { generateSidebar } from 'vitepress-sidebar'
-
+import tabsPlugin from '@red-asuka/vitepress-plugin-tabs'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  markdown: { math: true },
+  markdown: {
+    math: true,
+    config: (md) => {
+      tabsPlugin(md)
+    }
+  },
 
   title: "LearnMindustryMod",
   description: "Mindustry Mod 百科全书",
