@@ -20,7 +20,7 @@
 :::: tabs
 
 ::: tab ZeroTermux
-[![GitHub Card](https://gh-card.dev/repos/hanxinhao000/ZeroTermux.svg)](https://github.com/hanxinhao000/ZeroTermux)
+<GitHubCard repo="hanxinhao000/ZeroTermux"/>
 [官方下载站](https://d.icdown.club/repository/main/ZeroTermux/)
 [下载最新版](http://getzt.icdown.club/)
 ::: details 预览
@@ -29,7 +29,7 @@
 :::
 
 ::: tab Termux
-[![GitHub Card](https://gh-card.dev/repos/termux/termux-app.svg)](https://github.com/termux/termux-app)
+<GitHubCard repo="termux/termux-app"/>
 [**从镜像下载**](https://github.tbedu.top/https://github.com/termux/termux-app/releases/download/v0.118.1/termux-app_v0.118.1+github-debug_arm64-v8a.apk)
 :::
 
@@ -94,7 +94,8 @@ apt update && apt upgrade
 >[!NOTE]
 >**TMOE** More Optional Environments.
 
-[![GitHub Card](https://gh-card.dev/repos/2moe/tmoe.svg)](https://github.com/2moe/tmoe/tree/doc)
+<GitHubCard repo="2moe/tmoe"/>
+
 [官方文档](https://doc.tmoe.me/)
 
 安装
@@ -151,7 +152,7 @@ awk -f 2.awk
 ### VNC客户端安装
 本教程使用AVNC客户端
 ![AVNC SVG](https://github.tbedu.top/https://github.com/gujjwal00/avnc/raw/master/metadata/en-US/branding/wordmark.svg)
-[![GitHub Card](https://gh-card.dev/repos/gujjwal00/avnc.svg)](https://github.com/gujjwal00/avnc)
+<GitHubCard repo="gujjwal00/avnc"/>
 [镜像直链下载](https://github.tbedu.top/https://github.com/gujjwal00/avnc/releases/download/v2.8.0/AVNC-2.8.0.apk)
 
 # 无容器配置
