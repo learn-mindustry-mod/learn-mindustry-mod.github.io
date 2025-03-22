@@ -7,3 +7,5 @@
 .vitepress/cache
 .vitepress/.temp
 .idea/
+yarn.lock
+
