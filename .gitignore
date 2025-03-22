@@ -8,4 +8,4 @@
 .vitepress/.temp
 .idea/
 yarn.lock
-
+pnpm-lock.yaml
