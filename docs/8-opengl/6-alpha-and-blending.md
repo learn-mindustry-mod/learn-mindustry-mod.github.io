@@ -37,7 +37,9 @@ void main() {
 }
 ```
 
-```java
+::: code-group
+
+```java Example.java
 class Example{
   Mesh mesh = new Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -91,6 +93,64 @@ class Example{
 }
 ```
 
+```kotlin Example.kt
+class Example{
+  val mesh = Mesh(true, 4, 6,
+      VertexAttribute.position,
+      VertexAttribute.color,
+      VertexAttribute.texCoords
+  )
+  val tex = Texture(
+      Vars.mods.getMod("example-mod").root.child("texture.png")
+  )
+  val shader = Shader(vertexShaderFi, fragmentShaderFi)
+  val camera = Camera()
+  val transform = Mat()
+  val seed = System.nanoTime()
+
+  init {
+    val c = Color.white.cpy().a(0.5f).toFloatBits() // 透明度设置为0.5f
+    mesh.setVertices(floatArrayOf(
+        //顶点坐标      颜色  纹理坐标
+        -0.5f, -0.5f,  c,   0f, 1f,
+         0.5f, -0.5f,  c,   1f, 1f,
+         0.5f,  0.5f,  c,   1f, 0f, 
+        -0.5f,  0.5f,  c,   0f, 0f,
+    ))
+    mesh.setIndices(shortArrayOf(
+        0, 1, 2, //第一个三角形
+        0, 2, 3  //第二个三角形
+    ))
+  }
+  
+  fun draw(){
+    shader.bind()
+    tex.bind()   // 绑定纹理
+    
+    camera.position.set(10f, 20f)
+    camera.width = Core.graphics.getWidth()
+    camera.height = Core.graphics.getHeight()
+    camera.update() // 每次使用前需要更新一次数据
+    shader.setUniformMatrix4("u_proj", camera.mat)
+
+    Mathf.rand.setSeed(seed)
+    for (i in 0 until 10) {
+      val size = Mathf.random(100, 300)
+      transform.also {
+        it.idt()
+        it.translate(Mathf.range(1000), Mathf.range(1000))
+        it.scale(size, size)
+        it.rotate(Mathf.random(360))
+      }
+      shader.setUniformMatrix4("u_trns", transform)
+      mesh.render(shader, Gl.triangles)
+    }
+  }
+}
+```
+
+:::
+
 运行一下，看看结果：
 
 ![alpha](./imgs/example-10.png)
@@ -111,6 +171,8 @@ class Example{
 
 OpenGL默认是关闭了混合的，尽管Mindustry已经在渲染流程中开启了它，但我们还是应当知道如何设置它：
 
+::: code-group
+
 ```java
 void example(){
   // 开启混合
@@ -119,6 +181,17 @@ void example(){
   Gl.disable(Gl.blend);
 }
 ```
+
+```kotlin
+fun example(){
+  // 开启混合
+  Gl.enable(Gl.blend)
+  // 禁用混合
+  Gl.disable(Gl.blend)
+}
+```
+
+:::
 
 如果不开启混合，那么片段着色器输出的颜色会直接覆盖旧有的颜色，而不是表现为透明图像。
 
@@ -166,6 +239,8 @@ $C_{final} = C_{source} * F_{source} + C_{dest} * F_{dest}$
 
 比如，Mindustry渲染流程中设置的默认混合方式其实就是这两个函数：
 
+::: code-group
+
 ```java
 void normalBlend() {
   Gl.blendFunc(
@@ -174,6 +249,17 @@ void normalBlend() {
   );
 }
 ```
+
+```kotlin
+fun normalBlend() {
+  Gl.blendFunc(
+      sfactor = Gl.srcAlpha,          // 源颜色混合因子生成函数
+      dfactor = Gl.oneMinusSrcAlpha   // 现有颜色混合因子生成函数
+  )  
+}
+```
+
+:::
 
 这个组合产生的混合方程形式是这样的：
 
@@ -187,6 +273,8 @@ $C_{final} = C_{source} * alpha + C_{dest} * (1 - alpha)$
 
 另外，我们还可以将`aplha`通道的计算和`RGB`值的混合函数分开设置，这样做的话计算混合的颜色通道和透明度通道会使用不同的混合函数：
 
+::: code-group
+
 ```java
 void example(){
   Gl.blendFuncSeparate(
@@ -198,12 +286,34 @@ void example(){
 }
 ```
 
+```kotlin
+fun example(){
+  Gl.blendFuncSeparate(
+      srcRGB = Gl.srcAlpha,          // 源颜色混合因子生成函数
+      dstRGB = Gl.oneMinusSrcAlpha,  // 现有颜色混合因子生成函数
+      srcAlpha = Gl.one,             // 源透明度混合因子生成函数
+      dstAlpha = Gl.zero             // 现有透明度混合因子生成函数
+  )
+}
+```
+
+:::
+
 在Arc中对混合做了简单的封装（真的很简单...），这个封装类型为`arc.graphics.Blending`，这个类型包装了四个`int`值用于分别存储四个混合因子生成函数，构造器有两个，区分我们能前文提到过的颜色通道与透明度通道是否分开设置：
 
+::: code-group
+
 ```java
-Blending blend = Blending(srcColor, dstColor, srcAlpha, dstAlpha);
-Blending blendComb = Blending(srcFactor, dstFactor);
+Blending blend = new Blending(srcColor, dstColor, srcAlpha, dstAlpha);
+Blending blendComb = new Blending(srcFactor, dstFactor);
 ```
+
+```kotlin
+val blend = Blending(srcColor, dstColor, srcAlpha, dstAlpha)
+val blendComb = Blending(srcFactor, dstFactor)
+```
+
+:::
 
 在`Blending`中也定义了三个默认的混合模式，分别是：
 
@@ -213,7 +323,9 @@ Blending blendComb = Blending(srcFactor, dstFactor);
 
 而`Blending`的使用也很简单，只需要调用其`apply()`方法即可，这里我们修改一下前文范例中的`draw`方法，测试一下使用`additive`会得到怎么样的效果：
 
-```java
+::: code-group
+
+```java Example.java
 void draw(){
   shader.bind();
   tex.bind();   // 绑定纹理
@@ -239,6 +351,37 @@ void draw(){
   Blending.normal.apply(); // 重设为通常混合模式
 }
 ```
+
+```kotlin Example.kt
+fun draw(){
+  shader.bind()
+  tex.bind()   // 绑定纹理
+  
+  Blending.additive.apply() // 设置混合模式为加法混合模式
+  
+  camera.position.set(10f, 20f)
+  camera.width = Core.graphics.getWidth()
+  camera.height = Core.graphics.getHeight()
+  camera.update() // 每次使用前需要更新一次数据
+  shader.setUniformMatrix4("u_proj", camera.mat)
+
+  Mathf.rand.setSeed(seed)
+  for (i in 0 until 10) {
+    val size = Mathf.random(100, 300)
+    transform.also{
+      it.idt()
+      it.translate(Mathf.range(1000), Mathf.range(1000))
+      it.scale(size, size)
+      it.rotate(Mathf.random(360))
+    }
+    shader.setUniformMatrix4("u_trns", transform)
+    mesh.render(shader, Gl.triangles)
+  }
+  Blending.normal.apply() // 重设为通常混合模式
+}
+```
+
+:::
 
 嗯，因为颜色值相加会提升整体亮度，结果果然变亮了。
 

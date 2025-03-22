@@ -12,6 +12,8 @@
 
 创建或者加载一个纹理在GL的工作流在Arc中纹理被封装为了一个java类型`arc.graphic.Texture`。要创建一个纹理，只需要调用`Texture`的多个构造函数之一：
 
+::: code-group
+
 ```java
 void example(){
   Texture tex1 = new Texture(new Fi("..."));  // 从文件加载纹理
@@ -24,6 +26,21 @@ void example(){
   Texture tex4 = new Texture(textureData);    // 从纹理数据创建纹理
 }
 ```
+
+```kotlin
+fun example() {
+  val tex1 = Texture(Fi("..."))  // 从文件加载纹理
+  val tex2 = Texture(pixmap)     // 从Pixmap创建纹理
+  val tex3 = Texture(
+      file = Fi("..."),
+      useMipaps = true
+  )  // 从文件加载纹理并启用mipmap
+  
+  val tex4 = Texture(textureData)    // 从纹理数据创建纹理
+}
+```
+
+::: 
 
 其中出现的**pixmap**在本节的后面会介绍，而**textureData**是一个纹理模型，具体来说这是接口`arc.graphic.TextureData`的实例。
 
@@ -49,12 +66,23 @@ void example(){
 
 把这张图片保存为文件`texture.png`，然后放入到mod目录下的任意子目录中（不要放在sprites目录下，之后的章节我会解释为什么），例如，我们将这个图片放到mod的根目录下，然后我们可以这样去手动加载这个纹理：
 
+:::code-group
+
 ```java
 void example(){
   Fi modRoot = Vars.mods.getMod("example-mod").root;
   Texture tex = new Texture(modRoot.child("texture.png"));
 }
 ```
+
+```kotlin
+fun example() {
+  val modRoot = Vars.mods.getMod("example-mod").root
+  val tex = Texture(modRoot.child("texture.png"))  
+}
+```
+
+:::
 
 `Vars.mods.getMod`可以获取具有给定内部名称的模组元属性对象，`root`为这个mod的根目录路径。这里我们就已经对这个图像创建了它的纹理对象，接下来我们就可以在着色器中使用这个纹理了。
 
@@ -116,7 +144,9 @@ void main() {
 }
 ```
 
-```java
+::: code-group
+
+```java Example.java
 class Example{
   Mesh mesh = new Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -149,6 +179,45 @@ class Example{
 }
 ```
 
+```kotlin Example.kt
+class Example{
+  val mesh = Mesh(true, 4, 6,
+      VertexAttribute.position,
+      VertexAttribute.texCoords
+  )
+  val tex = Texture(
+      Vars.mods.getMod("example-mod").root.child("texture.png")
+  )
+  val shader = Shader(vertexShaderFi, fragmentShaderFi)
+
+  init {
+    mesh.setVertices(
+      floatArrayOf(
+        //顶点坐标       纹理坐标
+        -0.5f, -0.5f, 0f, 0f,
+        0.5f, -0.5f, 1f, 0f,
+        0.5f, 0.5f, 1f, 1f,
+        -0.5f, 0.5f, 0f, 1f,
+      )
+    )
+    mesh.setIndices(
+      shortArrayOf(
+        0, 1, 2, //第一个三角形
+        0, 2, 3  //第二个三角形
+      )
+    )
+  }
+  
+  fun draw() {
+    shader.bind()
+    tex.bind()   // 绑定纹理
+    mesh.render(shader, Gl.triangles)
+  }
+}
+```
+
+:::
+
 不出意外你将会得到一张上下颠倒的渲染图像：
 
 ![img.png](./imgs/example-4.png)
@@ -158,6 +227,8 @@ class Example{
 ![flip](./imgs/flip.png)
 
 要解决这个问题也很简单，只需要将纹理坐标的v值取反即可，修改顶点坐标如下：
+
+::: code-group
 
 ```java
 void example(){
@@ -172,6 +243,24 @@ void example(){
   //...
 }
 ```
+
+```kotlin
+fun example() {
+  //...
+  mesh.setVertices(
+    floatArrayOf( 
+      //顶点坐标       纹理坐标
+      -0.5f, -0.5f,   0f, 1f,
+       0.5f, -0.5f,   1f, 1f,
+       0.5f,  0.5f,   1f, 0f,
+      -0.5f,  0.5f,   0f, 0f,
+    )
+  )
+  //...  
+}
+```
+
+:::
 
 这样就可以得到正确的渲染图像了：
 
@@ -193,6 +282,8 @@ void example(){
 
 我们可以通过`setWrap`方法来设置纹理的环绕模式：
 
+::: code-group
+
 ```java
 void example(Texture tex) {
   tex.setWrap(Texture.TextureWrap.clampToEdge);
@@ -201,11 +292,23 @@ void example(Texture tex) {
 }
 ```
 
+```kotlin
+fun example(tex: Texture) {
+  tex.setWrap(Texture.TextureWrap.clampToEdge)
+  tex.setWrap(Texture.TextureWrap.repeat)
+  tex.setWrap(Texture.TextureWrap.mirroredRepeat)
+}
+```
+
+:::
+
 三种环绕方式的实际效果：
 
 ![wrap](./imgs/textureWrap.png)
 
 我们也可以对纹理的`u`和`v`分别设置不同的环绕方式：
+
+::: code-group
 
 ```java
 void example(Texture tex) {
@@ -215,6 +318,17 @@ void example(Texture tex) {
   );
 }
 ```
+
+```kotlin
+fun example(tex: Texture) {
+  tex.setWrap(
+      u = Texture.TextureWrap.clampToEdge, // u warp
+      v = Texture.TextureWrap.repeat       // v warp
+  )
+}
+```
+
+:::
 
 环绕方式在我们渲染拼贴画或者一些有趣的拼接式图案时会很有用。
 
@@ -235,12 +349,23 @@ OpenGL也提供了两种基本的纹理过滤方式：
 
 就像设置环绕方式一样，我们也可以通过`setFilter`方法来设置纹理的过滤方式：
 
+::: code-group
+
 ```java
 void example(Texture tex) {
   tex.setFilter(Texture.TextureFilter.nearest);
   tex.setFilter(Texture.TextureFilter.linear);  
 }
 ```
+
+```kotlin
+fun example(tex: Texture) {
+  tex.setFilter(Texture.TextureFilter.nearest)
+  tex.setFilter(Texture.TextureFilter.linear)
+}
+```
+
+:::
 
 两种纹理过滤方式会使得采样出来的图像有所差异，`nearest`过滤方式会使得图像的边缘更加锐利，同时会突出边缘的锯齿；而`linear`过滤方式则会使得图像更加平滑，但是会使得图像的边缘模糊，同时会增大采样的开销。
 
@@ -250,6 +375,8 @@ void example(Texture tex) {
 
 同时，还可以对纹理的放大采样（Magnify）和缩小采样（Minify）分别设置不同的过滤方式：
 
+::: code-group
+
 ```java
 void example(Texture tex) {
   tex.setFilter(
@@ -258,6 +385,17 @@ void example(Texture tex) {
   );
 }
 ```
+
+```kotlin
+fun example(tex: Texture) {
+  tex.setFilter(
+    minFilter = Texture.TextureFilter.nearest, // minify filter
+    magFilter = Texture.TextureFilter.linear   // magnify filter
+  )
+}
+```
+
+:::
 
 ## 多级细节纹理（Mipmap）
 
@@ -280,6 +418,8 @@ void example(Texture tex) {
 
 这些同样也被封装在了枚举类`Texture.TextureFilter`中，默认情况下多级细节纹理的过滤方式为`GL.linearMipMapLinear`。
 
+::: code-group
+
 ```java
 void example(Texture tex) {
   tex.setFilter(Texture.TextureFilter.nearestMipMapNearest);
@@ -288,6 +428,17 @@ void example(Texture tex) {
   tex.setFilter(Texture.TextureFilter.linearMipMapLinear);
 }
 ```
+
+```kotlin
+fun example(tex: Texture) {
+  tex.setFilter(Texture.TextureFilter.nearestMipMapNearest)
+  tex.setFilter(Texture.TextureFilter.linearMipMapNearest)
+  tex.setFilter(Texture.TextureFilter.nearestMipMapLinear)
+  tex.setFilter(Texture.TextureFilter.linearMipMapLinear)
+}
+```
+
+:::
 
 ## 纹理单元
 
@@ -298,6 +449,8 @@ void example(Texture tex) {
 当我们绑定纹理时，实际上是将纹理绑定到了当前正在活动的纹理单元上，在着色器运行时则通过纹理单元来定位图像，并将它们提供给着色器的`uniform`采样器。
 
 ArcGL最多支持32个纹理单元，这对我们来说已经完全够用了。绑定和激活纹理单元的工作在`Texture`中也已经封装了，我们只需要在绑定纹理时传入一个纹理单元索引即可。
+
+::: code-group
 
 ```java
 void example() {
@@ -312,6 +465,21 @@ void example() {
 }
 ```
 
+```kotlin
+fun example() {
+  tex0.bind(0)
+  tex1.bind(1)
+  tex2.bind(2)
+  //...
+  tex31.bind(31)
+  //tex32.bind(32) 不要这么做，超出范围了！
+
+  Gl.activeTexture(Gl.texture0) // 重设活动的纹理单元为0
+}
+```
+
+:::
+
 在你将纹理绑定到一个非0号的纹理单元后，当前活动的纹理单元不会自动重设为0，而游戏内最普遍使用的是默认的`bind()`方法进行纹理绑定，因此你应该在完成多个纹理的绑定后，将当前活动的纹理单元重设为0，否则后续的绘图纹理会被放入错误的纹理单元从而造成问题。
 
 ![textureUnit](./imgs/textureUnit.png)
@@ -322,6 +490,8 @@ void example() {
 
 默认情况下，当着色器中只有一个`uniform sampler`采样器变量时，它会自动从`0`纹理单元中获取纹理，但是当我们需要传入多个纹理时，则需要为`uniform`设置索引值：
 
+::: code-group
+
 ```java
 void example(Shader shader) {
   shader.bind();
@@ -331,6 +501,18 @@ void example(Shader shader) {
   //...
 }
 ```
+
+```kotlin
+fun example() {
+  shader.bind()
+  shader.setUniformi("u_texture0", 0)
+  shader.setUniformi("u_texture1", 1)
+  shader.setUniformi("u_texture2", 2)
+  //...
+}
+```
+
+:::
 
 在`sampler`类的uniform变量上设置的整数值，表示的是这个采样器将从哪个纹理单元中读取纹理数据，同样的，数值只有在`0-31`之间时才能正常工作。
 
@@ -358,7 +540,9 @@ void main() {
 
 接着修改主程序获取两个纹理，并分别将它们传递给着色器：
 
-```java
+::: code-group
+
+```java Example.java
 class Example{
   // ...
   
@@ -382,6 +566,28 @@ class Example{
 }
 ```
 
+```kotlin Example.kt
+class Example{
+  // ...
+  
+  val tex1 = Texture(Vars.mods.getMod("example-mod").root.child("texture.png"))
+  val tex2 = Texture(Vars.mods.getMod("example-mod").root.child("texture1.png"))
+  
+  fun draw(){
+    shader.bind()
+    tex1.bind(0)
+    shader.setUniformi("u_texture0", 0)
+    tex2.bind(1)
+    shader.setUniformi("u_texture1", 1)
+    Gl.activeTexture(Gl.texture0)
+    
+    mesh.render(shader, Gl.triangles)
+  }
+}
+```
+
+:::
+
 运行它, 看看结果：
 
 ![mixTextures](./imgs/example-6.png)
@@ -392,6 +598,8 @@ class Example{
 
 点阵图的程序类型为`arc.graphic.Pixmap`，它有构造器可以从文件或者字节序列创建点阵图，或者通过图像的长宽等基础数据创建一块空白的画布。
 
+::: code-group
+
 ```java
 Pixmap pixmap = new Pixmap(128, 128);             // 创建一块128x128的空白画布
 Pixmap pixmap = new Pixmap(new Fi("..."));        // 从文件创建点阵图
@@ -399,9 +607,20 @@ Pixmap pixmap = new Pixmap(byteArray);            // 从字节序列创建点阵
 Pixmap pixmap = new Pixmap(byteBuffer, 128, 128); // 从字节序列创建点阵图
 ```
 
+```kotlin
+val pixmap = Pixmap(128, 128)             // 创建一块128x128的空白画布
+val pixmap = Pixmap(Fi("..."))            // 从文件创建点阵图
+val pixmap = Pixmap(byteArray)            // 从字节序列创建点阵图
+val pixmap = Pixmap(byteBuffer, 128, 128) // 从字节序列创建点阵图
+```
+
+:::
+
 `Pixmap`内部提供了一系列实用方法，用于向点阵图内绘制形状，文本与图像等，或者从点阵图中读取颜色信息，翻转画布等。
 
 譬如我们可以使用纯代码的形式在一个空白画布上画下一个三角形：
+
+::: code-group
 
 ```java
 void example(){
@@ -413,6 +632,19 @@ void example(){
   pixmap.drawLine(0, 0, 128, 0, Color.black.rgba());
 }
 ```
+
+```kotlin
+fun example() {
+  val pixmap = Pixmap(128, 128)
+  pixmap.fill(Color.white)
+  
+  pixmap.drawLine(0, 0, 64, 128, Color.black.rgba())
+  pixmap.drawLine(64, 128, 128, 0, Color.black.rgba())
+  pixmap.drawLine(0, 0, 128, 0, Color.black.rgba())
+}
+```
+
+:::
 
 没错，你又得到了一个倒过来的三角形，因为文件的坐标系与点阵图的程序坐标系y轴方向是相反的！
 
@@ -430,6 +662,8 @@ Pixmap flipped = pixmap.flipY();
 
 前面我们有提及过，从点阵图可以创建纹理对象，同样的，我们也可以反过来从纹理对象中提取它的点阵图，然后去对它进行读取颜色，绘图，翻转等操作：
 
+::: code-group
+
 ```java
 void example(Texture tex){
   Pixmap pixmap = tex.getTextureData().getPixmap();
@@ -440,6 +674,19 @@ void example(Texture tex){
   //...
 }
 ```
+
+```kotlin
+fun example(tex: Texture){
+  val pixmap = tex.textureData.getPixmap()
+  val c = Color(pixmap.get(10, 10))
+  pixmap.set(20, 20, c.rgba())
+  val xFlipped = pixmap.flipX()
+  val yFlipped = pixmap.flipY()
+  //...
+}
+```
+
+:::
 
 但是有一类特殊的纹理数据`GlOnlyTextureData`，这类纹理的数据并不在内存上，而是映射自GPU上的显存，因此无法直接通过纹理数据来提取它的点阵图。
 

@@ -8,7 +8,9 @@ Arc GL强制使用OpenGL可编程管线，我们绘图时会需要向GL提供一
 
 在Arc GL中，着色器程序又分两种：**顶点着色器（Vertex Shader）**与**片段着色器（Fragment Shader）**，而它们都被包装在了一个类型`arc.graphic.gl.Shader`中，要创建一个着色器，只需要将着色器程序的内容作为参数传入到其构造函数即可：
 
-```java
+::: code-group
+
+```
 void example(){
   String vertexShader = "...";
   String fragmentShader = "...";
@@ -20,6 +22,21 @@ void example(){
   Shader shaderWithFile = new Shader(vertShaderFi, fragShaderFi);
 }
 ```
+
+```kotlin
+fun example() {
+  val vertexShader = "..."
+  val fragmentShader = "..."
+  
+  val vertShaderFi = Fi("...")
+  val fragShaderFi = Fi("...")
+
+  val vertShader = Shader(vertexShader, fragmentShader)
+  val fragShader = Shader(vertShaderFi, fragShaderFi)
+}
+```
+
+:::
 
 ## glsl
 
@@ -213,6 +230,8 @@ void main(){
 
 是不是听起来比较抽象？我们刚刚编写的顶点着色器不是将颜色信息存储到图元顶点上了么，只需要修改一下我们上一节中的范例，将三角形的三个角颜色变为不同的颜色：
 
+::: code-group
+
 ```java
 void example(){
   Mesh mesh = new Mesh(
@@ -234,6 +253,29 @@ void example(){
 }
 ```
 
+```kotlin
+fun example(){
+  val mesh = Mesh(
+      isStatic = true,
+      maxVertices = 3, 
+      maxIndices = 0, 
+      VertexAttribute.position,
+      VertexAttribute.color,
+      VertexAttribute.texCoords
+  )
+  mesh.setVertices(floatArrayOf(
+      //顶点坐标      颜色                   纹理坐标
+      -0.5f, -0.5f,  color.toFloatBits(),  0f,   0f,
+       0.0f,  0.5f,  color.toFloatBits(),  0.5f, 1f,
+       0.5f, -0.5f,  color.toFloatBits(),  1f,   0f
+  ))
+
+  mesh.render(shader, Gl.triangles)
+}
+```
+
+:::
+
 然后我们编写一个非常简单的片段着色器，将顶点着色器传递过来的颜色直接作为像素颜色：
 
 ```glsl
@@ -252,7 +294,9 @@ void main(){
 
 通常情况下我们为了维护性，会将着色器程序存储为程序文件，此处为演示方便，直接用上一部分的顶点着色器和这个片段着色器以字符串字面量的形式创建`Shader`对象，然后用它来绘制三角形：
 
-```java
+::: code-group
+
+```java Example.java
 class Example {
   Shader shader = new Shader(
       //顶点着色器
@@ -303,17 +347,85 @@ class Example {
 }
 ```
 
+```kotlin Example.kt
+class Example {
+  val shader = Shader(
+      //顶点着色器
+      """
+      attribute vec2 a_position;
+      attribute vec4 a_color;
+      attribute vec2 a_texCoord0;
+      
+      varying vec4 v_color;
+      varying vec2 v_texCoord;
+      
+      void main(){
+          v_color = a_color;
+          v_texCoord = a_texCoord0;
+          gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+      """,
+      //片段着色器
+      """
+      varying vec4 v_color;
+      varying vec2 v_texCoord;
+      
+      void main(){
+          gl_FragColor = v_color;
+      }
+      """
+  )
+
+  val mesh = Mesh(true, 3, 0,  
+      VertexAttribute.position,
+      VertexAttribute.color,
+      VertexAttribute.texCoords
+  )
+  
+  init {
+    mesh.setVertices(floatArrayOf(
+        //顶点坐标     颜色                        纹理坐标
+        -0.5f, -0.5f, Color.red.toFloatBits(),   0f,   0f,
+        0f,    0.5f,  Color.green.toFloatBits(), 0.5f, 1f,
+        0.5f, -0.5f,  Color.blue.toFloatBits(),  1f,   0f
+    ))
+  }
+
+  fun draw() {
+    shader.bind()
+    mesh.render(shader, Gl.triangles)
+  }
+}
+```
+
+:::
+
 OpenGL的直接绘制流程会需要我们配置OpenGl的诸多状态与窗口，并需要手动刷新屏幕，但是我们在Mindustry中编写图形程序直接在绘制流程中去渲染网格即可，无需考虑GL的底层细节。
 
 现在我们直接在mod主类的`init()`方法中实例化这个对象，并添加对`EventType.Trigger.uiDrawEnd`的监听器，去调用这个对象的`draw()`：
 
-```java
-@Override
-public void init() {
-  Example example = new Example();
-  Events.run(EventType.Trigger.uiDrawEnd, example::draw);
+::: code-group
+
+```java ExampleMod.java
+public class ExampleMod extends Mod {
+  @Override
+  public void init() {
+    Example example = new Example();
+    Events.run(EventType.Trigger.uiDrawEnd, example::draw);
+  }
 }
 ```
+
+```kotlin ExampleMod.kt
+class ExampleMod : Mod() {
+  override fun init() {
+    val example = Example()
+    Events.run(EventType.Trigger.uiDrawEnd, example::draw)
+  }
+}
+```
+
+:::
 
 启动游戏，如果你的程序正确，那么你应该在游戏的主界面看到这样一个三角形：
 
@@ -339,6 +451,8 @@ void main(){
 
 设置Uniform值的工作流`Shader`类已经替我们封装好了，通过`setUniform`的若干衍生重载方法，可以向Uniform区域中提交各类数据，注意，设置Uniform前需要绑定着色器，例如：
 
+::: code-group
+
 ```java
 void example(Shader shader){
   shader.bind();
@@ -350,6 +464,20 @@ void example(Shader shader){
   shader.setUniformMatrix4(mat4.val);                     //输入数组设置一个4x4矩阵
 }
 ```
+
+```kotlin
+fun example(shader: Shader){
+  shader.bind()
+  shader.setUniformi("u_texture", 0)                     //设置单个整数
+  shader.setUniformf("u_origin", 1.0f, 0.0f, 0.0f, 1.0f) //设置一个四维向量
+  shader.setUniformf("u_camPos", camera.pos)             //对向量的java类型封装
+  shader.setUniformf("u_color", Color.red)               //对颜色的java类型封装
+  shader.setUniformMatrix(mat3)                          //设置一个3x3矩阵
+  shader.setUniformMatrix4(mat4.`val`)                     //输入数组设置一个4x4矩阵
+}
+```
+
+:::
 
 例如，我们修改上文范例的片段着色器，让它接收一个颜色与绘图颜色进行混合：
 
@@ -366,13 +494,25 @@ void main(){
 
 然后，在`draw()`方法中，我们向这个Uniform变量提交一个颜色：
 
-```java
+::: code-group
+
+```java Example.java
 void draw() {
   shader.bind();
   shader.setUniformf("u_color", Color.lightGray);
   mesh.render(shader, Gl.triangles);
 }
 ```
+
+```kotlin Example.kt
+fun draw() {
+  shader.bind()
+  shader.setUniformf("u_color", Color.lightGray)
+  mesh.render(shader, Gl.triangles)
+}
+```
+
+:::
 
 > 你也可以尝试将输入的颜色更改为其他的看看混合的结果
 

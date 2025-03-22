@@ -283,7 +283,9 @@ void main() {
 接着在Java中构造这个矩阵，并将它传递给着色器的uniform变量，Arc同样为我们封装了三阶矩阵类型`arc.graphic.Mat`和四阶矩阵`arc.graphic.Mat3D`，我们可以直接使用它们来构造矩阵：
 :::
 
-```java
+::: code-group
+
+```java Example.java
 class Example{
   Mesh mesh = new Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -320,6 +322,46 @@ class Example{
   }
 }
 ```
+
+```kotlin Example.kt
+class Example{
+  val mesh = Mesh(true, 4, 6,
+      VertexAttribute.position,
+      VertexAttribute.texCoords
+  )
+  val tex = Texture(
+      Vars.mods.getMod("example-mod").root.child("texture.png")
+  )
+  val shader = Shader(vertexShaderFi, fragmentShaderFi)
+  val scale = Mat()
+  
+  val a = 1000f
+
+  init {
+    mesh.setVertices(floatArrayOf(
+        //顶点坐标       纹理坐标
+        -0.5f, -0.5f,  0f, 1f,
+         0.5f, -0.5f,  1f, 1f,
+         0.5f,  0.5f,  1f, 0f,
+        -0.5f,  0.5f,  0f, 0f,
+    ))
+    mesh.setIndices(shortArrayOf(
+        0, 1, 2, //第一个三角形    
+        0, 2, 3  //第二个三角形
+    ))  
+  }
+  
+  fun draw() {
+    shader.bind()
+    tex.bind()   // 绑定纹理
+    scale.setToScaling(a/Core.graphics.width, a/Core.graphics.height)
+    shader.setUniformMatrix("u_scale", scale)
+    mesh.render(shader, Gl.triangles)
+  }
+}
+```
+
+:::
 
 让我们将它渲染出来，如果你的代码没有错误，那么图像就应该以正确的比例显示在了屏幕中央:
 
@@ -401,7 +443,9 @@ void main() {
 
 然后我们修改上文的范例，将这个矩阵设置到我们需要的摄像机参数后，将它传递给`uniform`，在Arc中封装的`Mat`很贴心的为我们提供了`setOrtho()`方法，在这个方法中定义了我们上文用到的正交投影公式，使用摄像机的坐标和长宽来设置这个投影矩阵：
 
-```java
+::: code-group
+
+```java Example.java
 Mat projection = new Mat();
 Vec2 cameraPos = new Vec2(20, 10);
 
@@ -419,6 +463,27 @@ void draw(){
   mesh.render(shader, Gl.triangles);
 }
 ```
+
+```kotlin Example.kt
+val projection = Mat()
+val cameraPos = Vec2(20, 10)
+
+fun draw(){
+  shader.bind()
+  tex.bind()   // 绑定纹理
+  projection.setOrtho(
+      // 将视角中点平移半个视角长宽，以确保世界坐标的原点与摄像机的中点坐标重合
+      cameraPos.x - Core.graphics.width/2f,
+      cameraPos.y - Core.graphics.height/2f,
+      Core.graphics.width,
+      Core.graphics.height
+  )
+  shader.setUniformMatrix4("u_proj", projection)
+  mesh.render(shader, Gl.triangles)
+}
+```
+
+:::
 
 然后，你会发现你只是在屏幕上画了一个像素点...
 
@@ -449,7 +514,9 @@ void main() {
 
 然后在我们的绘制方法中将这个矩阵设置为缩放矩阵，然后传入uniform：
 
-```java
+::: code-group
+
+```java Example.java
 Mat transform = new Mat();
 
 void draw(){
@@ -470,13 +537,38 @@ void draw(){
 }
 ```
 
+```kotlin Example.kt
+val transform = Mat()
+
+fun draw(){
+  shader.bind()
+  tex.bind()   // 绑定纹理
+  projection.setOrtho(
+      // 将视角中点平移半个视角长宽，以确保世界坐标的原点与摄像机的中点坐标重合
+      cameraPos.x - Core.graphics.width/2f,
+      cameraPos.y - Core.graphics.height/2f,
+      Core.graphics.width,
+      Core.graphics.height
+  )
+  shader.setUniformMatrix4("u_proj", projection)
+  
+  transform.setToScaling(100, 100)
+  shader.setUniformMatrix4("u_trns", transform)
+  mesh.render(shader, Gl.triangles)
+}
+```
+
+:::
+
 很好！
 
 ![example](./imgs/example-8.png)
 
 现在，图像被正确的显示在了屏幕上，结合我们前面说过的变换矩阵性质，我们可以将物体平移到任何位置，旋转到任何角度，缩放到任何大小，现在我们不妨来试试话很多各角度，位置，大小都不一样的图案：
 
-```java
+::: code-group
+
+```java Example.java
 long seed = System.nanoTime();
 void draw(){
   shader.bind();
@@ -502,6 +594,37 @@ void draw(){
 }
 ```
 
+```kotlin Example.kt
+val seed = System.nanoTime()
+fun draw(){
+shader.bind()
+  tex.bind()   // 绑定纹理
+  projection.setOrtho(
+      cameraPos.x - Core.graphics.width/2f,
+      cameraPos.y - Core.graphics.height/2f,
+      Core.graphics.width,
+      Core.graphics.height
+  )
+  shader.setUniformMatrix4("u_proj", projection)
+  
+  Mathf.rand.setSeed(seed)
+  for (i in 0 until 10) {
+    val size = Mathf.random(100, 300)
+    transform.also{
+      it.idt()
+      it.translate(Mathf.range(1000), Mathf.range(1000))
+      it.scale(size, size)
+      it.rotate(Mathf.random(360))
+    }
+      
+    shader.setUniformMatrix4("u_trns", transform)
+    mesh.render(shader, Gl.triangles)
+  }
+}
+```
+
+:::
+
 > Arc包装的`Mat`类型与`Vec`类型的所有操作方法均可链式调用。
 
 it work!
@@ -510,7 +633,9 @@ it work!
 
 事实上，Arc同样将摄像机也包装为了一个类型`arc.graphic.Camera`，这个类型替我们封装了摄像机的位置和视图尺寸，以及一些投影与反投影相关的工具方法并且已经帮我们将摄像机的半个长宽偏移附加到了坐标上，使用`Camera`编写投影变换会很简单：
 
-```java
+::: code-group
+
+```java Example.java
 Camera camera = new Camera();
 void draw(){
   shader.bind();
@@ -534,6 +659,33 @@ void draw(){
   }
 }
 ```
+
+```kotlin Example.kt
+val camera = Camera()
+fun draw() {
+  shader.bind()
+  tex.bind()   // 绑定纹理
+  
+  camera.position.set(10f, 20f)
+  camera.width = Core.graphics.width
+  camera.height = Core.graphics.height
+  camera.update() // 每次使用前需要更新一次数据
+  shader.setUniformMatrix4("u_proj", camera.mat)
+  
+  Mathf.rand.setSeed(seed)
+  for (i in 0 until 10) {
+    val size = Mathf.random(100, 300)
+    transform.also {
+      it.idt()
+      it.translate(Mathf.range(1000), Mathf.range(1000))
+      it.scale(size, size)
+      it.rotate(Mathf.random(360))
+    }
+  }
+}
+```
+
+:::
 
 效果与先前的完全一样。
 

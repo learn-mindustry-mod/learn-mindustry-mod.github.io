@@ -57,6 +57,8 @@ OpenGL的绘图坐标以屏幕中心为原点（0, 0），屏幕的左下角（-
 
 属性也可自定义，构造一个`VertexAttribute`对象需要指定它的顶点属性名称，数据类型，以及数据大小等信息，例如：
 
+::: code-group
+
 ```java
 VertexAttribute attr1 = new VertexAttribute(
     4,              //components
@@ -72,6 +74,23 @@ VertexAttribute attr2 = new VertexAttribute(
 );
 ```
 
+```kotlin
+val attr1 = VertexAttribute(
+  components = 4,
+  type = GL.unsignedByte,
+  normalized = false,
+  alias = "attr1"
+)
+
+//也可以使用简化的构造函数，类型默认为Gl.floatV
+val attr2 = VertexAttribute(
+  components = 3,
+  alias = "attr2"
+)
+```
+
+:::
+
 其中的`normalized`参数会影响数据在传入后是否对数据进行归一化处理，将数据从其数据类型的上下界映射到0到1的范围内，例如对于`GL.unsignedByte`类型的数据其上下界为`0-255`，输入`128`时会被归一化到`0.5`。
 
 ::: tip
@@ -86,7 +105,7 @@ Mesh的数据模型定义通过其构造函数的可变参数提供，传入为�
 
 ::: code-group
 
-```java example.java
+```java
 void example(Color color){
   Mesh mesh = new Mesh(
       true,//isStatic
@@ -105,12 +124,12 @@ void example(Color color){
 }
 ```
 
-``` kotlin example.kt
+``` kotlin
 fun example(color: Color){
   val mesh = Mesh(
-      true, //isStatic
-      3,    //maxVertices
-      0,    //maxIndices
+      isStatic = true,
+      maxVertices = 3,
+      maxIndices = 0,
       VertexAttribute.position,
       VertexAttribute.color,
       VertexAttribute.texCoords
@@ -142,14 +161,14 @@ fun example(color: Color){
 
 ::: code-group
 
-```java example.java
+```java
 void example(Mesh mesh){
   shader.bind();
   mesh.render(shader, Gl.triangles);
 }
 ```
  
-```kotlin example.kt
+```kotlin
 fun example(mesh: Mesh){
   shader.bind()
   mesh.render(shader, Gl.triangles)
@@ -185,7 +204,7 @@ OpenGL中定义的图元类型有：
 
 ::: code-group
 
-```java example.java
+```java
 void example(Mesh mesh){
   shader.bind();
   Core.gl20.lineWidth(10f);
@@ -193,7 +212,7 @@ void example(Mesh mesh){
 }
 ```
 
-```kotlin example.kt
+```kotlin
 fun example(mesh: Mesh){
   shader.bind()
   Core.gl20.lineWidth(10f)
@@ -253,13 +272,13 @@ fun example(mesh: Mesh){
 
 ::: code-group
 
-```java example.java
+```java
 void example(Mesh mesh) {
   mesh.setIndices(new short[]{ 0, 1, 2, 0, 2, 3 });
 }
 ```
 
-```kotlin example.kt
+```kotlin
 fun example(mesh: Mesh) {
   mesh.setIndices(shortArrayOf(0, 1, 2, 0, 2, 3))
 }
@@ -277,7 +296,7 @@ fun example(mesh: Mesh) {
 
 ::: code-group
 
-```java example.java
+```java
 void example(){
   Mesh mesh = new Mesh(true, 4, 6,  
       VertexAttribute.position,
@@ -301,7 +320,7 @@ void example(){
 }
 ```
 
-```kotlin example.kt
+```kotlin
 fun example() {
   val mesh = Mesh(true, 4, 6,  
       VertexAttribute.position,
