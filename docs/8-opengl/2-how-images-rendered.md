@@ -84,7 +84,9 @@ VertexAttribute attr2 = new VertexAttribute(
 
 Mesh的数据模型定义通过其构造函数的可变参数提供，传入为一个数组序列，依次描述顶点的每一个属性，对于上述的那个三角形序列，依次传入顶点属性以定义此Mesh的数据模型，如下所示：
 
-```java
+::: code-group
+
+```java example.java
 void example(Color color){
   Mesh mesh = new Mesh(
       true,//isStatic
@@ -103,6 +105,27 @@ void example(Color color){
 }
 ```
 
+``` kotlin example.kt
+fun example(color: Color){
+  val mesh = Mesh(
+      true, //isStatic
+      3,    //maxVertices
+      0,    //maxIndices
+      VertexAttribute.position,
+      VertexAttribute.color,
+      VertexAttribute.texCoords
+  )
+  mesh.setVertices(floatArrayOf(
+      //顶点坐标      颜色                   纹理坐标
+      -0.5f, -0.5f,  color.toFloatBits(),  0f,   0f,
+       0.0f,  0.5f,  color.toFloatBits(),  0.5f, 1f,
+       0.5f, -0.5f,  color.toFloatBits(),  1f,   0f
+  ))
+}   
+```
+
+:::
+
 注意到，Mesh的构造函数中，除了数据模型定义外，还定义了`maxVertices`和`maxIndices`两个参数，这两个参数分别代表顶点序列的最大长度和索引序列的最大长度，索引序列的作用我们稍后会讨论，此处不使用索引，设为0即可。这两个参数会决定这个Mesh会分配多大的内存用于存放顶点和索引数据，而稍后传入的顶点数量不能超过设置的最大值。
 
 此外还有一个布尔值`isStatic`，这个布尔值表示这个Mesh是否为静态的，静态Mesh在提交数据后，其顶点数据将不会再发生改变，OpenGL可以对其进行性能优化。
@@ -117,12 +140,23 @@ void example(Color color){
 
 而除了需要提供用于绘制该Mesh的着色器程序`Shader`外，最少还需要一个**图元类型**参数来表示如何将顶点组合成几何形状，例如：
 
-```java
+::: code-group
+
+```java example.java
 void example(Mesh mesh){
   shader.bind();
   mesh.render(shader, Gl.triangles);
 }
 ```
+ 
+```kotlin example.kt
+fun example(mesh: Mesh){
+  shader.bind()
+  mesh.render(shader, Gl.triangles)
+}
+```
+
+:::
 
 其中，`shader.bind()`用于绑定着色器，每次更换着色器之后必须在绘制前进行绑定。
 
@@ -149,13 +183,25 @@ OpenGL中定义的图元类型有：
 
 `lines`及其相关的图元类型提供了一些额外的参数，用于控制点的大小和线段的宽度，它们需要Gl的控制流来进行操作，例如：
 
-```java
+::: code-group
+
+```java example.java
 void example(Mesh mesh){
   shader.bind();
   Core.gl20.lineWidth(10f);
   mesh.render(shader, Gl.lines);
 }
 ```
+
+```kotlin example.java
+fun example(mesh: Mesh){
+  shader.bind()
+  Core.gl20.lineWidth(10f)
+  mesh.render(shader, Gl.lines)
+}
+```
+
+:::
 
 > 很诡异的一点是Arc GL支持`points`图元，却没有设置点图元尺寸的相关函数...
 
@@ -205,11 +251,21 @@ void example(Mesh mesh){
 
 顶点索引是一个并列于顶点序列的索引序列，可以通过Mesh的`setIndices`方法来设置顶点索引：
 
-```java
+::: code-group
+
+```java example.java
 void example(Mesh mesh) {
   mesh.setIndices(new short[]{ 0, 1, 2, 0, 2, 3 });
 }
 ```
+
+```kotlin example.java
+fun example(mesh: Mesh) {
+  mesh.setIndices(shortArrayOf(0, 1, 2, 0, 2, 3))
+}
+```
+
+:::
 
 在正常情况下，如果我们不设置索引序列，那么OpenGL在将顶点装配为图元的过程，会按顶点序列的顺序依次处理顶点。
 
@@ -219,7 +275,9 @@ void example(Mesh mesh) {
 
 具体来说，对于上文的那个四边形顶点定义，如果我们使用索引序列来绘制，那么只需要定义矩形的四个顶点和6个索引组成的序列即可：
 
-```java
+::: code-group
+
+```java example.java
 void example(){
   Mesh mesh = new Mesh(true, 4, 6,  
       VertexAttribute.position,
@@ -242,6 +300,32 @@ void example(){
   mesh.render(shader, Gl.triangles);
 }
 ```
+
+```kotlin
+fun example() {
+  val mesh = Mesh(true, 4, 6,  
+      VertexAttribute.position,
+      VertexAttribute.color,
+      VertexAttribute.texCoords
+  )
+  mesh.setVertices(floatArrayOf(
+      //顶点坐标     颜色                  纹理坐标
+      -0.5f, -0.5f, color.toFloatBits(), 0f, 0f,
+      0.5f,  -0.5f, color.toFloatBits(), 1f, 0f,
+      0.5f,  0.5f,  color.toFloatBits(), 1f, 1f,
+      -0.5f, 0.5f,  color.toFloatBits(), 0f, 1f,
+  ))
+  mesh.setIndices(shortArrayOf(
+      0, 1, 2, //第一个三角形
+      0, 2, 3  //第二个三角形
+  ))
+  
+  shader.bind()
+  mesh.render(shader, Gl.triangles)
+}
+```
+
+:::
 
 这样，我们就节约下了两个顶点的内存空间，而在规模更大的问题中，这个数字会更加庞大。
 
