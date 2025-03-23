@@ -37,3 +37,11 @@
 - Save Actions 格式化代码插件
 - SonarLint 代码质量检查插件
 - Statistic 代码统计插件
+- IdeaVim Idea使用vim特征
+
+## 关于安卓设备
+安卓设备安装容器后即可跑IDEA 需要下载Linux arm64版本
+注意 配置要求较高 至少6GB运存
+::: details 预览
+![Idea Android](./imgs/preview/idea_android_preview.png)
+:::

@@ -76,6 +76,43 @@ pkg install neovim
 > 安卓上运行的Linux也不建议使用**GUI**
 
 # GUI安装
+有非常多Neovim GUI客户端
+下面给出一些
+## nvim-qt
+## neovide
+> [!NOTE]
+> neovide需要neovim `0.10`及以上
+
+<GitHubCard repo="neovide/neovide"/>
+:::: tabs
+
+::: tab "Windows" id="windows"
+
+> [!NOTE]
+> **自行添加进环境变量**
+:::
+
+::: tab "Debian/Ubuntu" id="debian"
+```shell
+sudo apt install neovim
+```
+:::
+
+::: tab "Arch Linux" id="arch"
+```shell
+sudo pacman -S neovide
+```
+如果需要在X11下运行 还需要`libxkbcommon-x11`
+```shell
+sudo pacman -S libxkbcommon-x11
+```
+:::
+
+::: tab "Termux" id="termux"
+无容器Termux无GUI不支持
+:::
+
+::::
 
 # 配置
 Neovim配置比较复杂

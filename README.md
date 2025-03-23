@@ -8,3 +8,24 @@
 - 每节标题使用Markdown的一级标题
 - 每章标题写在各文件夹`index.md`文件中
 - 图片使用相对路径引用
+
+## 组件
+see sandbox.md
+### Tabs
+```markdown
+:::: tabs 
+
+::: tab apple
+
+::: 
+
+::: tab "banana" id="banana"
+
+::: 
+
+::::
+```
+### GitHubCard
+```markdown
+<GitHubCard repo="learn-mindustry-mod/learn-mindustry-mod.github.io"/>
+```

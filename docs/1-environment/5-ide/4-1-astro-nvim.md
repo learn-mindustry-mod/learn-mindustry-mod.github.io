@@ -8,4 +8,4 @@
 
 **AstroNvim** 是一个美观且功能丰富的 **Neovim** 配置方案，注重可扩展性和可用性。
 
-[Neovim](./4-0-neovim.md)
+[Neovim安装](./4-0-neovim.md)
