@@ -409,7 +409,6 @@ sudo pacman -S libxkbcommon-x11
 # 配置
 Neovim配置比较复杂\
 下面有一些常用的第三方配置
-- [AstroNvim](./4-1-astro-nvim.md)
 
 # 镜像配置
 讲一些neovim常用管理插件通用的镜像配置\
