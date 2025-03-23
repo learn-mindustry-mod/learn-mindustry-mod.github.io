@@ -7,7 +7,7 @@
 我们将它与先前绘制彩色三角形时使用的着色器与顶点格式结合起来，试试改变一下正方形的顶点颜色，调整一下它们的**透明度（Alpha值）**，看看会发生什么：
 
 `顶点着色器`
-```glsl
+```glsl example.vert
 attribute vec4 a_position;
 attribute vec4 a_color;
 attribute vec2 a_texCoord0;
@@ -26,7 +26,7 @@ void main() {
 ```
 
 `片段着色器`
-```glsl
+```glsl example.frag
 uniform sampler2D u_texture;
 
 varying vec2 v_texCoord;
@@ -46,13 +46,8 @@ class Example{
       VertexAttribute.color,
       VertexAttribute.texCoords
   );
-  Texture tex = new Texture(
-      Vars.mods.getMod("example-mod").root.child("texture.png")
-  );
-  Shader shader = new Shader(vertexShaderFi, fragmentShaderFi);
-  Camera camera = new Camera();
-  Mat transform = new Mat();
-  long seed = System.nanoTime();
+  
+  //...
 
   {
     float c = Color.white.cpy().a(0.5f).toFloatBits(); // 透明度设置为0.5f
@@ -68,28 +63,8 @@ class Example{
         0, 2, 3  //第二个三角形
     });
   }
-
-  void draw(){
-    shader.bind();
-    tex.bind();   // 绑定纹理
-    
-    camera.position.set(10f, 20f);
-    camera.width = Core.graphics.getWidth();
-    camera.height = Core.graphics.getHeight();
-    camera.update(); // 每次使用前需要更新一次数据
-    shader.setUniformMatrix4("u_proj", camera.mat);
-
-    Mathf.rand.setSeed(seed);
-    for (int i = 0; i < 10; i++) {
-      float size = Mathf.random(100, 300);
-      transform.idt()
-          .translate(Mathf.range(1000), Mathf.range(1000))
-          .scale(size, size)
-          .rotate(Mathf.random(360));
-      shader.setUniformMatrix4("u_trns", transform);
-      mesh.render(shader, Gl.triangles);
-    }
-  }
+  
+  //...
 }
 ```
 
@@ -100,13 +75,8 @@ class Example{
       VertexAttribute.color,
       VertexAttribute.texCoords
   )
-  val tex = Texture(
-      Vars.mods.getMod("example-mod").root.child("texture.png")
-  )
-  val shader = Shader(vertexShaderFi, fragmentShaderFi)
-  val camera = Camera()
-  val transform = Mat()
-  val seed = System.nanoTime()
+  
+  //...
 
   init {
     val c = Color.white.cpy().a(0.5f).toFloatBits() // 透明度设置为0.5f
@@ -123,29 +93,7 @@ class Example{
     ))
   }
   
-  fun draw(){
-    shader.bind()
-    tex.bind()   // 绑定纹理
-    
-    camera.position.set(10f, 20f)
-    camera.width = Core.graphics.getWidth()
-    camera.height = Core.graphics.getHeight()
-    camera.update() // 每次使用前需要更新一次数据
-    shader.setUniformMatrix4("u_proj", camera.mat)
-
-    Mathf.rand.setSeed(seed)
-    for (i in 0 until 10) {
-      val size = Mathf.random(100, 300)
-      transform.also {
-        it.idt()
-        it.translate(Mathf.range(1000), Mathf.range(1000))
-        it.scale(size, size)
-        it.rotate(Mathf.random(360))
-      }
-      shader.setUniformMatrix4("u_trns", transform)
-      mesh.render(shader, Gl.triangles)
-    }
-  }
+  //...
 }
 ```
 
@@ -165,7 +113,7 @@ class Example{
 
 ![pipeline](./imgs/pipeline.png)
 
-能看到，在片段着色器为像素上色完成之后，还有一步是**测试（Testing）** 与混合（Blending），而我们讨论的正是其中的**混合**。
+能看到，在片段着色器为像素上色完成之后，还有一步是**测试（Testing）** 与**混合（Blending）**，而我们讨论的正是其中的**混合**。
 
 在片段着色器完成绘图以后，它需要将输出的像素显示到屏幕上，而此时屏幕上仍存储着之前绘制的图像，片段着色输出的像素颜色会需要与旧有的像素颜色进行混合才能正确显示透明纹理。
 
@@ -383,7 +331,7 @@ fun draw(){
 
 :::
 
-嗯，因为颜色值相加会提升整体亮度，结果果然变亮了。
+嗯，因为颜色值相加会提升整体亮度，结果如预期的变亮了。
 
 ![加法混合模式](./imgs/example-11.png)
 

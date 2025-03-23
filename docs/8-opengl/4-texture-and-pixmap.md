@@ -102,7 +102,7 @@ uniform samplerCube u_cubemap;
 
 此处我们先只讨论最常用的2D纹理`sampler2D`，采样器可以通过采样函数`texture2D()`从纹理中读取指定位置的颜色，例如我们编写这样一个片段着色器：
 
-```glsl
+```glsl example.frag
 uniform sampler2D u_texture;
 
 varying vec2 v_texCoord;
@@ -121,7 +121,7 @@ void main() {
 现在，我们为片段着色器补充顶点着色器，并构造一个四边形的`Mesh`，用与上一章相同的方法将这个图像绘制到屏幕上：
 
 `顶点着色器`
-```glsl
+```glsl example.vert
 attribute vec2 a_position;
 attribute vec2 a_texCoord0;
 
@@ -134,7 +134,7 @@ void main() {
 ```
 
 `片段着色器`
-```glsl
+```glsl example.frag
 uniform sampler2D u_texture;
 
 varying vec2 v_texCoord;
@@ -520,7 +520,7 @@ fun example() {
 
 我们现在可以试试传入两个图像，并将它们混合显示，我们这样修改前文范例中的片段着色器：
 
-```glsl
+```glsl example.frag
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 

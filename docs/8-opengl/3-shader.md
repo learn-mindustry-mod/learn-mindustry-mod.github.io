@@ -181,7 +181,7 @@ vec2 u = b * m; // u = vec2(6.0, 8.0)
 
 例如，我们需要将上一节中的那个三角形直接按顶点颜色绘制到屏幕上的话，它的顶点着色器如下所示：
 
-```glsl
+```glsl example.vert
 attribute vec2 a_position;
 attribute vec4 a_color;
 attribute vec2 a_texCoord0;
@@ -278,7 +278,7 @@ fun example(){
 
 然后我们编写一个非常简单的片段着色器，将顶点着色器传递过来的颜色直接作为像素颜色：
 
-```glsl
+```glsl example.frag
 varying vec4 v_color;
 varying vec2 v_texCoord;
 
@@ -439,7 +439,7 @@ class ExampleMod : Mod() {
 
 Uniform在着色器中通过`uniform`声明变量来进行接收：
 
-```glsl
+```glsl example.frag
 uniform vec4 u_color;
 
 void main(){
@@ -481,7 +481,7 @@ fun example(shader: Shader){
 
 例如，我们修改上文范例的片段着色器，让它接收一个颜色与绘图颜色进行混合：
 
-```glsl
+```glsl example.frag
 varying vec4 v_color;
 varying vec2 v_texCoord;
 
@@ -527,7 +527,7 @@ fun draw() {
 例如，我们将前文的范例做一点修改，把顶点坐标也通过**varying**传递给片段着色器，如下所示：
 
 `顶点着色器`
-```glsl
+```glsl example.vert
 attribute vec2 a_position;
 attribute vec4 a_color;
 attribute vec2 a_texCoord0;
@@ -545,7 +545,7 @@ void main(){
 ```
 
 `片段着色器`
-```glsl
+```glsl example.frag
 const vec4 c1 = vec4(1.0, 0.0, 0.0, 1.0);
 const vec4 c2 = vec4(0.0, 1.0, 0.0, 1.0);
 const vec4 c3 = vec4(0.0, 0.0, 1.0, 1.0);

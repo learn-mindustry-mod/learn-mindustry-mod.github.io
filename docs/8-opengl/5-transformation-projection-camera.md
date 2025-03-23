@@ -263,7 +263,7 @@ $scale = \left [ \begin{matrix} \frac{scl}{width} & 0 & 0 \\ 0 & \frac{scl}{heig
 我们略微修改上一节的范例，在顶点着色器中添加一个uniform变量来接收这个矩阵，然后用它来变换我们的顶点坐标：
 
 `顶点着色器`
-```glsl
+```glsl example.vert
 attribute vec4 a_position;
 attribute vec2 a_texCoord0;
 
@@ -287,32 +287,10 @@ void main() {
 
 ```java Example.java
 class Example{
-  Mesh mesh = new Mesh(true, 4, 6,
-      VertexAttribute.position,
-      VertexAttribute.texCoords
-  );
-  Texture tex = new Texture(
-      Vars.mods.getMod("example-mod").root.child("texture.png")
-  );
-  Shader shader = new Shader(vertexShaderFi, fragmentShaderFi);
-  Mat scale = new Mat();
+  //...
   
+  Mat scale = new Mat();
   float a = 1000;
-
-  {
-    mesh.setVertices(new float[]{
-        //顶点坐标       纹理坐标
-        -0.5f, -0.5f,  0f, 1f,
-         0.5f, -0.5f,  1f, 1f,
-         0.5f,  0.5f,  1f, 0f,
-        -0.5f,  0.5f,  0f, 0f,
-    });
-    mesh.setIndices(new short[]{
-        0, 1, 2, //第一个三角形
-        0, 2, 3  //第二个三角形
-    });
-  }
-
   void draw(){
     shader.bind();
     tex.bind();   // 绑定纹理
@@ -325,32 +303,10 @@ class Example{
 
 ```kotlin Example.kt
 class Example{
-  val mesh = Mesh(true, 4, 6,
-      VertexAttribute.position,
-      VertexAttribute.texCoords
-  )
-  val tex = Texture(
-      Vars.mods.getMod("example-mod").root.child("texture.png")
-  )
-  val shader = Shader(vertexShaderFi, fragmentShaderFi)
+  //...
+  
   val scale = Mat()
-  
   val a = 1000f
-
-  init {
-    mesh.setVertices(floatArrayOf(
-        //顶点坐标       纹理坐标
-        -0.5f, -0.5f,  0f, 1f,
-         0.5f, -0.5f,  1f, 1f,
-         0.5f,  0.5f,  1f, 0f,
-        -0.5f,  0.5f,  0f, 0f,
-    ))
-    mesh.setIndices(shortArrayOf(
-        0, 1, 2, //第一个三角形    
-        0, 2, 3  //第二个三角形
-    ))  
-  }
-  
   fun draw() {
     shader.bind()
     tex.bind()   // 绑定纹理
@@ -427,7 +383,7 @@ $proj=\left [ \begin{matrix} \frac{scl}{width} & 0 & -\frac{scl \times cameraX +
 
 回看前文我们更改过后的那个顶点着色器，传入的变换矩阵会与输入的顶点坐标乘算作为绘制的坐标，那么，在我们传入这个变换矩阵时当然也可以使用这个投影矩阵，为命名规范，我们将这个矩阵的输入变量重命名为`u_projection`或者缩写为`u_proj`：
 
-```glsl
+```glsl example.vert
 attribute vec4 a_position;
 attribute vec2 a_texCoord0;
 
@@ -497,7 +453,7 @@ fun draw(){
 
 为了对物体应用变换，我们继续修改顶点着色器，让它再接收另一个变换矩阵`u_transform`或者简写为`u_trns`，先用它处理物体本身的变换后，再将它投影到屏幕：
 
-```glsl
+```glsl example.vert
 attribute vec4 a_position;
 attribute vec2 a_texCoord0;
 
