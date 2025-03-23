@@ -8,7 +8,7 @@
 
 在你阅读本教程之前，你至少需要有如下的知识与素养：
 
-- 能够使用 **Java / Kotlin / JavaScript** 中至少一种编程语言编写程序
+- <font style="color:red;">能够使用 Java / Kotlin / JavaScript 中至少一种编程语言编写程序</font>
 - 能够通过阅读**Java**源代码理解程序逻辑
 - 能够一边阅读一边实践
 - **一颗常在学习的心**
