@@ -4,7 +4,7 @@
 
 2025-03-17 Novarc
 
-本教程将讲述在android手机上使用termux开发mdt mod的 基本配置 和 容器安装
+本教程将讲述在android手机上使用termux开发mdt mod的 基本配置 和 容器安装\
 由于部分设备不支持容器 也加入了如果不安装容器的一些配置方案(因为termux的路径系统 一些东西可能会有问题)
 
 # Termux配置
@@ -12,11 +12,13 @@
 > Termux是一个**适用于 Android 的终端模拟器，其环境类似于 Linux 环境**。 无需Root或设置即可使用。 Termux 会自动进行最小安装 - 使用 APT 包管理器即可获得其他软件包。
 
 > [!TIP]
-> 推荐新人使用功能更加强大的**ZeroTermux**
-> **ZeroTermux**基于**Termux**进行修改，内置一键切换apt/pkg软件源、一键备份恢复等多种便捷功能
+> 推荐新人使用功能更加强大的**ZeroTermux**\
+> **ZeroTermux**基于**Termux**进行修改，内置一键切换apt/pkg软件源、一键备份恢复等多种便捷功能\
 > 另外支持背景
 
 下面ZeroTermux和Termux二选一
+> [!TIP]
+> 建议熟悉后换成Termux
 :::: tabs
 
 ::: tab ZeroTermux
@@ -30,7 +32,7 @@
 
 ::: tab Termux
 <GitHubCard repo="termux/termux-app"/>
-[**从镜像下载**](https://github.tbedu.top/https://github.com/termux/termux-app/releases/download/v0.118.1/termux-app_v0.118.1+github-debug_arm64-v8a.apk)
+[**github下载**](https://github.com/termux/termux-app/releases/download/v0.118.1/termux-app_v0.118.1+github-debug_arm64-v8a.apk)
 :::
 
 ::::
@@ -75,8 +77,8 @@ apt update && apt upgrade
 
 :::
 # 容器安装
-部分国产安卓系统可能不支持容器
-如果不想安装容器就跳过
+部分国产安卓系统可能不支持容器\
+如果不想安装容器就跳过\
 安装容器后基本上就是相当于拥有了一个linux系统 配置模组开发环境和IDE可以参考前面的教程
 
 对于没有toot的 推荐使用PRoot
@@ -96,9 +98,8 @@ apt update && apt upgrade
 
 <GitHubCard repo="2moe/tmoe"/>
 
-[官方文档](https://doc.tmoe.me/)
-
-安装
+[官方文档](https://doc.tmoe.me/)\
+安装tmoe
 ::: code-group
 
 ```txt [ZeroTermux]
@@ -106,7 +107,7 @@ apt update && apt upgrade
 ```
 
 ```shell [Termux]
-pkg install -y curl#安装curl
+ if ! which curl; then pkg install;fi
 curl -LO https://gitee.com/mo2/linux/raw/2/2.awk
 awk -f 2.awk
 ```
@@ -126,9 +127,9 @@ awk -f 2.awk
 > 似乎因为tmoe过老 arch安装过程似乎因为镜像问题速度有点慢了
 自行选择 推荐ArchLinux或者Ubuntu
 
-因为tmoe安装过程十分人性化
-而且有中文 所以自己配置 记住认真选择
-别没用的都安了
+因为tmoe安装过程十分人性化\
+而且有中文 所以自己配置 记住认真选择\
+别没用的都安了\
 如果需要使用idea或者vsc(不算code-server)的请记得通过tmoe安装桌面并且安装vnc
 
 ### tmoe tools
@@ -136,14 +137,18 @@ awk -f 2.awk
 
 ### 图形化界面和VNC
 > [!NOTE]
-> VNC (Virtual Network Console)是虚拟网络控制台的缩写。它 是一款优秀的远程控制工具软件，由著名的 AT&T 的欧洲研究实验室开发的
-
-直接启动tmoe tools来安装
+> VNC (Virtual Network Console)是虚拟网络控制台的缩写。它 是一款优秀的远程控制工具软件，由著名的 AT&T 的欧洲研究实验室开发的\
+直接启动tmoe tools来安装\
 本教程不介绍其他自行安装的方法
 
 ### ZSH配置(可选)
-打开TMOE Tools
-找到ZSH
+> [!NOTE]
+> 尽管Tmoe安装zsh比较方便\
+> 但是因为使用的是oh my zsh性能堪忧\
+> 推荐查看[Zsh配置教程]() 配置zsh+zinit
+
+打开TMOE Tools\
+找到ZSH\
 配色和主题自选
 ::: details 预览
 预览为p10k
@@ -153,14 +158,15 @@ awk -f 2.awk
 本教程使用AVNC客户端
 ![AVNC SVG](https://github.tbedu.top/https://github.com/gujjwal00/avnc/raw/master/metadata/en-US/branding/wordmark.svg)
 <GitHubCard repo="gujjwal00/avnc"/>
-[镜像直链下载](https://github.tbedu.top/https://github.com/gujjwal00/avnc/releases/download/v2.8.0/AVNC-2.8.0.apk)
+[github下载](https://github.com/gujjwal00/avnc/releases/download/v2.8.0/AVNC-2.8.0.apk)
 
 # 无容器配置
-无容器环境下的一些配置与linux相似但又区别 其他教程中的Termux分组指的就是无容器环境下的配置方案
+无容器环境下的一些配置与linux相似但又区别 其他教程中的Termux分组指的就是无容器环境下的配置方案\
 自行参考其他教程
+
 ## 使用tmoe配置zsh(可选)
-尽管tmoe一般是来安装容器的
-不过也可以通过tmoe安装zsh美化终端
-按照上面方法安装/打开tmoe
-选择 **configure zsh美化终端**
+尽管tmoe一般是来安装容器的\
+不过也可以通过tmoe安装zsh美化终端\
+按照上面方法安装/打开tmoe\
+选择 **configure zsh美化终端**\
 后面操作和linux中使用tmoe配置zsh一样

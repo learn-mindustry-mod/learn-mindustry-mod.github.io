@@ -40,14 +40,14 @@ onMounted(() => {
 const theme = computed(() =>
   isDark.value
     ? {
-      background: "#272a2f",
+      background: "rgba(0,0,0,0.3)",
       borderColor: "rgb(48, 54, 61)",
       color: "rgb(139, 148, 158)",
       linkColor: "rgb(88, 166, 255)",
       fontColor: "#dfdfd6"
     }
     : {
-      background: "white",
+      background: "rgba(255,255,255,0.3)",
       borderColor: "#e1e4e8",
       color: "#586069",
       linkColor: "#0366d6",
