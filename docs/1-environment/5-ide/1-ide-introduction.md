@@ -9,7 +9,7 @@
 | **IDEA** | 由JetBrains开发的专业Java/Kt IDE | 强大的功能 简单的配置 | 开发Java/Kt mod的最佳选择 |
 | **vscode** | 免费开源的多语音IDE | 需要安装插件配置 较为复杂 | 都能跑vsc了给我用idea去 |
 | **Neovim** | Vim的升级版本 | 需要复杂的配置 当然可以使用一些现有配置 | Termux无容器用户的必然选择 Linux命令行用户的选择 低配android跑linux的选择 |
-| **AndroidIDE** | 安卓平台上的Java Ide | 本质上是内置了一个Termux 外面提供GUI | 推荐意见暂不清楚 |
+| **AndroidIDE** | 安卓平台上的Java Ide | 本质上是内置了一个Termux 外面提供GUI | 可以尝试但是问题较多 |
 
 > [!TIP]
 > 对于无容器的Termux仅能使用Neovim
@@ -44,6 +44,7 @@
 - 最低屏幕分辨率 1024x768
 
 [IDEA](./2-idea.md)
+# Vscode/Code-server
 # Neovim
 > [!NOTE]
 > neovim配置复杂
@@ -80,3 +81,11 @@ neovim的配置比较繁琐
 > --Kt 开发环境我还不会配置--
 
 [Neovim](./4-0-neovim.md)
+
+# AndroidIDE
+AIDE目前还有一些潜在问题\
+可以试试
+::: details 预览
+图片由E 355416854提供
+![AndroidIDEPreview](./imgs/preview/android_ide_preview.jpg)
+:::
