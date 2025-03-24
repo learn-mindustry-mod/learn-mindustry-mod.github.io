@@ -160,3 +160,44 @@ Gradle的构建逻辑通过构建脚本定义，即项目文件下的文件`buil
 如果你需要让你的mod能够运行在Android设备上，那么你就需要再部署Android SDK。
 
 **待施工**
+
+## 安装Kotlin
+
+Kotlin是Java的延伸，你可以使用Kotlin来无缝编写运行在jvm上的项目，并与Java项目可以无缝衔接。
+
+我们会比较建议你使用Kotlin进行开发，更加现代化的语法特性能较大程度的改善你的开发体验。
+
+如果你不需要的话，跳过本小节即可。
+
+在Windows上，一般建议伴随IDE环境共同安装Kotlin，`IntelliJ IDEA`会内置Kotlin。
+
+> [**Intellij IDEA**](https://www.jetbrains.com/idea/)：由JetBrains开发的一个强大的Java IDE，目前仍是Java项目开发的首选工具，支持Java/Kotlin等多种语言。
+
+在Linux上则可以安装`kotlin`命令行工具，Kotlin的安装会相当方便：
+
+::: info debian/ubuntu
+
+```bash
+sudo apt install kotlin
+```
+
+:::
+
+::: info archlinux
+
+```bash
+sudo pacman -S kotlin
+```
+
+:::
+
+另外，你也可以通过`sdkman`安装Kotlin：
+
+::: info sdkman
+
+```bash
+curl -s https://get.sdkman.io | bash
+sdk install kotlin
+```
+
+:::
