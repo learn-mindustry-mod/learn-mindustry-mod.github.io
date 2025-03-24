@@ -2,6 +2,8 @@
 
 > ***"万丈高楼平地起。"***
 
+**该节需要你拥有电脑，或者至少已经在Android设备上部署了Linux环境。有关安卓部署开发环境请跳至第四节 _如果你只有安卓设备_。**
+
 Mindustry是一个Java游戏项目，尽管其具备JavaScript mod接口，但是我们仍然更加建议使用性能更优，可维护性更强的java进行开发。
 
 本篇教程也只会给出Java与Kotlin语言的演示程序与片段，如果你仍然决定使用JavaScript进行开发，可跳过本节阅读下一节：*“javaScript/typeScript开发环境”*。
@@ -30,15 +32,18 @@ Mindustry是一个Java游戏项目，尽管其具备JavaScript mod接口，但�
 
 OracleJDK的安装方式较为简单，它为Windows平台及Linux平台都提供了快速安装的发行包。
 
-::: tip **Windows**
+::: info **Windows**
+
 通过上述连接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，选择Windows x64 Installer（.exe）进行下载：
 
 ![download-oracle](./imgs/download-oracle.png)
 
 下载完成后，右键点击安装包，选择“以管理员身份运行”，你不需要做什么额外的设置，一路按照默认设置点击【下一步】直到安装完成即可。
+
 :::
 
-::: tip **Linux**
+::: info **Linux**
+
 Oracle同样为Linux提供了`deb`和`rpm`软件包和，找到符合你系统架构的软件包，下载完成后打开终端，执行以下命令安装：
 
 ```bash
@@ -75,12 +80,12 @@ Java HotSpot(TM) 64-Bit Server VM Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23
 
 Adoptium是一个开源的JDK发行版，安装方式与OracleJDK类似，由社区从属的完全免费JDK，但事实上对于我们个人开发而言并不需要考虑版权和协议问题。
 
-> [!NOTE] **Windows**
+> [!NOTE] Windows
 > Adoptium的安装方式与OracleJDK类似，前往Adoptium官网，选择最新的LTS版本，点击下载链接，选择Windows x64 JDK.msi进行下载：
 > ![download-adoptium](./imgs/download-adoptium.png)
 > 下载完成后，右键点击安装包，选择“以管理员身份运行”，与OracleJDK一样点击安装即可。
 
-> [!NOTE] **Linux**
+> [!NOTE] Linux
 > 而Linux下安装Adoptium会相对比较麻烦，你需要下载它的`tar.gz`包，解压后手动配置路径及环境变量。
 > 下载软件包，将其放到你希望将jdk安装到的位置，打开终端，执行以下命令：
 > ```bash
@@ -101,7 +106,8 @@ Adoptium是一个开源的JDK发行版，安装方式与OracleJDK类似，由社
 > ```fish
 > fish_add_path 你解压的文件夹/bin
 > ```
-> 安装完成后仍然使用`java -version`命令检查JDK的安装情况。
+
+安装完成后仍然使用`java -version`命令检查JDK的安装情况。
 
 #### GraalVM
 
@@ -109,14 +115,15 @@ GraalVM是一个应用AOT技术优化的高性能的JDK发行版，如果你希�
 
 GraalVM的安装方式较特殊，在Windows上反而较为麻烦，Linux上可以通过`pacman`进行快速安装。
 
-> [!NOTE] **Windows**
+> [!NOTE] Windows
 > Windows上安装GraalVM需要下载它的`zip`包，解压后手动配置路径及环境变量。
 > 进入GraalVM的下载页面，选择最新的LTS版本，选择Windows x64后点击下载按钮：
 > ![download-graalvm](./imgs/download-graal.png)
 > 下载完成后，将文件解压到你希望安装JDK的文件目录，将其中的`bin`目录添加到系统的环境变量中。
+>
 > ***windows待施工***
 
-> [!NOTE] **Linux**
+> [!NOTE] Linux
 > Linux上安装GraalVM可以通过`pacman`进行快速安装，你可能需要先安装pacman，打开终端，执行以下命令：
 > ```bash
 > curl -s "https://get.sdkman.io" | bash
@@ -126,4 +133,30 @@ GraalVM的安装方式较特殊，在Windows上反而较为麻烦，Linux上可�
 > sdk install java 24-graal
 > ```
 
+安装完成后打开终端，使用`java -version`命令检查JDK的安装情况。应得到如下输出：
+
+```
+java version "21.0.6" 2025-01-21 LTS
+Java(TM) SE Runtime Environment Oracle GraalVM 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23.1-b55)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23.1-b55, mixed mode, sharing)
+```
+
 :::
+
+## Gradle构建工具
+
+Gradle是一个现代Java构建工具，它可以帮助我们自动化构建、测试和发布Java/Kotlin项目。
+
+一般来说我们不需要在自己的设备上安装Gradle，Java项目通常会使用Gradle Wrapper来自动打包，下载和配置Gradle。
+
+在我们会用到的Mod项目模板里已经打包并配置了Gradle Wrapper，我们无需安装Gradle。
+
+Gradle的构建逻辑通过构建脚本定义，即项目文件下的文件`build.gradle`中编写的内容，在模板项目中同样已经为我们配置好了Gradle的构建脚本。
+
+我们一般不需要配置太多关于Gradle的操作，有关gradle的具体内容如果有兴趣，可以**前往Gradle网站：https://gradle.org/**
+
+## Android SDK
+
+如果你需要让你的mod能够运行在Android设备上，那么你就需要再部署Android SDK。
+
+**待施工**
