@@ -1,91 +1,159 @@
 # Gradle 环境与 Java/Kotlin
 
-> ***"工欲善其事，必先利其器。"***
+> ***"万丈高楼平地起。"***
 
-::: tip 
-本教程涉及的为使用桌面端进行开发，如果是其他设备请移步[第五节](./4-build-on-android.md)
+Mindustry是一个Java游戏项目，尽管其具备JavaScript mod接口，但是我们仍然更加建议使用性能更优，可维护性更强的java进行开发。
+
+本篇教程也只会给出Java与Kotlin语言的演示程序与片段，如果你仍然决定使用JavaScript进行开发，可跳过本节阅读下一节：*“javaScript/typeScript开发环境”*。
+
+> 我们会提供一个快速部署开发环境的脚本，但是你可能依然需要知道我们的快速脚本做了哪些事。
+
+## 安装JDK（Java Development Kit）
+
+配置Java开发环境最基本的一步就是安装JDK，JDK是Java开发的基础，它包含了Java编译器（javac）、Java运行时环境（JRE）等工具。
+
+对于我们需要使用到的JDK版本，你可以在JDK 17及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 21。
+
+### 安装JDK
+
+有多种JDK发行版可供选择，一般来说被广泛使用的有OracleJDK、Adoptium及GraalVM等。
+
+以下为这些JDK的网页链接：
+
+- [**OracleJDK**](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html)
+- [**Adoptium**](https://adoptium.net/)
+- [**GraalVM**](https://www.graalvm.org/)
+
+三类发行版的安装方式略有差异，但是OracleJDK的安装方式最为简单。
+
+#### OracleJDK
+
+OracleJDK的安装方式较为简单，它为Windows平台及Linux平台都提供了快速安装的发行包。
+
+::: tip **Windows**
+通过上述连接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，选择Windows x64 Installer（.exe）进行下载：
+
+![download-oracle](./imgs/download-oracle.png)
+
+下载完成后，右键点击安装包，选择“以管理员身份运行”，你不需要做什么额外的设置，一路按照默认设置点击【下一步】直到安装完成即可。
 :::
 
-虽说Mindustry是个挺不正常的Java项目，但是其 **构建（Build）** 系统还是比较正常的————使用的是Java世界中最流行的Gradle。本节教程将聚焦开发环境的配置，选择最适合您的开发方式。
+::: tip **Linux**
+Oracle同样为Linux提供了`deb`和`rpm`软件包和，找到符合你系统架构的软件包，下载完成后打开终端，执行以下命令安装：
 
-## Java!
+```bash
+sudo dpkg -i 你下载的文件.deb
+```
 
-无论您做什么，基本的运行环境————Java是不可或缺的。
+或者
 
-如果您曾经安装过Java，也不要高兴的太早，本教程的 Java 模组开发是基于**Java 21**的，而且必须是**JDK**，所以，最好先检查一下你的JDK版本。请在终端中输入`java -version`查看当前默认Java版本。
+```bash
+sudo rpm -i 你下载的文件.rpm
+```
 
-::: tip 终端
-本教程中所称的*终端*，可以用来输入系统命令。在不同系统中，其位置也有所不同：
-- 在Windows系统中，指的是`cmd.exe`。打开方法可以是按下`Win + R`组合键并输入`cmd`；
-- 在macOS系统中，指的是`Terminal.app`。打开方法可以是按下`Command + 空格`，再输入`Terminal`；
-- 在Linux系统中，我想你知道终端在哪。
-
-值得注意的是，其他教程在指代系统命令中，常用一个`$`表示，本教程由于不涉及非系统命令，所以不加此区分。
 :::
 
-如果你确定自己是**JDK 21**，那么你可以开始下一步了。
+无论你通过哪一个方式安装完成JDK，在安装成功后均可通过以下命令检查JDK的安装情况：
 
-如果你不曾安装过Java或者Java版本不正确，那你必须安装一个符合要求的Java。Java这门语言与其他一些语言不同，他只有执行标准，却没有所谓的官方实现，因此，市面上有琳琅满目的许多厂商的Java，都叫**JDK 21**，功能上没有差异，只是效率方面小有差别。目前，市面上比较流行的Java实现有`OracleJDK`、`OpenJDK`和`GraalVM`等等，但在本教程中，我们更推荐`Adoptium`!
+```bash
+java -version
+```
 
-### 安装 Adoptium
+如果你看到类似如下的输出，则说明JDK安装成功：
 
-首先，让我们转入Adoptium的官网，那么Adoptium的官网是什么呢？
+```
+java version "21.0.6" 2025-01-21 LTS
+Java(TM) SE Runtime Environment Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23.1-b55)
+Java HotSpot(TM) 64-Bit Server VM Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23.1-b55, mixed mode, sharing)
+```
 
-::: info 【课中探究案1-1-1】学会使用搜索引擎
-只有上帝才有能力知道世间每一件事情，所幸你可以求助上帝————只需要打开搜索引擎。
+如果你想要安装另外的两个JDK版本，请展开继续阅读：
 
-搜索引擎的选择很重要，如果你对百度搜索结果前几条的推荐机制不太了解，恐怕Bing更适合你。
+::: details 另外两个JDK的安装方式
 
-当然，如果你认准“官网”标志和看见“广告”二字，百度也是非常好用的工具。如果没有官网标志，那真的是很痛苦了。
+#### Adoptium
 
-本探究建议使用bing完成，课后可尝试用百度再来一遍，然后你就懂我为什么这么说了。
+Adoptium是一个开源的JDK发行版，安装方式与OracleJDK类似，由社区从属的完全免费JDK，但事实上对于我们个人开发而言并不需要考虑版权和协议问题。
 
-答案见下
+::: tip **Windows**
+
+Adoptium的安装方式与OracleJDK类似，前往Adoptium官网，选择最新的LTS版本，点击下载链接，选择Windows x64 JDK.msi进行下载：
+
+![download-adoptium](./imgs/download-adoptium.png)
+
+下载完成后，右键点击安装包，选择“以管理员身份运行”，与OracleJDK一样点击安装即可。
+
 :::
 
-::: details 答案
-https://adoptium.net/zh-CN/
+::: tip **Linux**
+
+而Linux下安装Adoptium会相对比较麻烦，你需要下载它的`tar.gz`包，解压后手动配置路径及环境变量。
+
+下载软件包，将其放到你希望将jdk安装到的位置，打开终端，执行以下命令：
+
+```bash
+tar -xvf 你下载的文件.tar.gz
+cd 你解压的文件夹
+ls
+```
+
+你应当会得到如下输出：
+
+```
+bin/  conf/  include/  jmods/  legal/  lib/  release  LINCESE.txt
+```
+
+我们需要的只有`bin`和`lib`这两个目录，要让java可以在命令行中使用，我们需要将`bin`目录添加到系统的环境变量中。
+
+```bash
+echo 'export PATH=$PATH:你解压的文件夹/bin' >> ~/.bashrc
+source ~/.bashrc
+```
+
+如果你使用的是fish shell环境，可以直接使用`fish_add_path`来添加路径：
+
+```fish
+fish_add_path 你解压的文件夹/bin
+```
+
+安装完成后仍然使用`java -version`命令检查JDK的安装情况。
+
 :::
 
-![adoptium-index](./imgs/adoptium/adoptium-index.png)
+#### GraalVM
 
-接下来，点击中间的“最新LTS发行包”。
+GraalVM是一个应用AOT技术优化的高性能的JDK发行版，如果你希望获得更好的java程序运行效率，那么可以使用GraalVM进行开发。
 
-下载得到的是一个安装包，解压并无脑点击Next即可成功安装。这样，无论你是否以前安装过Java，现在`JAVA_HOME`一定会指向新下载的Java 21了！
+GraalVM的安装方式较特殊，在Windows上反而较为麻烦，Linux上可以通过`pacman`进行快速安装。
 
-## IDEA
+::: tip **Windows**
 
-> 如果你更习惯于用命令行开发，可跳过本节。
+Windows上安装GraalVM需要下载它的`zip`包，解压后手动配置路径及环境变量。
 
-安装完Java之后，可以说你的开发环境已经配置完了————至少你现在可以去控制台执行`<gradlew> jar`了。不过我打赌，除非你以前是个资深vim程序员，否则你不会喜欢在这种环境下开发的。这时候你就需要一个IDE（集成开发环境）了。和Java一样，IDE也有许多种，此处我们只探讨 **IntelliJ IDEA** 。
+进入GraalVM的下载页面，选择最新的LTS版本，选择Windows x64后点击下载按钮：
 
-**IDEA**是Java开发的神。关于其安装教程并不值得本教程赘述，相关教程网络上已经分布了很多，请自行百度或选择以下外链观看，和刚才一样，我更推荐你自己去找这些东西：
+![download-graalvm](./imgs/download-graal.png)
 
-::: details 外链
-+ Windows端：[https://blog.csdn.net/m0_37220730/article/details/107589690]
-+ macOS端：[https://blog.csdn.net/jackson_lingua/article/details/145177226]
-+ Linux端：[https://blog.csdn.net/qq_43646721/article/details/108152206]
+下载完成后，将文件解压到你希望安装JDK的文件目录，将其中的`bin`目录添加到系统的环境变量中。
+
+***windows待施工***
+
 :::
 
-不过先别急着去下载，关于IDEA仍然有两个问题需要说明：
-+ Mindustry Mod开发只需要**社区版**功能，所以不必费时费力**甚至是费钱**去破解旗舰版；
-+ 目前IDEA已经自带中文了，所以你在查询2024年以前的教程时要注意之。
+::: tip **Linux**
 
-## Gradle 和 Kotlin
+Linux上安装GraalVM可以通过`pacman`进行快速安装，你可能需要先安装pacman，打开终端，执行以下命令：
 
-虽然这才是标题的内容，但是这两样东西的配置方法是————不用配置。
+```bash
+curl -s "https://get.sdkman.io" | bash
+```
 
-只要Java正确安装，Gradle就会正常执行，同时也包括Kotlin。
+然后执行以下命令安装GraalVM：
 
+```bash
+sdk install java 24-graal
+```
 
-
-
-<h2>高级：Scala</h2>
-
-::: danger 极度警告
-本内容极其不适合放在你的模组当中，正如你所见，此部分不出现目录中，将其放置在这里只是因为与本节内容相关。
-
-除非你以前很了解Scala，否则千万不要使用Scala进行模组开发。
 :::
 
-
+:::
