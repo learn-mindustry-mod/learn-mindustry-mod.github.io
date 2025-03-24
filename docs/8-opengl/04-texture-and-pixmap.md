@@ -371,7 +371,7 @@ fun example(tex: Texture) {
 
 ![filterExample](./imgs/textureFilterExample.png)
 
-#### （容我从LearnOpenGL搬张图，整这个挺麻烦的）
+~~（容我从LearnOpenGL搬张图，整这个挺麻烦的）~~
 
 同时，还可以对纹理的放大采样（Magnify）和缩小采样（Minify）分别设置不同的过滤方式：
 
