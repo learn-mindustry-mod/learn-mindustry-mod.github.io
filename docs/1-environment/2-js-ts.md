@@ -4,7 +4,128 @@
 > 能写Java/Kt就写Java/Kt\
 > javaScript/typeScript没有前途没有优势
 
-# JavaScript
+
+# Quick Start
+## 环境
+::: info
+正常环境下mdt js开发就没有类型补全\
+大多数mdt js开发者进行的javaScript就是纯文本编辑器盲写\
+甚至没有格式化器
+:::
+
+所以进行MDT JS Mod开发的门槛非常低\
+你可以使用任何文本编辑器开始\
+不过为了舒适性 推荐使用下面IDE
+> 如果你是安卓要么看[第五节](./4-build-on-android.md)来安装对应IDE 要么还是直接用文本编辑器手写吧
+- vscode
+- neovim
+
+> [!NOTE]
+> TypeScript 通过为 JavaScript 添加类型系统，扩展了这门语言。它能在代码运行前捕获错误并提供修复方案，从而显著提升开发效率。\
+> 下面夹一点私货
+> <GitHubCard repo="EmmmM9O/MindustryTSModTemplate" />
+> 使用`mindustry-types`提供类型补全的TS Mod模板\
+> 使用TS进行mdt开发系另一个工作流了\
+> 查看[中文文档](https://github.com/EmmmM9O/MindustryTSModTemplate/blob/master/README_CN.md)了解\
+> 不过你都能用上lsp了为什么不直接写java去
+
+## js mod目录架构
+以下为Mindustry模组的目录结构：
+
+- mod.(h)json (必须) 是你模组的配置数据,
+- scripts/ 目录是Javascript文件,
+  - main.js js mod入口
+  - ...
+- content/ 目录是JSON代码,
+- maps/ 目录是游戏内地图,
+- bundles/ 目录是语言文件,
+- sounds/ 目录是音效文件,
+- schematics/ 目录是蓝图文件,
+- sprites-override/ 目录是**覆盖原版**的贴图文件,
+- sprites/ 目录是模组的贴图文件
+
+## 模块
+::: info
+Mindustry使用的是**CommonJS**模块\
+ES5(或许吧)规范
+:::
+使用`require("xxx")`导入其他模块\
+需要注意`require("xxx")`
+xxx需要是不带"./"的相对路径
+比如
+- scripts/
+  - main.js
+  - foo/
+    - bar.js
+    - foo2/
+      - bar2.js
+在`main.js`使用`require("foo/bar.js")`
+在`foo/bar.js`使用`require("foo/foo2/bar2.js")`
+
+```js
+module.exports = {
+...
+}
+```
+导出
+## 注意事项
+下面有一些Rhino Js不能使用的特性
+- `const` 这个有bug
+- `new Function()` 不支持
+- 模板字符串即\`xxxx\`不支持
+
+## 内置函数
+从`core/assets/scripts/global.js`我们可以知道Anuke设置的内部函数
+```js
+const log = (context, obj) => Vars.mods.scripts.log(context, String(obj))//日志
+const print = text => log(modName + "/" + scriptName, text)//打印
+
+const newFloats = cap => Vars.mods.getScripts().newFloats(cap);
+//从Lambda表达式获得arc.func下的接口
+const run = method => new java.lang.Runnable(){run: method}
+const boolf = method => new Boolf(){get: method}
+const boolp = method => new Boolp(){get: method}
+const floatf = method => new Floatf(){get: method}
+const floatp = method => new Floatp(){get: method}
+const cons = method => new Cons(){get: method}
+const prov = method => new Prov(){get: method}
+const func = method => new Func(){get: method}
+//新建效果
+const newEffect = (lifetime, renderer) => new Effect.Effect(lifetime, new Effect.EffectRenderer({render: renderer}))
+//js 'extend(Base, ..., {})' = java 'new Base(...) {}'
+function extend(/*Base, ..., def*/){}
+//相当于Java代码 new Base(...){}
+//获得的是对象而非类
+```
+## 技巧
+如果想要导入其他Java Mod中的类 使用下面
+```js
+const loader = Vars.mods.mainLoader();
+const scripts = Vars.mods.scripts;
+const NativeJavaClass = Packages.rhino.NativeJavaClass;
+function getClass(name) {
+  return NativeJavaClass(scripts.scope, loader.loadClass(name));
+}
+const xxx = getClass("xxxx");
+//导入其他Java Mod的类
+```
+虽然说使用的是ES5标准\
+但是可以通过function实现class
+```js
+var testM = /** @class */(function(){
+  function testM(foo){
+    this.foo = foo
+  }
+  testM.prototype.test = function () {
+    Log.info("test")
+  }
+  return testM
+}())
+let u = new testM()
+u.test()
+```
+
+# Rhino 介绍
 
 :::: info
 JavaScript 是一种高级的、解释执行的编程语言\
@@ -12,7 +133,9 @@ Mindustry使用Rhino作为JS引擎\
 (为了支持Android 不然早用其他的了)
 
 <GitHubCard repo="mozilla/rhino"/>
-
+Auken fork的rhino\
+使用的是`73a812444ac388ac2d94013b5cadc8f70b7ea027`
+<GitHubCard repo="Anuken/rhino"/>
 Rhino性能非常低\
 不过因为纯Java实现调用Java函数时候性能反而高？
 
@@ -28,7 +151,6 @@ Rhino性能非常低\
 > F再反射调用对应方法\
 > 为了对安卓的兼容ReflectASM和ByteBuddy
 > 来实现更高效的调用都不会使用
-
 
 
 ### 纯For循环
@@ -96,8 +218,9 @@ end
 所以非常非常不建议使用JS/TS
 ::::
 
-下面将介绍如何搭建一个有类型补全和格式化的JS/TS开发环境
-# 环境安装
+# 进阶环境
+## NodeJS
+下面将介绍如何搭建一个有语法检测和格式化的JS/TS开发环境
 <GitHubCard repo="nodejs/node" />
 > [!NOTE]
 > Node.js® 是一个免费、开源、跨平台的 JavaScript 运行时环境, 它让开发人员能够创建服务器 Web 应用、命令行工具和脚本。
@@ -157,109 +280,41 @@ npm install -g pnpm
 :::
 
 ::::
+## Prettier
+> [!NOTE]
+> 一个“有态度”的代码格式化工具\
+> 支持大量编程语言\
+> 已集成到大多数编辑器中\
+> 几乎不需要设置参数 
 
+[官方文档](https://www.prettier.cn/)
+### 安装
+:::: tabs :options="{ storageKey: 'node' }"
 
-::::::: tabs :options="{ storageKey: 'language' }"
-
-::: tab "JavaScript" id="js"
-模板还未编写
+::: tab npm
+```shell
+npm install -g prettier
+```
+:::
+::: tab yarn
+```shell
+yarn global add prettier
+```
 :::
 
-:::::: tab "TypeScript" id="ts"
-> [!NOTE]
-> TypeScript 通过为 JavaScript 添加类型系统，扩展了这门语言。它能在代码运行前捕获错误并提供修复方案，从而显著提升开发效率。
-
-我们使用`mindustry-types`提供类型补全
-<GitHubCard repo="EmmmM9O/mindustry-types" />
-使用我的模板`MindustryTSModTemplate`
-<GitHubCard repo="EmmmM9O/MindustryTSModTemplate" />
-使用该模板 clone到本地
-::::: tabs :options="{ storageKey: 'node' }"
-
-:::: tab npm
+::: tab pnpm
 ```shell
-npm install
-npm format #格式化
-npm fix #ESlint fix
-npm raw #编译raw文件夹
-npm tools #编译tools
-npm main #编译main
-npm dist
+pnpm add -g prettier
 ```
-记得修改`raw/dist.config.ts`
-修改里面`buildCommand`
-:::: 
+:::
 
-:::: tab yarn
+::::
+### 使用
 ```shell
-yarn install
-yarn format #格式化
-yarn fix #ESlint fix
-yarn raw #编译raw文件夹
-yarn tools #编译tools
-yarn main #编译main
-yarn dist
+prettier xxxx --write
 ```
-:::: 
-
-:::: tab pnpm
-```shell
-pnpm install
-pnpm format #格式化
-pnpm fix #ESlint fix
-pnpm raw #编译raw文件夹
-pnpm tools #编译tools
-pnpm main #编译main
-pnpm dist
-```
-记得修改`raw/dist.config.ts`
-修改里面`buildCommand`
-:::: 
-
-:::::
-文件目录架构
-- project/
-  - eslint.config.mjs ESLint配置
-  - prettier.config.mjs Prettier配置
-  - package.json node配置
-  - main/
-    - assets/ 资源文件
-      - sprites/ 图片
-        - ...其他
-    - src/
-      - main.ts 主程序
-      - ... 其他
-    - tsconfig.json TS配置
-  - raw/ 内容辅助json生成器
-    - bundle.config.ts bundle生成配置
-    - content.config.ts content生成配置
-    - dist.config.ts dist构建配置
-    - mod.config.ts **Mod信息配置**
-    - src
-      - index.ts 构造调用入口 可以自行修改部分
-      - bundles/
-        - index.ts bundle生成器入口
-        - meta.ts 配置bundle的类型 类似于基本模板
-        - languages.ts bundle的具体内容
-      - content/ content生成器类型还未完成
-        - index.ts content生成器入口
-        - block.ts 方块
-    - tsconfig.json TS配置
-  - tools/ 生成器的实现 无需修改 除非需要添加功能和类型
-
-> [!IMPORTANT]
-> 不要使用import "./module" 使用 import "module"\
-> 不要用class继承java类型\
-> 使用extend函数替代\
-> 只有对应名称的extend函数有对应补全 比如`extend__Table`
-
-
-::::::
-
-:::::::
-
-# LSP配置
-:::: tabs :options="{ storageKey: 'idea' }"
+## LSP配置
+:::: tabs :options="{ storageKey: 'ide' }"
 
 ::: tab "IDEA" id="idea"
 什么 都用IDEA了还不写Java\
@@ -267,11 +322,16 @@ Idea无法配置
 ::: 
 
 ::: tab "Vscode" id="vsc"
-
+安装下面插件
+- ESLint
+- Prettier
 ::: 
 
 ::: tab "Neovim" id="nvim"
-
+通过`Mason`安装下面LSP
+- typescript-language-server
+- prettier
+- eslint-lsp
 ::: 
 
 ::::

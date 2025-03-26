@@ -1,7 +1,6 @@
 import { defineConfig } from "vitepress"
 import { generateSidebar } from "vitepress-sidebar"
 import tabsPlugin from "@red-asuka/vitepress-plugin-tabs"
-
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   markdown: {
