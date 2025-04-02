@@ -1,9 +1,10 @@
-import { defineConfig } from "vitepress"
-import { generateSidebar } from "vitepress-sidebar"
+import { defineConfig, UserConfig } from "vitepress"
+import { generateSidebar, withSidebar } from "vitepress-sidebar"
 import tabsPlugin from "@red-asuka/vitepress-plugin-tabs"
+import { VitePressSidebarOptions } from "vitepress-sidebar/types"
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+const viteConfig: UserConfig = {
   markdown: {
     math: true,
     config: (md) => {
@@ -18,20 +19,16 @@ export default defineConfig({
   lastUpdated: true,
 
   rewrites: {
-    "0-introduction/index.md": "index.md",
+    "java/0-introduction/index.md": "java/index.md",
   },
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [{ text: "Java", link: "/" }],
-    sidebar: generateSidebar({
-      documentRootPath: "docs",
-      collapsed: true,
-      useTitleFromFileHeading: true,
-      useFolderTitleFromIndexFile: true,
-      includeEmptyFolder: true,
-      excludePattern: ["imgs", "readme"],
-    }),
+    nav: [
+      { text: "Java", link: "/java" },
+      { text: "通识",link: "/general"}
+    ],
+  
     socialLinks: [
       {
         icon: "github",
@@ -43,4 +40,21 @@ export default defineConfig({
         "https://github.com/learn-mindustry-mod/learn-mindustry-mod.github.io/edit/master/docs/:path",
     },
   },
-})
+}
+function generateNav(name:string):VitePressSidebarOptions{
+  return{
+  documentRootPath: 'docs',
+  scanStartPath: name,
+  resolvePath: '/'+name+'/',
+  useTitleFromFileHeading: true,
+  useFolderTitleFromIndexFile: true,
+  includeEmptyFolder: true,
+  excludePattern: ["imgs", "readme"],
+  }
+}
+export default defineConfig(withSidebar(viteConfig,
+  [
+    generateNav("java"),
+    generateNav("general")
+  ])
+)
