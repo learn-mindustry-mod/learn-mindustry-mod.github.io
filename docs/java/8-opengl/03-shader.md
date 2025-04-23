@@ -10,7 +10,7 @@ Arc GL强制使用OpenGL可编程管线，我们绘图时会需要向GL提供一
 
 ::: code-group
 
-```
+```java
 void example(){
   String vertexShader = "...";
   String fragmentShader = "...";
