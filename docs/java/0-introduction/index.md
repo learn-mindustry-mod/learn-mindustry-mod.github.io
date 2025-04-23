@@ -9,8 +9,9 @@ LearnMindustryMod
 **基本的模组开发环境搭建**
 - **1.1** gradle环境与java/kotlin
 - **1.2** javaScript/typeScript开发环境
-- **1.3** mod文件结构
-- **1.4** 如果你只有Android设备
+- **1.3** 如果你只有Android设备
+- **1.4** Java模组模板
+- **1.5** 参考：模组文件结构
 
 ### 第二章 创建游戏内容
 
