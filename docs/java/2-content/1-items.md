@@ -1,7 +1,7 @@
 
 # 物品
 
-> ***"大楼一定是用砖块砌成的"***
+> ***大楼一定从第一层开始建***
 
 作为一个工厂游戏，物品和流体可以说是整个游戏唯二的基础构件，任何游戏性的内容一定是以此为基础的。所以，我们将从这里开始。
 
@@ -13,7 +13,7 @@
 
 ### 代码部分
 
-首先，找到项目的源代码根目录，右键之并选择`新建>>软件包`，建立`content`软件包。然后，在此软件包中，新建名为`LLMItems`的类（Java）或对象（Kotlin）。
+首先，找到项目的源代码根目录，右键之并选择`新建>>软件包`，建立`content`软件包。然后，在此软件包中，新建名为`LMMItems`的类（Java）或对象（Kotlin）。
 
 接下来，对于Java，在此类中建立一个类型为`Item`的静态变量`sodium`，对于Kotlin，新建一个`lateinit var`即可；再新建一个静态方法`void load()`（意思是此方法没有参数，同时返回值类型为`void`）。如果IDEA提示找不到`Item`类，请稍等片刻，如果持续找不到，请返回上一节查看依赖是否配置正确。接下来，在此方法中，添加如下代码。
 
@@ -37,10 +37,10 @@ sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
 ```
 :::
 
-完成后，整个LLMItems类应当如下（省略package和import区）：
+完成后，整个LMMItems类应当如下（省略package和import区）：
 ::: code-group
 ```java
-public class LLMItems{
+public class LMMItems{
     public static Item sodium;
     public static void load(){
         sodium = new Item("sodium", Color.valueOf("eeeeee")) {{
@@ -53,7 +53,7 @@ public class LLMItems{
 }
 ```
 ```kotlin
-object LLMItems {
+object LMMItems {
     lateinit var sodium : Item
 
     fun load(){
@@ -73,11 +73,11 @@ object LLMItems {
 
 ::: code-group
 ```java
-    LLMItems.load();
+    LMMItems.load();
 ```
 
 ```kotlin
-    LLMItems.load()
+    LMMItems.load()
 ```
 :::
 
@@ -86,7 +86,7 @@ object LLMItems {
 如果你要添加第二个物品，可以进行一定的简写，比如用一个`public static Item`声明多个静态变量（仅限Java）：
 ::: code-group
 ```java
-public class LLMItems{
+public class LMMItems{
     //一带二
     public static Item sodium, potassiumChloride;
     public static void load(){
@@ -103,7 +103,7 @@ public class LLMItems{
 }
 ```
 ```kotlin
-object LLMItems {
+object LMMItems {
     //不可以一带二
     lateinit var sodium : Item
     lateinit var potassiumChloride : Item
@@ -347,7 +347,7 @@ public class Employee{
 强调建议你在实践中应用以上的规律来检验你对模组的理解程度，所以准备了以下习题供练习：
 
 + 找到原版中声明物品的类，并把其代码和核心数据库联系起来，然后推测`hardness`和`lowPriority`字段的机制。
-+ 后文我们将用到几个物品：钾（Potassium）、岩盐（Rock Salt）。请根据自己对这两种物品的理解，在模组中创建出这两个物品，并给出完整的`LLMItems.java`。
++ 后文我们将用到几个物品：钾（Potassium）、岩盐（Rock Salt）。请根据自己对这两种物品的理解，在模组中创建出这两个物品，并给出完整的`LMMItems.java`。
 + 刚才的`Item`类中有一部分未节选的字段声明。将他们找出来并推测每一个字段的意思。
 + 以下是`Liquid`类的节选，请解释其中各个字段的意思，请推测其用途：
 ```java    
