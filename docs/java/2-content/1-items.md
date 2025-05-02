@@ -1,3 +1,4 @@
+
 # 物品
 
 > ***"大楼一定是用砖块砌成的"***
@@ -12,9 +13,9 @@
 
 ### 代码部分
 
-首先，找到项目的源代码根目录，右键之并选择`新建>>软件包`，建立`content`软件包。然后，在此软件包中，新建名为`LLMItems`的类（Java）。
+首先，找到项目的源代码根目录，右键之并选择`新建>>软件包`，建立`content`软件包。然后，在此软件包中，新建名为`LLMItems`的类（Java）或对象（Kotlin）。
 
-接下来，对于Java，在此类中建立一个类型为`Item`的静态变量`sodium`，再新建一个静态方法`void load()`（意思是此方法没有参数，同时返回值类型为`void`）。如果IDEA提示找不到`Item`类，请稍等片刻，如果持续找不到，请返回上一节查看依赖是否配置正确。接下来，在此方法中，添加如下代码。
+接下来，对于Java，在此类中建立一个类型为`Item`的静态变量`sodium`，对于Kotlin，新建一个`lateinit var`即可；再新建一个静态方法`void load()`（意思是此方法没有参数，同时返回值类型为`void`）。如果IDEA提示找不到`Item`类，请稍等片刻，如果持续找不到，请返回上一节查看依赖是否配置正确。接下来，在此方法中，添加如下代码。
 
 ::: code-group
 ```java
@@ -27,34 +28,106 @@ sodium = new Item("sodium", Color.valueOf("eeeeee")) {{
 ```
 
 ```kotlin
+sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
+    hardness = 0
+    flammability = 0.5f
+    explosiveness = 0.5f
+    cost = 3.5f
+}
 ```
 :::
 
-如果只是写下了这行代码是没有用的，因为这行代码并不会自动被游戏执行。因为，你还需要建立一个通道，把这些代码的执行权交给一个游戏会主动执行的地方，而这个地方，正是主类的`loadContent()`方法。所以，你还要在主类的loadContent方法中添加上一行：
+完成后，整个LLMItems类应当如下（省略package和import区）：
+::: code-group
+```java
+public class LLMItems{
+    public static Item sodium;
+    public static void load(){
+        sodium = new Item("sodium", Color.valueOf("eeeeee")) {{
+            hardness = 0;
+            flammability = 0.5f;
+            explosiveness = 0.5f;
+            cost = 3.5f;
+        }};
+    }
+}
+```
+```kotlin
+object LLMItems {
+    lateinit var sodium : Item
+
+    fun load(){
+        sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
+            hardness = 0
+            flammability = 0.5f
+            explosiveness = 0.5f
+            cost = 3.5f
+        }
+    }
+
+}
+```
+:::
+
+如果只是写下了这行代码是没有用的，因为这行代码并不会自动被游戏执行。因为，你还需要建立一个通道，把这些代码的执行权交给一个游戏会主动执行的地方，而这个地方，正是主类的`loadContent()`方法。所以，你还要在主类的`loadContent`方法中添加上一行：
 
 ::: code-group
 ```java
-    LLMItems.load()
+    LLMItems.load();
 ```
 
 ```kotlin
+    LLMItems.load()
 ```
 :::
 
 现在，打包模组，加载到游戏中，你就会获得一个没有名字、没有贴图的物品了。
 
-如果你要添加第二个物品，`LLMItems`就不必再次添加了，而静态变量和方法中的实例化需要重复。不过，静态变量在Java可以进行堆叠，如原版例：
+如果你要添加第二个物品，可以进行一定的简写，比如用一个`public static Item`声明多个静态变量（仅限Java）：
+::: code-group
 ```java
-
+public class LLMItems{
+    //一带二
+    public static Item sodium, potassiumChloride;
+    public static void load(){
+        sodium = new Item("sodium", Color.valueOf("eeeeee")) {{
+            hardness = 0;
+            flammability = 0.5f;
+            explosiveness = 0.5f;
+            cost = 3.5f;
+        }};
+        potassiumChloride = new Item("potassium-chloride", Color.valueOf("ffffff")){{
+            hardness = 1;
+        }};
+    }
+}
 ```
+```kotlin
+object LLMItems {
+    //不可以一带二
+    lateinit var sodium : Item
+    lateinit var potassiumChloride : Item
+
+    fun load(){
+        sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
+            hardness = 0
+            flammability = 0.5f
+            explosiveness = 0.5f
+            cost = 3.5f
+        }
+        potassiumChloride = Item("potassium-chloride", Color.valueOf("ffffff")).apply{
+            hardness = 1
+        }
+    }
+
+}
+```
+:::
 
 ### 语言部分
 
-Mindustry具有天生的多语言支持，当然这里指的是自然语言。如果你以前写JSON模组的话，你可能压根没听说过什么是 **多语言文件（Bundle）** 。不过，既然Java模组直接在代码里添加老三样（即`localizedName` `description` `details`）并不容易，那么下面将介绍Bundle文件的具体写法。
+Mindustry具有天生的多语言支持，当然这里指的是自然语言。如果你以前写JSON模组的话，你可能压根没听说过什么是 **多语言文件（Bundle）** 。不过，Java模组直接在代码里添加老三样（即`localizedName` `description` `details`）并不容易，那么下面将介绍Bundle文件的具体写法。
 
-::: info
-有关`localizedName`、`name`和bundle中name的概念，及在json和java中的优先次序问题，请参见通识，本文不再赘述。
-:::
 
 首先在项目的`assets`文件夹下建立`bundles`文件夹，并在其中建立`bundle.properties`和`bundle_zh_CN.properties`两个文件。接下来，分别填入以下内容：
 
@@ -62,15 +135,19 @@ Mindustry具有天生的多语言支持，当然这里指的是自然语言。�
 item.lmm-sodium.name = Sodium
 item.lmm-sodium.decription = Silver-gray flammable metal.
 item.lmm-sodium.details = Fire puts off water while water boils fire
+item.lmm-potassium-chloride.name = Potassium Chloride
+item.lmm-potassium-chloride.decription = Bitter and poinsonous salt.
 ```
 
 ``` properties
 item.lmm-sodium.name = 钠
 item.lmm-sodium.decription = 银白色的可燃金属。
 item.lmm-sodium.details = 火能把水浇灭，水能把火蒸干
+item.lmm-potassium-chloride.name = 氯化钾
+item.lmm-potassium-chloride.decription = 味苦、有毒的类盐状物质。
 ```
 
-其中，三级域名中的`item`即代表其**内容类型**的**单数形式**。二级域名为此内容的 **内部名称（Internal Name）**，下文将对此概念进一步阐述。一级域名即老三样，其中`name`必定会在游戏中显示，而`description`和`details`若未被声明则无显示。此种查找方式在游戏源代码中可查。
+其中，三级域名中的`item`即代表其**内容类型**的**单数形式**。二级域名为此内容的 **有模组名的内部名称（Internal Name）**，下文将对此概念进一步阐述。一级域名即老三样，其中`name`必定会在游戏中显示，而`description`和`details`若未被声明则无显示。
 
 至于bundle文件本身，`bundle.properties`代表的是英语。当玩家使用的语言的bundle中没有某项条目的，会回退到英语；如果英语bundle中仍然没有此项条目，游戏就不得不将此条目直接显示出来，并在左右各加上三个问号。这也就解释了为什么未添加bundle时，物品的 **本地化名称（Localized Name）** 是`???item.lmm-sodium.name???`。而`bundle_zh_CN.properties`代表的是简体中文，其中`zh_CN`即为语言代码，关于原版支持的语言请参考原版，例如`fr``ja``ru``zh_TW`。
 
@@ -88,18 +165,12 @@ item.lmm-sodium.details = 火能把水浇灭，水能把火蒸干
 
 坦白地说，贴图是模组的一大拦路虎，不过，本系列教程并不会教你画贴图，贴图教程请参考本网站其他栏目。这里假设你已经拥有了合适的贴图，只待加载进游戏。
 
-若想给内容加载贴图，首先应当明白此内容需要什么贴图。就没有动态贴图的物品而言，贴图只需要一张。
-
-首先，在项目的`assets`文件夹下建立`sprites`文件夹，然后将贴图复制进入此文件夹，并把名称改为**无模组名的内部名称**，当然要包括其png后缀，此例中即为`sodium.png`。现在，打包模组，加载到游戏中，你就会获得一个有名字、有贴图的物品了！
+首先，在项目的`assets`文件夹下建立`sprites`文件夹，然后将贴图复制进入此文件夹，并把名称改为**无模组名的内部名称**，当然要包括其png后缀，此例中即为`sodium.png`或`potassium-chloride.png`。现在，打包模组，加载到游戏中，你就会获得一个有名字、有贴图的物品了！
 
 在`sprites`文件夹中可以建立任何层数文件夹，贴图文件的路径对对游戏中贴图的引用没有任何关系，不过也有一个例外（见本章后文）。至于贴图本身，应当是`png`格式，且对于物品应当为`32x32`像素大小。尺寸不正常的贴图可能造成游戏卡顿或贴图模糊，同时在一些界面中贴图的大小并不会被自动缩放。
 
 
-## 属性
-
-::: warning
-再次强调：没有Java基础是没有办法做模组的，即使你复制了上面的代码，也可能出现无法理解的语法错误、不规范的大小写等问题，建议至少学完Java面向对象再学习Java模组。
-:::
+## 命名规范
 
 让我们先回到刚才的代码当中：
 
@@ -114,17 +185,26 @@ sodium = new Item("sodium", Color.valueOf("eeeeee")) {{
 ```
 
 ```kotlin
+sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
+    hardness = 0
+    flammability = 0.5f
+    explosiveness = 0.5f
+    cost = 3.5f
+}
 ```
 :::
 
 这里我们先介绍三个名词：
-+ 变量名（Variable Name）：上方代码中第一个`sodium`处在的位置，通常来说，它是驼峰命名；
-+ 无模组名的内部名称（Internal Name）：上方代码中第二个`sodium`处在的位置，通常来说，它是全小写并且由连字符连接的；
++ 变量名（Variable Name）：上方代码中第一个`sodium`处在的位置；
++ 无模组名的内部名称（Internal Name）：上方代码中第二个`sodium`处在的位置；
 + 有模组名的内部名称：在无模组名的内部名称前面加上一个`模组名称-`。
 
-如果你把这段代码和游戏中的核心数据库进行对比的话，就会发现其可燃性和爆炸性都为50%，和上文的代码相同；不过，刚才的代码中还有两个东西`hardness`和`cost`不清楚有什么用；此外，还不太清楚放电性和放射性怎么在代码里表达出来。最重要的是，刚才那个声明物品的语法（Java）完全没在Java教程中见过，它到底是什么原理？。前两个问题，都应当从源代码中去获取答案。不过，在此我们先解决第三个问题：
+通常来说，变量名需要以小写开头，并且遵守驼峰命名。而内部名称一般是用全小写，并且用连字符连接。如果你还在命名里面用中文，那自求多福吧。
 
 ## 匿名类
+::: info
+刚才那个声明物品的语法（Java）完全没在Java教程中见过，它到底是什么原理？
+:::
 上文代码的原理，可以进行如下概括：
 ```java
 
@@ -197,6 +277,12 @@ public class Employee{
 
 ## 字段、构造方法和Javadoc
 
+::: info
+
+如果你把这段代码和游戏中的核心数据库进行对比的话，就会发现其可燃性和爆炸性都为50%，和上文的代码相同；不过，刚才的代码中还有两个东西`hardness`和`cost`有什么用呢？放电性和放射性又怎么在代码里表达出来呢？
+
+:::
+
 现在，明白了背后的语法原理，终于要去源代码看看物品的属性到底是什么了。点击`Item`类，并按下``快捷键（macOS上为`Command+下`），然后将跳转到`Item`类的页面。接下来，找到其中的字段区，如下所示（有省略）：
 
 ```java
@@ -249,11 +335,18 @@ public class Employee{
 
 ## `Color`类
 
+刚才的构造方法中第二个参数是一个`Color`类对象。这个类顾名思义是描述一种颜色，那么颜色一般是怎么描述的呢。
 
+首先对于一个类来说，其构造方法肯定是不能忽略的。但是`Color`类的构造方法过于抽象，并不实用，所以我们一般转向它的**工厂方法（Factory）**。工厂方法一般是指一个并不是构造方法，但也能返回一个新的对象的方法。这里的工厂方法是`Color valueOf(String hex)`方法，这个方法接收一个表示成**HEX**的字符串，然后返回一个与之对应的颜色。
+
+除此之外，有的时候你还可以求助于一些**工具类（Utils）**，这些工具类可能存储了许多事先设计好的颜色的静态变量供你使用。对于`Color`类，首先它自己就是工具类，里面存放了一些如`white``lightGray`之类的颜色。`Pal`也是它的工具类，这个类存放的是Mindustry的调色盘，所以当你需要获取和原版一样的颜色时，可以试试这个类中的`health``accent`。
+
+另一个常见的误区就是一个颜色只能有一个`Color`对象，这种想法是危险的。以后你可能犯这样的错误，以为只要HEX相同，就不会实例化出多个`Color`，结果事与愿违，直接内存升天。
 
 ## 练习题
 强调建议你在实践中应用以上的规律来检验你对模组的理解程度，所以准备了以下习题供练习：
 
++ 找到原版中声明物品的类，并把其代码和核心数据库联系起来，然后推测`hardness`和`lowPriority`字段的机制。
 + 后文我们将用到几个物品：钾（Potassium）、岩盐（Rock Salt）。请根据自己对这两种物品的理解，在模组中创建出这两个物品，并给出完整的`LLMItems.java`。
 + 刚才的`Item`类中有一部分未节选的字段声明。将他们找出来并推测每一个字段的意思。
 + 以下是`Liquid`类的节选，请解释其中各个字段的意思，请推测其用途：
@@ -269,7 +362,7 @@ public class Employee{
     /** how prone to exploding this liquid is, when heated. 0 = nothing, 1 = nuke */
     public float explosiveness;
 ```
-+ 不复制到IDE中，判断以下代码能否正常运行，如果能，是否符合规范：
++ 不复制到IDE中，判断以下代码能否正常运行，如果能，是否符合规范，如果不能，指出错误之处：
 
 A.
 ```java 
