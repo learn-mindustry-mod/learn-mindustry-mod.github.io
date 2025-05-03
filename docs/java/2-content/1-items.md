@@ -7,15 +7,15 @@
 
 ## 添加一个物品
 
-如果以前做过其他游戏的模组的话，你肯定对内容的 **注册（Register）** 过程十分熟悉，简而言之注册就是让游戏中可以显示出新添加的内容的过程。在其他游戏中， **实例化（Instantiate）** 代表物品的对象，和注册物品，是不同的两个过程。不过，在Mindustry中，新建一个代表物品的对象和注册一个物品是同一个操作，所以，在任何时候，一句`new Item("my-item",Color.of("#ffffff"))`，就会往游戏里添加一个物品了。
+如果以前做过其他游戏的模组的话，你肯定对内容的 **注册（Register）** 过程十分熟悉，通俗地来说，注册就是向游戏添加内容的过程。在其他游戏中， **实例化（Instantiate）** 对象和注册物品是不同的两个过程。不过，在Mindustry中，新建一个代表物品的对象和注册一个物品是等价的，一行形如`new Item("my-item",Color.of("#ffffff"))`的代码，就会往游戏里添加一个物品了。
 
-不过，在实际开发的过程中，把干同样事情的代码散落在项目各处，会导致维护上极大的不便，因此，参考原版代码，一个比较良好的范式，就是在一个名为`content`的 **软件包（Package）** 里，把每一种 **内容类型（Content Type）** 放置在一个文件当中。下面我们将给出具体的代码。
+在实际开发的过程中，把干同样事情的代码散落在项目各处，会导致维护上极大的不便。参考原版代码，有一种做法就是在一个名为`content`的 **软件包（Package）** 里把每一种 **内容类型（Content Type）** 放置在一个文件当中注册。下面我们将给出具体的代码。
 
 ### 代码部分
 
-首先，找到项目的源代码根目录，右键之并选择`新建>>软件包`，建立`content`软件包。然后，在此软件包中，新建名为`LMMItems`的类（Java）或对象（Kotlin）。
+首先，找到项目的源代码根目录，右键并选择`新建>>软件包`，建立`content`软件包。然后，在此软件包中，新建名为`LMMItems`的类（Java）或对象（Kotlin）。
 
-接下来，对于Java，在此类中建立一个类型为`Item`的静态变量`sodium`，对于Kotlin，新建一个`lateinit var`即可；再新建一个静态方法`void load()`（意思是此方法没有参数，同时返回值类型为`void`）。如果IDEA提示找不到`Item`类，请稍等片刻，如果持续找不到，请返回上一节查看依赖是否配置正确。接下来，在此方法中，添加如下代码。
+接下来，对于Java，在此类中建立一个类型为`Item`的静态变量`sodium`，对于Kotlin，新建一个`lateinit var`；再新建一个静态方法`void load()`（意思是此方法没有参数，同时返回值类型为`void`）。如果IDEA提示找不到`Item`类，请稍等片刻，如果持续找不到，请返回上一节查看依赖是否配置正确。接下来，在此方法中，添加如下代码。
 
 ::: code-group
 ```java
@@ -69,19 +69,19 @@ object LMMItems {
 ```
 :::
 
-如果只是写下了这行代码是没有用的，因为这行代码并不会自动被游戏执行。因为，你还需要建立一个通道，把这些代码的执行权交给一个游戏会主动执行的地方，而这个地方，正是主类的`loadContent()`方法。所以，你还要在主类的`loadContent`方法中添加上一行：
+只写这些代码不会创建出内容，因为它们并不会自动地被游戏执行。因此，你还需要建立一个“通道”，把这些代码与游戏主动执行的地方”连接“起来，让游戏去执行这些代码。这个游戏主动执行的地方，正是主类的`loadContent()`方法。所以，你还要在主类的`loadContent`方法中添加上一行：
 
 ::: code-group
 ```java
-    LMMItems.load();
+LMMItems.load();
 ```
 
 ```kotlin
-    LMMItems.load()
+LMMItems.load()
 ```
 :::
 
-现在，打包模组，加载到游戏中，你就会获得一个没有名字、没有贴图的物品了。
+现在，打包模组并加载到游戏中，你就会获得一个没有名字、没有贴图的物品了。
 
 如果你要添加第二个物品，可以进行一定的简写，比如用一个`public static Item`声明多个静态变量（仅限Java）：
 ::: code-group
@@ -126,7 +126,7 @@ object LMMItems {
 
 ### 语言部分
 
-Mindustry具有天生的多语言支持，当然这里指的是自然语言。如果你以前写JSON模组的话，你可能压根没听说过什么是 **多语言文件（Bundle）** 。不过，Java模组直接在代码里添加老三样（即`localizedName` `description` `details`）并不容易，那么下面将介绍Bundle文件的具体写法。
+Mindustry有原生的多语言支持——当然这里指的是自然语言。如果你以前写JSON模组的话，你可能压根没听说过什么是 **多语言文件（Bundle）** 。在Java模组中，直接在代码里添加文案（即`localizedName` `description` `details`）并不容易，所以更推荐使用Bundle来进行设置。
 
 
 首先在项目的`assets`文件夹下建立`bundles`文件夹，并在其中建立`bundle.properties`和`bundle_zh_CN.properties`两个文件。接下来，分别填入以下内容：
@@ -147,13 +147,15 @@ item.lmm-potassium-chloride.name = 氯化钾
 item.lmm-potassium-chloride.decription = 味苦、有毒的类盐状物质。
 ```
 
-其中，三级域名中的`item`即代表其**内容类型**的**单数形式**。二级域名为此内容的 **有模组名的内部名称（Internal Name）**，下文将对此概念进一步阐述。一级域名即老三样，其中`name`必定会在游戏中显示，而`description`和`details`若未被声明则无显示。
+其中，三级域名中的`item`即代表其**内容类型**的**单数形式**。二级域名为此内容的 **有模组名的内部名称（Internal Name）**。一级域名即老三样，其中`name`必须在游戏中显示，而若未声明`description`和`details`则不会显示它们。
 
-至于bundle文件本身，`bundle.properties`代表的是英语。当玩家使用的语言的bundle中没有某项条目的，会回退到英语；如果英语bundle中仍然没有此项条目，游戏就不得不将此条目直接显示出来，并在左右各加上三个问号。这也就解释了为什么未添加bundle时，物品的 **本地化名称（Localized Name）** 是`???item.lmm-sodium.name???`。而`bundle_zh_CN.properties`代表的是简体中文，其中`zh_CN`即为语言代码，关于原版支持的语言请参考原版，例如`fr``ja``ru``zh_TW`。
+至于bundle文件本身，`bundle_zh_CN.properties`代表的是简体中文，其中`zh_CN`为**语言代码（Language Code）**，例如`fr` `ja` `ru` `zh_TW`，其他语文可以参考原版相关代码。
+
+`bundle.properties`代表英语。当玩家语言的bundle中没有某项内容的，游戏会自动回退成英语；如果英语的bundle中仍然没有此项内容，游戏就会将此内容直接显示出来，并在左右各加上三个问号。这也就解释了未添加bundle时物品的 **本地化名称（Localized Name）** 显示的是`???item.lmm-sodium.name???`。
 
 ### 贴图部分
 
-<font style="color:red;background-color:white">Oh no！</font>
+<font style="color:red;background-color:#eeeeee">Oh no！</font>
 
 ::: warning
 
@@ -163,11 +165,11 @@ item.lmm-potassium-chloride.decription = 味苦、有毒的类盐状物质。
 
 :::
 
-坦白地说，贴图是模组的一大拦路虎，不过，本系列教程并不会教你画贴图，贴图教程请参考本网站其他栏目。这里假设你已经拥有了合适的贴图，只待加载进游戏。
+上面这段话摘自Anuke自己的[贴图教程](https://mindustrygame.github.io/wiki/modding/4-spriting/)中，坦白地说，贴图是模组的一大拦路虎，不过，本系列教程并不会教你画贴图，贴图教程请参考本网站其他栏目。这里假设你已经拥有了合适的贴图，只待加载进游戏。
 
 首先，在项目的`assets`文件夹下建立`sprites`文件夹，然后将贴图复制进入此文件夹，并把名称改为**无模组名的内部名称**，当然要包括其png后缀，此例中即为`sodium.png`或`potassium-chloride.png`。现在，打包模组，加载到游戏中，你就会获得一个有名字、有贴图的物品了！
 
-在`sprites`文件夹中可以建立任何层数文件夹，贴图文件的路径对对游戏中贴图的引用没有任何关系，不过也有一个例外（见本章后文）。至于贴图本身，应当是`png`格式，且对于物品应当为`32x32`像素大小。尺寸不正常的贴图可能造成游戏卡顿或贴图模糊，同时在一些界面中贴图的大小并不会被自动缩放。
+在`sprites`文件夹中可以建立任何层数文件夹，`sprites`文件夹中的存储路径，与游戏中对贴图的引用没有任何关系，不过也有一个例外（见本章后文）。至于贴图本身，应当是`png`格式，且对于物品应当为`32x32`像素大小。尺寸不正常的贴图可能造成游戏卡顿或贴图模糊，同时在一些界面中贴图的大小并不会被自动缩放。
 
 
 ## 命名规范
@@ -176,36 +178,35 @@ item.lmm-potassium-chloride.decription = 味苦、有毒的类盐状物质。
 
 ::: code-group
 ```java
-sodium = new Item("sodium", Color.valueOf("eeeeee")) {{
-        hardness = 0;
-        flammability = 0.5f;
-        explosiveness = 0.5f;
-        cost = 3.5f;
-}};
+        potassiumChloride = new Item("potassium-chloride", Color.valueOf("ffffff")){{
+            hardness = 1;
+        }};
 ```
 
 ```kotlin
-sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
-    hardness = 0
-    flammability = 0.5f
-    explosiveness = 0.5f
-    cost = 3.5f
-}
+        potassiumChloride = Item("potassium-chloride", Color.valueOf("ffffff")).apply{
+            hardness = 1
+        }
 ```
 :::
 
 这里我们先介绍三个名词：
-+ 变量名（Variable Name）：上方代码中第一个`sodium`处在的位置；
-+ 无模组名的内部名称（Internal Name）：上方代码中第二个`sodium`处在的位置；
-+ 有模组名的内部名称：在无模组名的内部名称前面加上一个`模组名称-`。
++ 变量名（Variable Name）：上方代码中`potassiumChloride`处在的位置；
++ 无模组名的内部名称（Internal Name）：上方代码中`potassium-chloride`处在的位置；
++ 有模组名的内部名称：在无模组名的内部名称前面加上一个`模组名称-`，此处即为`lmm-potassium-chloride`。
 
 通常来说，变量名需要以小写开头，并且遵守驼峰命名。而内部名称一般是用全小写，并且用连字符连接。如果你还在命名里面用中文，那自求多福吧。
 
 ## 匿名类
-::: info
+::: warning
+不要质疑我讲这个东西的动机。匿名类和实例初始化器都是少见的语法。
+:::
+::: tip
 刚才那个声明物品的语法（Java）完全没在Java教程中见过，它到底是什么原理？
 :::
+
 上文代码的原理，可以进行如下概括：
+::: details
 ```java
 
 sodium = 
@@ -224,6 +225,7 @@ sodium =
 
 };
 ```
+:::
 
 **[匿名类（Anonymous Class）](https://www.runoob.com/java/java-anonymous-class.html)**，故名思义，就是没有名称的类。你可能会怀疑，类声明出来就是为了实例化对象的，没有名称怎么引用它？但有的时候，我们就是需要一种不会被第二次使用的类，只生成一个对象，并且不想浪费时间在给它取名上，这就是匿名类的作用。
 
@@ -237,22 +239,10 @@ sodium.explosiveness = 0.5f;
 sodium.cost = 3.5f;
 ```
 
-可以看到sodium被写了四次，这还是仅有四个属性要修改，如果有几十个字段要修改，那真的是要累死。
-
-要解决这个问题，有一种解决方式是这样的：
-```kotlin
-sodium = Item("sodium", Color.valueOf("eeeeee")).apply{
-    hardness = 0
-    flammability = 0.5f
-    explosiveness = 0.5f
-    cost = 3.5f
-}
-```
-这可能就是Kotlin中作用域方法发明的初衷，这里的`apply`方法就是直接把lambda中的`this`设置到`sodium`上了，因此不用再写出hardness的接受者是谁，直接按照this的隐式省略原则设置到`sodium`。不过，在Java中也并不是不能这么做，比如在UI编程中，Anuke自己就搓了一套类似作用域方法的轮子，不过并不能像Kotlin一样接替`this`，并没有根治这个问题。
-
-因此，在设置内容的参数的时候，Anuke求助了匿名类。而作为一个类，要想设置新实例化对象的属性，正应该借助由`{}`包裹的对象初始化器。
+可以看到sodium被写了四次，这还是仅有四个属性要修改，如果有几十个字段要修改，那真的是要累死。因此，在设置内容的参数的时候，Anuke求助了匿名类。而作为一个类，要想设置新实例化对象的属性，正应该借助由`{}`包裹的对象初始化器。
 
 **对象初始化器**，即在类中直接由大括号包裹，而没有任何方法声明的一个特殊的方法，平时使用的时候可能长这样：
+::: details
 ```java
 public class Employee{
     public int age;
@@ -271,9 +261,8 @@ public class Employee{
     }
 }
 ```
-把这段代码放在一个正常的Java项目中，在`main`方法中实例化一个Employee对象，然后你就会发现，实际上对象初始化器和构造方法是连续的，他们两个共同构成了实例化过程中初始化对象的`<init>`方法。不过从结果上来看，在构造方法中更改对象的变量，不正是我们想要的效果嘛。这样Anuke写出了字数更少并且可读性更好的代码，我们看起来也方便了不少，可是，代价是什么呢？
-
-代价就是，每一个内容都有自己的类，并且都是匿名类。一方面，Java中一类一class文件，导致了编译出来的文件数极多。另一方面，当你第一次尝试反射的时候，往往会获取不到你想要的基类。此类问题在以后遇到对应位置时将会再次提及。
+:::
+把这段代码放在一个正常的Java项目中，在`main`方法中实例化一个Employee对象，然后你就会发现，对象初始化器和构造方法是连续的，他们两个共同构成了初始化对象的`<init>`方法。从结果上来看，在构造方法中更改对象的变量，正是我们想要的效果。这样Anuke写出了字数更少并且可读性更好的代码，我们看起来也方便了不少，可是代价是什么呢？代价就是，每一个内容都有自己的类，并且都是匿名类。一方面，Java中一类一class文件，导致了编译出来的文件数极多。另一方面，当你第一次尝试反射的时候，往往会获取不到你想要的基类。此类问题在以后遇到对应位置时将会再次提及。
 
 ## 字段、构造方法和Javadoc
 
@@ -325,9 +314,9 @@ public class Employee{
 > 英文：*how radioactive this item is.*<br>
 > 中文：*此物品有多大的放射性。*
 
-不过，有时字段的功能已经十分明晰，就没有再用Javadoc作进一步解释，比如`hidden`，这个单词本来就是隐藏的意思，结合其类型可知要表达物品是否隐藏。
+不过，有时字段的功能已经十分明晰，就没有再用Javadoc作进一步解释。例如，`hidden`这个单词本来就是隐藏的意思，结合其类型可知要表达物品是否隐藏。
 
-要了解这个字段的用途，对于任何人（包括英语母语者）的困难都是读懂这里的英文。事实上，任何一个细分学科中的英语都和日常的英语大体相同但有细微差别，并且，翻译器有的时候并不能相信，所以，还是建议在开发过程中逐渐积累计算机领域和游戏领域的英语表达。此处仅举一例`Block`。
+要了解这个字段的用途，对于任何人（包括英语母语者）的困难都是读懂这里的英文。事实上，任何一个细分学科中的英语都和日常的英语大体相同但有细微差别，并且，翻译器有的时候并不能相信，所以，还是建议在开发过程中逐渐积累计算机领域和游戏领域的英语表达。
 
 至于此处除了四个物品的属性和其颜色以外的字段，在此处并没有其用处，对此的讨论将下放至其用例处。
 
@@ -362,15 +351,13 @@ public class Employee{
     /** how prone to exploding this liquid is, when heated. 0 = nothing, 1 = nuke */
     public float explosiveness;
 ```
-+ 不复制到IDE中，判断以下代码能否正常运行，如果能，是否符合规范，如果不能，指出错误之处：
++ 不复制到IDE中，判断以下代码能否正常运行，是否符合规范，指出错误之处：
+::::: tabs
 
 A.
 ```java 
 PlumBlossom = new Item("PlumBlossom", Color.valueOf("66fe7e")) {{
         hardness = 0;
-        flammability = 0.5f;
-        explosiveness = 0.5f;
-        cost = 3.5f;
 }};
 ```
 
@@ -378,9 +365,6 @@ B.
 ```java
 orchid = new Item("orchid", Color.valueOf("6e77ef")) {
         hardness = 0;
-        flammability = 0.5f;
-        explosiveness = 0.5f;
-        cost = 3.5f;
 };
 ```
 
@@ -388,9 +372,6 @@ C.
 ```java 
 bamboo = new Item("bamboo", Color.valueOf("1g3e4e")) {{
         hardness = 0;
-        flammability = 0.5f;
-        explosiveness = 0.5f;
-        cost = 3.5f;
 }};
 ```
 
@@ -398,10 +379,8 @@ D.
 ```java 
 chrysanthemum = new Item("chrysanthemum", Color.valueOf("1f3e4e")) {{
         hardness = 0;
-        flammability = 0.5f;
-        explosiveness = 0.5f;
-        cost = 3.5f;
 }};
 ```
+:::::
 
-如果你看不出来，可以将代码复制到IDEA，请将这四个内容添加到你的模组中去，检察他们是否添加成功，游戏是否被没有崩溃，IDEA是否没有提示语法错误。
+如果你看不出来，可以将代码复制到IDEA，把这四个内容添加到你的模组中去，检查游戏是否崩溃，IDEA是否提示语法错误。
