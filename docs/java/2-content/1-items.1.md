@@ -30,7 +30,7 @@ Item("sampleItem1", Color.red)
 
 ::: code-group
 
-```java
+```java ExampleJavaMod.java
 public class ExampleJavaMod extends Mod{
   @Override
   public void loadContent(){
@@ -39,7 +39,7 @@ public class ExampleJavaMod extends Mod{
 }
 ```
 
-```kotlin
+```kotlin ExampleJavaMod.kt
 class ExampleJavaMod: Mod(){
   override fun loadContent(){
     Item("sampleItem")
@@ -61,15 +61,15 @@ class ExampleJavaMod: Mod(){
 
 物品的显示名称，描述，和细节文本分别被定义为语言文件中的几个固定格式的键：
 
-- **item.\[mod内部名称]-\[物品名称].name**：物品的显示名称
-- **item.\[mod内部名称]-\[物品名称].description**：物品的描述文本
-- **item.\[mod内部名称]-\[物品名称].details**：物品细节
+- **item.[mod内部名称]-[物品名称].name**：物品的显示名称
+- **item.[mod内部名称]-[物品名称].description**：物品的描述文本
+- **item.[mod内部名称]-[物品名称].details**：物品细节
 
 其中`mod内部名称`填写你在`mod.json`中所写的`name`，而`物品名称`即在你创建物品对象时，在参数中写下的那个字符串。
 
 例如，对于我们刚刚创建的那个物品，其名称为`sampleItem`，我们例子中的演示mod内部名称为`example-java-mod`，那么在bundle中的键值对键名就应当填写为`example-java-mod-sampleItem`，例如我们将如下信息填写到`bundle_zh_CN.properties`当中：
 
-```
+```properties
 item.example-java-mod-sampleItem.name = 演示物
 item.example-java-mod-sampleItem.description = Hello World！（为什么在这里还要Hello World？）
 item.example-java-mod-sampleItem.details = 你看不见我看不见我看不见我
@@ -143,6 +143,10 @@ Item("sampleItem").apply{
 
 :::
 
+现在，再次看看它的详情：
+
+![分配属性](imgs/firstItemAttred.png)
+
 ::: tip 注意
 
 上述的代码中`java`与`kotlin`的程序实际上并不等价，在java的就地分配属性中其实创建了一个**匿名类**，即`new Type(...){...}`表达式，然后在匿名类中仅定义了一个初始化块`{...}`来完成的属性分配，从而形成了`new Type(...){ {...} }`这样的形式，而kotlin则是实际的就地分配属性。
@@ -150,10 +154,6 @@ Item("sampleItem").apply{
 这并不重要，但是如果你很在意这一份开销的话，也可以把java声明拆开写。
 
 :::
-
-现在，再次看看它的详情：
-
-![分配属性](imgs/firstItemAttred.png)
 
 ## 整理并列表
 
@@ -169,7 +169,7 @@ Item("sampleItem").apply{
 
 ::: code-group
 
-```java
+```java ModItems.java
 public class ModItems{
   public static Item item1, 
       item2, 
@@ -196,7 +196,7 @@ public class ModItems{
 }
 ```
 
-```kotlin
+```kotlin ModItems.kt
 object ModItems{
   lateinit var item1
   lateinit var item2
@@ -229,7 +229,7 @@ object ModItems{
 
 ::: code-group
 
-```java
+```java ExampleJavaMod.java
 public class ExampleJavaMod extends Mod{
   @Override
   public void loadContent(){
@@ -238,7 +238,7 @@ public class ExampleJavaMod extends Mod{
 }
 ```
 
-```kotlin
+```kotlin ExampleJavaMod.kt
 class ExampleJavaMod: Mod(){
   override fun loadContent(){
     ModItems.load()

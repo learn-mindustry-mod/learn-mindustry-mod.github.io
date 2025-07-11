@@ -66,7 +66,7 @@ fun example() {
 
 把这张图片保存为文件`texture.png`，然后放入到mod目录下的任意子目录中（不要放在sprites目录下，之后的章节我会解释为什么），例如，我们将这个图片放到mod的根目录下，然后我们可以这样去手动加载这个纹理：
 
-:::code-group
+::: code-group
 
 ```java
 void example(){
