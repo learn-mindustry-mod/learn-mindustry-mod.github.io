@@ -57,7 +57,7 @@ FrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boole
 | rgb565         | 像素占据16位精度，分割为5位的r和g以及6位的b | (r, g, b, 1) |
 | rgba4444       | 像素占据16位精度，四个数据rgba分别占4位   | (r, g, b, a) |
 | rgb888         | 像素占24位精度，三个数据rgb分别占8位     | (r, g, b, 1) |
-| rgba8888       | 像素占据16位精度，四个数据rgba分别占8位   | (r, g, b, a) |
+| rgba8888       | 像素占据32位精度，四个数据rgba分别占8位   | (r, g, b, a) |
 
 除非你很清楚你需要的效果，否则使用`rgba8888`始终是首选。
 
