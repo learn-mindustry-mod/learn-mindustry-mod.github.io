@@ -228,55 +228,7 @@ void main(){
 
 ![interpolation](./imgs/interpolation.png)
 
-是不是听起来比较抽象？我们刚刚编写的顶点着色器不是将颜色信息存储到图元顶点上了么，只需要修改一下我们上一节中的范例，将三角形的三个角颜色变为不同的颜色：
-
-::: code-group
-
-```java
-void example(){
-  Mesh mesh = new Mesh(
-      true,//isStatic
-      3,   //maxVertices
-      0,   //maxIndices
-      VertexAttribute.position,
-      VertexAttribute.color,
-      VertexAttribute.texCoords
-  );
-  mesh.setVertices(new float[]{
-      //顶点坐标      颜色                   纹理坐标
-      -0.5f, -0.5f,  color.toFloatBits(),  0f,   0f,
-       0.0f,  0.5f,  color.toFloatBits(),  0.5f, 1f,
-       0.5f, -0.5f,  color.toFloatBits(),  1f,   0f
-  });
-  
-  mesh.render(shader, Gl.triangles);
-}
-```
-
-```kotlin
-fun example(){
-  val mesh = Mesh(
-      isStatic = true,
-      maxVertices = 3, 
-      maxIndices = 0, 
-      VertexAttribute.position,
-      VertexAttribute.color,
-      VertexAttribute.texCoords
-  )
-  mesh.setVertices(floatArrayOf(
-      //顶点坐标      颜色                   纹理坐标
-      -0.5f, -0.5f,  color.toFloatBits(),  0f,   0f,
-       0.0f,  0.5f,  color.toFloatBits(),  0.5f, 1f,
-       0.5f, -0.5f,  color.toFloatBits(),  1f,   0f
-  ))
-
-  mesh.render(shader, Gl.triangles)
-}
-```
-
-:::
-
-然后我们编写一个非常简单的片段着色器，将顶点着色器传递过来的颜色直接作为像素颜色：
+是不是听起来比较抽象？我们刚刚编写的顶点着色器不是将颜色信息存储到图元顶点上了么，只需要修改一下我们上一节中的范例，将三角形的三个角颜色变为不同的颜色，然后我们编写一个非常简单的片段着色器，将顶点着色器传递过来的颜色直接作为像素颜色：
 
 ```glsl example.frag
 varying vec4 v_color;
