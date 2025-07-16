@@ -54,10 +54,10 @@ FrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boole
 | alpha          | 像素仅包含一个8位精度的数据a，仅记录透明度信息  | (0, 0, 0, a) |
 | intensity      | 像素仅包含一个8位精度的数据i，记录像素灰度信息  | (i, i, i, i) |
 | luminanceAlpha | 像素仅包含一个8位精度的数据l，记录像素的亮度信息 | (l, l, l, 1) |
-| rgb565         | 像素占据16位精度，分割为5位的r和g以及6位的b | (r, g, b, 1) |
-| rgba4444       | 像素占据16位精度，四个数据rgba分别占4位   | (r, g, b, a) |
-| rgb888         | 像素占24位精度，三个数据rgb分别占8位     | (r, g, b, 1) |
-| rgba8888       | 像素占据32位精度，四个数据rgba分别占8位   | (r, g, b, a) |
+| rgb565         | 像素为16位颜色，分割为5位的r和g以及6位的b  | (r, g, b, 1) |
+| rgba4444       | 像素为16位颜色，四个数据rgba分别占4位    | (r, g, b, a) |
+| rgb888         | 像素为24位颜色，三个数据rgb分别占8位     | (r, g, b, 1) |
+| rgba8888       | 像素为32位颜色，四个数据rgba分别占8位    | (r, g, b, a) |
 
 除非你很清楚你需要的效果，否则使用`rgba8888`始终是首选。
 
