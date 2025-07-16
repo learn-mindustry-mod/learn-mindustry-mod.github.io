@@ -310,3 +310,39 @@ fun drawPixelate(){
 ![像素化后的图像绘制](imgs/pixelated.png)
 
 而游戏本身的像素化实现原理与上述例子实际上是几乎完全一致的，只是那个`draw()`方法指向了游戏的核心渲染流程！
+
+打开游戏本身实现像素化的工具类`mindustry.graphics.Pixelator`，查阅其两个核心方法:
+
+```java
+public void drawPixelate(){
+    //计算缓冲尺寸w与h，已省略
+    //...
+
+    buffer.resize(w, h);
+
+    buffer.begin(Color.clear);
+    renderer.draw();
+}
+
+public void register(){
+  Draw.draw(Layer.end, () -> {
+    buffer.end();
+
+    Blending.disabled.apply();
+    buffer.blit(Shaders.screenspace);
+
+    //对齐摄像机坐标，已省略
+    //...
+  });
+}
+```
+
+而这两个方法恰恰将整个游戏的世界渲染工作包含在了其中，这与我们前面所给出的例子的工作逻辑是**完全一致的**！而其中出现的帧缓冲的`buffer.blit(shader)`方法，其效用为使用参数提供的那个着色器，将帧缓冲的内容绘制在屏幕上，这等价于使用该着色器和帧缓冲中的纹理作为采样目标，去提交一个四个顶点分别为屏幕四个角的`Mesh`，而上述`Shaders.screenspace`就是简单的将纹理采样结果作为片段颜色进行染色。
+
+## 小练习
+
+试试编写一个小窗，在游戏正常渲染的同时，将游戏画面在一个小窗口中再次显示。
+
+::: details 小提示
+###### 参考一下本节的第一个例子是如何缩放的，然后想想像素化又是如何对游戏画面进行的？
+:::
