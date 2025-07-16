@@ -173,6 +173,10 @@ fun example(){
 
 > 可以试试画一个更复杂的图像，然后尝试改变一下将帧缓冲绘制到屏幕上的尺寸甚至角度，看看绘制的效果。
 
+::: tip 注意
+注意新建`TextureRegion`的操作，频繁实例化会带来性能问题，在实际开发中应缓存一个对象通过`set(texture)`方法来更新该纹理区域的图像内容。
+:::
+
 你可能会困惑于这有什么作用，需要注意帧缓冲的绑定与解绑并不干扰其间的绘制任务，当我们将游戏的图形绘制工作完全包含在一个帧缓冲绑定内时，游戏输出的图像就会被完整的输出到帧缓冲中，而不是屏幕上，而对这个图像应用一些处理后再输出到屏幕，就可以实现如滤镜和像素化等效果，而游戏本身的像素化也就是利用帧缓冲实现的，稍后我们会去解析Mindustry的像素化处理原理。
 
 ## 嵌套帧缓冲
@@ -236,3 +240,73 @@ fun example(){
 
 而对于需要逐级传递渲染结果的嵌套结构，还应在内层的帧缓冲解绑后将缓冲内容以任何形式去绘制到上一层。
 :::
+
+## 像素化的原理
+
+在讲解像素化的工作原理之前，我们还需要补充一个知识点，即帧缓冲的尺寸对渲染任务的影响。
+
+在你绑定到一个帧缓冲时，在将渲染目标设定到该帧缓冲的同时，`begin`方法还会将GL窗口的尺寸也重设为与帧缓冲一致，回顾我们在之前的章节中讲解的标准化屏幕坐标，当一个帧缓冲被绑定后，该坐标在屏幕空间的投射同样会指向该帧缓冲中，也就是说：**绑定的帧缓冲尺寸会改变渲染的比例与分辨率**。
+
+现在，思考一下实现图像像素化需要做什么？
+
+像素化的实质即通过降低图像的分辨率，来增强图像的边缘锯齿，为此，我们可以将游戏的主要渲染工作包围在一个长宽比不变，但是分辨率小于窗口实际尺寸的帧缓冲中，此时，游戏的渲染将会在一个更小的窗口中进行。
+
+![分辨率对光栅化的影响](imgs/resolution.png)
+
+此时，在此缓冲内完成游戏的渲染流程后，游戏的一帧将会被输出到一个尺寸缩小后的纹理当中。将该纹理的过滤方式设置为最近邻过滤（见本章第四节 ***[纹理与点阵图（Pixmap）](04-texture-and-pixmap.md)***）以强化边界的锯齿，直接将该纹理放大绘制到屏幕尺寸上，即可实现图像的像素化。
+
+以我们在第五节中绘制多个方形图像的[程序](05-transformation-projection-camera.md#摄像机的原理)为例，我们按照上述的逻辑编写一个帧缓冲包围那个`draw()`方法：
+
+::: code-group
+
+```java
+FrameBuffer pixelator = new FrameBuffer(){{ 
+  getTexture().setFilter(Texture.TextureFilter.nearest);
+}};
+TextureRegion region = new TextureRegion();
+
+public void drawPixelate(){
+  int width = Core.graphics.getWidth();
+  int height = Core.graphics.getHeight();
+  
+  pixelator.resize(width/4, height/4);
+  pixelator.begin(Color.clear);
+  
+  draw();
+  
+  pixelator.end();
+  
+  region.set(pixelator.getTexture());
+  Draw.rect(region, width/2f, height/2f, width, height);
+}
+```
+
+```kotlin
+val pixelator = FrameBuffer().apply{
+  getTexture().setFilter(Texture.TextureFilter.nearest)
+}
+val region = TextureRegion()
+
+fun drawPixelate(){
+  val width = Core.graphics.width
+  val height = Core.graphics.height
+
+  pixelator.resize(width/4, height/4)
+  pixelator.begin(Color.clear)
+
+  draw()
+
+  pixelator.end()
+
+  region.set(pixelator.getTexture())
+  Draw.rect(region, width/2f, height/2f, width, height)
+}
+```
+
+:::
+
+将绘制中对`draw()`的调用更换为此处包围的`drawPixelate()`，最后的图像会明显的像素化：
+
+![像素化后的图像绘制](imgs/pixelated.png)
+
+而游戏本身的像素化实现原理与上述例子实际上是几乎完全一致的，只是那个`draw()`方法指向了游戏的核心渲染流程！

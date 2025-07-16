@@ -412,9 +412,9 @@ fun example(tex: Texture) {
 而对于多级细节的纹理，它的采样方式是另外四种用于多级细节纹理的过滤方式：
 
 - `GL.nearestMipMapNearest` 从最接近的mipmap级别中进行采样，并使用最近邻过滤
-- `GL.linearMipMapNearest` 从最接近的mipmap级别中进行采样，并使用线性过滤
-- `GL.nearestMipMapLinear` 从两个最接近的mipmap级别中进行最近邻采样，并使用最近邻过滤
-- `GL.linearMipMapLinear` 从两个最接近的mipmap级别中进行线性插值采样，并对采样的两个颜色进行线性插值
+- `GL.nearestMipMapLinear` 从最接近的mipmap级别中进行采样，并使用线性过滤
+- `GL.linearMipMapNearest` 从两个最接近的mipmap级别中进行最近邻采样，然后对采样的两个颜色进行线性插值
+- `GL.linearMipMapLinear` 从两个最接近的mipmap级别中进行线性插值采样，然后对采样的两个颜色进行线性插值
 
 这些同样也被封装在了枚举类`Texture.TextureFilter`中，默认情况下多级细节纹理的过滤方式为`GL.linearMipMapLinear`。
 
