@@ -115,3 +115,27 @@ outputItems = ItemStack.with(Items.copper,1,Items.lead,2);
 outputLiquids = new LiquidStack(Liquids.water,1f);
 outputItem = LiquidStack.with(Liquids.water,1f,Liquids.slag,2f);
 ```
+
+## 声明绘制器（Drawer）
+
+在v7之前，原版的工厂只有屈指可数的几种绘制模式，并且绘制的内容还受制于工厂的类型。而在v7之后，就全都不一样了：一方面，所有没有热量需求和地形增益的工厂都被统一到`GenericCrafter`；另一方面，工厂的绘制完全被提取到绘制器（Drawer）这一组件中，使得JSON模组获得了超强的自定义能力，也优化了Java中工厂的架构，提高了绘制模式的可重用性。在本节中，你将先了解如何组合并使用原版中已有的drawer。
+
+
+## 一些特殊的工厂子类型
+
+正如上一节中所提，并非所有工厂都是`GenericCrafter`。实际上，有地形增益的工厂是`AttributeCrafter`，有热量需求的工厂是`HeatCrafter`。
+
+这两个类型都是`GenericCrafter`的子类，也就是说，上文所提的一切在这两个类型中都是可用的；相应地，这两个类也有一些独创之处：
+
+对于`AttributeCrafter`：
+- `atrribute`：使此工厂获得增益或减益的属性（Attribute），原版中的attribute包括`heat``spores``water``oil``light``sand``steam`等，均可望名生义；
+- `displayEfficiencyScale`：在显示工厂效率时的一个乘数；
+- 其他属性均可望名生义。
+
+对于`HeatCrafter`：
+- `heatRequirement`：所需热量；
+- `overheatScale`：当获取热量超出所需热量时，多出的热量将以多大的比例提高效率，默认是按原倍数增长；
+- `maxEfficiency`：由热量增益产生的最大效率。
+
+## 思考题
+只有那些category为crafting的才算是工厂吗？查找原版还有哪些方块也是工厂，并思考用工厂还能做出来什么新奇的策划设计。
