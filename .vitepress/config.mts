@@ -49,7 +49,7 @@ function generateNav(name:string):VitePressSidebarOptions{
   useTitleFromFileHeading: true,
   useFolderTitleFromIndexFile: true,
   includeEmptyFolder: true,
-  excludePattern: ["imgs", "readme"],
+  excludePattern: ["imgs", "readme","guideline"],
   }
 }
 export default defineConfig(withSidebar(viteConfig,
