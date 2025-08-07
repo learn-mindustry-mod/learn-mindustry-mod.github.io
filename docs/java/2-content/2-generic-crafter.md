@@ -118,7 +118,30 @@ outputItem = LiquidStack.with(Liquids.water,1f,Liquids.slag,2f);
 
 ## 声明绘制器（Drawer）
 
-在v7之前，原版的工厂只有屈指可数的几种绘制模式，并且绘制的内容还受制于工厂的类型。而在v7之后，就全都不一样了：一方面，所有没有热量需求和地形增益的工厂都被统一到`GenericCrafter`；另一方面，工厂的绘制完全被提取到绘制器（Drawer）这一组件中，使得JSON模组获得了超强的自定义能力，也优化了Java中工厂的架构，提高了绘制模式的可重用性。在本节中，你将先了解如何组合并使用原版中已有的drawer。
+在v7之前，原版的工厂只有屈指可数的几种绘制模式，并且绘制的内容还受制于工厂的类型。而在v7之后，就全都不一样了：一方面，所有没有热量需求和地形增益的工厂都被统一到`GenericCrafter`；另一方面，工厂的绘制完全被提取到绘制器（Drawer）这一组件中，使得JSON模组获得了超强的自定义能力，也优化了Java中工厂的架构，提高了绘制模式的可重用性。在本节中，你将先了解如何使用并组合原版中已有的drawer。
+
+最基本的drawer就是`DrawDefault`了，这个最基本的drawer的功能，仅仅是绘制一张名称与本工厂相同的贴图。使用如下方式进行使用：
+
+```
+drawer = new DrarDefault();
+```
+
+不过，你也可以再多在绘制上用一些心思。在`mindustry.world.draw`包下面还有好多drawer可供探索，但需要切记的是一个方块只有一个drawer，像是`DrawCircle` `DrawGlowRegion`之类的drawer，需要和其他drawer一同使用，这就需要`DrawMulti`了：
+
+```
+drawer = new DrawMulti(
+                new DrawRegion("-bottom"),
+                new DrawLiquidTile(Liquids.water, 2f),
+                new DrawBubbles(Color.valueOf("7693e3")),
+                new DrawRegion(),
+                new DrawLiquidOutputs(),
+                new DrawGlowRegion()
+                );
+```
+
+一个`DrawMulti`中可以嵌套多层drawer，这些drawer将会按照声明顺序从下到上叠加，最终形成原版电解机那样丰富的口感。
+
+另外一件事是，有的drawer会需要一张贴图，比如`DrawerDefault`要一张与方块内部名相同的贴图，`DrawRegion`的有参版本会需要一张内部名后面有特定后缀的贴图，像`DrawGlowRegion`需要一张`-glow`为后缀的贴图，欲知各个drawer需要什么样的贴图，访问其`load()`方法即可知。
 
 
 ## 一些特殊的工厂子类型
