@@ -9,6 +9,8 @@
 
 ## 创建一个Drill
 
+::: code-group
+
 ```java
 new Drill("tutorial-drill");
 ```
@@ -41,6 +43,7 @@ consumeLiquid(Liquids.water, 0.05f).boost();
 
 ## 创建一个Pump
 
+::: code-group
 
 ```java
 new Pump("tutorial-pump");
@@ -49,6 +52,8 @@ new Pump("tutorial-pump");
 ```kotlin
 Pump("tutorial-pump")
 ```
+
+:::
 
 泵唯一的特点就是其抽取速度`pumpAmount`，不要忘记涉及流体时，时间的单位都要取刻。
 

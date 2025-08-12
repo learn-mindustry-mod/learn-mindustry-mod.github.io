@@ -16,7 +16,7 @@
 
 像物品和流体一样，方块也被封装成了一个类型`mindustry.world.Block`。不过，不同方块有着不同的功能，这就需要方块拥有不同的类型。因此，我们在创建一个方块的时候，需要根据需要的功能选择合适的类型。而要创建一个通用工厂，我们需要的类型为`mindustry.world.blocks.production.GenericCrafter`。
 
-:::
+::: code-group
 
 ```java
 new GenericCrafter("tutorial-crafter");
@@ -124,13 +124,13 @@ outputItem = LiquidStack.with(Liquids.water,1f,Liquids.slag,2f);
 
 最基本的drawer就是`DrawDefault`了，这个最基本的drawer的功能，仅仅是绘制一张名称与本工厂相同的贴图。使用如下方式进行使用：
 
-```
+``` java
 drawer = new DrarDefault();
 ```
 
 不过，你也可以再多在绘制上用一些心思。在`mindustry.world.draw`包下面还有好多drawer可供探索，但需要切记的是一个方块只有一个drawer，像是`DrawCircle` `DrawGlowRegion`之类的drawer，需要和其他drawer一同使用，这就需要`DrawMulti`了：
 
-```
+```java
 drawer = new DrawMulti(
                 new DrawRegion("-bottom"),
                 new DrawLiquidTile(Liquids.water, 2f),
@@ -144,6 +144,50 @@ drawer = new DrawMulti(
 一个`DrawMulti`中可以嵌套多层drawer，这些drawer将会按照声明顺序从下到上叠加，最终形成原版电解机那样丰富的口感。
 
 另外一件事是，有的drawer会需要一张贴图，比如`DrawerDefault`要一张与方块内部名相同的贴图，`DrawRegion`的有参版本会需要一张内部名后面有特定后缀的贴图，像`DrawGlowRegion`需要一张`-glow`为后缀的贴图，欲知各个drawer需要什么样的贴图，访问其`load()`方法即可知。
+
+如下表：
+
+| 名称 | 效果 | 所需贴图后缀 | 使用例 |
+|:---:|---|---|---|
+| DrawArcSmelt | 绘制半径周期变化的圆，和一些向四周飞出的、充当火焰的短线 |  | 电弧硅炉 |
+| DrawBlock | 是抽象类，不能直接用 |  | 所有方块 |
+| DrawBlurSpin | 低速时绘制一个旋转贴图，高速时绘制动态模糊版的旋转贴图 | $suffix$和$suffix$-blur | 涡轮冷凝器 |
+| DrawBubbles | 绘制一些泡泡 |  | 电解器 |
+| DrawCells | 绘制流体层和一些在流体里放大缩小的粒子 | middle | 瘤变反应堆中心瘤液处 |
+| DrawCircles | 绘制一些会放大缩小的粒子 |  | 合金坩埚和瘤变反应堆四周 |
+| DrawCrucibleFlame | 绘制向内运动并缩小的粒子 |  | 碳化物坩埚的中心 |
+| DrawCultivator | 绘制在随机位置出现的逐渐扩大的八边形 |  | 培养机 |
+| DrawDefault | 绘制贴图 | 无后缀 | 大部分方块 |
+| DrawFade | 绘制有周期性变化颜色的遮罩层 | top | 塑钢压缩机 |
+| DrawFlame | 绘制工作时周期性变化大小的灯 | top | 硅冶炼厂 |
+| DrawFrames | 绘制随工作进度周期性或线性变换的贴图 | frame$i$ | 无 |
+| DrawGlowRegion | 绘制亮度随工作进度线性变化的贴图 | glow | 热解发生器 |
+| DrawHeatInput | 绘制亮度随输入热量比线性变化的贴图 | heat | 所有带热量输入的方块 |
+| DrawHeatOutput | 绘制亮度随输出热量线性变化的贴图 | heat glow top1 top2 | 所有带热量输出的方块 |
+| DrawHeatRegion | 绘制亮度随热量线性变化并周期变化的贴图 | glow | 所有热量工厂 |
+| DrawLiquidOutputs | 按输出流体面（liquidOutputDirections）绘制贴图 | $liquid$-output | 电解器 |
+| DrawLiquidRegion | 绘制透明度随指定或当前流过流体量变化的贴图 | liquid | 孢子压缩机 |
+| DrawLiquidTile | 绘制透明度随指定或当前流过流体量变化的纯色层 |  | 冷冻液混合器 |
+| DrawMulti | 组合多个Drawer |  | 基本所有方块 |
+| DrawMultiWeave | 绘制两个旋转的、会发光的梭子（疑） | weave weave-glow | 相织布合成机 |
+| DrawParticles | 绘制粒子特效 |  | 大气收集器 |
+| DrawPistons | 绘制一圈周期收缩的活塞 | piston | 热解发生器 |
+| DrawPlasma | 绘制旋转的、透明度随预热程度线性变化的多张贴图 | plasma-$i$ | 冲击反应堆 |
+| DrawPower | 绘制颜色随电量线性变化的贴图 | power或（power-empty和power-full） | 电池 |
+| DrawPulseShape | 绘制一个逐渐扩大的菱方形或圆形 |  | 再生投影仪 |
+| DrawPumpLiquid | 绘制与抽取流体同色的贴图 | liquid | 泵 |
+| DrawRegion | 绘制一张贴图 |  |  |
+| DrawShape | 绘制一个多边形 |  | 再生投影仪 |
+| DrawSideRegion | 绘制一个与朝向有关（右上/左下）的贴图 | top1 top2 |  |
+| DrawSoftParticles | 绘制柔软的粒子特效 |  | 通量反应堆 |
+| DrawSpikes | （没看出来） |  | 相织布合成机 |
+| DrawTurret | 绘制炮塔的part | 视情况而定 | 所有很帅的炮塔 |
+| DrawWarmupRegion | 绘制随预热程度变化的贴图 | top | RTG发电机 |
+| DrawWeave | 绘制一个旋转的的梭子 | weave | 相织布编织器 |
+
+此外有几点须知：
+- 大部分drawer为了增加“活力”，会通过正弦函数对绘制的贴图增加一个周期性变化的值，这种现象称为“律动”（Pulse），而正弦函数y=Asinωx中的A、ω分别振幅（Magnificance）和频率（Scale），缩写分别为Mag和Scl；
+- 上提到的所有变化中的自变量都不是“量”，而是“量”与“容量”的比值，是归一化（Normalized）的，介于0-1之间（当然有的会超过1），比如`DrawLiquidTile`的自变量是流体量与流体容量的比值。
 
 
 ## 一些特殊的工厂子类型
