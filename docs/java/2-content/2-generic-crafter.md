@@ -68,6 +68,8 @@ GenericCrafter("tutorial-crafter").apply{
 }
 ```
 
+我们并没有手动设置方块的建造时间，实际上方块的建造时间就是需求物品的`cost`总和再乘以`buildCostMultiplier`，如果你觉得某个方块的建造时间过长，但不想更改物品的`cost`时，可以设置`buildCostMultiplier`为一个比1小的数来降低建造时间。**最好不要直接设置buildCost！！！**
+
 接下来，名称和贴图的设置不再备述。
 
 :::
@@ -205,6 +207,11 @@ drawer = new DrawMulti(
 - `heatRequirement`：所需热量；
 - `overheatScale`：当获取热量超出所需热量时，多出的热量将以多大的比例提高效率，默认是按原倍数增长；
 - `maxEfficiency`：由热量增益产生的最大效率。
+
+## 加载顺序
+
+如果你在方块里使用到了模组里的物品，那你最好要保证物品先于方块被加载，否则你可能会遇到`NullPointerException`异常。方法就是，保证注册物品的代码先于方块被执行即可。
+
 
 ## 思考题
 只有那些category为crafting的才算是工厂吗？查找原版还有哪些方块也是工厂，并思考用工厂还能做出来什么新奇的策划设计。
