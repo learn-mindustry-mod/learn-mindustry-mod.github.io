@@ -28,7 +28,7 @@ solarPanel = SolarGenerator("tutorial-solar-panel").apply{
 
 ### 地热发电机（ThermalGenerator）
 
-根据下方方块的Attribute计算效率，就像工厂中的`AttributeCrafter`一样。可以设置最低工作效率`minEfficiency`。埃里克尔上的涡轮冷凝器也是一个“地热发电机”，这是由于蒸汽喷口也是一种Attibute（即`steam`），所以“地热发电机”也有`outputLiquid`可以输出流体。
+根据下方方块的Attribute计算效率，就像工厂中的`AttributeCrafter`一样。可以设置最低工作效率`minEfficiency`。埃里克尔上的涡轮冷凝器也是一个“地热发电机”，这是由于蒸汽喷口也是一种Attibute（即`steam`），所以“地热发电机”有`outputLiquid`可以输出流体。
 
 ::: code-group
 
@@ -209,7 +209,7 @@ impactReactor = ImpactReactor("tutorial-impact-reactor").apply{
 
 ### 总结
 
-我们到目前为此也已经见过十多种方块的类了，它们的类型（Kind）大致可分为三种：
+我们到目前为此已经见过十多种方块的类了，它们的类型（Kind）大致可分为三种：
 
 - 通用类：一个类有一个工作的基础模板，在模板之上有一定的自定义空间，通常使用组件来拓展功能，如通用工厂（`GenericCrafter`），消耗发电机（`ConsumeGenerator`）；
 - 专用类：一个类只负责干一个非常专门的工作，比如太阳能板（`SolarPanel`）、溢流门（`OverflowGate`），逻辑大多复杂而且不能简单地归入到通用类的框架下；
@@ -219,7 +219,7 @@ impactReactor = ImpactReactor("tutorial-impact-reactor").apply{
 
 电力节点有两种类型，一种是在圆形范围内、有连接数量限制、手动连接的电力节点，一种是在范围里自动连接的激光节点。还有一个奇怪的`LongPowerNode`，似乎只是在绘制上与电力节点稍有区别。
 
-你当然可以让电力节点也能缓存电力，原版在埃里克尔就是这么做的，因为那里没有电池用。
+你当然可以让电力节点缓存电力，原版在埃里克尔就是这么做的，因为那里没有电池用。
 
 关于电力节点和激光节点的连接，实际上大有文章可作，此处并不深究。
 
@@ -274,13 +274,13 @@ batteryLarge = new Battery("tutorial-battery-large"){{
 }};
 ```
 
-电池就是缓存电力的，而其功能由`ConsumePowerBuffered`这一消耗器负责。而且，电池居然也有drawer，默认的drawer只负责变换电池的颜色，你固然可以给电池上一些更加好看的drawer，但是电池又没有`progress`，所以部分drawer并不能起效。
+电池就是缓存电力的，而其功能由`ConsumePowerBuffered`这一消耗器负责。而且，电池居然有drawer，默认的drawer只负责变换电池的颜色，你固然可以给电池上一些更加好看的drawer，但是电池又没有`progress`，所以部分drawer并不能起效。
 
 ## 其余电力方块
 
-除了`PowerGenerator`用于标记发电机，还有两个标记类，分别是`PowerDistributor`和`PowerBlock`，这两个类完全没有标记作用，只是做了一些设置工作。
+除了`PowerGenerator`用于标记发电机，还有两个标记类，分别是`PowerDistributor`和`PowerBlock`，这两个类完全没有标记作用，只是做了一些设置工作。此外，电力源`PowerSource`和电力黑洞`PowerVoid`在`mindustry.world.block.sandbox`包里，这两个类的工作原理完全不神秘，单纯是无条件的高能发电机和无条件的高耗能方块而已。
 
-灯光方块`LightBlock`跟电力方块在同一个软件包里，它的工作就是发光照亮**黑暗**，没有探开战争迷雾的功能。此外，它的可见性`BuildVisibility`也与其他方块稍有不同，只有在战役模式或地图有黑暗的时候才会显示。
+灯光方块`LightBlock`跟电力方块在同一个软件包里，它的工作就是照亮**黑暗**，但没有探开战争迷雾的功能。它的可见性`BuildVisibility`与其他方块稍有不同，只有在战役模式或地图有黑暗的时候才会显示。
 
 ``` java
 illuminator = new LightBlock("illuminator"){{

@@ -1,12 +1,6 @@
 
 # 工厂
 
-- 创建一个GenericCrafter
-- 声明消耗项（Consume） // 引子 - 消耗系统
-- 常规产出项
-- 绘制器（Drawer） // 引子 - 自定义drawer
-- 一些特殊的工厂子类型 // 引子 - 环境与Attribute
-
 
 > ***游戏的灵魂***
 
