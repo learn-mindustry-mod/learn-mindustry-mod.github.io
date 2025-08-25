@@ -105,3 +105,17 @@ UnitType("tutorial-unit").apply{
 - `StatusFieldAbility`：状态场能力，对附近的单位施加状态效果，如电鳗；
 - `SuppressionFieldAbility`：修复压制场能力，使附近的修复建筑停止工作，如“龙王”；
 - `UnitSpawnAbility`：单位生成能力，建造单位，如“海神”。
+
+## 单位命令与姿态
+
+单位命令（UnitCommand）与姿态（UnitStance）是v8中新添加的两种内容类型，应用于RTS系统。单位命令可以更换单位的AI。单位姿态给单位标记**状态（State）**，本身没有功能，只是供单位控制器读取并作出反应。由于与AI的强耦合性，现阶段没有必要注册新的单位命令和姿态。
+
+单位支持的姿态和命令既可以手动指定，也可以让游戏根据单位本身的参数自动添加。
+
+关于单位采矿菜单中没有模组矿物的问题，你只需要注册一个新的`ItemUnitStance`，并给单位添加这个姿态就好了：
+
+``` java
+ItemUnitStance item1mine = new ItemUnitStance(ModItems.item1);
+UnitTypes.mono.stances.add(item1mine);
+//省略若干单位
+```
