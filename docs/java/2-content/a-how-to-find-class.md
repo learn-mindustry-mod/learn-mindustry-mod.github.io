@@ -1,4 +1,4 @@
-# 如何查找自己需要的类型和字段
+# 如何查找自己需要的类型
 
 在本章的学习中，我们已经潜移默化地在利用和查阅源代码了。本节我们将系统地讲解查阅原版源代码的流程，帮助养成举一反三的能力，以及减少对他人的依赖。
 
@@ -27,6 +27,8 @@
 |`../ai/UnitStance.java`| 原版所有单位姿态 |
 
 v7之后，所有的内容加载类的所有字段和方法都是静态的，在原版中由`Vars.content.createBaseContent()`统一调用，紧随着就是各个模组的`loadContent()`被执行。
+
+`loadContent()`后内容并非就加载完毕了，之后会再依次执行所有内容的 `createIcons()`（作为对比，原版内容此方法在编译期执行） `init()` `postInit()` `loadIcon()` `load()`，然后才是`Mod#init()`。
 
 ## 根据方块找到合适的class
 
@@ -88,5 +90,50 @@ public @Load(value = "@-#1-#2", lengths = {7, 4}) TextureRegion[][] regions;
 
 ```
 
+你可以用`Content`的练习一下：
+
+``` java
+@Override
+public void loadIcon(){
+    fullIcon =
+        Core.atlas.find(fullOverride == null ? "" : fullOverride,
+        Core.atlas.find(getContentType().name() + "-" + name + "-full",
+        Core.atlas.find(name + "-full",
+        Core.atlas.find(name,
+        Core.atlas.find(getContentType().name() + "-" + name,
+        Core.atlas.find(name + "1"))))));
+
+    uiIcon = Core.atlas.find(getContentType().name() + "-" + name + "-ui", fullIcon);
+}
+```
+*请思考：物品的本体贴图到底有多少种命名方式？Mindustry每次大更新都没有模组负担，为什么Anuken还留着他们？*
+
 ## 原版Bundle格式
+
+关于语言的获取代码位于`UnlockableContent`中：
+
+``` java
+public UnlockableContent(String name){
+    super(name);
+
+    this.localizedName = Core.bundle.get(getContentType() + "." + this.name + ".name", this.name);
+    this.description = Core.bundle.getOrNull(getContentType() + "." + this.name + ".description");
+    this.details = Core.bundle.getOrNull(getContentType() + "." + this.name + ".details");
+    this.unlocked = Core.settings != null && Core.settings.getBool(this.name + "-unlocked", false);
+}
+
+```
+
+其中`getContentType()`就是上节提到的`ContentType`若干种。另外需要知道的是，在内容的name前面自动加`modName`是`Vars.content.transformName()`方法的功能。此时我们回顾一下各种内容的bundle格式就是极为合适的：
+
+``` properties
+```
+
+## 其他我暂时不知道在哪里讲合适的东西
+
+本节是一些原版比较偏难怪的功能，未来这些内容可能会分散在本章或后几章中。
+
+不得不讲一个笑话，一个莫斯科大学的数学教授跳槽到了哈佛，刚一抵达就被要求教数学分析，于是他跑去问其它教授：“这门课我该教些什么？”其他人告诉他：“教点极限、连续性、可微性，再加点不定积分就行了。”第二天，他又跑过来问其他教授，「那我第二堂课该教些什么呢？」
+
+### Env位掩码系统
 
