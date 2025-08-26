@@ -84,7 +84,7 @@ consumeLiquids(LiquidStack.with(Liquids.water,1f,Liquids.slag,2f));
 consumePower(1f);
 ```
 
-值得注意的是，流体和电量的消耗都是以**刻（Tick）**为单位的，而`1s = 60tick`，所以千万不要让流体和电力消耗扩大60倍！
+值得注意的是，流体和电量的消耗都是以 **刻（Tick）** 为单位的，而`1s = 60tick`，所以千万不要让流体和电力消耗扩大60倍！
 
 这只是消耗器的一部分用法，事实上，原版中火力发电机、炮塔的冷却剂等都是消耗器的功能，所以你甚至可以在自己的工厂里塞更多奇怪的东西。
 
@@ -105,7 +105,7 @@ consume(new ConsumeCoolant(1f));
 非常遗憾的是，工厂的输出没有被抽象出来，实在是原版的一大败笔。
 
 原版中，`outputItem``outputItems``outputLiquid``outputLiquids`（注意这里的output均为原型，`outputsLiquid`是另一个属性）是用来声明输出项的，
-不过，**单复数形式不能混用！**代码如下：
+不过， **单复数形式不能混用！** 代码如下：
 
 ``` java
 outputItem = new ItemStack(Items.copper,1);
