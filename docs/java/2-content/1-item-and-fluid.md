@@ -28,8 +28,8 @@ Item("tutorial-item", Color.red)
 
 ::: code-group
 
-```java ExampleJavaMod.java
-public class ExampleJavaMod extends Mod{
+```java TurorialMod.java
+public class TutorialMod extends Mod{
   @Override
   public void loadContent(){
     new Item("tutorial-item", Color.red);
@@ -37,8 +37,8 @@ public class ExampleJavaMod extends Mod{
 }
 ```
 
-```kotlin ExampleJavaMod.kt
-class ExampleJavaMod: Mod(){
+```kotlin TutorialMod.kt
+class TutorialMod: Mod(){
   override fun loadContent(){
     Item("tutorial-item", Color.red)
   }
@@ -65,12 +65,12 @@ class ExampleJavaMod: Mod(){
 
 其中`mod内部名称`填写你在`mod.json`中所写的`name`，而`物品名称`即在你创建物品对象时，在构造方法中写下的那个字符串。
 
-例如，对于我们刚刚创建的那个物品，其名称为`tutorial-item`，我们例子中的演示mod内部名称为`example-java-mod`，那么在bundle中的键值对键名就应当填写为`example-java-mod-tutorial-item`，例如我们将如下信息填写到`bundle_zh_CN.properties`当中：
+例如，对于我们刚刚创建的那个物品，其名称为`tutorial-item`，我们例子中的演示mod内部名称为`tutorial-mod`，那么在bundle中的键值对键名就应当填写为`tutorial-mod-tutorial-item`，例如我们将如下信息填写到`bundle_zh_CN.properties`当中：
 
 ```properties
-item.example-java-mod-tutorial-item.name = 演示物
-item.example-java-mod-tutorial-item.description = Hello World！（为什么在这里还要Hello World？）
-item.example-java-mod-tutorial-item.details = 你看不见我看不见我看不见我
+item.tutorial-mod-tutorial-item.name = 演示物
+item.tutorial-mod-tutorial-item.description = Hello World！（为什么在这里还要Hello World？）
+item.tutorial-mod-tutorial-item.details = 你看不见我看不见我看不见我
 ```
 
 打开这个物品的详细信息：

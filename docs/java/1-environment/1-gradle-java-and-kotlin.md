@@ -1,27 +1,23 @@
-<!-- 这个是ebw版1.1和硫缺铅版1.1的杂交版，同时重走一遍流程也让我看到了一些问题 -->
-<!-- 实际上在这里浪费时间是非常不负责任的，不过我同意折中一下咱俩的意见，当然， -->
-<!-- 现在也有一些应该更新的东西了，而且这一篇教程不提模板，何时提模板呢？。 -->
-<!-- 有几个小疑问：1. JDK是必装的吗？ 2. Android SDK怎么安装-->
 # Gradle 环境与 Java/Kotlin
 
-> ***"万丈高楼平地起。"***
+> ***万丈高楼平地起。***
 
 ::: info 
-**该节需要你拥有电脑，或者至少已经在Android设备上部署了Linux环境。有关安卓部署开发环境请跳至第四节 _如果你只有安卓设备_。**
+**该节需要你拥有电脑，或者至少已经在Android设备上部署了Linux环境。有关纯安卓设备部署开发环境请参阅第四节 [如果你只有安卓设备](4-build-on-android) 。**
 :::
 
-Mindustry是一个Java游戏项目，尽管其具备JavaScript mod接口，但是我们仍然更加建议使用性能更优，可维护性更强的java进行开发。
+Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*，但是我们仍然更加建议使用性能更优，可维护性更强的Java或Kotlin进行开发。
 
-本篇教程也只会给出Java与Kotlin语言的演示程序与片段，如果你仍然决定使用JavaScript进行开发，可跳过本节阅读下一节：*“javaScript/typeScript开发环境”*。
+教程本单元会提供一个快速部署开发环境的模板，在进行较高级的操作之前你只需要使用，不过迟早你需要充分了解整个脚本的。
 
-> 本篇教程会提供一个快速部署开发环境的模板，在进行较高级的操作之前你只需要对其有一定了解即可，不过迟早你需要充分了解整个脚本的。
+<!---- 充分落实黑箱蒙古精神！ ----->
 
 ## 安装JDK（Java Development Kit）
 
 无论您做什么，基本的运行环境————Java是不可或缺的。`JDK`即为Java开发的基础套件，它包含了Java编译器（`javac`）、Java运行时环境（`JRE`）等工具。
 
 <!-- time-limited -->
-对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 21，本教程的 Java 模组开发也是基于**Java 21**的。如果您曾经安装过Java，也不要高兴的太早；如果不用确定版本，仍然推荐您重新安装。
+对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 21，本教程的 Java 模组开发也是基于**Java 21**的。如果你曾经游玩过Minecraft 1.18版本以上，应该会有满足标准的 JDK
 
 需要指出的是，`JDK`只是功能上的描述，实际上有多个厂商的JDK发行版可供选择，一般来说被广泛使用的有OracleJDK、Adoptium及GraalVM等。
 
@@ -30,13 +26,23 @@ Mindustry是一个Java游戏项目，尽管其具备JavaScript mod接口，但�
 
 [**OracleJDK**](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html)的安装方式较为简单，它为Windows平台及Linux平台都提供了快速安装的发行包。
 
-::: info **Windows**
+::: info **Windows/macOS**
 
-通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，选择Windows x64 Installer（.exe）进行下载：
+通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`Windows x64 Installer（.exe）`或`ARM64 DMG Installer`或``进行下载：
 
 ![download-oracle](./imgs/download-oracle.png)
 
 下载完成后，右键点击安装包，选择“以管理员身份运行”，你不需要做什么额外的设置，一路按照默认设置点击【下一步】直到安装完成即可。
+
+:::
+
+::: info **macOS**
+
+通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`ARM64 DMG Installer`或`x64 DMG Installer`进行下载：
+
+![download-oracle](./imgs/download-oracle.png)
+
+下载完成后，打开`.dmg`文件，运行其中的`.pkg`文件，一路按照默认设置点击【下一步】直到安装完成即可。
 
 :::
 
@@ -72,30 +78,25 @@ Java HotSpot(TM) 64-Bit Server VM Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23
 
 ## IDEA
 
-安装完Java之后，可以说你的开发环境已经配置完了————至少你现在可以去控制台执行`<gradlew> jar`了。不过，除非你以前是个资深vim程序员，否则不会喜欢在命令行环境下开发的。这时你就需要一个**IDE（集成开发环境）**了。和Java一样，IDE也有许多种，此处我们只探讨 **IntelliJ IDEA** 。
+安装完Java之后，可以说你的开发环境已经配置完了————至少你现在可以去控制台执行`<gradlew> jar`了。不过，除非你以前是个资深vim程序员，否则不会喜欢在命令行环境下开发的。这时你就需要一个 **IDE（集成开发环境）** 了。和Java一样，IDE也有许多种，此处我们只推荐并强行要求使用 **IntelliJ IDEA** 。
+
 
 毫无疑问，每一个人都会说**IDEA是Java开发的神**。关于其安装教程并不值得本教程赘述，相关教程网络上已经有很多，请自行百度或选择以下外链观看。不过，有两点注意事项:
 
 + Mindustry Mod开发只需要**社区版**功能，所以不必费时费力**甚至是费钱**去破解旗舰版；
 + 目前IDEA已经内置中文翻译包，不需要手动下载了。
 
-::: details 外链
-+ Windows端：[https://blog.csdn.net/m0_37220730/article/details/107589690]
-+ macOS端：[https://blog.csdn.net/jackson_lingua/article/details/145177226]
-+ Linux端：[https://blog.csdn.net/qq_43646721/article/details/108152206]
-:::
++ Windows端：[https://blog.csdn.net/m0_37220730/article/details/107589690](https://blog.csdn.net/m0_37220730/article/details/107589690)
++ macOS端：[https://blog.csdn.net/jackson_lingua/article/details/145177226](https://blog.csdn.net/m0_37220730/article/details/107589690)
++ Linux端：[https://blog.csdn.net/qq_43646721/article/details/108152206](https://blog.csdn.net/m0_37220730/article/details/107589690)
 
-下载完 IDEA 后，推荐您对IDEA的默认设置进行一些调优，避免写出和已有的模组代码风格相违背的代码。调优内容包括插件的安装和错误提示的调整。
-
-<!-- TODO:整理一下，应该就是unused和final最好改一下，不过有待我测试 -->
 
 ## Android SDK
 
-<!-- 我知道我这个装SDK的方式很邪门，但是我真的觉得这是最省事的办法了，如果有更好的办法直接替换之即可 -->
 
 **Android SDK**是使模组能够在安卓设备上运行的重要手段。只有正确地配置，才能让编译出来的模组能在安卓设备上运行。
 
-当然，这并不是唯一手段，如果你的电脑硬盘捉襟见肘，也可以考虑使用 **Github Action** 进行在线CI编译，这需要一定使用Github的基础。
+当然，这并不是唯一手段，，也可以考虑使用 **Github Action** 进行在线CI编译，这需要一定使用Github的基础。
 
 由于网络上的安装教程与模组开发所需内容不太相符，并且谷歌已经删除了独立的Android SDK Tools，所以下面我们将介绍其安装方式。如果你想使用新版工具，可能必须自寻方法。
 
