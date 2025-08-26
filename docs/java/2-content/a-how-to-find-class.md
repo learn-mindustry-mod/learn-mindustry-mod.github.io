@@ -129,11 +129,88 @@ public UnlockableContent(String name){
 ``` properties
 ```
 
+此外，前面也讲到一些不属于`UnlockableContent`的东西，他们的bundle是自己加载的。
+
+``` properties
+command.tutorialUnitCommand = 教程单位命令
+stance.tutorialUnitStance = 教程单位姿态
+ability.turorialunitability = 教程单位能力
+```
+
+并且我们会发现，这些内容的`name`并不再是连字符命名的，`command`和`stance`是小驼峰命名，而`ability` 干脆是**类名全小写化**，正如它的代码一样：
+
+``` java
+public String localized(){
+    return Core.bundle.get(getBundle());
+}
+
+public String getBundle(){
+    var type = getClass();
+    return "ability." + (type.isAnonymousClass() ? type.getSuperclass() : type).getSimpleName().replace("Ability", "").toLowerCase();
+}
+```
+
 ## 其他我暂时不知道在哪里讲合适的东西
 
 本节是一些原版比较偏难怪的功能，未来这些内容可能会分散在本章或后几章中。
 
-不得不讲一个笑话，一个莫斯科大学的数学教授跳槽到了哈佛，刚一抵达就被要求教数学分析，于是他跑去问其它教授：“这门课我该教些什么？”其他人告诉他：“教点极限、连续性、可微性，再加点不定积分就行了。”第二天，他又跑过来问其他教授，「那我第二堂课该教些什么呢？」
+不得不讲一个笑话，一个莫斯科大学的数学教授跳槽到了哈佛，刚一抵达就被要求教数学分析，于是他跑去问其它教授：“这门课我该教些什么？”其他人告诉他：“教点极限、连续性、可微性，再加点不定积分就行了。”第二天，他又跑过来问其他教授，“那我第二堂课该教些什么呢？”
 
 ### Env位掩码系统
+
+在方块、单位等处中你均可以看到三个变量：
+
+- `envRequired`：要求当前地图环境符合该变量的所有环境需求；
+- `envEnabled`：要求当前地图环境符合该变量的某个环境需求；
+- `envDisabled`：要求当前地图不符合该变量的任何环境需求。
+
+并且行星也有一个字段`defaultEnv`，默认值为`Env.terrestrial | Env.spores | Env.groundOil | Env.groundWater | Env.oxygen`。
+
+但是这些字段的值都是`int`类型的，意味着他们只是数字而已，事实也是如此，defaultEnv的值为`0b01110101`，也就是`117`。这说明，这里采用了某种机制在数字中隐藏了信息，实际上，这里使用的方法是**位掩码（Bitmask）**，通过把二进制数的某位设置为0或1来对标记进行设置。比如说，原版中所有`env`是这样定义的：
+
+``` java
+public class Env{
+    public static final int
+    //处在星球上
+    terrestrial = 1,
+    //在太空中，没有大气层
+    space = 1 << 1,
+    //在水下，首先要在星球上
+    underwater = 1 << 2,
+    //有孢子
+    spores = 1 << 3,
+    //环境就像火焰山
+    scorching = 1 << 4,
+    //有石油
+    groundOil = 1 << 5,
+    //有地下水
+    groundWater = 1 << 6,
+    //大气层中有氧气
+    oxygen = 1 << 7,
+    //所有环境，用来位掩码运算
+    any = 0xffffffff,
+    //没有环境
+    none = 0;
+}
+```
+
+具体来说，位掩码是这样操作的：
+- 首先我们要获得当前地图环境的`env`：`Vars.state.rules.env`（假设为默认值：`0b01110101`）
+- 然后对一个需要判断在当前地图环境下能否工作的方块或单位：
+- * `envRequired`要么是空的，要么与`env`作“或”（Or）操作，结果为`envRequired`，说明要求的环境都是存在的；
+  * `envEnabled`与`env`作“与”（And）操作，结果不为空，说明要求的环境至少存在一个；
+  * `envDisabled`与`env`作“与”（And）操作，结果为空，说明禁止的环境都不存在。
+
+原版只用了`int`的后八位，模组还有56位的发挥空间。
+
+像这样的位掩码机制原版在**存档机制**中使用较多，毕竟存档是一个 <font style="color:red;">**寸土寸金**</font> 的地方。此外，还有一种数据结构叫作**BitSet**（在Arc为`arc.struct.Bits`），设计出来专门就是存放大量0/1数据的。
+
+### `Interp`
+
+与统计学上的同名概念不同或`lerp`不同，Arc（LibGDX复制而来）中的插值`Interp`实际上是 **补间（Tweening）** ，通常是一个`[0,1] -> [0,1]`（区间）的函数，用于在两个值之间平滑过渡，或形成视觉效果，在Java中被声明为一个Lambda，存放在`arc.math.Interp`下，同时此类中还有一些实用的补间函数。
+
+插值函数是存在是极为必要的，人眼并不适应匀速运动，反而是需要一些非线性的补间函数来让变化更起来更**平滑**，以下是原版（也是LibGDX复制而来）的一些`Interp`：
+
+（此处应有[LibGDX wiki](https://libgdx.com/wiki/math-utils/interpolation)上的那张图，既然anuke都借鉴了）
+
 
