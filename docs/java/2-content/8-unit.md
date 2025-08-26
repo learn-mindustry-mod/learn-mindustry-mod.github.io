@@ -71,7 +71,7 @@ UnitType("tutorial-unit").apply{
 
 关于Weapon各字段的含义如下：
 
-
+（棍母，自己把整个类复制给deepseek就告诉你了）
 
 ## 单位的贴图
 
