@@ -22,6 +22,11 @@ const viteConfig: UserConfig = {
     "java/0-introduction/index.md": "java/index.md",
   },
 
+  head: [
+    ["link", {"rel": "icon", herf: "/favicon.ico"}]
+  ],
+  
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -43,9 +48,9 @@ const viteConfig: UserConfig = {
 }
 function generateNav(name:string):VitePressSidebarOptions{
   return{
-  documentRootPath: 'docs',
+  documentRootPath: "docs",
   scanStartPath: name,
-  resolvePath: '/'+name+'/',
+  resolvePath: "/"+name+"/",
   useTitleFromFileHeading: true,
   useFolderTitleFromIndexFile: true,
   includeEmptyFolder: true,
