@@ -1,10 +1,10 @@
-# 物品
+# 物品与流体
 
 > ***“万事开头难”***
 
 Mindustry的游戏内容大致可以划分为若干个板块，从作为材料的**物品**，**液体**，到进行加工的**工厂**，再到消耗产品的**功能性方块**与**炮塔**，以及用材料生产的**单位**，这些基本的游戏要素构成了游戏的核心玩法。
 
-要入门mod开发，自然从最简单的制作一个物品开始。
+要入门mod开发，自然从最简单的制作一个物品开始，然后制作一个同样基础的流体。
 
 ## 创建一个Item
 
@@ -153,17 +153,128 @@ Item("tutorial-item").apply{
 
 :::
 
+## 创建一个Liquid
+在Mindustry中，流体被封装为`Liquid`。虽然叫”液体“，但这样的命名是源自v7前游戏没有原生的气体，而在v7中Anuke简单地把气体实现为不会产生水坑的液体，所以`Liquid`类的正确译名应当是流体。
+
+<!----“流体”一名哪有这么容易，也是当年我在翻译斗争中争取来的---->
+
+::: code-group
+
+```java
+new Liquid("tutorial-liquid", Color.blue);
+```
+
+```kotlin
+Liquid("tutorial-liquid", Color.blue)
+```
+
+:::
+
+分配贴图不再陈述。
+
+```properties
+liquid.tutorial-mod-tutorial-liquid.name = 演示液体
+liquid.tutorial-mod-tutorial-liquid.description = 流体不做任何处理默认是液体。
+liquid.tutorial-mod-tutorial-liquid.details = 上善似水。水善利万物而有静，居众之所恶，故几于道矣。
+```
+## 流体的属性
+
+### 1. 基础类型与外观 (Basic Type & Appearance)
+
+这些字段定义了流体的基本类别和视觉呈现。
+
+*   `public boolean gas = false;`
+    *   **是否为气体**。这是最基础的分类。
+    *   **`true`**： 该流体是气体。它不会在地面上形成液体水坑（puddles），通常会向上飘散或具有特殊行为。
+    *   **`false`**： 该流体是液体。它会在地面上形成水坑并流动。
+
+*   `public Color color;`
+    *   **基础颜色**。这是流体在管道中流动、或作为液体水坑存在时的**主要颜色**。
+
+*   `public Color gasColor = Color.lightGray.cpy();`
+    *   **气体颜色**。当 `gas = true` 时，流体会使用这个颜色进行渲染，而不是 `color`。通常气体颜色比液体颜色更浅、更半透明。
+
+*   `public @Nullable Color barColor;`
+    *   **状态条颜色**。**可为空**（`Nullable`）。在游戏UI中（例如显示储液罐容量、单位液体库存的条状图）所使用的颜色。如果为 `null`，则很可能回退使用 `color`。
+
+*   `public Color lightColor = Color.clear.cpy();`
+    *   **发光颜色**。用于绘制该流体发出的光效。
+    *   **特别注意**： 这个颜色的 **Alpha通道（透明度）** 值决定了发光的**亮度**。`Color.clear` 表示完全不发光。
+
+*   `public boolean hidden;`
+    *   **是否隐藏**。如果为 `true`，该流体将在大多数UI（如选择器、数据库）中被隐藏，可能用于一些开发者流体或特殊场景流体。
+
+---
+
+### 2. 物理与化学属性 (Physical & Chemical Properties)
+
+这些字段模拟了流体的“真实”物化性质，并直接关联到游戏玩法。
+
+*   `public float flammability;`
+    *   **易燃性（0-1）**。
+    *   `0`： 完全不可燃。
+    *   `> 0`： 暴露在高温（如岩浆、激光）下有可能**着火**。
+    *   `>= 0.5`： 非常易燃（例如油）。
+
+*   `public float temperature = 0.5f;`
+    *   **基础温度（0-1）**。一个相对的标度。
+    *   `0.5`： 环境温度（例如水）。
+    *   `< 0.5`： 低温流体（例如冷冻液）。
+    *   `> 0.5`： 高温流体（例如熔融金属、岩浆）。高温流体可能点燃可燃物或伤害单位。
+
+*   `public float heatCapacity = 0.5f;`
+    *   **热容量**。表示流体**储存热量能力**的大小。
+    *   **值越高**，作为**冷却剂**的效果越好（因为它能吸收更多热量而自身温度上升较慢）。注释提到水（0.4）是相当不错的冷却剂。
+
+*   `public float viscosity = 0.5f;`
+    *   **粘度**。表示流体的**粘稠度**，直接影响其**流动速度**。
+    *   `0.5`： 类似水的粘度（相对粘稠，流动速度中等）。
+    *   `1.0`： 类似焦油的粘度（非常粘稠，流动极慢）。
+
+*   `public float explosiveness;`
+    *   **爆炸性（0-1）**。表示流体受热时发生**爆炸**的倾向和威力。
+    *   `0`： 不爆炸。
+    *   `> 0`： 受热时可能爆炸。
+    *   `1`： 像核弹一样爆炸（例如硝化甘油）。
+
+*   `public float boilPoint = 2f;`
+    *   **沸点**。流体**蒸发**的温度阈值。注意注释提到这不完全是现实中的沸腾。当流体温度 >= 此值时，会转变为气体状态并触发 `vaporEffect`。
+
+---
+
+### 3. 游戏内交互与行为 (In-Game Interactions & Behavior)
+
+这些字段控制流体如何与游戏世界中的其他元素互动。
+
+*   `public boolean blockReactive = true;`
+    *   **是否与方块反应**。如果为 `true`，该流体会与特定方块发生特殊反应，用于瘤液
+
+*   `public boolean coolant = true;`
+    *   **是否可作为冷却剂**。如果为 `false`，即使 `heatCapacity` 很高，也无法被放入需要冷却剂的设备（如散热器）中。
+
+*   `public boolean moveThroughBlocks = false;`
+    *   **是否可穿透方块**。如果为 `true`，该流体的水坑可以穿过方块流动（例如像水一样渗过墙壁），用于瘤液
+
+*   `public boolean incinerable = true;`
+    *   **是否可被焚化**。如果为 `true`，该流体可以在**焚化炉（Incinerator）** 中被销毁，用于瘤液
+
+*   `public boolean capPuddles = true;`
+    *   **是否限制水坑大小**。如果为 `true`，流体的水坑面积会有一个上限，防止单种流体无限蔓延。
+
+有些字段没有列出，是因为涉及了后文才提到的内容。
+
+
 ## 整理并列表
 
-> 本小节仅作建议与参考，只是提供一种相对工整的形式，项目结构的具体组织还须根据实际情况调整。
+> 本小节仅作建议与参考，只是提供一种接近原版的、相对工整的形式，项目结构的具体组织还须根据实际情况调整。
 
-通常我们制作mod不会只声明一个物品，更不可能只创建物品，我们上文中直接将`Item`创建在了Mod主类的`loadContent()`中了，但是实际工作中则不应该这么做，而应当将我们的物品，以及所有其他内容都分好类，然后放在不同的类/文件当中，再在`loadContent()`中调用加载函数以进行加载。
+通常我们制作mod不会只声明一个物品，更不可能只创建物品，我们上文中直接将`Item`和`Liquid`创建在了Mod主类的`loadContent()`中了，但是实际工作中则不应该这么做，而应当将我们的物品，以及所有其他内容都分好类，然后放在不同的类/文件当中，再在`loadContent()`中调用加载函数以进行加载。
 
 与此同时，我们还需要保存各个物品的变量，以方便在我们定义方块生产消耗等情况时引用这个物品。
 
 这就引出了整理物品以及所有其他游戏内容的需要，通常来说，我们会将各个类型的内容按照一定的规则来进行分类，然后将它们集中的定义在多个类型中。
 
-例如，我们创建一个类型（kotlin则是单例）`ModItems`来存储mod的所有物品，然后在一个`load()`方法中进行统一创建：
+例如，我们创建一个类型（kotlin则是单例）`ModItems`来存储mod的所有物品，`ModLiquids`来存储mod的所有物品，然后在一个`load()`方法中进行统一创建：
 
 ::: code-group
 
@@ -227,26 +338,28 @@ object ModItems{
 
 ::: code-group
 
-```java ExampleJavaMod.java
-public class ExampleJavaMod extends Mod{
+```java TutorialMod.java
+public class TutorialMod extends Mod{
   @Override
   public void loadContent(){
     ModItems.load();
+    ModLiquids.load();
   }
 }
 ```
 
-```kotlin ExampleJavaMod.kt
-class ExampleJavaMod: Mod(){
+```kotlin TutorialMod.kt
+class TutorialMod: Mod(){
   override fun loadContent(){
     ModItems.load()
+    ModLiquids.load()
   }
 }
 ```
 
 :::
 
-不只是物品，我们之后会创建的所有类型的内容，都应当做好分类以便管理和维护。
+不只是物品和流体，我们之后会创建的所有类型的内容，都应当做好分类以便管理和维护。
 
 ## 思考题
 
