@@ -106,7 +106,7 @@ public void loadIcon(){
     uiIcon = Core.atlas.find(getContentType().name() + "-" + name + "-ui", fullIcon);
 }
 ```
-*请思考：物品的本体贴图到底有多少种命名方式？Mindustry每次大更新都没有模组负担，为什么Anuken还留着他们？*
+*请思考：物品的本体贴图到底有多少种命名方式？Mindustry每次大更新都没有模组负担，为什么Anuke还留着他们？*
 
 ## 原版Bundle格式
 
