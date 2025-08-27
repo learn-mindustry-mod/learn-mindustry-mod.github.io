@@ -92,13 +92,13 @@ UnitType("tutorial-unit").apply{
 原版中的Ability如下：
 
 - `ArmorPlateAbility`：装甲板能力，在射击时减少受到的伤害；
-- `EnergyFieldAbility`：能量场能力，对附近的敌人释放电击，或并治疗友方，如”玄武“；
-- `ForceFieldAbility`：力墙场能力，投射一个能吸收子弹的力场护盾，如”耀星“；
+- `EnergyFieldAbility`：能量场能力，对附近的敌人释放电击，或并治疗友方，如“玄武”；
+- `ForceFieldAbility`：力墙场能力，投射一个能吸收子弹的力场护盾，如“耀星”；
 - `LiquidExplodeAbility`：死亡溢液能力，死亡时释放液体，如Latum；
 - `LiquidRegenAbility`：液体吸收能力，吸收液体以治疗自身，如Latum；
 - `MoveEffectAbility`：移动特效能力，边移动边产生特效，如创伤导弹；
 - `MoveLightningAbility`：闪电助推器能力，移动时释放闪电，*如v5中的Dart*；
-- `RegenAbility`：再生能力，随着时间的推移恢复自己的生命值，如”耀星“；
+- `RegenAbility`：再生能力，随着时间的推移恢复自己的生命值，如“耀星”；
 - `RepairFieldAbility`：修复场能力，修复附近的单位，如“新星”；
 - `ShieldArcAbility`：弧形护盾能力，投射一个弧形的力场护盾，能吸收子弹，如“天理”；
 - `SpawnDeathAbility`：死亡产生单位能力，死亡时释放单位，如Latum；

@@ -29,3 +29,5 @@ see sandbox.md
 ```markdown
 <GitHubCard repo="learn-mindustry-mod/learn-mindustry-mod.github.io"/>
 ```
+
+用`”[^“”，。、：的与非和而 ]+?“` `“[^“”，。、：的与非和而 ]+?“` `”[^“”，。、：的与非和而 ]+?”`来检查有没有反向的引号
