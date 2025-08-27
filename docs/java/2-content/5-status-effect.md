@@ -13,12 +13,24 @@ new StatusEffect("tutorial-status-effect-1");
 ```
 
 ```kotlin
-Item("tutorial-status-effect-2")
+StatusEffect("tutorial-status-effect-1")
 ```
 
 :::
 
 和往常一样，你需要给它分配贴图和文本。
+
+```properties bundle_zh_CN.properties
+status.tutorial-mod-tutorial-status-effect-1.name = 演示状态效果1
+status.tutorial-mod-tutorial-status-effect-1.description = 原版甚至没有给状态效果做过描述。
+status.tutorial-mod-tutorial-status-effect-1.details = 
+```
+
+```properties bundle.properties
+status.tutorial-mod-tutorial-status-effect-1.name = Tutorial Status Effect 1
+status.tutorial-mod-tutorial-status-effect-1.description = There is no description of a status effect in vanilla.
+status.tutorial-mod-tutorial-status-effect-1.details = 
+```
 
 白板的状态效果没有任何用处，你需要设置一些属性。和以往不同，给状态效果中的某些值赋予负值是有意义的；作为对比，方块的某些值为负值可能代表默认值或忽略属性：
 

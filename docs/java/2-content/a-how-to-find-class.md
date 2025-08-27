@@ -132,9 +132,11 @@ public UnlockableContent(String name){
 此外，前面也讲到一些不属于`UnlockableContent`的东西，他们的bundle是自己加载的。
 
 ``` properties
-command.tutorialUnitCommand = 教程单位命令
-stance.tutorialUnitStance = 教程单位姿态
-ability.turorialunitability = 教程单位能力
+command.tutorialUnitCommand = 演示单位命令
+stance.tutorialUnitStance = 演示单位姿态
+ability.turorialunitability = 演示单位能力
+techtree.tutorial = 演示科技树
+
 ```
 
 并且我们会发现，这些内容的`name`并不再是连字符命名的，`command`和`stance`是小驼峰命名，而`ability` 干脆是**类名全小写化**，正如它的代码一样：

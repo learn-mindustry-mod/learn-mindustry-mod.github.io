@@ -20,6 +20,24 @@ Planet("tutorial-planet", Planets.sun, 1f, 3)
 
 构造方法的第一个参数是行星的名称；第二个参数是行星的公转中心，如果为null就没有公转中心，可以算作恒星；第三个参数是星球的半径，Serpulo和Erekir的半径均为1；第四个参数是 **星球网格（PlanetGrid）** 的 **细分（Subdivision）** 次数，当细分次数为0时，每个格子的中心是正二十面体的12个顶点，构成正十二面体，之后每次细分都把**顶点（Corner）**转化成六边形**格子（Tile）**，因此，细分次数为1时，星球是足球形，有12个正五边形和20个正六边形，共32个区块。
 
+你可以给你的行星放一张渲染图，不过短时间内你也用不上。还可以画一张小图标，设置给`icon`，在星球选单和核心数据库中使用。
+
+```properties bundle_zh_CN.properties
+planet.tutorial-mod-tutorial-planet.name = 演示行星
+planet.tutorial-mod-tutorial-planet.description = 绕着太阳转。原版甚至没有给状态效果做过描述。
+planet.tutorial-mod-tutorial-planet.details = 这里有人生活过。
+```
+
+```properties bundle.properties
+planet.tutorial-mod-tutorial-planet.name = Tutorial Planet
+planet.tutorial-mod-tutorial-planet.description = Orbits the sun. There is no description of a status effect in vanilla.
+planet.tutorial-mod-tutorial-planet.details = Here lives.
+```
+
+关于Planet各字段的含义如下：
+
+（棍母，自己把整个类复制给deepseek就告诉你了）
+
 ### 行星的绘制
 
 为了使行星被绘制出来，我们需要设置行星的形状并将其交给显卡渲染，而行星的形状本质上就是一个多面体，而代表行星多面体的对象的基接口是`mindustry.graphic.GenericMesh`（不要和`arc.graphic.Mesh`搞混，原生Arc对3D支持极为有限）。能用的PlanetMesh包括：
@@ -71,6 +89,22 @@ SectorPreset("testSector", Planets.serpulo, 15)
 
 :::
 
+```properties bundle_zh_CN.properties
+sector.tutorial-mod-testSector.name = 演示区块
+sector.tutorial-mod-testSector.description = 旅程的起点。
+sector.tutorial-mod-testSector.details = 旅起最佳。
+```
+
+```properties bundle.properties
+sector.tutorial-mod-testSector.name = Turorial Sector
+sector.tutorial-mod-testSector.description = The commence of our tutorial.
+sector.tutorial-mod-testSector.details = INITIATION DOCTRINAE
+```
+
+你有注意到区块的`name`是小驼峰命名吗？
+
+现版本区块也有自己的图标了，像之前一样添加贴图即可。
+
 接下来，你只需要在`assets/maps`目录下面添加一张名为`testSector.msav`的地图文件就可以了。
 
 ## 创建一个Weather
@@ -90,6 +124,16 @@ ParticleWeather("gray-pall")
 ```
 
 :::
+
+```properties bundle_zh_CN.properties
+weather.tutorial-mod-hailing.name = 冰雹
+weather.tutorial-mod-gray-pall.name = 灰棘迷雾
+```
+
+```properties bundle.properties
+weather.tutorial-mod-hailing.name = Hail
+weather.tutorial-mod-gray-pall.name = Gray Pall
+```
 
 ## 获取一个Team
 
@@ -135,7 +179,7 @@ ParticleWeather("gray-pall")
 上文提到的“可解锁”“可索引”直接表示内容系统的基类：
 
 - `Content`：一切游戏“内容”的基类。提供short类型的`id`，并且自动向`Vars.content`中注册，可以用id索引；
-- `MappableContent`：可映射内容。提供唯一名称`name`，包括`mod.name`前缀，可以在`Vars.content`中用名称索引；
+- `MappableContent`：可映射内容。提供唯一名称`name`，包括`modName`前缀，可以在`Vars.content`中用名称索引；
 - `UnlockableContent`：可解锁内容。提供`localizedName`、`description`和`details`，提供Bundle支持；支持full图标和emoji；在核心数据库中可以添加统计信息；拥有是否解锁的状态，可以添加到科技树中，可以绑定星球。
 
 

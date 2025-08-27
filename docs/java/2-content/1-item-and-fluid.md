@@ -51,33 +51,43 @@ class TutorialMod: Mod(){
 
 ![第一个物品](imgs/firstItem.png)
 
-如你所见，物品此时还没有贴图，也没有名字，因此会显示为错误贴图（oh no）和一段内部名称作为名字，为了给这个物品提供贴图和名称，就需要做一些Java代码以外的工作了。
+如你所见，物品此时还没有贴图，也没有名字，因此会显示为错误贴图（oh no）和一段**内部名称**作为名字，为了给这个物品提供贴图和名称，就需要做一些Java代码以外的工作了。
 
 ### 为物品赋予名称和描述
 
-我们不能让物品在游戏内以内部名称显示，所以就需要给物品命名，这就需要将物品的名字写进mod的语言文件当中（即我们在*第一章第三节 mod文件结构*中所讲到的`bundles`目录及`bundle`文件）。
+::: warning 严厉声明
+<font style="color:red;">禁止在Java代码中直接设置`localizedName` `description`和`details`。</font>
+:::
 
-物品的显示名称，描述和细节文本分别被表示为语言文件中的几个固定格式的键值对：
+我们不能让物品在游戏内以内部名称显示，所以就需要给物品命名，这就需要将物品的名字写进mod的语言文件当中（即我们在*第一章第三节 mod文件结构*中所讲到的`bundles`目录中的`bundle`文件）。
 
-- **item.[mod内部名称]-[物品名称].name**：物品的显示名称
-- **item.[mod内部名称]-[物品名称].description**：物品的描述文本
-- **item.[mod内部名称]-[物品名称].details**：物品的细节文本
+**物品**的本地化名称，描述和细节文本分别被表示为语言文件中的几个固定格式的键值对：
+
+- `item.[mod内部名称]-[物品名称].name`：物品的本地化名称
+- `item.[mod内部名称]-[物品名称].description`：物品的描述文本
+- `item.[mod内部名称]-[物品名称].details`：物品的细节文本
 
 其中`mod内部名称`填写你在`mod.json`中所写的`name`，而`物品名称`即在你创建物品对象时，在构造方法中写下的那个字符串。
 
-例如，对于我们刚刚创建的那个物品，其名称为`tutorial-item`，我们例子中的演示mod内部名称为`tutorial-mod`，那么在bundle中的键值对键名就应当填写为`tutorial-mod-tutorial-item`，例如我们将如下信息填写到`bundle_zh_CN.properties`当中：
+例如，对于我们刚刚创建的那个物品，其名称为`tutorial-item`，我们例子中的演示mod内部名称为`tutorial-mod`，那么在bundle中的键值对键名就应当填写为`tutorial-mod-tutorial-item`，例如我们将如下信息填写到`bundle_zh_CN.properties`和`bundle.properties`当中：
 
-```properties
+```properties bundle_zh_CN.properties
 item.tutorial-mod-tutorial-item.name = 演示物
 item.tutorial-mod-tutorial-item.description = Hello World！（为什么在这里还要Hello World？）
 item.tutorial-mod-tutorial-item.details = 你看不见我看不见我看不见我
+```
+
+```properties bundle.properties
+item.tutorial-mod-tutorial-item.name = Tutorial Item
+item.tutorial-mod-tutorial-item.description = Hello World！（Why）
+item.tutorial-mod-tutorial-item.details = Shhhhhh
 ```
 
 打开这个物品的详细信息：
 
 ![命名物品](imgs/firstItemNamed.png)
 
-> 其实不需要太多考虑bundle中间到底填什么，如你所见，在游戏的核心数据库和物品详情中，会以加灰的文本显示这个物品的内部名称，你只需要将那个文本填写到其中即可。
+实际模组开发中，写出贴合实际功能和原版风格的bundle是一门学问，有待深入研究。
 
 ### 为物品分配贴图
 
@@ -85,7 +95,7 @@ item.tutorial-mod-tutorial-item.details = 你看不见我看不见我看不见�
 
 这一步很简单，我们只需要为物品绘制一张贴图，并把这张图片命名为你构造方法中写下的那个字符串，然后将它按照*第一章第三节 mod文件结构*中所讲的那样放入到`sprites`目录中即可。
 
-需要注意的一点是，提供给物品的贴图尺寸**必须是32x32**，大于这个尺寸的贴图将会导致物品在流速显示页面上显示错误。
+需要注意的一点是，提供给物品的贴图尺寸**必须是32x32**，大于这个尺寸的贴图将会导致物品在流速显示页面上显示错误。*此外它必须是`png`格式，位深为4，是一张彩色的图片，如果不遵守可能会在稀奇古怪的设备上出现奇怪的问题。*
 
 我们将这样一张图片按先前创建物品时提供的名称，命名为`tutorial-item.png`，并放进`sprites`目录里：
 
@@ -105,15 +115,15 @@ item.tutorial-mod-tutorial-item.details = 你看不见我看不见我看不见�
 
 物品中的属性和作用均如下所示，其中大部分属性都在一些工厂识别材料时使用：
 
-- **explosiveness**：爆炸性，这个值会影响物品在容器和传送带上的效果，如果爆炸性较高，容器和传送带被破坏时会引发爆炸，强度取决于易爆性大小。
-- **flammability**：燃烧性，会影响物品在容器和传送带上的效果，如果物品可燃性较高，那么火焰会引起容器燃烧。
-- **radioactivity**：放射性，这个值通常只用于筛选工厂消耗的材料，例如RTG发电机。
-- **charge**：带电性，同放射性，作为方块消耗的识别项
-- **hardness**：硬度，当有一个矿物地板被采掘生产这个物品时，决定此矿物地板的硬度，即影响哪些钻头可以采掘此物品。
-- **lowPriority**：影响矿物地板的效果，该值影响钻头的采掘优先级，如果钻头覆盖了多种矿物，则会忽略掉这个值为true的地板。
-- **buildable**：虽然字面义上叫“能否建造方块”，但实际上控制的是能否进入Erekir的核心
-- **cost**：当此物品参与方块的建造时，用于计算建造方块需要的时间，此值越大，消耗时间越长。
-- **healthScaling**：此物品在方块未设定默认生命值时，在计算方块生命值时作为额外生命值参加计算。
+- `explosiveness`：爆炸性，这个值会影响物品在容器和传送带上的效果，如果爆炸性较高，容器和传送带被破坏时会引发爆炸，强度取决于易爆性大小，还能影响携带此物品的容器和单位死亡时的爆炸伤害。
+- `flammability`：燃烧性，会影响物品在容器和传送带上的效果，如果物品可燃性较高，那么火焰会引起容器燃烧。
+- `radioactivity`：放射性，这个值通常只用于筛选工厂消耗的材料，例如RTG发电机。
+- `charge`：带电性，同放射性，作为方块消耗的识别项，但还能影响携带此物品的容器和单位死亡时的产生的爆炸。
+- `hardness`：硬度，当有一个矿物地板被采掘生产这个物品时，决定此矿物地板的硬度，即影响哪些钻头可以采掘此物品，并影响钻探速度。
+- `lowPriority`：影响对应矿物地板的效果，该值影响钻头的采掘优先级，如果钻头覆盖了多种矿物，则会忽略掉这个值为true的地板。
+- `buildable`：虽然字面义上叫“能否建造方块”，但实际上控制的是能否进入设置`incinerateNonBuildable`（销毁不可建造物品）的核心，Erekir上的所有行星都设置了此项。
+- `cost`：当此物品参与方块的建造时，用于计算建造方块需要的时间，此值越大，消耗时间越长。
+- `healthScaling`：此物品在方块未设定默认生命值时，在计算方块生命值时作为额外生命值参加计算。
 
 我们可以使用这样的语法来在创建物品时就地为它们分配属性：
 
@@ -172,14 +182,21 @@ Liquid("tutorial-liquid", Color.blue)
 
 分配贴图不再陈述。
 
-```properties
+```properties bundle_zh_CN.properties
 liquid.tutorial-mod-tutorial-liquid.name = 演示液体
 liquid.tutorial-mod-tutorial-liquid.description = 流体不做任何处理默认是液体。
 liquid.tutorial-mod-tutorial-liquid.details = 上善似水。水善利万物而有静，居众之所恶，故几于道矣。
 ```
+
+```properties bundle.properties
+liquid.tutorial-mod-tutorial-liquid.name = Tutorial Liquid
+liquid.tutorial-mod-tutorial-liquid.description = He who is not gas is liquid
+liquid.tutorial-mod-tutorial-liquid.details = And God said, "Let there be an expanse between the waters to separate water from water." 
+```
+
 ## 流体的属性
 
-### 1. 基础类型与外观 (Basic Type & Appearance)
+### 1. 基础类型与外观
 
 这些字段定义了流体的基本类别和视觉呈现。
 
@@ -189,7 +206,7 @@ liquid.tutorial-mod-tutorial-liquid.details = 上善似水。水善利万物而�
     *   **`false`**： 该流体是液体。它会在地面上形成水坑并流动。
 
 *   `public Color color;`
-    *   **基础颜色**。这是流体在管道中流动、或作为液体水坑存在时的**主要颜色**。
+    *   **基础颜色**。这是流体在管道中流动、或作为液体水坑存在时的**默认颜色**。
 
 *   `public Color gasColor = Color.lightGray.cpy();`
     *   **气体颜色**。当 `gas = true` 时，流体会使用这个颜色进行渲染，而不是 `color`。通常气体颜色比液体颜色更浅、更半透明。
@@ -204,9 +221,8 @@ liquid.tutorial-mod-tutorial-liquid.details = 上善似水。水善利万物而�
 *   `public boolean hidden;`
     *   **是否隐藏**。如果为 `true`，该流体将在大多数UI（如选择器、数据库）中被隐藏，可能用于一些开发者流体或特殊场景流体。
 
----
 
-### 2. 物理与化学属性 (Physical & Chemical Properties)
+### 2. 物理与化学属性
 
 这些字段模拟了流体的“真实”物化性质，并直接关联到游戏玩法。
 
@@ -240,9 +256,7 @@ liquid.tutorial-mod-tutorial-liquid.details = 上善似水。水善利万物而�
 *   `public float boilPoint = 2f;`
     *   **沸点**。流体**蒸发**的温度阈值。注意注释提到这不完全是现实中的沸腾。当流体温度 >= 此值时，会转变为气体状态并触发 `vaporEffect`。
 
----
-
-### 3. 游戏内交互与行为 (In-Game Interactions & Behavior)
+### 3. 游戏内交互与行为
 
 这些字段控制流体如何与游戏世界中的其他元素互动。
 
@@ -261,7 +275,7 @@ liquid.tutorial-mod-tutorial-liquid.details = 上善似水。水善利万物而�
 *   `public boolean capPuddles = true;`
     *   **是否限制水坑大小**。如果为 `true`，流体的水坑面积会有一个上限，防止单种流体无限蔓延。
 
-有些字段没有列出，是因为涉及了后文才提到的内容。
+有些字段没有列出，涉及到了后文才提到的内容。
 
 
 ## 整理并列表
@@ -334,6 +348,8 @@ object ModItems{
 
 :::
 
+ModLiquids类也类似。
+
 接着在Mod主类的`loadContent()`方法中调用`load()`方法即可：
 
 ::: code-group
@@ -359,7 +375,7 @@ class TutorialMod: Mod(){
 
 :::
 
-不只是物品和流体，我们之后会创建的所有类型的内容，都应当做好分类以便管理和维护。
+不只是物品和流体，我们之后会创建的所有类型的内容，都应当做好分类以便管理和维护。本教程将以此范式继续展开讲解。
 
 ## 思考题
 

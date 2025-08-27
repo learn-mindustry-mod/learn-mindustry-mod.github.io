@@ -16,7 +16,6 @@ Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*�
 
 无论您做什么，基本的运行环境————Java是不可或缺的。`JDK`即为Java开发的基础套件，它包含了Java编译器（`javac`）、Java运行时环境（`JRE`）等工具。
 
-<!-- time-limited -->
 对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 21，本教程的 Java 模组开发也是基于**Java 21**的。如果你曾经游玩过Minecraft 1.18版本以上，应该会有满足标准的 JDK
 
 需要指出的是，`JDK`只是功能上的描述，实际上有多个厂商的JDK发行版可供选择，一般来说被广泛使用的有OracleJDK、Adoptium及GraalVM等。

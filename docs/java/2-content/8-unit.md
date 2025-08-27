@@ -43,6 +43,22 @@ UnitType("tutorial-unit").apply{
 
 另一方面，`UnitType`也有子类型，不过他们只是在`UnitType`的基础上设置了一些字段，而非增加了什么功能，属于我们之前提到的 **模板（Template）** 类。至于单位的属性，由于所有具体的单位实体都受`UnitType`统辖，所以`UnitType`中的字段既包括所有单位通用的字段，也包括只有某种单位实体会使用的字段。
 
+```properties bundle_zh_CN.properties
+unit.tutorial-mod-tutorial-unit.name = 演示单位
+unit.tutorial-mod-tutorial-unit.description = 不能攻击，但是会被攻击。
+unit.tutorial-mod-tutorial-unit.details = 一无所有
+```
+
+```properties bundle.properties
+unit.tutorial-mod-tutorial-unit.name = Tutorial Unit
+unit.tutorial-mod-tutorial-unit.description = Incapable of attacking, while capable of being attacked.
+unit.tutorial-mod-tutorial-unit.details = Nonetheless
+```
+
+关于UnitType各字段的含义如下：
+
+（棍母，自己把整个类复制给deepseek就告诉你了）
+
 ## 为单位添加武器
 
 没有武器的单位只能当矿机、建造工或者搬运机这些辅助性单位，想对敌人造成伤害或者给友方建筑回血的话，你需要给单位添加武器。单位的武器就一个小炮塔。不同的是，如果不启用“单位弹药限制”规则，单位就无需弹药即可发射，即使启用，也可以直接从核心或容器时自动吸取弹药。单位武器的类型主要是`Weapon`，此外还有`PointDefenseBulletWeapon`点防武器和`RepairBeamWeapon`修复光束武器两个专用类：

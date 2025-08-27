@@ -22,7 +22,7 @@ nodeRoot("tutorial", ModItems.tutorialItem) {
 
 这样你就创建了一颗新的科技树，然后不要忘记给他分配名称。至于贴图，会自动使用根节点的：
 
-```properties
+```properties bundle_zh_CN.properties
 techtree.tutorial = 演示科技树
 ```
 

@@ -62,13 +62,27 @@ GenericCrafter("tutorial-crafter").apply{
 }
 ```
 
-我们并没有手动设置方块的建造时间，实际上方块的建造时间就是需求物品的`cost`总和再乘以`buildCostMultiplier`，如果你觉得某个方块的建造时间过长，但不想更改物品的`cost`时，可以设置`buildCostMultiplier`为一个比1小的数来降低建造时间。**最好不要直接设置buildCost！！！**
-
-接下来，名称和贴图的设置不再备述。
-
 :::
 
-以上代码设置`stacks`时使用了`ItemStack.with`这一**工厂方法（Factory Method）**，免去我们直接创建ItemStack[]时的冗杂。关于ItemStack，本阶段我们只需要知道它是一种用来描述具有一定数量的物品和如何声明之即可。
+以上代码设置`stacks`时使用了`ItemStack.with`这一**工厂方法（Factory Method）**，免去我们直接创建ItemStack[]时的冗长。关于ItemStack，本阶段我们只需要知道它是一种用来描述具有一定数量的物品和如何声明之即可。
+
+我们并没有手动设置方块的建造时间，实际上方块的建造时间就是需求物品的`cost`总和再乘以`buildCostMultiplier`，如果你觉得某个方块的建造时间过长，但不想更改物品的`cost`时，可以设置`buildCostMultiplier`为一个比1小的数来降低建造时间。**不要直接设置buildCost！！！**
+
+接下来，我们也需要给方块分配名称和贴图：
+
+```properties bundle_zh_CN.properties
+block.tutorial-mod-tutorial-crafter.name = 演示工厂
+block.tutorial-mod-tutorial-crafter.description = 工厂，也叫冶炼厂、压缩机、混合器、编织器、离心机、提取器、抽水机、培养器
+block.tutorial-mod-tutorial-crafter.details = 工厂游戏没有工厂叫什么工厂游戏
+```
+
+```properties bundle.properties
+block.tutorial-mod-tutorial-crafter.name = Turorial Crafter
+block.tutorial-mod-tutorial-crafter.description = Crafter may also called smelter, compressor, mixer, weaver, centrifuger, extractor and cultivator.
+block.tutorial-mod-tutorial-crafter.details = Without factory you cannot spell "factory game"
+```
+
+至于贴图，你需要根据方块的尺寸而定，一般每格为`32x32`，最好不要变更这个比例。
 
 ## 声明消耗器（Consume）
 
@@ -84,7 +98,7 @@ consumeLiquids(LiquidStack.with(Liquids.water,1f,Liquids.slag,2f));
 consumePower(1f);
 ```
 
-值得注意的是，流体和电量的消耗都是以 **刻（Tick）** 为单位的，而`1s = 60tick`，所以千万不要让流体和电力消耗扩大60倍！
+值得注意的是，流体和电量的消耗都是以 **刻（Tick）** 为单位的，而`1s = 60tick`，所以千万不要误让流体和电力消耗扩大60倍！
 
 这只是消耗器的一部分用法，事实上，原版中火力发电机、炮塔的冷却剂等都是消耗器的功能，所以你甚至可以在自己的工厂里塞更多奇怪的东西。
 
@@ -96,6 +110,7 @@ consume(new ConsumeItemExplode());
 //像炮塔一样，使用冷却剂提高工作效率
 consume(new ConsumeCoolant(1f));
 ```
+
 在此处，我们抛开了Anuke给我们封装好的方法，直接使用了其源头上的注册方法`consume()`，在未来，我们可以自己动手写一个消耗器来满足复杂的输入需求，也需要深入探究**消耗系统**的工作原理来让它更好地为我们所用。
 
 最后仍要强调的是，`GenericCrafter`是严格单配方的，你声明的所有消耗器最终会归结到一个配方中，所以，不要试图创建自相矛盾的消耗器，要合理地安排工厂的输入。
@@ -104,14 +119,17 @@ consume(new ConsumeCoolant(1f));
 
 非常遗憾的是，工厂的输出没有被抽象出来，实在是原版的一大败笔。
 
-原版中，`outputItem``outputItems``outputLiquid``outputLiquids`（注意这里的output均为原型，`outputsLiquid`是另一个属性）是用来声明输出项的，
+原版中，`outputItem` `outputItems` `outputLiquid` `outputLiquids`（注意这里的output均为原形，`outputsLiquid`是另一个属性）是用来声明输出项的，
 不过， **单复数形式不能混用！** 代码如下：
 
 ``` java
-outputItem = new ItemStack(Items.copper,1);
-outputItems = ItemStack.with(Items.copper,1,Items.lead,2);
-outputLiquids = new LiquidStack(Liquids.water,1f);
-outputItem = LiquidStack.with(Liquids.water,1f,Liquids.slag,2f);
+outputItem = new ItemStack(Items.copper, 1);
+//或
+outputItems = ItemStack.with(Items.copper, 1, ModItems.item1 ,2);
+
+outputLiquids = new LiquidStack(Liquids.water, 1f);
+//或
+outputItem = LiquidStack.with(Liquids.water, 1f, ModItems.liquid1, 2f);
 ```
 
 ## 声明绘制器（Drawer）
@@ -137,9 +155,11 @@ drawer = new DrawMulti(
                 );
 ```
 
-一个`DrawMulti`中可以嵌套多层drawer，这些drawer将会按照声明顺序从下到上叠加，最终形成原版电解机那样丰富的口感。
+一个`DrawMulti`中可以嵌套多层drawer，这些drawer将会按照声明顺序从下到上叠加，最终形成原版电解机那样丰富的“口感”。
 
-另外一件事是，有的drawer会需要一张贴图，比如`DrawerDefault`要一张与方块内部名相同的贴图，`DrawRegion`的有参版本会需要一张内部名后面有特定后缀的贴图，像`DrawGlowRegion`需要一张`-glow`为后缀的贴图，欲知各个drawer需要什么样的贴图，访问其`load()`方法即可知。
+//TODO 图图
+
+有的drawer会需要一张贴图，比如`DrawerDefault`要一张与方块内部名相同的贴图，`DrawRegion`的有参版本会需要一张内部名后面有特定后缀的贴图，像`DrawGlowRegion`需要一张`-glow`为后缀的贴图，欲知各个drawer需要什么样的贴图，访问其`load()`方法即可知。
 
 如下表：
 
@@ -182,8 +202,8 @@ drawer = new DrawMulti(
 | DrawWeave | 绘制一个旋转的的梭子 | weave | 相织布编织器 |
 
 此外有几点须知：
-- 大部分drawer为了增加“活力”，会通过正弦函数对绘制的贴图增加一个周期性变化的值，这种现象称为“律动”（Pulse），而正弦函数y=Asinωx中的A、ω分别振幅（Magnificance）和频率（Scale），缩写分别为Mag和Scl；
-- 上提到的所有变化中的自变量都不是“量”，而是“量”与“容量”的比值，是归一化（Normalized）的，介于0-1之间（当然有的会超过1），比如`DrawLiquidTile`的自变量是流体量与流体容量的比值。
+- 大部分drawer为了增加“活力”，会通过正弦函数对绘制的贴图增加一个周期性变化的值，这种现象称为 **“律动”（Pulse）** ，而正弦函数y=Asinωx中的A、ω分别叫作振幅（Magnificance）和频率（Scale），缩写分别为Mag和Scl；
+- 上提到的所有变化中的自变量都不是“量”，而是“量”与“容量”的比值（这种处理叫 **归一化（Normalized）** ），介于0-1之间（当然有时会超过1），比如`DrawLiquidTile`的自变量是流体量与流体容量的比值。
 
 
 ## 一些特殊的工厂子类型
@@ -193,18 +213,20 @@ drawer = new DrawMulti(
 这两个类型都是`GenericCrafter`的子类，也就是说，上文所提的一切在这两个类型中都是可用的；相应地，这两个类也有一些独创之处：
 
 对于`AttributeCrafter`：
+
 - `atrribute`：使此工厂获得增益或减益的属性（Attribute），原版中的attribute包括`heat``spores``water``oil``light``sand``steam`等，均可望名生义；
 - `displayEfficiencyScale`：在显示工厂效率时的一个乘数；
 - 其他属性均可望名生义。
 
 对于`HeatCrafter`：
+
 - `heatRequirement`：所需热量；
 - `overheatScale`：当获取热量超出所需热量时，多出的热量将以多大的比例提高效率，默认是按原倍数增长；
 - `maxEfficiency`：由热量增益产生的最大效率。
 
 ## 加载顺序
 
-如果你在方块里使用到了模组里的物品，那你最好要保证物品先于方块被加载，否则你可能会遇到`NullPointerException`异常。方法就是，保证注册物品的代码先于方块被执行即可。
+如果你在方块里使用到了模组里的物品或流体，那你最好要保证其先于方块被加载，否则你可能会遇到`NullPointerException`异常，或者在游戏里显示不正常。方法就是，保证注册物品的代码先于方块被执行即可。
 
 
 ## 思考题
