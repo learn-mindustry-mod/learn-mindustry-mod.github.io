@@ -155,9 +155,10 @@ drawer = new DrawMulti(
                 );
 ```
 
-一个`DrawMulti`中可以嵌套多层drawer，这些drawer将会按照声明顺序从下到上叠加，最终形成原版电解机那样丰富的“口感”。
+一个`DrawMulti`中可以嵌套多层drawer，这些drawer将会按照声明顺序从下到上叠加，最终形成原版瘤液反应堆那样丰富的“口感”。
 
-//TODO 图图
+
+![neoplastic-reactor](imgs/neoplastic-reactor.gif)
 
 有的drawer会需要一张贴图，比如`DrawerDefault`要一张与方块内部名相同的贴图，`DrawRegion`的有参版本会需要一张内部名后面有特定后缀的贴图，像`DrawGlowRegion`需要一张`-glow`为后缀的贴图，欲知各个drawer需要什么样的贴图，访问其`load()`方法即可知。
 
