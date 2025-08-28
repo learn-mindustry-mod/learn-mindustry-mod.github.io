@@ -89,6 +89,7 @@ Java HotSpot(TM) 64-Bit Server VM Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23
 + macOS端：[https://blog.csdn.net/jackson_lingua/article/details/145177226](https://blog.csdn.net/m0_37220730/article/details/107589690)
 + Linux端：[https://blog.csdn.net/qq_43646721/article/details/108152206](https://blog.csdn.net/m0_37220730/article/details/107589690)
 
+**下载之后的第一件事，是去设置中搜索`编码`，并把能改成UTF-8的项都改成UTF-8。否则会出现乱码问题！**
 
 ## Android SDK
 
