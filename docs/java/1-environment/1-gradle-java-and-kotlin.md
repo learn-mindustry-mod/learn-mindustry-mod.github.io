@@ -97,13 +97,13 @@ Java HotSpot(TM) 64-Bit Server VM Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23
 
 当然，这并不是唯一手段，，也可以考虑使用 **Github Action** 进行在线CI编译，这需要一定使用Github的基础。
 
-由于网络上的安装教程与模组开发所需内容不太相符，并且谷歌已经删除了独立的Android SDK Tools，所以下面我们将介绍其安装方式。如果你想使用新版工具，可能必须自寻方法。
+我们将采用安装Android Studio的方式安装Android SDK。
+- 首先，访问[Google官网](https://developer.android.com/studio?hl=zh-cn)，下载最新的Android Studio；
+- 安装Android Studio，但不要安装`Android Virtual Device`（对Mindustry模组开发没有用处）；
+- 静待其安装完毕，找到Android Studio的设置（与IDEA类似），`Languages & Frameworks -> Android SDK`，记下`Android SDK Location`；
+- 去`Android SDK Location`/build-tools目录看一眼，记下里面最新的版本号；
+- 然后，你需要设置环境变量（请自行百度）。请注意！Mindustry所需的安卓环境变量和常规有所不同，你需要将`ANDROID_HOME`（而不是ANDROID_SDK_HOME）设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`。
 
-- 首先，访问[此站](https://www.androiddevtools.cn/)，实际上这并非官网，但是这是目前唯一比较快速的的方式了；
-- 找到`SDK Tools`，并下载对应操作系统的`24.4.1`版本。下载并解压或安装。 
-- 打开软件，找到`Tools (Preview Channel)` 下载其中的`30 rc2`版本。找到`Android R`，下载其中的`SDK Platform AndroidR Preview`
-- 下一步，你需要建立你的ANDROID_HOME文件夹。找到软件界面上方的`SDK Path`记录之
-- 然后，你需要设置环境变量（请自行百度）。请注意！Mindustry所需的安卓环境变量和常规有所不同，你需要将`ANDROID_HOME`（而不是ANDROID_SDK_HOME）设置为刚才的`SDK Path`。对于`PATH`，你只需要追加`%ANDROID_HOME%\build-tools\30.0.0-preview\`（Windows）或`$ANDROID_SDK_HOME/build-tools/30.0.0-preview/`
 
 ## Gradle和Kotlin
 
@@ -126,19 +126,16 @@ Kotlin是Java的延伸，你可以使用Kotlin来无缝编写运行在jvm上的�
 
 在Windows上，一般建议伴随IDE环境共同安装Kotlin，`IntelliJ IDEA`会内置Kotlin。在Linux上则可以安装`kotlin`命令行工具，Kotlin的安装会相当方便。
 
-::: code-group
-
-```Debian/Ubuntu
+```bash
+#Debian或Ubuntu
 sudo apt install kotlin
 ```
-
-```Arch
+```bash
+#Arch Linux
 sudo pacman -S kotlin
 ```
-
-```sdkman
+```bash
+#使用Sdkman
 curl -s https://get.sdkman.io | bash
 sdk install kotlin
 ```
-
-:::
