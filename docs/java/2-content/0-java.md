@@ -1,13 +1,21 @@
-# Java 基础检测及原版开发规范
+# 语法基础检测及原版开发规范
 
-本节我们将提及一些模组开发中需要的 Java/Kotlin 语法，及原版在语法方面的一些规定，并不是 Java/Kotlin 的教程或讲解，如果发现有漏洞的知识点请在他处自行学习。如果你对Java真的零基础，可以先看看下面，了解一下不需要学什么。
+本节我们将提及一些模组开发中需要的 Java/Kotlin/JavaScript/Hjson 语法，及原版在语法方面的一些规定，并不是编程语言的**教程或讲解**，如果发现有漏洞的知识点请在他处自行学习。如果你对Java真的零基础，可以先看看下面，了解一下不需要学什么。
 
 推荐 Java 教程：[黑马程序员零基础](https://www.bilibili.com/video/BV1Ei4y137HJ)（全看完）、[韩顺平30天速成](https://www.bilibili.com/video/BV1fh411y7R8)（看到547课即可）、[廖雪峰官网](https://liaoxuefeng.com/books/java/introduction/index.html)、[菜鸟教程](https://www.runoob.com/java/java-tutorial.html)（不推荐用这个学，适合当语法速查）
 
 推荐 Kotlin 教程：[官方文档](https://book.kotlincn.net/text/home.html)（新语言的文档往往比较优质）、[Kotlin教程视频](https://www.bilibili.com/video/BV1P94y1c7tV/)
 
+推荐 JavaScript 教程：[FreecodeComp](https://www.freecodecamp.org/chinese/learn/javascript-algorithms-and-data-structures)
+
 ## 不需要什么
 Mindustry不需要`java.[n]io` / `java.net` / `java.util`以外任何Java基础库，因为安卓可能没有它们，这就包括`Swing`和`Awt`。也不需要会任何其他Java框架或中间件。不需要非JVM语言，它们不能用来写模组，包括C++和Python。不需要数据库，除非你要做一个新的服务器基础层。
+
+## Hjson语法
+
+如果非要说的话，只有一句话：**括号一定要是匹配的！！！**
+
+毕竟Mindustry原生的JSON解析过于宽松，引号和逗号笔者建议最好全都不要写，如果写了也一定要匹配，此外即使是Mjson也**不支持尾随逗号**。这样的话，一切语法问题就可以归结到括号不匹配上了。但如果读者使用的是MT管理器，或其他任何没有插件功能的文本编辑器，则推荐使用正规JSON语法，至少还有格式化器可用。
 
 ## Java 语言基础知识清单
 

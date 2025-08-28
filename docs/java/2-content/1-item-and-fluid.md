@@ -20,6 +20,17 @@ new Item("tutorial-item", Color.red);
 Item("tutorial-item", Color.red)
 ```
 
+```javascript
+const tutorialItem = extend(Item, "tutorial-item", Color.red, {})
+```
+
+```json
+// content/items.tutorial-item.json
+{
+  
+}
+```
+
 :::
 
 其中，第二个参数传入的颜色会影响此物品在分类器中的显示色。Item还有一个不带颜色的构造方法，不过此构造方法仅供 Mindustry 内部使用。
