@@ -31,7 +31,6 @@ const viteConfig: UserConfig = {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Java", link: "/java" },
-      { text: "通识",link: "/general"}
     ],
   
     socialLinks: [
@@ -54,12 +53,11 @@ function generateNav(name:string):VitePressSidebarOptions{
   useTitleFromFileHeading: true,
   useFolderTitleFromIndexFile: true,
   includeEmptyFolder: true,
-  excludePattern: ["imgs", "readme","guideline"],
+  excludePattern: ["imgs", "readme","guideline","reference"],
   }
 }
 export default defineConfig(withSidebar(viteConfig,
   [
     generateNav("java"),
-    generateNav("general")
   ])
 )

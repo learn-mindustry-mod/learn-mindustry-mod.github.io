@@ -1,0 +1,175 @@
+{
+  "type": "MultiMesh",
+  "meshes": [
+    {
+      "type": "NoiseMesh",
+      "seed": -5,
+      "divisions": 2,
+      "radius": 0.12,
+      "octaves": 2,
+      "persistence": 0.55,
+      "scale": 0.45,
+      "mag": 14.0,
+      "color1": "6d635cff",
+      "color2": "444c5100",
+      "coct": 3,
+      "cper": 0.6,
+      "cscl": 0.38,
+      "cthresh": 0.4
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": -4,
+        "divisions": 1,
+        "radius": 0.039694287,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [-0.41581467, 0.0043853936, -0.43292877]
+      }
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": -3,
+        "divisions": 1,
+        "radius": 0.04112552,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [-1.1926273, -0.5223744, -0.34610972]
+      }
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": -2,
+        "divisions": 1,
+        "radius": 0.034535024,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [0.6332749, -0.6608225, -0.93765724]
+      }
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": -1,
+        "divisions": 1,
+        "radius": 0.05146175,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [0.6968424, 0.41930753, -0.54544216]
+      }
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": 0,
+        "divisions": 1,
+        "radius": 0.0382008,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [-1.0368634, -0.03162155, -0.5795313]
+      }
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": 1,
+        "divisions": 1,
+        "radius": 0.022329422,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [-0.27299184, -0.30318034, 0.9343648]
+      }
+    },
+    {
+      "type": "MatMesh",
+      "mesh": {
+        "type": "NoiseMesh",
+        "seed": 2,
+        "divisions": 1,
+        "radius": 0.033677075,
+        "octaves": 2,
+        "persistence": 0.6,
+        "scale": 0.38,
+        "mag": 20.0,
+        "color1": "6d635cff",
+        "color2": "444c5100",
+        "coct": 3,
+        "cper": 0.6,
+        "cscl": 0.38,
+        "cthresh": 0.4
+      },
+      "mat": {
+        "trans": [-0.47120374, -0.5294042, 0.7750685]
+      }
+    }
+  ]
+}

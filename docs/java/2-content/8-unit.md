@@ -39,7 +39,7 @@ UnitType("tutorial-unit").apply{
 - `BuildingTetherPayloadUnit::create`：建筑绑定单位，*如货运无人机、装配无人机，在json中用`tether`表示*；
 - `CrawlUnit::create`：爬虫单位，如Latum、Renale，但爬虫（Crawler）本身只是普通的`MechUnit`，*在json中用`crawl`表示*。
 
-长期以来某些不求甚解的modder认为设置constructor后即可解决问题。但实际上，你应该再去设置一下`EntityMapping`。然而，事情再度反转，在v151后，使用原版`constructor`的单位类型会自动注册`EntityMapping`，而在`constructor`使用自己的`Unit`会使游戏产生新的崩溃并强制要求注册，我们将在下一章详细陈述。
+长期以来某些不求甚解的modder认为设置constructor后即可解决问题。但实际上，你应该再去设置一下`EntityMapping`。然而，使用原版`constructor`的单位类型会自动注册`EntityMapping`，而在`constructor`使用自己的`Unit`会使游戏产生新的崩溃并强制要求注册，我们将在下一章详细陈述。
 
 另一方面，`UnitType`也有子类型，不过他们只是在`UnitType`的基础上设置了一些字段，而非增加了什么功能，属于我们之前提到的 **模板（Template）** 类。至于单位的属性，由于所有具体的单位实体都受`UnitType`统辖，所以`UnitType`中的字段既包括所有单位通用的字段，也包括只有某种单位实体会使用的字段。
 
@@ -99,7 +99,7 @@ UnitType("tutorial-unit").apply{
 
 武器的情况大同小异，本体贴图`tutorial-weapon.png`仍然是不可缺少的，但较小的武器可以没有cell贴图。武器还可以拥有过热贴图`tutorial-weapon.png`，只能使用不同透明度的`#ffffff`，一般需要进行高斯模糊以达到最佳视觉效果。你还可以使用预览贴图`tutorial-weapon-preview.png`设置在核心数据库中武器的图标。
 
-如果你的单位是`LegsUnit`，你还得准备`joint-base` `leg` `joint` `foot`贴图，他们分别是近身关节、普通的腿、腿间关节和脚。如果你的单位是`TankUnit`，你还需要准备`trades`履带贴图，并且v151后，你无需再准备更多。
+如果你的单位是`LegsUnit`，你还得准备`joint-base` `leg` `joint` `foot`贴图，他们分别是近身关节、普通的腿、腿间关节和脚。如果你的单位是`TankUnit`，你还需要准备`trades`履带贴图，并且v151后。
 
 ## 单位的能力
 
