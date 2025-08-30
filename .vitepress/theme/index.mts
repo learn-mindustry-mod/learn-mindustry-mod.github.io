@@ -3,7 +3,6 @@ import DefaultTheme from "vitepress/theme"
 import { Tab, Tabs } from "vue3-tabs-component"
 import GitHubCard from "./components/GitHubCard.vue"
 import "@red-asuka/vitepress-plugin-tabs/dist/style.css"
-import HomeHero from './components/HomeHero.vue'
 import { defineComponent } from "vue"
 import './style/var.css'
 
