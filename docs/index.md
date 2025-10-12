@@ -14,5 +14,8 @@ hero:
       - theme: brand
         text: Java/Kotlin教程
         link: /java
+      - theme: brand
+        text: Json教程
+        link: /json
 
 ---
