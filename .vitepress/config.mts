@@ -60,5 +60,6 @@ function generateNav(name:string):VitePressSidebarOptions{
 export default defineConfig(withSidebar(viteConfig,
   [
     generateNav("java"),
+    generateNav("json")
   ])
 )
