@@ -18,7 +18,7 @@
 
 ### iOS
 
-iOS上的玩家很可怜，他们只有Json模组可以玩。在iOS上，笔者推荐只推荐**Spec Editor**，这也是安卓端推荐的第二个编辑器。后推荐它的原因主要是因为较少有人使用。优点如下：
+在iOS上，笔者只推荐**Spec Editor**，这也是安卓端推荐的第二个编辑器。后推荐它的原因主要是因为较少有人使用。优点如下：
 
 - 衍生自 **Visual Studio Code** ，UI令人舒适；
 - 自动Json纠错，自动检查代码语法错误；
@@ -34,8 +34,32 @@ iOS上的玩家很可怜，他们只有Json模组可以玩。在iOS上，笔者�
 
 如果使用**VSCode**，你可以选择安装**Hjson**插件，支持Hjson的格式化。不装任何插件也可以浏览Mindustry源代码，如果加装**Gradle**插件反而会占用存储空间。
 
+### 绘图软件
 
-其他软件，如**ES文件管理器**、**Documents**、**Sublime Text**等，不在此推荐，但并不代表不能使用。
+绘图软件不必区分平台，通用的选择就是**PS**，我指的不是Adobe Photoshop，而是 **Pixel Studio** 。
+
 
 ------
 
+## 模组结构
+  
+在这里我可以直接给你Json模组所有要用到的文件夹的结构。你可以选择按需创建，一次性全都创建完成也并非不可。
+
+- `mod.json`：模组配置数据，是模组唯一必须的文件；
+- `content/`：Json数据，也就是模组的“代码”：
+  - `/items/`：物品代码；
+  - `/liquids/`：流体代码；
+  - `/blocks/`：方块代码；
+  - `/units/`：单位代码；
+  - `/statuses/`：状态效果；
+  - `/planets/`：行星；
+  - `/sectors/`：区块；
+  - `/weathers/`：天气；
+- `bundles/`：语言文件；
+- `sprites/`：模组贴图文件；
+  - `/blocks/environment/`：**地板的贴图必须放在这里**
+- `sprites-override/`：**覆盖原版**的贴图文件；
+- `schematics/`：蓝图文件；
+- `maps/`：地图文件；
+- `sounds/`：音效文件；
+- `scirpts/`：Javascript文件。
