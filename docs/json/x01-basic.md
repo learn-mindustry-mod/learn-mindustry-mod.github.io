@@ -45,7 +45,19 @@
 ## 模组结构
 
 JSON模组不区分“源代码”和实际可以安装的模组文件。实际上，JSON模组实质就是一个文件夹，或者是一个文件夹的`zip`压缩包。
+
+当然，为了和官方wiki中的教程贴近一些，你可以选择直接把文件夹建在游戏的mod文件夹里。有的系统直接直接输入路径进行访问相应路径，直接复制下方路径即可。
+
+我还是要再次声明，如果你找不到这些路径在哪里，压缩模组再导入游戏也不会耗费太多时间：
+
+- Linux： ~/.local/share/Mindustry/mods/
+- Steam： steam/steamapps/common/Mindustry/saves/mods/
+- Windows： %appdata%/Mindustry/mods/
+- MacOS： ~/Library/Application Support/Mindustry/mods/
+- Android：/Android/data/io.anuke.mindustry/mods
+- iOS：你在做梦
   
+------
 在这里我可以直接给你Json模组所有要用到的文件夹。你可以选择按需创建，一次性全都创建完成也可以。
 
 - `mod.json`：模组配置数据，是模组唯一必需的文件；
@@ -198,10 +210,24 @@ JSON模组不区分“源代码”和实际可以安装的模组文件。实际�
 
 完成上述工作后，你就可以压缩你的模组，然后导入到游戏当中。游戏重启后，如果能在模组页面看到你的模组，就说明没有问题了！
 
-## 备考
+## 获取一份源代码（可选）
+
+Mindustry是开源的游戏，遵守GPL-3许可证。这对你有两点意味：首先，你的模组也必须是开放源**代码**的；其次，你可以直接获取Mindustry的源代码来查找数据和贴图，而不必像其他游戏一样要靠**拆包和反编译。**
+
+Mindustry的源代码就托管在GitHub上，项目地址为[https://github.com/Anuken/Mindustry](https://github.com/Anuken/Mindustry)。此外，Mindustry是基于Arc游戏框架开发的，因此你还需要用到[https://github.com/Anuken/Arc](https://github.com/Anuken/Arc)。
+
+访问这两个网站，你可以在线访问源代码（很考验你的网速），或者是下载源代码。找到Code->Download Zip，这样你就将源代码下载到本地了。
+
+如果你的网络不支持你这么做，你可以选择寻找一些GitHub加速的手段。这里我可以给你提供两个网址：[Mindustry最新源代码](https://ghfast.top/https://github.com/Anuken/Mindustry/archive/master.zip)和[Arc最新源代码](https://ghfast.top/https://github.com/Anuken/Arc/archive/master.zip)。
+
+在Mindustry源代码目录下方`core/src`就是原版大部分源代码了，`core/sprites-raw`则是原版所有**未经处理的**贴图。
+
+
+## FAQ
 
 - **在Windows上报错`Invalid CEN header`怎么办？**：这说明你的压缩包编码格式不对，你需要确保你的所有文件都是`UTF-8（无BOM）`编码的；
 - **我的模组重启后就消失了？**：如果模组消失，只有可能是加载失败了，在设置-数据中导出日志或直接查看`lastlog.txt`解决问题；
 - **报错`No mod.json found`**：首先检查文件名的拼写是否有误。如果无误，你需要改变一下压缩的手法，不要压缩包括`mod.json`文件的文件夹，而是全选所有文件并压缩；
-- **官方Wiki上指示我把模组文件夹直接建立在Mindustry数据文件夹里，为何本教程不推荐这么做？**：还是从国情考虑，大多数人找不到文件夹在哪。
+- **官方Wiki上指示我把模组文件夹直接建立在Mindustry数据文件夹里，为何本教程不推荐这么做？**：从国情考虑，大多数人找不到数据文件夹在哪。
+- **为什么`modName`命名有那么多限制？**：因为原版自带一种特殊的处理机制（位于`Mod.java`的953行），`modName`会自动把大写字母转成小写字母，并把空格转为连字符。
 
