@@ -72,10 +72,10 @@
 
 添加之后，整个文件应该长这样：
 
-```json
+``` json
 {
 	"name": "示例物品",
-	"description": "JSON模组的示例物品，有着大葱的绿色。",
+	"description": "JSON模组的示例物品，有着葱绿色。",
 	"details": "我是灰色的，所以你看不见我看不见我看不见我"
 	"hardness": 4,
 	"cost":8,
@@ -92,6 +92,8 @@
 
 为了行文方便和篇幅精练，以后每次说到**添加**都不再给出添加后的文件。
 
+在游戏中，`name`是不得不显示的名称，而`description`（简介）和`details`（隐藏信息）在没有的时候可以不显示出来。
+
 - 优点：这样做非常之快，而且很方便，也能比较快地把代码与文案对应上；
 - 缺点：以后做**国际化（Internalization，简称i18n）**的时候还是不得不采用第二种方法。
 
@@ -102,5 +104,41 @@ Bundle系统中原版用于处理多语言问题的工具。使用Bundle可以�
 为了使用Bundle，你需要在`bundles`文件夹下建立两个文件：`bundle.properties`和`bundle_zh_CN.properties`，都是纯文本格式：
 
 ```properties bundle.properties
+item.tutorial-json-mod-tutorial-item1.name = Tutorial Item
+item.tutorial-json-mod-tutorial-item1.description = Emerald-like json-mod example item.
+item.tutorial-json-mod-tutorial-item1.name = You cannot see me you cannot see me 
+```
+
+```properties bundle_zh_CN.properties
+item.tutorial-json-mod-tutorial-item1.name = 示例教程
+item.tutorial-json-mod-tutorial-item1.description = JSON模组的示例物品，有着葱绿色。
+item.tutorial-json-mod-tutorial-item1.details = 我是灰色的，所以你看不见我看不见我看不见我 
+```
+
+和上文一样，`description`和`details`仍然是可选的。打开你的游戏，测试一下这个物品在简体中文和英文中不同的显示效果。
+
+那么，Bundle文件的格式具体是什么呢？具体来说是这样一条公式：
+
+```properties
+
+<内容类型>.<modName>-<内部名称>.<name/description/details> = 具体内容
 
 ```
+
+其中，*内容类型*在物品就是`item`，在流体就是`liquid`；`modName`的相关内容参见上一节`mod.json`； *内部名称（Internal Name）* 对于JSON文件来说，就是其**文件名**。（严格地说，内部名称应该是`<modName>-<文件名>`，例如`tutorial-json-mod-tutorial-item1`）
+
+## 为物品分配贴图
+
+当然，你的物品不能顶着ohno的贴图下去，你需要给物品分配贴图。
+
+物品的贴图**应当**是`32x32`像素、32位RGBA格式、`png`格式的。贴图尺寸有误可能导致某些UI显示不正常，而图片格式有误在某些平台会造成游戏崩溃。贴图的名称与JSON代码的文件名保持一致。
+
+接下来，你需要把贴图放入模组的`sprites/`文件夹下**几乎任意**一个地方。在第一节中，我不 有强调物品的贴图必须放在`sprites/items`下什么的。实际上，在`sprites/`中你可以任意嵌套文件夹来组织你的贴图，但不可以把贴图放到`sprites/blocks/environment`下，因为它不是地板。
+
+## 流体
+
+## FAQ
+
+- *物品的`type`曾经是有用的，具体是什么形式？*：在5.0（v98-v104）版本间，物品分为能进核心的`material`和不能进核心的`resource`。在6.0中这个设定就取消了，7.0中添加了回来，但是这个功能是由字段控制的。*因此，可能大多数人在Bilibili中搜索到的教程都是NPE在5.0时期的教程，或者是复制其模板。*
+
+
