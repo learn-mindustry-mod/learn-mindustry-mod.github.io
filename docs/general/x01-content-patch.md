@@ -5,7 +5,7 @@
 内容补丁**可以**做到：
 
 - 增加或减少工厂的输入；
-- 改变广场的建行需求；
+- 改变方块的建造需求；
 - 完全改变某单位的武器和子弹；
 - 改变单位工厂的配方；
 - 把方块或单位的贴图改成游戏内其他纹理；
@@ -17,7 +17,7 @@
 - 向游戏中添加新纹理或资源文件；
 - 添加原版没有的新机制；
 - 改变方块的类型，如把墙变成炮塔；
-- 添加新内容，如广场、单位等；
+- 添加新内容，如方块、单位等；
 
 内容补丁*不是*模组的替代器（译者注：指一般性的内容模组），它只能更改已有的内容。
 
@@ -155,7 +155,7 @@ unit.flare.weapons: [
 - 单位的`range`和`maxRange`不会自动更新，即使你设置lifetime和speed提高了武器子弹的射程。你需要手动更新；
 - 类似地，单位更改了类型后，字段也不会自动赋值，比如把尖刀变成海军默认仍然会被淹死；
 - 方块和单位的`clipSize`也不会更新，即使你扩大了它们的渲染范围。手动赋值之；
-- 很多消耗器在不支持的广场上不会工作。通常来说，如果原版没有类似设计，则可能支持不会很好；
+- 很多消耗器在不支持的方块上不会工作。通常来说，如果原版没有类似设计，则可能支持不会很好；
 - 不可重新设置方块的尺寸，否则会崩溃存档。并且大部分物流方块变大并没有意义；
 - 有依赖关系的值统统不会自动重设。例如，更改方块的建筑需要并不会更新它的建造时间；（译者注：原版方块建造时间是根据需要物品算出来的，而不是自己设置的）
 - 环境静态方块不可使用非环境页的纹理。换而言之，你可以让草地使用雪地的贴图，但是不能使用路由器的贴图，否则会显示错误；（译者注：根据渲染时如何更新，原版贴图分为五个页表，分别为`main` `environment` `editor` `ui` `rubble`，在不同渲染阶段只能使用一张页表。所以渲染环境方块的时候不能使用主页表里的贴图，反之也不可以）
@@ -168,52 +168,52 @@ unit.flare.weapons: [
 ## '双管生万物'
 
 ```hjson
-//再说一遍，命名可有可无，但方便
+//再说一遍，命名可有可无，但方便在补丁页面查看
 name: Duofication
 
 item: {
-  //fissile-matter is an unused item, so use it for demonstration
+  //“裂变产物是个没有用的物品，所以用它作演示
   fissile-matter: {
-    //change the display name of the item to 'Duo'
+    //把显示名字改成Duo
     localizedName: Duo
-    //unhide it
+    //取消它的隐藏
     hidden: false
-    //change the in-game icon to 'duo-preview', which is used by the duo turret
+    //把游戏里围标改成'duo-preview'，是双管使用的
     fullIcon: duo-preview
-    //change the in-ui icon to 'block-duo-ui', which is also used by the duo turret in UI
+    //把UI图标改成'block-duo-ui'，这也是双管使用的
     uiIcon: block-duo-ui
   }
 }
 
 block: {
-  //edit the pulverizer
+  //编辑“粉碎机”
   pulverizer: {
-    //change its name
+    //改名字
     localizedName: Duo Factory
-    //rewrite the things it consumes
+    //重写消耗器
     consumes: {
-      //remove all previous consumers - without this line, it would retain its old consumption of scrap
-      //you can also remove *only* item consumers by writing `remove: items`
+      //删除先前所有消耗器，如果不写，还是会消耗废料
+      //你可以通过`remove: 某物品`来只删除某物品（译者注：此处不明是填字符串还是列表）
       remove: all
-      //consume 1 copper item per craft
+      //每次消耗一个铜
       item: copper
     }
-    //change the UI display icon
+    //更改UI图标
     uiIcon: block-duo-ui
-    //change the region
+    //更改贴图
     region: block-duo-full
-    //output 1 fissile matter, which was previously patched to have the name 'Duo'
-    //note that outputItems is an array, so its contents have to be written as a list with [ and ]
+    //输出一个“裂变产物”虽然之前已经命名成Duo了
+    //注意outputItems是一个列表
     outputItems: [fissile-matter/1]
-    //define the drawers, which define how the block is rendered. they can be defined as an array with []
+    //定义绘制器
     drawer: [
       {
-        //the first drawer is a simple DrawRegion, which draws the sprite 'block-1', which is the base for 1x1 Serpulo turrets
+        //第一步就是简单的DrawRegion，画了一张'block-1'贴图，这是1x1炮塔的底座
         type: DrawRegion
         name: block-1
       }
       {
-        //the second drawer draws the 'duo-preview' region and rotates it at speed 1
+        //再画一张速度为1旋转的'duo-preview'
         type: DrawRegion
         rotateSpeed: 1
         name: duo-preview
@@ -224,33 +224,33 @@ block: {
 }
 
 unit: {
-  //patch the dagger unit
+  //修改“尖刀”
   dagger: {
-    //change its body region to duo-preview
+    //把身体主体改成duo-preview
     region: duo-preview
-    //re-define the weapon array (note: this clears all previous weapons)
+    //重定义武器，这会删除所有原来的武器
     weapons: [
-      //all weapons in the array are objects of their own, so they need to be encased in {} braces
+      //每个武器自己是一个对象，所以分别用{}括上
       {
-        //the weapon is centered on the unit
+        //武器居中
         x: 0
         y: 0
-        //reload of 20 ticks (1 second = 60 ticks)
+        //CD为20刻，即1/3秒
         reload: 20
-        //alternate left and right with a spread of 3.5 world units (1 tile = 8 world units)
+        //3.5世界单位长度间隔的两个炮管交替射击
         shoot: {
           type: ShootAlternate
           spread: 3.5
         }
 
-        //define the bullet the weapon shoots
+        //定义武器发射的子弹
         bullet: {
-          //width and height of the sprite in world units
+          //贴图的尺寸，仍然以世界单位计算
           width: 7
           height: 9
-          //lifetime in ticks (1 second)
+          //子弹寿命，1秒
           lifetime: 60
-          //colors of the bullet as a hex code
+          //子弹颜色，使用十六进制色
           frontColor: eac1a8
           backColor: d39169
         }
@@ -260,34 +260,34 @@ unit: {
 }
 ```
 
-## Modifying Turret Ammo
+## 修改炮塔子弹
 
 ```hjson
 block.fuse.ammoTypes: {
-  //remove titanium ammo from the ammo map by using the special "-" value
+  //移除此项，使用"-"
   titanium: "-"
-  //add surge alloy ammo that shoots a laser
+  //添加发射激光的巨浪合金
   surge-alloy: {
     type: LaserBulletType
-    //make it produce 1 shot per ammo item
+    //每次射击消耗1物品
     ammoMultiplier: 1
-    //make it shoot half as fast
+    //CD减少一半
     reloadMultiplier: 0.5
     damage: 100
-    //make it look awful!
+    //让颜色看起来很吓人
     colors: ["000000", "ff0000", "ffffff"]
   }
 }
 ```
 
-## Adding Unit Abilities
+## 添加单位能力
 
 ```hjson
-//add a new ability to pulsar (note the .+)
+//给“恒星”添加新能力，注意.+
 unit.pulsar.abilities.+: [
   {
     type: ForceFieldAbility
-    //set the maximum health of of the force field to 1000
+    //盾量最大1000
     max: 1000
   }
 ]
@@ -297,26 +297,26 @@ unit.pulsar.abilities.+: [
 ## Adding Unit Plans
 
 ```hjson
-//make the ground factory produce flares
+//让陆军工厂生产星辉
 block.ground-factory.plans.+: {
   unit: flare
-  //require 10 surge alloy to build
+  //需要十个巨浪合金
   requirements: [surge-alloy/10]
-  //take 100 ticks to build
+  //需要100刻
   time: 100
 }
 ```
 
-## Modifying Unit Factory Plans
+## 修改单位工厂配方
 
 ```hjson
-//make daggers (the first plan of the ground factory, or index 0) take 60 ticks to build, or 1 second 
+//让尖刀，也就是第一个配方（Java中从0开始数）的生产时间为1秒
 block.ground-factory.plans.0.time: 60
 ```
 
-## Modifying Block Requirements
+## 修改方块造价
 
 ```hjson
-//make duo cost 5 titanium and 20 surge alloy
+//让双管炮造价为5个钛和20个巨浪合金
 block.duo.requirements: [titanium/5, surge-alloy/20]
 ```
