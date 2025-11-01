@@ -32,6 +32,7 @@ const viteConfig: UserConfig = {
     nav: [
       { text: "Java", link: "/java" },
       { text: "Json", link: "/json" },
+      { text: "参考", link: "/general" },
     ],
   
     socialLinks: [
@@ -60,6 +61,7 @@ function generateNav(name:string):VitePressSidebarOptions{
 export default defineConfig(withSidebar(viteConfig,
   [
     generateNav("java"),
-    generateNav("json")
+    generateNav("json"),
+    generateNav("general")
   ])
 )

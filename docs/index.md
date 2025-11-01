@@ -17,5 +17,8 @@ hero:
       - theme: brand
         text: Json教程
         link: /json
+      - theme: alt
+        text: 参考文档
+        link: /general
 
 ---
