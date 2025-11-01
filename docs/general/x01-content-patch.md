@@ -59,6 +59,7 @@ block.conveyor.health: 50
 在第三层，你需要定义你想要更改的属性，和相应的值。例如：
 
 ```hjson
+
 block: {
   conveyor: {
     health: 50
@@ -88,7 +89,7 @@ block.conveyor.health: 50
 
 ## 访问数组或列表
 
-如果需要访问数组（形如T[]，其中T指任何类型），或者是一个列表（形如Seq<T>），你可以这样做：
+如果需要访问数组（形如T[]，其中T指任何类型），或者是一个列表（形如Seq< T >），你可以这样做：
 
 ```hjson
 //极大地使尖刀的左炮偏移了原来的位置
@@ -139,7 +140,7 @@ unit.flare.weapons: [
 ]
 ```
 
-此语法可用于`T[]` `Seq<T>`  `ObjectSet`。
+此语法可用于`T[]` `Seq< T >`  `ObjectSet`。
 
 # 通识
 
@@ -164,10 +165,10 @@ unit.flare.weapons: [
 
 # Extra Examples
 
-## 'Duoification'
+## '双管生万物'
 
 ```hjson
-//once again, names are optional, but help identify a patchset in the list
+//再说一遍，命名可有可无，但方便
 name: Duofication
 
 item: {
