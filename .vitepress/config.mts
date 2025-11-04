@@ -33,6 +33,7 @@ const viteConfig: UserConfig = {
       { text: "Java", link: "/java" },
       { text: "Json", link: "/json" },
       { text: "参考", link: "/general" },
+      { text: "内容补丁", link: "/content-patch/x01-content-patch.md"}
     ],
   
     socialLinks: [
