@@ -13,15 +13,15 @@ hero:
   actions:
       - theme: brand
         text: Java/Kotlin教程
-        link: /java
+        link: /java/index
       - theme: brand
         text: Json教程
-        link: /json
+        link: /json/index
       - theme: brand
         text: 内容补丁
         link: /content-patch/x01-content-patch.md
       - theme: alt
         text: 参考文档
-        link: /general
+        link: /general/index
 
 ---
