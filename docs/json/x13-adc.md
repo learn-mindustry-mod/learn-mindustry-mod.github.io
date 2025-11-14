@@ -1,0 +1,45 @@
+# 使用ACD修复星球建筑
+
+在147之后，Mindustry关于物品白名单的功能发生大变革，由原来的行星设置物品白名单变成了物品设置`shownPlanets`，大大增加了JSON模组作者的不便。
+
+由此，guiY同志开发了自适应核心数据库（ADC）这一模组，帮助JSON作者修复物品的白名单规则。
+
+## 原教程
+
+参见 [https://github.com/guiYMOUR/AdaptiveCoreDatabase/blob/main/README_CN.md](https://github.com/guiYMOUR/AdaptiveCoreDatabase/blob/main/README_CN.md)
+
+简而言之，你需要在与`mod.json`同级的位置放置一个`adc.json`，格式参见下文。
+
+## 模板
+
+原教程没有直接给出模板，下面我们将处理这一问题：
+
+``` json adc.json
+{
+  "root": [
+    {
+      "planet":"你行星的文件名",
+      "items": ["scrap", "copper", "lead", "graphite", "coal", "titanium", "thorium", "silicon", "plastanium", "phase-fabric", "surge-alloy", "spore-pod", "sand", "blast-compound", "pyratite", "metaglass"
+      //模组其他物品也要放在这里
+      ],
+      "liquids": ["water","slag","oil","cryofluid"
+      //模组其他液体也要放在这里
+      ],
+      "units": [
+        "dagger","mace","fortress","secepter","regin",
+        "nova","pulsar","quasar","vela","corvus",
+        "crawler","atrax","spiroct","arkyid","toxopid",
+        "flare","horizon","zenith","antumbra","eclipse",
+        "mono","poly","mega","quad","oct",
+        "risso","minke","bryde","sei","omura",
+        "retusa","oxynoe","cyerce","aegires","navanax"
+        //模组其他单位也要放在这里
+      ]
+      //模组方块不需要放在这里！！！
+    }
+  ]
+}
+```
+
+- 我们不需要设置方块的`shownPlanet`，因为游戏根本看的不是方块的这一字段，而是其建造所需物品的`shownPlanets`情况，所以不要在adc.json中体现你的方块；
+- Erekir上的物品、液体和单位原理类似，你需要写的是他们的**内部名称**，如果你不知道什么是内部名称，原版内容参见[x09](./x09-how-to-find-class-and-field.md)，模组内容就是JSON的文件名
