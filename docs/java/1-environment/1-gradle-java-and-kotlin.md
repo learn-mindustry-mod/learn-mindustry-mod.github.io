@@ -6,17 +6,15 @@
 **该节需要你拥有电脑，或者至少已经在Android设备上部署了Linux环境。有关纯安卓设备部署开发环境请参阅第四节 [如果你只有安卓设备](4-build-on-android) 。**
 :::
 
-Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*，但是我们仍然更加建议使用性能更优，可维护性更强的Java或Kotlin进行开发。
+Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*，但是我们仍然更加建议使用性能更优、可维护性更强的Java或Kotlin进行开发。
 
-教程本单元会提供一个快速部署开发环境的模板，在进行较高级的操作之前你只需要使用，不过迟早你需要充分了解整个脚本的。
-
-<!---- 充分落实黑箱蒙古精神！ ----->
+从零开始生成一个可用的模组文件较为复杂，因此，本章将会提供一个开箱即用的 **模板（Template）** ，帮助你跳过生成项目这一步。 
 
 ## 安装JDK（Java Development Kit）
 
 无论您做什么，基本的运行环境————Java是不可或缺的。`JDK`即为Java开发的基础套件，它包含了Java编译器（`javac`）、Java运行时环境（`JRE`）等工具。
 
-对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 21，本教程的 Java 模组开发也是基于**Java 21**的。如果你曾经游玩过Minecraft 1.18版本以上，应该会有满足标准的 JDK
+对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 25，本教程的 Java 模组开发也是基于**Java 25**的。
 
 需要指出的是，`JDK`只是功能上的描述，实际上有多个厂商的JDK发行版可供选择，一般来说被广泛使用的有OracleJDK、Adoptium及GraalVM等。
 
@@ -25,9 +23,9 @@ Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*�
 
 [**OracleJDK**](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html)的安装方式较为简单，它为Windows平台及Linux平台都提供了快速安装的发行包。
 
-::: info **Windows/macOS**
+::: info **Windows**
 
-通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`Windows x64 Installer（.exe）`或`ARM64 DMG Installer`或``进行下载：
+通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`Windows x64 Installer（.exe）`进行下载：
 
 ![download-oracle](./imgs/download-oracle.png)
 
@@ -37,7 +35,7 @@ Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*�
 
 ::: info **macOS**
 
-通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`ARM64 DMG Installer`或`x64 DMG Installer`进行下载：
+通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`ARM64 DMG Installer`或`x64 DMG Installer`（根据机型）进行下载：
 
 ![download-oracle](./imgs/download-oracle.png)
 
@@ -70,41 +68,36 @@ java -version
 如果你看到类似如下的输出，则说明JDK安装成功：
 
 ```
-java version "21.0.6" 2025-01-21 LTS
-Java(TM) SE Runtime Environment Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23.1-b55)
-Java HotSpot(TM) 64-Bit Server VM Oracle 21.0.6+8.1 (build 21.0.6+8-LTS-jvmci-23.1-b55, mixed mode, sharing)
+java version "25.0.1" 2025-10-21 LTS
+Java(TM) SE Runtime Environment (build 25.0.1+8-LTS-27)
+Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 ```
 
 ## IDEA
 
-安装完Java之后，可以说你的开发环境已经配置完了————至少你现在可以去控制台执行`<gradlew> jar`了。不过，除非你以前是个资深vim程序员，否则不会喜欢在命令行环境下开发的。这时你就需要一个 **IDE（集成开发环境）** 了。和Java一样，IDE也有许多种，此处我们只推荐并强行要求使用 **IntelliJ IDEA** 。
+接下来，你还需要安装 **IntelliJ IDEA** 这一软件，它是一款**IDE（集成开发环境）软件**，包括高亮、语法纠错、代码跳转等记事本不具备的高级功能，在各种体验上均优于其他IDE，**毫无疑问，每个人都会说IDEA是Java开发的神** 。
 
+关于其安装方法，本教程将不再赘述，请自行百度或访问以下外链：
 
-毫无疑问，每一个人都会说**IDEA是Java开发的神**。关于其安装教程并不值得本教程赘述，相关教程网络上已经有很多，请自行百度或选择以下外链观看。不过，有两点注意事项:
++ [Windows端](https://blog.csdn.net/m0_37220730/article/details/107589690)
++ [macOS端](https://blog.csdn.net/m0_37220730/article/details/107589690)
++ [Linux端](https://blog.csdn.net/m0_37220730/article/details/107589690)
 
-+ Mindustry Mod开发只需要**社区版**功能，所以不必费时费力**甚至是费钱**去破解旗舰版；
-+ 目前IDEA已经内置中文翻译包，不需要手动下载了。
-
-+ Windows端：[https://blog.csdn.net/m0_37220730/article/details/107589690](https://blog.csdn.net/m0_37220730/article/details/107589690)
-+ macOS端：[https://blog.csdn.net/jackson_lingua/article/details/145177226](https://blog.csdn.net/m0_37220730/article/details/107589690)
-+ Linux端：[https://blog.csdn.net/qq_43646721/article/details/108152206](https://blog.csdn.net/m0_37220730/article/details/107589690)
-
-**下载之后的第一件事，是去设置中搜索`编码`，并把能改成UTF-8的项都改成UTF-8。否则会出现乱码问题！**
+**如果你是Windows系统，下载之后的第一件事，是在设置中转到“编辑器-文件编码”，将“文件编码”、“项目编码”、和“属性文件的默认编码”全都改成“UTF-8”，否则你的模组将无法正常显示中文。**
 
 ## Android SDK
 
+只有正确地配置Android SDK，你才能在本地编译出可以运行在安卓设备上的模组。
 
-**Android SDK**是使模组能够在安卓设备上运行的重要手段。只有正确地配置，才能让编译出来的模组能在安卓设备上运行。
+当然，这并不是唯一让模组能在安卓设备上运行的方法。你也可以考虑使用 **Github Action** 进行在线编译，见于[后文](./5-anuke-template.md)。
 
-当然，这并不是唯一手段，，也可以考虑使用 **Github Action** 进行在线CI编译，这需要一定使用Github的基础。
+我们将采用安装Android Studio的方式安装Android SDK：
 
-我们将采用安装Android Studio的方式安装Android SDK。
 - 首先，访问[Google官网](https://developer.android.com/studio?hl=zh-cn)，下载最新的Android Studio；
 - 安装Android Studio，但不要安装`Android Virtual Device`（对Mindustry模组开发没有用处）；
 - 静待其安装完毕，找到Android Studio的设置（与IDEA类似），`Languages & Frameworks -> Android SDK`，记下`Android SDK Location`；
-- 去`Android SDK Location`/build-tools目录看一眼，记下里面最新的版本号；
-- 然后，你需要设置环境变量（请自行百度）。请注意！Mindustry所需的安卓环境变量和常规有所不同，你需要将`ANDROID_HOME`（而不是ANDROID_SDK_HOME）设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`。
-
+- 访问`Android SDK Location`/build-tools，记下里面最新的版本号；
+- 然后，你需要设置环境变量（请自行百度）。**请注意！**Mindustry所需的安卓环境变量和常规有所不同，你需要将`ANDROID_HOME`（而不是ANDROID_SDK_HOME）设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`。
 
 ## Gradle和Kotlin
 
@@ -117,11 +110,11 @@ Gradle是一个现代Java构建工具，它可以帮助我们自动化构建、�
 
 Gradle的构建逻辑通过**构建脚本**定义，即项目文件下的文件`build.gradle`中编写的内容，在模板项目中同样已经为我们配置好了Gradle的构建脚本。
 
-我们一般不需要配置太多关于Gradle的操作，如果对有关gradle的具体内容有兴趣，可以**前往Gradle网站：https://gradle.org/**
+我们一般不需要配置太多关于Gradle的操作，如果对有关gradle的具体内容有兴趣，可以前往Gradle网站：[https://gradle.org/](https://gradle.org/)
 
 ### Kotlin
 
-Kotlin是Java的延伸，你可以使用Kotlin来无缝编写运行在jvm上的项目，并与Java项目可以无缝衔接。
+Kotlin是Java的延伸，你可以使用Kotlin来无缝编写运行在JVM上的项目，并与Java项目可以无缝衔接。
 
 我们会比较建议你使用Kotlin进行开发，更加现代化的语法特性能较大程度的改善你的开发体验。
 
