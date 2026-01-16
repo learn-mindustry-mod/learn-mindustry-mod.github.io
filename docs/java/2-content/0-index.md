@@ -1,10 +1,12 @@
 # 创建游戏内容
 
-恭喜你闯过了第一章————这个95%的萌新都会被拦腰斩断的地方，闯过了环境的配置，那么接下来就是真正模组的内容了。
+恭喜你闯过了第一章————这个95%的萌新都会被拦腰斩断的地方，那么接下来就是真正模组的内容了。
 
 不过，本教程还不打算让你现在就开始翱翔在Java自由的天空中，俗话说，天高任鸟摔。在能真正利用Java这股原始的力量之前，你需要先搞懂模组到底是以什么样的结构展开的，并且了解一些Mindustry固有的概念。
 
-本节我们将提及一些模组开发中需要的 Java/Kotlin/JavaScript/Hjson 语法，及原版在语法方面的一些规定，并不是编程语言的**教程或讲解**，如果发现有漏洞的知识点请在他处自行学习。如果你对Java真的零基础，可以先看看下面，了解一下不需要学什么。
+本节我们将提及一些模组开发中需要的 Java/Kotlin/JavaScript/Hjson 语法，及原版在语法方面的一些规定，并不是编程语言的**教程或讲解**，如果发现有漏洞的知识点请在他处自行学习。如果你对Java真的零基础，可以先看看下面，了解一下不需要学什么，然后再进行语法的学习。
+
+不厌其烦地再次重复一遍，不掌握语法会寸步难行。
 
 推荐 Java 教程：[黑马程序员零基础](https://www.bilibili.com/video/BV1Ei4y137HJ)（全看完）、[韩顺平30天速成](https://www.bilibili.com/video/BV1fh411y7R8)（看到547课即可）、[廖雪峰官网](https://liaoxuefeng.com/books/java/introduction/index.html)、[菜鸟教程](https://www.runoob.com/java/java-tutorial.html)（不推荐用这个学，适合当语法速查）
 
@@ -13,13 +15,7 @@
 推荐 JavaScript 教程：[FreecodeComp](https://www.freecodecamp.org/chinese/learn/javascript-algorithms-and-data-structures)
 
 ## 不需要什么
-Mindustry不需要`java.[n]io` / `java.net` / `java.util`以外任何Java基础库，因为安卓可能没有它们，这就包括`Swing`和`Awt`。也不需要会任何其他Java框架或中间件。不需要非JVM语言，它们不能用来写模组，包括C++和Python。不需要数据库，除非你要做一个新的服务器基础层。
-
-## Hjson语法
-
-如果非要说的话，只有一句话：**括号一定要是匹配的！！！**
-
-毕竟Mindustry原生的JSON解析过于宽松，引号和逗号笔者建议最好全都不要写，如果写了也一定要匹配，此外即使是Mjson也**不支持尾随逗号**。这样的话，一切语法问题就可以归结到括号不匹配上了。但如果读者使用的是MT管理器，或其他任何没有插件功能的文本编辑器，则推荐使用正规JSON语法，至少还有格式化器可用。
+Mindustry不需要`java.[n]io` / `java.net` / `java.util`以外任何Java基础库，因为安卓可能没有它们，这就包括`Swing`和`Awt`。也不需要会任何其他Java框架或中间件。不需要非JVM语言，它们不能用来写模组，包括C++和Python。
 
 ## Java 语言基础知识清单
 
@@ -162,8 +158,8 @@ tiles.each(tileConsumer);
 ### 命名规范
 - 类名：大驼峰，如 BlockStateManager
 - 方法名/变量名：小驼峰，如 getName
-- 常量名：<font style="color:red;">不是全大写加下划线，而和变量一样小驼峰，如 maxSize</font>
-- 包名：<font style="color:red;">不是全小写反向域名，而是要简单，如 project</font>
+- 常量名：<font style="color:red;">不是全大写加下划线，而和变量一样小驼峰，如`maxSize`</font>
+- 包名：<font style="color:red;">不是全小写的域名，而是要简单，如 project</font>
 
 
 ## Kotlin 语言基础知识清单
@@ -359,7 +355,7 @@ fun main() {
 
 委托对象必须遵循**属性委托约定**，即提供 `operator` 修饰的 `getValue()` 和 `setValue()` 函数（后者用于 `var` 属性）。
 
-Kotlin 标准库提供了几个极其有用的内置属性委托工厂函数（虽然你要求不包括 stdlib，但这些是理解委托不可或缺的核心例子）：
+Kotlin 标准库提供了几个极其有用的内置属性委托工厂函数：
 
 #### `lazy`： 惰性初始化
 
@@ -393,7 +389,7 @@ fun main() {
 *   **`vetoable`:** 在属性值**被改变前**触发回调，允许你“否决”此次修改。
 
 ```kotlin
-import kotlin.properties.Delegates // 这是标准库的一部分，仅作示例
+import kotlin.properties.Delegates
 
 var name: String by Delegates.observable("<no name>") { prop, old, new ->
     println("$old -> $new") // 变化后打印
