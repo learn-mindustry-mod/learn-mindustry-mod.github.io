@@ -7,8 +7,8 @@
 - 流体（Liquid）
 
 几个小问题
-- `new Item("sampleItem");`这个构造方法有必要提出来吗？
-- `sprite` `image` `texture`统一一下译名
+- `new Item("sampleItem");`这个构造方法不再提出
+- `sprite` `image` `texture` `altas`：贴图 图像 纹理 图集册
 
 
 2.2 工厂方块（GenericCrafter）

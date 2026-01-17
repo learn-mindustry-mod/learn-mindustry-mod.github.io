@@ -89,7 +89,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 
 只有正确地配置Android SDK，你才能在本地编译出可以运行在安卓设备上的模组。
 
-当然，这并不是唯一让模组能在安卓设备上运行的方法。你也可以考虑使用 **Github Action** 进行在线编译，见于[后文](./5-anuke-template.md)。
+当然，这并不是唯一让模组能在安卓设备上运行的方法。你也可以考虑使用 **Github Action** 进行在线编译，见于[后文](./2-anuke-template.md)。
 
 我们将采用安装Android Studio的方式安装Android SDK：
 
