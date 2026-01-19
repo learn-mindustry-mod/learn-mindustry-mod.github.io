@@ -68,6 +68,8 @@ GenericCrafter("tutorial-crafter").apply{
 
 值得注意的是，方块的建造时间并不是手动设置的，而是由建造需求决定的，计算公式为需求物品的`cost`总和再乘以`buildCostMultiplier`。如果你觉得某个方块的建造时间过长，但又不想更改物品的`cost`时，可以设置`buildCostMultiplier`为一个比1小的数来降低建造时间。 **直接设置`buildCost`不会起效，因为计算`buildCost`在创建对象之后很久之后才会发生**。
 
+方块也是物品、流体、电力的容器，这三种物质分别存储在建筑的物品槽（ItemModule）、流体槽（LiquidModule）和电力槽（PowerModule）中。你需要分别使用`hasItems` `hasLiquids` `hasPower`去标记建筑需要这三种槽。你还可以设置物品和流体的容量，分别为`itemCapacity` `liquidCapacity`。
+
 接下来同样需要给方块分配名称和贴图：
 
 ```properties bundle_zh_CN.properties
@@ -160,7 +162,7 @@ consumePower(-1f);
 
 ## 声明绘制器（Drawer）
 
-在v7版本之前，原版工厂仅有少数几种绘制模式，且绘制内容受工厂类型限制。v7版本更新后，绘制系统发生了显著变化：一方面，所有无需热量需求且无地形增益的工厂被统一归入 `GenericCrafter` 类型；另一方面，绘制逻辑被抽离为独立的绘制器（Drawer）组件。这一改动增强了JSON模组在绘制行为上的自定义能力，同时优化了Java端的工厂架构，提升了绘制模式的复用性。本节将首先介绍如何使用与组合原版中已有的绘制器。
+在v7版本之前，原版工厂仅有少数几种绘制模式，且绘制内容受工厂类型限制。v7版本更新后，绘制系统发生了显著变化：一方面，所有无需热量需求且无属性增益的工厂被统一归入 `GenericCrafter` 类型；另一方面，绘制逻辑被抽离为独立的绘制器（Drawer）组件。这一改动增强了JSON模组在绘制行为上的自定义能力，同时优化了Java端的工厂架构，提升了绘制模式的复用性。本节将首先介绍如何使用与组合原版中已有的绘制器。
 
 最基本的drawer是`DrawDefault`，可以绘制一张名称与本工厂相同的贴图。使用方式如下：
 
@@ -235,13 +237,13 @@ drawer = new DrawMulti(
 
 ## 一些特殊的工厂子类型
 
-并非所有工厂都是`GenericCrafter`。正如开头所说，不同的功能需要不同的类型，地形增益工厂的类型是`mindustry.world.blocks.production.AttributeCrafter`，有热量需求的工厂的类型是`mindustry.world.blocks.production.HeatCrafter`，热量产生器为`mindustry.world.blocks.heat.HeatProducer`（不在`production`包内）。
+并非所有工厂都是`GenericCrafter`。正如开头所说，不同的功能需要不同的类型，属性增益工厂的类型是`mindustry.world.blocks.production.AttributeCrafter`，有热量需求的工厂的类型是`mindustry.world.blocks.production.HeatCrafter`，热量产生器为`mindustry.world.blocks.heat.HeatProducer`（不在`production`包内）。
 
 这三个类型都是`GenericCrafter`的子类，也就是说，上文所提的一切字段在这两个类型中都是可用的；相应地，这三个类也有一些新增的属性：
 
 对于`AttributeCrafter`：
 
-- `atrribute`：使此工厂获得增益或减益的**属性（Attribute）**，原版中的attribute包括`heat` `spores` `water` `oil` `light` `sand` `steam`等，均与名称相同；
+- `atrribute`：使此工厂获得增益或减益的**属性（Attribute）**，原版中的attribute包括`heat` `spores` `water` `oil` `light` `sand` `steam`等。属性并不一定是地形带来的，天气和环境也可以带来属性，如孢子迷雾天气会增加`spores`属性；
 - `baseEfficiency`：无增益效果时的基础效率；
 - `boostScale`：增益效果的倍率；
 - `maxBoost`：增益效果的最大值，为增量；
@@ -260,10 +262,11 @@ drawer = new DrawMulti(
 - `heatOutput`：热量输出；
 - `warmupRate`：预热速度。
 
+## 不是工厂的工厂
+
+
+
 ## 加载顺序
 
 在方块中使用模组内的物品或流体时，应确保这些内容先于方块本身加载，否则可能引发 `NullPointerException` 异常或游戏内显示异常。为此，只需确保物品或流体的注册代码在方块的注册代码之前执行即可。
 
-
-## 思考题
-只有那些category为crafting的才算是工厂吗？查找原版还有哪些方块也是工厂，并思考用工厂还能做出来什么新奇的策划设计。
