@@ -262,6 +262,41 @@ drawer = new DrawMulti(
 - `heatOutput`：热量输出；
 - `warmupRate`：预热速度。
 
+## 创建一个Seperator
+
+分离器的类型是`mindustry.world.blocks.production.Seperator`，它不是工厂，但是运行逻辑类似工厂。
+
+::: code-group
+
+```java
+new Seperator("tutorial-seperator");
+```
+
+```kotlin
+Seperator("tutorial-seperator")
+```
+
+:::
+
+和工厂类似的是，你可以设置`drawer`和`craftTime`。而分离器的产出及各产物概率是在`results`字段中。此时ItemStack中的`amount`不再表示数量，而是此物品所占的比例：
+
+``` java
+results = with(
+                Items.copper, 5,
+                Items.lead, 3,
+                Items.graphite, 2,
+                Items.titanium, 2
+            );
+```
+
+总比例是`5+3+2+2 = 12`，则铜占其中的5/12。
+
+分离器的机制有两点值得讨论：
+- **分离器的结果是如何在服务器和各个玩家之间保持同步的？** 分离器的结果并不是真随机，而是伪随机。简单来说，伪随机代表一种确定的随机。其确定性体现在，如果生成随机数的种子确定，则生成出来的随机数列也是确定。例如，如果种子都是1，那么第一次生成必定出现4，第3次生成必定出现9等。其随机性体现在，仅凭几次的输出无法推算出种子值，且生成的数列在各种意义上分布都是较为平均的。
+- **大分离器是如何输出钍等物品而不输出废料的，以及是如何计算物品总容量的？** 实际上分离器根本没有使用方块的`separateItemCapacity`属性，而是在`init()`时获取第一个物品消耗项的物品，并在之后的计算过程中减去此物品计算总共的物品容量。这就导致使用ContentPatch是无法修改这一点的。
+
+关于载荷系统中的工厂，见于第八节。
+
 ## 加载顺序
 
 在方块中使用模组内的物品或流体时，应确保这些内容先于方块本身加载，否则可能引发 `NullPointerException` 异常或游戏内显示异常。为此，只需确保物品或流体的注册代码在方块的注册代码之前执行即可。

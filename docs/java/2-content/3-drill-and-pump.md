@@ -1,6 +1,8 @@
-# 其他生产方块
+# 钻头与泵
 
 > ***我们不生产资源，我们只是资源的搬运工***
+
+钻头、光束钻头、凿墙机与泵，以及固态泵、石油压采器，是原版物品与流体的资源生产者，它们构成了自然资源的来源。
 
 ## 创建一个Drill
 
@@ -64,6 +66,28 @@ block.tutorial-mod-tutorial-drill.name = Tutorial Drill
 block.tutorial-mod-tutorial-drill.description = When placed on ore, outputs items at a slow pace indefinitely. Only capable of mining very soft resources. Incapable of using water to boost efficiency.
 block.tutorial-mod-tutorial-drill.details = WHY INFINITE ORE
 ```
+
+## 创建一个BeamDrill和WallCrafter
+
+光束钻头的类型是`mindustry.world.blocks.production.BeamDrill`，凿墙机的类型是`mindustry.world.blocks.production.WallCrafter`。
+
+::: code-group
+
+```java
+new BeamDrill("tutorial-beam-drill");
+new WallCrafter("tutorial-wall-crafter");
+```
+
+```kotlin
+BeamDrill("tutorial-beam-drill")
+WallCrafter("tutorial-pump")
+```
+
+:::
+
+光束钻头和钻头的设置完全相同，区别在于光束钻头需要的贴图数量更多，但是大多数的贴图都有默认值，额外必需的只有`-top`和`-glow`贴图。
+
+凿墙机的设置兼有钻头与属性工厂，既可以设置`drillTime`，也可以设置所需属性`attribute`和输出物品`output`。
 
 ## 钻头的消耗项声明
 
@@ -131,37 +155,3 @@ Fracker("tutorial-fracker")
 
 从代码架构来看，`Drill` 与 `Pump` 均属于功能高度特化、设置目的单一的类。此类设计在原版中十分常见，它们通过继承特定的基础类，专注于实现某一项核心的生产逻辑。
 
-## 创建一个Seperator
-
-分离器的类型是`mindustry.world.blocks.production.Seperator`，它不是工厂，但是运行逻辑类似工厂。
-
-::: code-group
-
-```java
-new Seperator("tutorial-seperator");
-```
-
-```kotlin
-Seperator("tutorial-seperator")
-```
-
-:::
-
-和工厂类似的是，你可以设置`drawer`和`craftTime`。而分离器的产出及各产物概率是在`results`字段中。此时ItemStack中的`amount`不再表示数量，而是此物品所占的比例：
-
-``` java
-results = with(
-                Items.copper, 5,
-                Items.lead, 3,
-                Items.graphite, 2,
-                Items.titanium, 2
-            );
-```
-
-总比例是`5+3+2+2 = 12`，则铜占其中的5/12。
-
-分离器的机制有两点值得讨论：
-- **分离器的结果是如何在服务器和各个玩家之间保持同步的？** 分离器的结果并不是真随机，而是伪随机。简单来说，伪随机代表一种确定的随机。其确定性体现在，如果生成随机数的种子确定，则生成出来的随机数列也是确定。例如，如果种子都是1，那么第一次生成必定出现4，第3次生成必定出现9等。其随机性体现在，仅凭几次的输出无法推算出种子值，且生成的数列在各种意义上分布都是较为平均的。
-- **大分离器是如何输出钍等物品而不输出废料的，以及是如何计算物品总容量的？** 实际上分离器根本没有使用方块的`separateItemCapacity`属性，而是在`init()`时获取第一个物品消耗项的物品，并在之后的计算过程中减去此物品计算总共的物品容量。这就导致使用ContentPatch是无法修改这一点的。
-
-关于载荷系统中的工厂，见于第八节。
