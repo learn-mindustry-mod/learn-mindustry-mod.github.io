@@ -2,6 +2,8 @@
 
 > ***合金气旋，已逝的神***
 
+状态效果是Mindustry融合性的一大体现，而炫酷的游戏效果离不开特效与音效的加持。本节将介绍状态效果与特效两者，同时还会介绍音效和音乐的相关内容，
+
 ## 声明一个StatusEffect
 
 状态效果，在其他游戏可能被称为buff，是一种可以应用在单位上，使单位获得增益或减益效果的一种内容类型（Content Type）。你可以按照先前的组织架构，为状态效果新建一个存储文件：
@@ -150,4 +152,4 @@ Vars.tree.loadSound("example-sound")
 
 Sound还有一个子类`RandomSound`，拥有一个`sounds`属性，可以接受一个`Sound`的列表。在播放此音效时，会在`sounds`中随机选择一个音效进行播放。
 
-音乐（Music）与音效的加载过程是类似的，只需要把`loadSound`变为`loadMusic`即可
+音乐（Music）与音效的加载过程是类似的，只需要把`loadSound`变为`loadMusic`即可。
