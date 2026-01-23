@@ -2,46 +2,45 @@
 
 > ***为什么要塞搬不动海神啊***
 
-书接上回，Mindustry不仅是自动化游戏，塔防游戏，还是**RTS游戏**，全称**即时战略游戏**，而RTS游戏中的精华就是 **单位（Unit）** 了，单位是原版中设置第二复杂的内容类型。本节将简述单位有关内容。
+Mindustry不仅是一款自动化与塔防游戏，同时也具备**即时战略（RTS）** 游戏的要素。在RTS游戏中，**单位（Unit）** 是核心组成部分之一，也是原版中设计复杂度较高的内容类型。本节将简要介绍与单位相关的内容。
 
 
 ## 创建一个UnitType
 
-在原版中，`UnitType`是代表一种单位的对象：
+在Mindustry中，单位被封装成了`mindustry.type.UnitType`这一类型。与以往的类型不同的是，其拥有必需的字段`constructor`，它是用来 **创建一个单位实体（Entity）** 的**提供器（Provider）**，其取值与所需单位实体的种类有关，见于下表：
 
 ::: code-group
 
 ```java
 new UnitType("tutorial-unit"){{
     constructor = UnitEntity::create;
+    EntityMapping.nameMap.put(name, constructor)
 }};
 ```
 
 ```kotlin
 UnitType("tutorial-unit").apply{
     constructor = UnitEntity::create
+    EntityMapping.nameMap.put(name, constructor)
 }
 ```
 
 :::
 
-这次我们直接把`constructor`介绍出来，它是用来 **创建一个单位实体（Entity）** 的。关于此处的细节暂时不必掌握，我们将在下一章探讨这种关系。至于此字段的值，是由单位的功能确定的，下面是一些可用的值：
-
-
 - `UnitEntity::create`：普通飞行单位，如星辉、阿尔法，*在json中用`flying`表示*；
 - `MechUnit::create`：机甲单位，如战锤、爬虫、新星，*在json中用`mech`表示*；
 - `LegsUnit::create`：多足单位，如死星、毒蛛、天守，*在json中用`legs`表示*；
 - `UnitWaterMove::create`：海军单位，如梭鱼、潜螺，*在json中用`naval`表示*；
-- `PayloadUnit::create`：可荷载单位，如巨像、苏醒、*发散、雷霆、要塞，在json中用`payload`表示*；
+- `PayloadUnit::create`：可荷载单位，如巨像、苏醒，*发散、雷霆、要塞，在json中用`payload`表示*；
 - `TimedKillUnit::create`：导弹单位，如创伤的导弹，*在json中用`missile`表示*；
 - `TankUnit::create`：坦克单位，如围护、领主，*在json中用`tank`表示*；
 - `ElevationMoveUnit::create`：悬浮单位，如挣脱，*在json中用`hover`表示*；
 - `BuildingTetherPayloadUnit::create`：建筑绑定单位，*如货运无人机、装配无人机，在json中用`tether`表示*；
-- `CrawlUnit::create`：爬虫单位，如Latum、Renale，但爬虫（Crawler）本身只是普通的`MechUnit`，*在json中用`crawl`表示*。
+- `CrawlUnit::create`：爬虫单位，如Latum、Renale。但爬虫（Crawler）本身只是普通的`MechUnit`，*在json中用`crawl`表示*。
 
-长期以来某些不求甚解的modder认为设置constructor后即可解决问题。但实际上，你应该再去设置一下`EntityMapping`。然而，使用原版`constructor`的单位类型会自动注册`EntityMapping`，而在`constructor`使用自己的`Unit`会使游戏产生新的崩溃并强制要求注册，我们将在下一章详细陈述。
+仅设置constructor可能不足以完成单位的完整注册。实际上，通常还需要在`EntityMapping`中进行相应的映射配置。不过，当使用原版提供的标准`constructor`时，相关的`EntityMapping`注册通常会自动完成。而如果`constructor`指向自定义的`Unit`实体类，则必须手动进行`EntityMapping`的注册，否则游戏会直接抛出错误。关于自定义单位实体的详细注册流程，我们将在下一章进行说明。
 
-另一方面，`UnitType`也有子类型，不过他们只是在`UnitType`的基础上设置了一些字段，而非增加了什么功能，属于我们之前提到的 **模板（Template）** 类。至于单位的属性，由于所有具体的单位实体都受`UnitType`统辖，所以`UnitType`中的字段既包括所有单位通用的字段，也包括只有某种单位实体会使用的字段。
+另一方面，`UnitType`也存在子类型，但这些子类型主要是在`UnitType`的基础上预设了部分字段值，并未引入新的功能，属于之前提到的 **模板（Template）** 类。关于单位的属性，由于所有具体的单位实体均由`UnitType`统一管理，因此`UnitType`中的字段既包含了所有单位通用的属性，也包含了仅特定单位实体才会使用的属性。
 
 ```properties bundle_zh_CN.properties
 unit.tutorial-mod-tutorial-unit.name = 演示单位
@@ -57,11 +56,11 @@ unit.tutorial-mod-tutorial-unit.details = Nonetheless
 
 关于UnitType各字段的含义如下：
 
-（棍母，自己把整个类复制给deepseek就告诉你了）
+<!--@include: ./reference/8-1-unittype.md-->
 
 ## 为单位添加武器
 
-没有武器的单位只能当矿机、建造工或者搬运机这些辅助性单位，想对敌人造成伤害或者给友方建筑回血的话，你需要给单位添加武器。单位的武器就一个小炮塔。不同的是，如果不启用“单位弹药限制”规则，单位就无需弹药即可发射，即使启用，也可以直接从核心或容器时自动吸取弹药。单位武器的类型主要是`Weapon`，此外还有`PointDefenseBulletWeapon`点防武器和`RepairBeamWeapon`修复光束武器两个专用类：
+单位武器是单位实现攻击或修复功能的核心组件，其本质是一个可移动的小型炮塔。与建筑武器不同，单位武器在默认游戏规则下无需消耗弹药即可发射；若启用“单位弹药限制”规则，单位则可以从核心或容器中自动获取所需弹药。武器的主要实现类为`Weapon`，此外还存在两个专用子类：`PointDefenseBulletWeapon`用于实现点防御功能，`RepairBeamWeapon`用于实现修复光束功能。
 
 ::: code-group
 
@@ -87,23 +86,23 @@ UnitType("tutorial-unit").apply{
 
 关于Weapon各字段的含义如下：
 
-（棍母，自己把整个类复制给deepseek就告诉你了）
+<!--@include: ./reference/8-2-weapon.md-->
 
 ## 单位的贴图
 
-贴图是模组最重要的外在特征，但越是深入了解，贴图就有越多的隐性知识，越多的暗坑，和越多许多modder仍然一知半解的细节。本部分将简要介绍单位实际上需要的全部贴图，至于其内在逻辑将会在后续讲解。
+贴图是模组最重要的外在特征之一，其实现细节会随着深入理解而逐渐显现。本部分将简要介绍单位实际所需的全部贴图，其内在逻辑将在后续章节详细说明。
 
-单位最基本的贴图是其本体`tutorial-unit.png`和其cell贴图`tutorial-unit-cell.png`。本体在绘制过程中处在最低层。cell贴图的颜色指示单位的队伍，闪烁速度指示单位的血量，使用`#ffffff` `#dcc6c6` `#9d7f7f`分别标记队伍颜色中的亮、中、暗色，使用其他颜色将会“原色绘制”。此外，游戏会自动给所有的贴图做**描边（Outline）** 和 **线性图像滤波（Linear Image Filter）**，作用是做图像显示起来更加边界分明和平滑，两者的具体原理将在后续讲解，在当前版本中，这两者是全自动执行的，不推荐干涉其过程，也没有必要添加outline贴图。
+单位的基本贴图包括本体贴图`tutorial-unit.png`和队伍色贴图`tutorial-unit-cell.png`。本体贴图在绘制时位于最底层。队伍色贴图用于指示单位的所属队伍，其颜色闪烁速度与单位生命值相关。该贴图使用`#ffffff`、`#dcc6c6`、`#9d7f7f`三种颜色分别标记队伍颜色中的亮部、中部和暗部区域，使用其他颜色将导致该区域被原样绘制。此外，游戏会自动为所有单位贴图应用**描边（Outline）**和**线性图像滤波（Linear Image Filter）**处理，以使图像边界更清晰、显示更平滑。这两项处理的具体原理将在后续章节说明。在当前版本中，该过程为全自动执行，通常无需干预，也无须额外提供描边贴图。
 
-有这两个贴图还不够，你会发现在核心数据库和建造栏上显示的单位与原版相比有一种怪异的感觉。实际上，原版单位在UI中显示的是其full贴图`tutorial-unit-full.png`。在full贴图中，你应该绘制出单位各个贴图组装完毕后的最终样子，包括全部武器（经过描边）和cell，但最外层的描边工作应当交由游戏去完成，并且也没有必要体现`LegsUnit`全部的腿和单位的引擎。
+仅有上述两种贴图可能不足以满足所有显示需求。例如，在核心数据库和建造栏中，单位图标若仅使用本体贴图，其视觉效果可能与原版单位存在差异。原版单位在这些界面中通常使用完整预览贴图`tutorial-unit-full.png`。在绘制完整预览贴图时，应呈现单位组装完成后的最终外观，包括所有武器（含描边效果）和队伍色区域。但最外层的最终描边应由游戏自动处理，且无需绘制`LegsUnit`的全部腿部细节或单位的推进器效果。
 
-武器的情况大同小异，本体贴图`tutorial-weapon.png`仍然是不可缺少的，但较小的武器可以没有cell贴图。武器还可以拥有过热贴图`tutorial-weapon.png`，只能使用不同透明度的`#ffffff`，一般需要进行高斯模糊以达到最佳视觉效果。你还可以使用预览贴图`tutorial-weapon-preview.png`设置在核心数据库中武器的图标。
+武器贴图的处理原则类似。武器本体贴图`tutorial-weapon.png`是必需的，但尺寸较小的武器可以不提供队伍色贴图。武器还可以拥有过热效果贴图`tutorial-weapon-heat.png`，该贴图仅能使用不同透明度的`#ffffff`白色，通常经过高斯模糊处理以达到最佳视觉效果。此外，可通过预览贴图`tutorial-weapon-preview.png`来设置在核心数据库中显示的武器图标。
 
-如果你的单位是`LegsUnit`，你还得准备`joint-base` `leg` `joint` `foot`贴图，他们分别是近身关节、普通的腿、腿间关节和脚。如果你的单位是`TankUnit`，你还需要准备`trades`履带贴图，并且v151后。
+对于`LegsUnit`（多足单位），还需准备以下贴图：`joint-base`（近身关节）、`leg`（腿部）、`joint`（腿部关节）和`foot`（足部）。对于`TankUnit`（坦克单位），需要准备履带贴图。自版本v151起，通常只需提供一张`-tread`贴图，游戏即可自动生成内部所需的其他相关贴图。
 
 ## 单位的能力
 
-单位的能力（Ability）是独立于战斗系统的一套使单位发挥作用的系统，然而在Mindustry中能力系统常常是为战斗系统服务的。它可以控制单位的行为和绘制，也可以在单位出生或死亡时执行一些操作。
+单位的能力（Ability）是独立于战斗系统的一套使单位发挥作用的系统，在Mindustry中能力系统常与战斗系统结合使用。它可以控制单位的行为和绘制，也可以在单位出生或死亡时执行特定操作。
 
 原版中的Ability如下：
 
@@ -124,14 +123,26 @@ UnitType("tutorial-unit").apply{
 
 ## 单位命令与姿态
 
-单位命令（UnitCommand）与姿态（UnitStance）是v8中新添加的两种内容类型，应用于RTS系统。单位命令可以更换单位的AI。单位姿态给单位标记**状态（State）**，本身没有功能，只是供单位控制器读取并作出反应。由于与AI的强耦合性，现阶段没有必要注册新的单位命令和姿态。
+单位命令（UnitCommand）与姿态（UnitStance）是v8中新添加的两种内容类型，应用于RTS系统。单位命令可以更换单位的AI。单位姿态给单位标记**状态（State）**，本身没有功能，只是供单位AI读取并作出反应。由于与AI的强耦合性，现阶段没有必要注册新的单位命令和姿态。
 
 单位支持的姿态和命令既可以手动指定，也可以让游戏根据单位本身的参数自动添加。
 
-关于单位采矿菜单中没有模组矿物的问题，你只需要注册一个新的`ItemUnitStance`，并给单位添加这个姿态就好了：
+关于单位采矿菜单中缺少模组矿物的问题，可通过注册新的`ItemUnitStance`并将其添加至单位姿态列表来解决：
 
 ``` java
 ItemUnitStance item1mine = new ItemUnitStance(ModItems.item1);
 UnitTypes.mono.stances.add(item1mine);
 //省略若干单位
 ```
+
+## 单位AI
+
+单位AI是控制单位行为的逻辑系统，当单位处于非玩家队伍或无玩家控制时，由AI接管其决策与行动。玩家队伍的单位则由`CommandAI`管理，其行为受单位指令系统调控。
+
+原版中的AI存放于`mindustry.ai.type`包内，包含以下几种类型。部分AI的使用需要满足特定条件：
+
+（WIP）
+
+在给单位的`aiController`字段赋值时，需要提供一个`Prov`类型的值。例如，可以直接填入`GroundAI::new`这样的表达式。通常不建议直接为`controller`字段赋值，因为该字段用于根据单位命令类型判断单位是使用无玩家队伍的AI，还是使用玩家队伍的`CommandAI`。
+
+## 单位工厂与重构厂
