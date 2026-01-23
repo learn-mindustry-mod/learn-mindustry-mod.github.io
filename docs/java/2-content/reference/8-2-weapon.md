@@ -8,9 +8,9 @@
 - `flipSprite`：渲染时是否翻转武器贴图；仅限内部使用，请勿手动设置。
 - `alternate`：当`mirror=true`时，是否交替射击左右武器；`true`为交替，`false`为同时。
 - `rotate`：武器是否独立于单位旋转以瞄准目标；`true`为独立旋转。
-- `showStatSprite`：是否在数据库中显示武器的精灵图；`true`为显示。
+- `showStatSprite`：是否在数据库中显示武器的贴图；`true`为显示。
 - `baseRotation`：武器的起始旋转角度（单位：度）。
-- `top`：是否将轮廓绘制在顶部；`true`为顶部，`false`为底部。
+- `top`：是否将描边绘制在顶部；`true`为顶部，`false`为底部。
 - `continuous`：射击时是否将子弹固定在武器上（仍需装填）；用于持续激光等。
 - `alwaysContinuous`：是否使用无需装填的持续射击；隐含`continuous=true`。
 - `aimChangeSpeed`：炮塔改变子弹“瞄准”距离的速度；仅用于点激光子弹。
@@ -64,7 +64,7 @@
 - `region`：显示的武器贴图区域（自动加载）。
 - `heatRegion`：热区域贴图，必须与`region`大小相同（可选）。
 - `cellRegion`：单元格区域贴图，必须与`region`大小相同（可选）。
-- `outlineRegion`：当`top=false`时显示的轮廓区域。
+- `outlineRegion`：当`top=false`时显示的描边区域。
 - `heatColor`：热区域着色颜色；用于显示武器过热效果。
 - `shootStatus`：射击时施加的状态效果；如燃烧、减速等。
 - `mountType`：要使用的武器底座类型；通过函数提供武器底座实例。

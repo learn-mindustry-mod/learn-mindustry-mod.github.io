@@ -90,15 +90,15 @@
 - `forceMultiTarget`：若为`true`，即使该单位只有一个镜像武器，也能有多个目标。
 - `canAttack`：若为`false`，该单位没有可以攻击的武器。
 - `hidden`：若为`true`，该单位不会出现在数据库或各种其他UI中。
-- `internal`：若为`true`，该单位仅供内部使用，不会生成精灵图。
-- `internalGenerateSprites`：对于某些单位，即使为内部使用，仍需要生成精灵图。
+- `internal`：若为`true`，该单位仅供内部使用，不会生成贴图。
+- `internalGenerateSprites`：对于某些单位，即使为内部使用，仍需要生成贴图。
 - `bounded`：若为`false`，该单位不会被地图边缘推离。
 - `naval`：若为`true`，该单位被检测为海军单位；**请勿手动分配**，在`init()`中初始化。
 - `autoFindTarget`：若为`false`，RTS AI控制的单位在移动时不会自动攻击目标；此值自动分配。
 - `targetUnderBlocks`：若为`false`，不会瞄准“下方”的方块（如传送带）。
 - `alwaysShootWhenMoving`：若为`true`，该单位在移动时总会射击，无论减速如何。
 - `hoverable`：该单位是否有悬停提示。
-- `alwaysCreateOutline`：若为`true`，该模组单位总会为其基础生成一个轮廓区域；通常，如果没有`top = false`的武器，轮廓会被忽略。
+- `alwaysCreateOutline`：若为`true`，该模组单位总会为其基础生成一个描边区域；通常，如果没有`top = false`的武器，描边会被忽略。
 - `generateFullIcon`：仅限原版内容；若为`false`，跳过完整图标生成步骤。
 - `squareShape`：若为`true`，该单位有一个方形阴影。
 - `drawBuildBeam`：若为`true`，该单位会绘制其建造光束指向方块。
@@ -154,9 +154,9 @@
 - `commands`：通过RTS控制该单位可用的命令；空数组意味着命令将根据单位能力在`init()`中分配。
 - `defaultCommand`：创建时分配给该单位的命令；`null`表示数组中的第一个命令。
 - `stances`：该单位可以拥有的姿态；空数组意味着姿态将根据单位能力在`init()`中分配。
-- `outlineColor`：精灵图周围生成的轮廓颜色。
-- `outlineRadius`：精灵图轮廓的厚度。
-- `outlines`：若为`false`，不生成精灵图轮廓。
+- `outlineColor`：贴图周围生成的描边颜色。
+- `outlineRadius`：贴图描边的厚度。
+- `outlines`：若为`false`，不生成贴图描边。
 - `itemCapacity`：该单位可以携带的物品数量；小于0时根据碰撞箱大小确定。
 - `ammoCapacity`：该单位可以持有的弹药量（若启用规则）；小于0时根据武器射速确定。
 - `ammoType`：该单位使用的弹药类型（若启用该系统）。
@@ -177,7 +177,7 @@
 - `legForwardScl`：腿尝试将自身放置在单位前方多远处的比例（相对于单位速度）；如果腿落后于单位，增加此数值。
 - `legBaseOffset`：腿从单位中心的偏移。
 - `legMoveSpace`：腿部移动间距的缩放。
-- `legExtension`：对于没有“关节”的腿，这是第二条腿精灵图被向后移动的距离，以覆盖关节区域。
+- `legExtension`：对于没有“关节”的腿，这是第二条腿贴图被向后移动的距离，以覆盖关节区域。
 - `legPairOffset`：此字段的值越高，腿部组之间的移动越不同步。
 - `legLengthScl`：腿尝试离身体多远的缩放（并非实际长度）；例如，若设为0.5，腿会显得有些折叠。
 - `legStraightLength`：若`legStraightness` > 0，这是腿离身体水平距离的缩放。
@@ -206,7 +206,7 @@
 对于坦克单位：
 - `treadRects`：履带矩形列表，以图像坐标表示，相对于中心，这些矩形会被镜像。
 - `treadFrames`：履带移动的帧数。
-- `treadPullOffset`：履带精灵图顶部被“切除”的部分相对于图案的比例；这会得到纠正。
+- `treadPullOffset`：履带贴图顶部被“切除”的部分相对于图案的比例；这会得到纠正。
 - `crushFragile`：若为`true`，“脆弱”的方块会在坦克周围1x1区域内被立即压碎。
 
 对于分节/爬虫单位：

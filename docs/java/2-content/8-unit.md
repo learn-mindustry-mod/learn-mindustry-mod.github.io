@@ -146,3 +146,137 @@ UnitTypes.mono.stances.add(item1mine);
 在给单位的`aiController`字段赋值时，需要提供一个`Prov`类型的值。例如，可以直接填入`GroundAI::new`这样的表达式。通常不建议直接为`controller`字段赋值，因为该字段用于根据单位命令类型判断单位是使用无玩家队伍的AI，还是使用玩家队伍的`CommandAI`。
 
 ## 单位工厂与重构厂
+
+原版中与单位配套的重要建筑是单位工厂和单位重构厂，以及埃里克尔中使用的单位组装厂。
+
+单位工厂类型是`mindustry.world.blocks.units.UnitFactory`，它继承自`mindustry.world.units.UnitBlock`和`mindustry.world.blocks.payload.PayloadBlock`。`PayloadBlock`是所有载荷方块的基类，定义了载荷移动速度`payloadSpeed`和载荷转弯速度`payloadRotateSpeed`两个属性，并要求加载`-top`、`-out`、`-in`三张贴图。
+
+<!----别问我为什么不写泛型，尖括号容易被解析成html标签----->
+单位工厂的主要设置项是其`plans`字段，这个字段接收一个包含`UnitPlan`的`Seq`。`UnitPlan`的构造接受三个参数，分别为制造单位、生产时间和物品消耗。
+
+::: code-group
+
+``` java
+groundFactory = new UnitFactory("ground-factory"){{
+    requirements(Category.units, with(Items.copper, 50, Items.lead, 120, Items.silicon, 80));
+    plans = Seq.with(
+        new UnitPlan(UnitTypes.dagger, 60f * 15, with(Items.silicon, 10, Items.lead, 10)),
+        new UnitPlan(UnitTypes.crawler, 60f * 10, with(Items.silicon, 8, Items.coal, 10)),
+        new UnitPlan(UnitTypes.nova, 60f * 40, with(Items.silicon, 30, Items.lead, 20, Items.titanium, 20))
+    );
+    size = 3;
+    consumePower(1.2f);
+    researchCostMultiplier = 0.5f;
+}};
+```
+
+``` kotlin
+val groundFactory = UnitFactory("ground-factory").apply {
+    requirements(Category.units, with(Items.copper, 50, Items.lead, 120, Items.silicon, 80))
+    plans = Seq.with(
+        UnitPlan(UnitTypes.dagger, 60f * 15, with(Items.silicon, 10, Items.lead, 10)),
+        UnitPlan(UnitTypes.crawler, 60f * 10, with(Items.silicon, 8, Items.coal, 10)),
+        UnitPlan(UnitTypes.nova, 60f * 40, with(Items.silicon, 30, Items.lead, 20, Items.titanium, 20))
+    )
+    size = 3
+    consumePower(1.2f)
+    researchCostMultiplier = 0.5f
+}
+```
+:::
+
+单位重构厂的类型为`mindustry.world.blocks.units.Reconstructor`。在Mindustry中，单位重构厂的消耗通过消耗器系统实现，其重构时间由`constructTime`字段控制，单位的升级路径则由`upgrades`字段定义。
+
+::: code-group
+
+``` java
+tetrativeReconstructor = new Reconstructor("tetrative-reconstructor"){{
+    requirements(Category.units, with(Items.lead, 4000, Items.silicon, 3000, Items.thorium, 1000, Items.plastanium, 600, Items.phaseFabric, 600, Items.surgeAlloy, 800));
+
+    size = 9;
+    consumePower(25f);
+    consumeItems(with(Items.silicon, 1000, Items.plastanium, 600, Items.surgeAlloy, 500, Items.phaseFabric, 350));
+    consumeLiquid(Liquids.cryofluid, 3f);
+
+    constructTime = 60f * 60f * 4;
+    createSound = Sounds.unitCreateBig;
+
+    upgrades.addAll(
+        new UnitType[]{UnitTypes.antumbra, UnitTypes.eclipse},
+        new UnitType[]{UnitTypes.arkyid, UnitTypes.toxopid},
+        new UnitType[]{UnitTypes.scepter, UnitTypes.reign},
+        new UnitType[]{UnitTypes.sei, UnitTypes.omura},
+        new UnitType[]{UnitTypes.quad, UnitTypes.oct},
+        new UnitType[]{UnitTypes.vela, UnitTypes.corvus},
+        new UnitType[]{UnitTypes.aegires, UnitTypes.navanax}
+    );
+}};
+```
+
+``` kotlin
+val tetrativeReconstructor = Reconstructor("tetrative-reconstructor").apply {
+    requirements(Category.units, with(Items.lead, 4000, Items.silicon, 3000, Items.thorium, 1000, Items.plastanium, 600, Items.phaseFabric, 600, Items.surgeAlloy, 800))
+
+    size = 9
+    consumePower(25f)
+    consumeItems(with(Items.silicon, 1000, Items.plastanium, 600, Items.surgeAlloy, 500, Items.phaseFabric, 350))
+    consumeLiquid(Liquids.cryofluid, 3f)
+
+    constructTime = 60f * 60f * 4
+    createSound = Sounds.unitCreateBig
+
+    upgrades.addAll(
+        arrayOf(UnitTypes.antumbra, UnitTypes.eclipse),
+        arrayOf(UnitTypes.arkyid, UnitTypes.toxopid),
+        arrayOf(UnitTypes.scepter, UnitTypes.reign),
+        arrayOf(UnitTypes.sei, UnitTypes.omura),
+        arrayOf(UnitTypes.quad, UnitTypes.oct),
+        arrayOf(UnitTypes.vela, UnitTypes.corvus),
+        arrayOf(UnitTypes.aegires, UnitTypes.navanax)
+    )
+}
+```
+
+:::
+
+单位组装厂的类型为`mindustry.world.units.UnitAssembler`。该类型会生成若干无人机作为升级的先决条件，随后接收一定量的载荷输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。
+
+::: code-group
+
+``` java
+tankAssembler = new UnitAssembler("tank-assembler"){{
+    requirements(Category.units, with(Items.thorium, 500, Items.oxide, 150, Items.carbide, 80, Items.silicon, 650));
+    regionSuffix = "-dark";
+    size = 5;
+    plans.add(
+    new AssemblerUnitPlan(UnitTypes.vanquish, 60f * 50f, PayloadStack.list(UnitTypes.stell, 4, Blocks.tungstenWallLarge, 10)),
+    new AssemblerUnitPlan(UnitTypes.conquer, 60f * 60f * 3f, PayloadStack.list(UnitTypes.locus, 6, Blocks.carbideWallLarge, 20))
+    );
+    areaSize = 13;
+    researchCostMultiplier = 0.4f;
+
+    consumePower(2.5f);
+    consumeLiquid(Liquids.cyanogen, 9f / 60f);
+}};
+```
+
+``` kotlin
+val tankAssembler = UnitAssembler("tank-assembler").apply {
+    requirements(Category.units, with(Items.thorium, 500, Items.oxide, 150, Items.carbide, 80, Items.silicon, 650))
+    regionSuffix = "-dark"
+    size = 5
+            plans.add(
+        AssemblerUnitPlan(UnitTypes.vanquish, 60f * 50f, PayloadStack.list(UnitTypes.stell, 4, Blocks.tungstenWallLarge, 10)),
+        AssemblerUnitPlan(UnitTypes.conquer, 60f * 60f * 3f, PayloadStack.list(UnitTypes.locus, 6, Blocks.carbideWallLarge, 20))
+    )
+    areaSize = 13
+    researchCostMultiplier = 0.4f
+
+    consumePower(2.5f)
+    consumeLiquid(Liquids.cyanogen, 9f / 60f)
+}
+```
+
+:::
+
+
