@@ -239,7 +239,7 @@ val tetrativeReconstructor = Reconstructor("tetrative-reconstructor").apply {
 
 :::
 
-单位组装厂的类型为`mindustry.world.units.UnitAssembler`。该类型会生成若干无人机作为升级的先决条件，随后接收一定量的载荷输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。
+单位组装厂的类型为`mindustry.world.units.UnitAssembler`。该类型会生成若干无人机作为升级的先决条件，随后接收一定量的载荷输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。配方中所需的升级模块数量由配方的顺序自动确定，即第一个配方无需模块，后续配方依次递增。
 
 ::: code-group
 
