@@ -4,7 +4,7 @@
 
 ## 一个最小示例
 
-先从一个最简单的“煤转石墨”工厂开始：
+先从一个最简单的把“煤”压成“石墨”的工厂开始：
 
 ```json content/blocks/tutorial-graphite-press.json
 {
@@ -88,7 +88,7 @@
 ## 输入写法小贴士
 
 - 物品输入可以写成字符串形式`"coal/2"`，也可以写成对象形式`{"item": "coal", "amount": 2}`；
-- 液体输入建议用对象形式，例如`{"liquid": "water", "amount": 0.1}`；
+- 液体输入更推荐对象形式，例如`{"liquid": "water", "amount": 0.1}`，因为字符串简写只能表达`water/0.1`，无法配置`booster`/`optional`等附加项；
 - 只要在`consumes`里写了对应输入，`GenericCrafter`会自动按需消耗。
 
 ## 容量与停机逻辑
