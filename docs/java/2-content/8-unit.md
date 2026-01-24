@@ -139,11 +139,13 @@ UnitTypes.mono.stances.add(item1mine);
 
 单位 AI 是控制单位行为的逻辑系统，当单位处于非玩家队伍或无玩家控制时，由 AI 接管其决策与行动。玩家队伍的单位则由`CommandAI`管理，其行为受单位指令系统调控。
 
-原版中的 AI 存放于`mindustry.ai.types`包内，包含以下几种类型。\1- **GroundAI**：地面单位 AI，用于控制地面移动的单位，如 `dagger`、`mace` 等
-- **FlyingAI**：飞行单位 AI，用于控制飞行单位，如 `flare`、`horizon` 等
-- **MinerAI**：采矿 AI，用于控制采矿单位，如 `mono`、`poly` 等
-- **BuilderAI**：建造 AI，用于控制建造单位，如 `alpha`、`beta` 等
-- **SuicideAI**：自杀式攻击 AI，用于控制自爆单位，如 `atrax` 等
+原版中的 AI 存放于`mindustry.ai.types`包内，包含以下几种类型。部分 AI 的使用需要满足特定条件：
+
+- **GroundAI**：地面单位 AI，用于控制地面移动的单位，如尖刀、战锤等
+- **FlyingAI**：飞行单位 AI，用于控制飞行单位，如星辉、天垠等
+- **MinerAI**：采矿 AI，用于控制采矿单位，如独影等
+- **BuilderAI**：建造 AI，用于控制建造单位，如幻型、阿尔法等
+- **SuicideAI**：自杀式攻击 AI，用于控制自爆单位，如爬虫等
 - **MissileAI**：导弹 AI，用于控制导弹单位，如创伤的导弹
 - **FlyingFollowAI**：跟随型飞行 AI，常见于需要跟随目标的飞行单位
 - **BoostAI**：助推飞行 AI，用于可升空单位的起降逻辑
@@ -164,7 +166,6 @@ UnitTypes.mono.stances.add(item1mine);
 
 单位工厂类型是`mindustry.world.blocks.units.UnitFactory`，它继承自`mindustry.world.blocks.units.UnitBlock`（而`UnitBlock`又继承自`mindustry.world.blocks.payloads.PayloadBlock`）。`PayloadBlock`是所有载荷方块的基类，定义了载荷移动速度`payloadSpeed`和载荷转弯速度`payloadRotateSpeed`两个属性，并要求加载`-top`、`-out`、`-in`三张贴图。
 
-<!----别问我为什么不写泛型，尖括号容易被解析成 html 标签----->
 单位工厂的主要设置项是其`plans`字段，这个字段接收一个包含`UnitPlan`的`Seq`。`UnitPlan`的构造接受三个参数，分别为制造单位、生产时间和物品消耗。
 
 ::: code-group
