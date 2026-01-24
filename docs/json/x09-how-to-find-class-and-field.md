@@ -2,7 +2,7 @@
 
 ## 源代码的下载与结构
 
-下载一份源代码是有很大帮助的。你肯定不希望只能一直使用GitHub的在线浏览器。你可以选择直接在[GitHub项目页面](https://github.com/Anuken/Mindustry)中间的 **Download zip** 处下载。如果使用Git，你可以使用`-- depth=1`来减少下载量。当然，如果你的网络条件不太好，可以选择使用**镜像站**来加速。比如，[使用ghproxy来加速源代码的下载](https://ghfast.top/https://github.com/Anuken/Mindustry/archive/master.zip)。
+下载一份源代码是有很大帮助的。你肯定不希望只能一直使用GitHub的在线浏览器。你可以选择直接在[GitHub项目页面](https://github.com/Anuken/Mindustry)中间的 **Download zip** 处下载。如果使用Git，你可以使用`--depth=1`来减少下载量。当然，如果你的网络条件不太好，可以选择使用**镜像站**来加速。比如，[使用ghproxy来加速源代码的下载](https://ghfast.top/https://github.com/Anuken/Mindustry/archive/master.zip)。
 
 下载源代码后，你主要需要关注的是`core/`文件夹。这个文件夹存放了Mindustry核心文件，以与平台相关代码区分开。其中有三个文件夹：
 

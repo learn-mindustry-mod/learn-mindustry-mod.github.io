@@ -93,17 +93,19 @@
 
 ## 容量与停机逻辑
 
-- 物品输出会优先尝试向邻接建筑卸载，卸载失败才进入**本机物品缓冲**；当**输出缓冲**达到`itemCapacity`时会暂停生产，与输入是否堆满无关；
-- 液体输出接近满格时也会暂停，除非`dumpExtraLiquid`为`true`或`ignoreLiquidFullness`为`true`；
-- 这意味着：**没有出路就会停机**，务必给输出端接上运输线路或管道。
+- 物品输出发生在`craft()`里：先`consume()`消耗，再对每个产出调用`offload()`尝试向邻接建筑卸载，失败才进入本机物品缓冲；
+- 停机判断只看**本机物品缓冲**是否还能容纳下一次产出：当`items.get(输出物品) + 输出数量 > itemCapacity`时，`shouldConsume()`返回`false`，进度直接停住；
+- 这与输入堆满无关；即使外部有空位，如果本机缓冲已满到放不下下一次产出，也会停机，直到被`dump()`或邻接建筑取走；
+- 液体输出是“边生产边流出”：每帧按进度把`outputLiquid(s)`注入本机液体缓冲；
+- 当`ignoreLiquidFullness = false`时，进度会按液体缓冲空间缩放：`dumpExtraLiquid = false`表示**任意一种液体满了就卡住**，`dumpExtraLiquid = true`表示**只要有一种液体还有空间就继续**；
+- `ignoreLiquidFullness = true`时完全忽略液体满格，进度照常，但液体会被容量上限截断。
 
 ## 进度与速度
 
-工厂进度由`craftTime`控制，实际速度还会受到**效率**影响：
+- `progress`按`getProgressIncrease(craftTime)`增长，本质是`efficiency * delta / craftTime`，效率越低越慢；
+- `efficiency`由消耗器决定：电力不足或缺少输入会把效率降到0，从而停机；
+- `progress`达到1触发一次`craft()`，并重置到0附近开始下一轮。
 
-- 电力不足会降低效率，进度变慢；
-- 缺少输入会停止消耗与进度；
-- 有液体输出但无法排出时会卡住进度（见上文）。
 
 ## 绘制与特效
 
