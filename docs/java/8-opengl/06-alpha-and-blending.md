@@ -39,7 +39,7 @@ void main() {
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 class Example{
   Mesh mesh = new Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -68,7 +68,7 @@ class Example{
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 class Example{
   val mesh = Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -121,7 +121,7 @@ OpenGL默认是关闭了混合的，尽管Mindustry已经在渲染流程中开�
 
 ::: code-group
 
-```java
+``` java
 void example(){
   // 开启混合
   Gl.enable(Gl.blend);
@@ -130,7 +130,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(){
   // 开启混合
   Gl.enable(Gl.blend)
@@ -189,7 +189,7 @@ $C_{final} = C_{source} * F_{source} + C_{dest} * F_{dest}$
 
 ::: code-group
 
-```java
+``` java
 void normalBlend() {
   Gl.blendFunc(
       Gl.srcAlpha,          // 源颜色混合因子生成函数
@@ -198,7 +198,7 @@ void normalBlend() {
 }
 ```
 
-```kotlin
+``` kotlin
 fun normalBlend() {
   Gl.blendFunc(
       sfactor = Gl.srcAlpha,          // 源颜色混合因子生成函数
@@ -223,7 +223,7 @@ $C_{final} = C_{source} * alpha + C_{dest} * (1 - alpha)$
 
 ::: code-group
 
-```java
+``` java
 void example(){
   Gl.blendFuncSeparate(
       Gl.srcAlpha,          // 源颜色混合因子生成函数
@@ -234,7 +234,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(){
   Gl.blendFuncSeparate(
       srcRGB = Gl.srcAlpha,          // 源颜色混合因子生成函数
@@ -251,12 +251,12 @@ fun example(){
 
 ::: code-group
 
-```java
+``` java
 Blending blend = new Blending(srcColor, dstColor, srcAlpha, dstAlpha);
 Blending blendComb = new Blending(srcFactor, dstFactor);
 ```
 
-```kotlin
+``` kotlin
 val blend = Blending(srcColor, dstColor, srcAlpha, dstAlpha)
 val blendComb = Blending(srcFactor, dstFactor)
 ```
@@ -273,7 +273,7 @@ val blendComb = Blending(srcFactor, dstFactor)
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 void draw(){
   shader.bind();
   tex.bind();   // 绑定纹理
@@ -300,7 +300,7 @@ void draw(){
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 fun draw(){
   shader.bind()
   tex.bind()   // 绑定纹理

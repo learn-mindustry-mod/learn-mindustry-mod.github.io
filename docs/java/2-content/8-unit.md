@@ -2,23 +2,23 @@
 
 > ***为什么要塞搬不动海神啊***
 
-Mindustry不仅是一款自动化与塔防游戏，同时也具备**即时战略（RTS）** 游戏的要素。在RTS游戏中，**单位（Unit）** 是核心组成部分之一，也是原版中设计复杂度较高的内容类型。本节将简要介绍与单位相关的内容。
+Mindustry 不仅是一款自动化与塔防游戏，同时也具备**即时战略（RTS）**游戏的要素。在 RTS 游戏中，**单位（Unit）** 是核心组成部分之一，也是原版中设计复杂度较高的内容类型。本节将简要介绍与单位相关的内容。
 
 
-## 创建一个UnitType
+## 创建一个 UnitType
 
-在Mindustry中，单位被封装成了`mindustry.type.UnitType`这一类型。与以往的类型不同的是，其拥有必需的字段`constructor`，它是用来 **创建一个单位实体（Entity）** 的**提供器（Provider）**，其取值与所需单位实体的种类有关，见于下表：
+在 Mindustry 中，单位被封装成了`mindustry.type.UnitType`这一类型。与以往的类型不同的是，其拥有必需的字段`constructor`，它是用来 **创建一个单位实体（Entity）** 的**提供器（Provider）**，其取值与所需单位实体的种类有关，见于下表：
 
 ::: code-group
 
-```java
+``` java
 new UnitType("tutorial-unit"){{
     constructor = UnitEntity::create;
-    EntityMapping.nameMap.put(name, constructor)
+    EntityMapping.nameMap.put(name, constructor);
 }};
 ```
 
-```kotlin
+``` kotlin
 UnitType("tutorial-unit").apply{
     constructor = UnitEntity::create
     EntityMapping.nameMap.put(name, constructor)
@@ -27,18 +27,18 @@ UnitType("tutorial-unit").apply{
 
 :::
 
-- `UnitEntity::create`：普通飞行单位，如星辉、阿尔法，*在json中用`flying`表示*；
-- `MechUnit::create`：机甲单位，如战锤、爬虫、新星，*在json中用`mech`表示*；
-- `LegsUnit::create`：多足单位，如死星、毒蛛、天守，*在json中用`legs`表示*；
-- `UnitWaterMove::create`：海军单位，如梭鱼、潜螺，*在json中用`naval`表示*；
-- `PayloadUnit::create`：可荷载单位，如巨像、苏醒，*发散、雷霆、要塞，在json中用`payload`表示*；
-- `TimedKillUnit::create`：导弹单位，如创伤的导弹，*在json中用`missile`表示*；
-- `TankUnit::create`：坦克单位，如围护、领主，*在json中用`tank`表示*；
-- `ElevationMoveUnit::create`：悬浮单位，如挣脱，*在json中用`hover`表示*；
-- `BuildingTetherPayloadUnit::create`：建筑绑定单位，*如货运无人机、装配无人机，在json中用`tether`表示*；
-- `CrawlUnit::create`：爬虫单位，如Latum、Renale。但爬虫（Crawler）本身只是普通的`MechUnit`，*在json中用`crawl`表示*。
+- `UnitEntity::create`：普通飞行单位，如 `flare`、`alpha`，*在 JSON 中用 `flying` 表示*；
+- `MechUnit::create`：机甲单位，如 `mace`、`crawler`、`nova`，*在 JSON 中用 `mech` 表示*；
+- `LegsUnit::create`：多足单位，如 `toxopid`、`corvus`、`collaris`，*在 JSON 中用 `legs` 表示*；
+- `UnitWaterMove::create`：海军单位，如 `risso`、`sei`，*在 JSON 中用 `naval` 表示*；
+- `PayloadUnit::create`：可载荷单位，如 `mega`、`quad`、`oct`，以及埃里克尔的 `evoke`、`incite`、`emanate`、`quell`、`disrupt`，*在 JSON 中用 `payload` 表示*；
+- `TimedKillUnit::create`：导弹单位，如创伤的导弹，*在 JSON 中用 `missile` 表示*；
+- `TankUnit::create`：坦克单位，如 `stell`、`vanquish`，*在 JSON 中用 `tank` 表示*；
+- `ElevationMoveUnit::create`：悬浮单位，如 `elude`，*在 JSON 中用 `hover` 表示*；
+- `BuildingTetherPayloadUnit::create`：建筑绑定单位，如 `manifold`、`assemblyDrone`，*在 JSON 中用 `tether` 表示*；
+- `CrawlUnit::create`：爬行单位，如 `latum`、`renale`。爬虫（`crawler`）本身是 `MechUnit`，*在 JSON 中用 `crawl` 表示*。
 
-仅设置constructor可能不足以完成单位的完整注册。实际上，通常还需要在`EntityMapping`中进行相应的映射配置。不过，当使用原版提供的标准`constructor`时，相关的`EntityMapping`注册通常会自动完成。而如果`constructor`指向自定义的`Unit`实体类，则必须手动进行`EntityMapping`的注册，否则游戏会直接抛出错误。关于自定义单位实体的详细注册流程，我们将在下一章进行说明。
+仅设置`constructor`并不总是足够。`UnitType`初始化时会检查`EntityMapping`：若`name`尚未映射，会自动补到`nameMap`。但如果`constructor`指向自定义的`Unit`实体类，还必须为该类注册`classId`（例如`EntityMapping.register(...)`或重写`classId()`），否则会在校验阶段抛出错误。关于自定义单位实体的详细注册流程，我们将在下一章进行说明。
 
 另一方面，`UnitType`也存在子类型，但这些子类型主要是在`UnitType`的基础上预设了部分字段值，并未引入新的功能，属于之前提到的 **模板（Template）** 类。关于单位的属性，由于所有具体的单位实体均由`UnitType`统一管理，因此`UnitType`中的字段既包含了所有单位通用的属性，也包含了仅特定单位实体才会使用的属性。
 
@@ -54,7 +54,7 @@ unit.tutorial-mod-tutorial-unit.description = Incapable of attacking, while capa
 unit.tutorial-mod-tutorial-unit.details = Nonetheless
 ```
 
-关于UnitType各字段的含义如下：
+关于 UnitType 各字段的含义如下：
 
 <!--@include: ./reference/8-1-unittype.md-->
 
@@ -64,16 +64,16 @@ unit.tutorial-mod-tutorial-unit.details = Nonetheless
 
 ::: code-group
 
-```java
+``` java
 new UnitType("tutorial-unit"){{
     constructor = UnitEntity::create;
     weapons.add(new Weapon("tutorial-weapon"){{
         bullet = new BasicBulletType(2.5f, 9);
-    }})；
+    }});
 }};
 ```
 
-```kotlin
+``` kotlin
 UnitType("tutorial-unit").apply{
     constructor = UnitEntity::create
     weapons.add(Weapon("tutorial-weapon").apply{
@@ -84,7 +84,7 @@ UnitType("tutorial-unit").apply{
 
 :::
 
-关于Weapon各字段的含义如下：
+关于 Weapon 各字段的含义如下：
 
 <!--@include: ./reference/8-2-weapon.md-->
 
@@ -98,32 +98,32 @@ UnitType("tutorial-unit").apply{
 
 武器贴图的处理原则类似。武器本体贴图`tutorial-weapon.png`是必需的，但尺寸较小的武器可以不提供队伍色贴图。武器还可以拥有过热效果贴图`tutorial-weapon-heat.png`，该贴图仅能使用不同透明度的`#ffffff`白色，通常经过高斯模糊处理以达到最佳视觉效果。此外，可通过预览贴图`tutorial-weapon-preview.png`来设置在核心数据库中显示的武器图标。
 
-对于`LegsUnit`（多足单位），还需准备以下贴图：`joint-base`（近身关节）、`leg`（腿部）、`joint`（腿部关节）和`foot`（足部）。对于`TankUnit`（坦克单位），需要准备履带贴图。自版本v151起，通常只需提供一张`-tread`贴图，游戏即可自动生成内部所需的其他相关贴图。
+对于`LegsUnit`（多足单位），还需准备以下贴图：`joint-base`（近身关节）、`leg`（腿部）、`joint`（腿部关节）和`foot`（足部）。对于`TankUnit`（坦克单位），需要准备履带贴图。自版本 v151 起，通常只需提供一张`-tread`贴图，游戏即可自动生成内部所需的其他相关贴图。
 
 ## 单位的能力
 
-单位的能力（Ability）是独立于战斗系统的一套使单位发挥作用的系统，在Mindustry中能力系统常与战斗系统结合使用。它可以控制单位的行为和绘制，也可以在单位出生或死亡时执行特定操作。
+单位的能力（Ability）是独立于战斗系统的一套使单位发挥作用的系统，在 Mindustry 中，能力系统常与战斗系统结合使用。它可以控制单位的行为和绘制，也可以在单位出生或死亡时执行特定操作。
 
-原版中的Ability如下：
+原版中的 Ability 如下：
 
 - `ArmorPlateAbility`：装甲板能力，在射击时减少受到的伤害；
-- `EnergyFieldAbility`：能量场能力，对附近的敌人释放电击，或并治疗友方，如“玄武”；
+- `EnergyFieldAbility`：能量场能力，对附近的敌人释放电击，或治疗友方，如“玄武”；
 - `ForceFieldAbility`：力墙场能力，投射一个能吸收子弹的力场护盾，如“耀星”；
-- `LiquidExplodeAbility`：死亡溢液能力，死亡时释放液体，如Latum；
-- `LiquidRegenAbility`：液体吸收能力，吸收液体以治疗自身，如Latum；
+- `LiquidExplodeAbility`：死亡溢液能力，死亡时释放液体，如 Latum；
+- `LiquidRegenAbility`：液体吸收能力，吸收液体以治疗自身，如 Latum；
 - `MoveEffectAbility`：移动特效能力，边移动边产生特效，如创伤导弹；
-- `MoveLightningAbility`：闪电助推器能力，移动时释放闪电，*如v5中的Dart*；
+- `MoveLightningAbility`：闪电助推器能力，移动时释放闪电，*如 v5 中的 Dart*；
 - `RegenAbility`：再生能力，随着时间的推移恢复自己的生命值，如“耀星”；
 - `RepairFieldAbility`：修复场能力，修复附近的单位，如“新星”；
 - `ShieldArcAbility`：弧形护盾能力，投射一个弧形的力场护盾，能吸收子弹，如“天理”；
-- `SpawnDeathAbility`：死亡产生单位能力，死亡时释放单位，如Latum；
+- `SpawnDeathAbility`：死亡产生单位能力，死亡时释放单位，如 Latum；
 - `StatusFieldAbility`：状态场能力，对附近的单位施加状态效果，如电鳗；
 - `SuppressionFieldAbility`：修复压制场能力，使附近的修复建筑停止工作，如“龙王”；
 - `UnitSpawnAbility`：单位生成能力，建造单位，如“海神”。
 
 ## 单位命令与姿态
 
-单位命令（UnitCommand）与姿态（UnitStance）是v8中新添加的两种内容类型，应用于RTS系统。单位命令可以更换单位的AI。单位姿态给单位标记**状态（State）**，本身没有功能，只是供单位AI读取并作出反应。由于与AI的强耦合性，现阶段没有必要注册新的单位命令和姿态。
+单位命令（UnitCommand）与姿态（UnitStance）是 v8 中新添加的两种内容类型，应用于 RTS 系统。单位命令可以更换单位的 AI。单位姿态给单位标记**状态（State）**，本身没有功能，只是供单位 AI 读取并作出反应。由于与 AI 的强耦合性，现阶段没有必要注册新的单位命令和姿态。
 
 单位支持的姿态和命令既可以手动指定，也可以让游戏根据单位本身的参数自动添加。
 
@@ -135,23 +135,36 @@ UnitTypes.mono.stances.add(item1mine);
 //省略若干单位
 ```
 
-## 单位AI
+## 单位 AI
 
-单位AI是控制单位行为的逻辑系统，当单位处于非玩家队伍或无玩家控制时，由AI接管其决策与行动。玩家队伍的单位则由`CommandAI`管理，其行为受单位指令系统调控。
+单位 AI 是控制单位行为的逻辑系统，当单位处于非玩家队伍或无玩家控制时，由 AI 接管其决策与行动。玩家队伍的单位则由`CommandAI`管理，其行为受单位指令系统调控。
 
-原版中的AI存放于`mindustry.ai.type`包内，包含以下几种类型。部分AI的使用需要满足特定条件：
+原版中的 AI 存放于`mindustry.ai.types`包内，包含以下几种类型。\1- **GroundAI**：地面单位 AI，用于控制地面移动的单位，如 `dagger`、`mace` 等
+- **FlyingAI**：飞行单位 AI，用于控制飞行单位，如 `flare`、`horizon` 等
+- **MinerAI**：采矿 AI，用于控制采矿单位，如 `mono`、`poly` 等
+- **BuilderAI**：建造 AI，用于控制建造单位，如 `alpha`、`beta` 等
+- **SuicideAI**：自杀式攻击 AI，用于控制自爆单位，如 `atrax` 等
+- **MissileAI**：导弹 AI，用于控制导弹单位，如创伤的导弹
+- **FlyingFollowAI**：跟随型飞行 AI，常见于需要跟随目标的飞行单位
+- **BoostAI**：助推飞行 AI，用于可升空单位的起降逻辑
+- **RepairAI**：修复 AI，用于靠近并修复友方单位/建筑
+- **DefenderAI**：防御 AI，用于以防守为主的单位
+- **CargoAI**：运输 AI，用于物流单位的运输任务
+- **PrebuildAI**：预建 AI，用于处理预建任务的单位
+- **AssemblerAI**：组装 AI，用于单位组装厂的装配无人机
+- **HugAI**：贴身 AI，用于近身黏附型单位（如 `latum`、`renale`）
+- **LogicAI**：逻辑 AI，用于逻辑控制的单位
+- **CommandAI**：指挥 AI，用于玩家队伍的单位指令系统
 
-（WIP）
-
-在给单位的`aiController`字段赋值时，需要提供一个`Prov`类型的值。例如，可以直接填入`GroundAI::new`这样的表达式。通常不建议直接为`controller`字段赋值，因为该字段用于根据单位命令类型判断单位是使用无玩家队伍的AI，还是使用玩家队伍的`CommandAI`。
+在给单位的`aiController`字段赋值时，需要提供一个`Prov`类型的值，例如`GroundAI::new`。`controller`用于根据队伍与可控性选择 AI（默认玩家队伍使用`CommandAI`，AI 队伍使用`aiController`），因此一般不建议直接替换`controller`，除非你同时处理玩家/AI 的分支逻辑。
 
 ## 单位工厂与重构厂
 
 原版中与单位配套的重要建筑是单位工厂和单位重构厂，以及埃里克尔中使用的单位组装厂。
 
-单位工厂类型是`mindustry.world.blocks.units.UnitFactory`，它继承自`mindustry.world.units.UnitBlock`和`mindustry.world.blocks.payload.PayloadBlock`。`PayloadBlock`是所有载荷方块的基类，定义了载荷移动速度`payloadSpeed`和载荷转弯速度`payloadRotateSpeed`两个属性，并要求加载`-top`、`-out`、`-in`三张贴图。
+单位工厂类型是`mindustry.world.blocks.units.UnitFactory`，它继承自`mindustry.world.blocks.units.UnitBlock`（而`UnitBlock`又继承自`mindustry.world.blocks.payloads.PayloadBlock`）。`PayloadBlock`是所有载荷方块的基类，定义了载荷移动速度`payloadSpeed`和载荷转弯速度`payloadRotateSpeed`两个属性，并要求加载`-top`、`-out`、`-in`三张贴图。
 
-<!----别问我为什么不写泛型，尖括号容易被解析成html标签----->
+<!----别问我为什么不写泛型，尖括号容易被解析成 html 标签----->
 单位工厂的主要设置项是其`plans`字段，这个字段接收一个包含`UnitPlan`的`Seq`。`UnitPlan`的构造接受三个参数，分别为制造单位、生产时间和物品消耗。
 
 ::: code-group
@@ -185,7 +198,7 @@ val groundFactory = UnitFactory("ground-factory").apply {
 ```
 :::
 
-单位重构厂的类型为`mindustry.world.blocks.units.Reconstructor`。在Mindustry中，单位重构厂的消耗通过消耗器系统实现，其重构时间由`constructTime`字段控制，单位的升级路径则由`upgrades`字段定义。
+单位重构厂的类型为`mindustry.world.blocks.units.Reconstructor`。在 Mindustry 中，单位重构厂的消耗通过消耗器系统实现，其重构时间由`constructTime`字段控制，单位的升级路径则由`upgrades`字段定义。
 
 ::: code-group
 
@@ -239,7 +252,7 @@ val tetrativeReconstructor = Reconstructor("tetrative-reconstructor").apply {
 
 :::
 
-单位组装厂的类型为`mindustry.world.units.UnitAssembler`。该类型会生成若干无人机作为升级的先决条件，随后接收一定量的载荷输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。配方中所需的升级模块数量由配方的顺序自动确定，即第一个配方无需模块，后续配方依次递增。
+单位组装厂的类型为`mindustry.world.blocks.units.UnitAssembler`。该类型会生成若干无人机作为组装的先决条件，随后接收配方要求的载荷/物品/液体输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。配方的序号对应模块等级：第一个配方无需模块，第二个配方需要至少一个`tier=1`模块，第三个配方需要`tier=1`与`tier=2`连续覆盖，以此类推：
 
 ::: code-group
 

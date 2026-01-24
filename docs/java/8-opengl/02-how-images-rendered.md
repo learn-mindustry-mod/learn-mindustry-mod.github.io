@@ -59,7 +59,7 @@ OpenGL的绘图坐标以屏幕中心为原点（0, 0），屏幕的左下角（-
 
 ::: code-group
 
-```java
+``` java
 VertexAttribute attr1 = new VertexAttribute(
     4,              //components
     GL.unsignedByte,//type
@@ -74,7 +74,7 @@ VertexAttribute attr2 = new VertexAttribute(
 );
 ```
 
-```kotlin
+``` kotlin
 val attr1 = VertexAttribute(
   components = 4,
   type = GL.unsignedByte,
@@ -105,7 +105,7 @@ Mesh的数据模型定义通过其构造函数的可变参数提供，传入为�
 
 ::: code-group
 
-```java
+``` java
 void example(Color color){
   Mesh mesh = new Mesh(
       true,//isStatic
@@ -161,14 +161,14 @@ fun example(color: Color){
 
 ::: code-group
 
-```java
+``` java
 void example(Mesh mesh){
   shader.bind();
   mesh.render(shader, Gl.triangles);
 }
 ```
  
-```kotlin
+``` kotlin
 fun example(mesh: Mesh){
   shader.bind()
   mesh.render(shader, Gl.triangles)
@@ -204,7 +204,7 @@ OpenGL中定义的图元类型有：
 
 ::: code-group
 
-```java
+``` java
 void example(Mesh mesh){
   shader.bind();
   Core.gl20.lineWidth(10f);
@@ -212,7 +212,7 @@ void example(Mesh mesh){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(mesh: Mesh){
   shader.bind()
   Core.gl20.lineWidth(10f)
@@ -272,13 +272,13 @@ fun example(mesh: Mesh){
 
 ::: code-group
 
-```java
+``` java
 void example(Mesh mesh) {
   mesh.setIndices(new short[]{ 0, 1, 2, 0, 2, 3 });
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(mesh: Mesh) {
   mesh.setIndices(shortArrayOf(0, 1, 2, 0, 2, 3))
 }
@@ -296,7 +296,7 @@ fun example(mesh: Mesh) {
 
 ::: code-group
 
-```java
+``` java
 void example(){
   Mesh mesh = new Mesh(true, 4, 6,  
       VertexAttribute.position,
@@ -320,7 +320,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   val mesh = Mesh(true, 4, 6,  
       VertexAttribute.position,

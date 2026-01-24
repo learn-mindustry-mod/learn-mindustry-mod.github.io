@@ -107,7 +107,7 @@ Planets.serpulo.techTree.each(node -> if(node.content == Items.surgeAlloy) tmp[0
 TechNode surgeAlloyN = tmp[0];
 ```
 
-```kotlin
+``` kotlin
 var surgeAlloyN: TechNode? = null
 Planets.serpulo.techTree.each { node ->
     if (node.content == Items.surgeAlloy) {
@@ -128,7 +128,7 @@ fexAlloyN.parent = surgeAlloyN;
 surgeAlloyN.children.add(fexAlloyN);
 ```
 
-```kotlin
+``` kotlin
 // 确保节点已找到
 surgeAlloyN?.let { parentNode ->
     val fexAlloyN = nodeProduce(ModItems.fexAlloy) { }
@@ -141,4 +141,4 @@ surgeAlloyN?.let { parentNode ->
 
 ## 行星资源消耗
 
-在Mindustry中，科技树中节点的解锁需要消耗星球区块核心内的资源。而一颗科技树可以使用哪些星球是由星球的`techTree`字段和节点的`planet`字段决定的，具体来说，可以使用节点`planet`属性引用的星球，和`techTree`属性被设置为此科技树根节点的星球。此外，如果根节点是一个核心方块，那么游戏会试图寻找`defaultCore`为此核心方块的星球。如果无法寻找到符合要求的星球，则默认会消耗赛普罗的资源。
+在 Mindustry 中，科技树中节点的解锁需要消耗星球区块核心内的资源。而一颗科技树可以使用哪些星球是由星球的`techTree`字段和节点的`planet`字段决定的，具体来说，可以使用节点`planet`属性引用的星球，和`techTree`属性被设置为此科技树根节点的星球。此外，如果根节点是一个核心方块，那么游戏会试图寻找`defaultCore`为此核心方块的星球。如果无法寻找到符合要求的星球，则默认会消耗赛普罗的资源。

@@ -10,12 +10,12 @@
 
 ::: code-group
 
-```java
+``` java
 new Drill("tutorial-drill");
 new BurstDrill("tutorial-drill");
 ```
 
-```kotlin
+``` kotlin
 Drill("tutorial-drill")
 BurstDrill("tutorial-drill");
 ```
@@ -73,12 +73,12 @@ block.tutorial-mod-tutorial-drill.details = WHY INFINITE ORE
 
 ::: code-group
 
-```java
+``` java
 new BeamDrill("tutorial-beam-drill");
 new WallCrafter("tutorial-wall-crafter");
 ```
 
-```kotlin
+``` kotlin
 BeamDrill("tutorial-beam-drill")
 WallCrafter("tutorial-pump")
 ```
@@ -105,11 +105,11 @@ consumeLiquid(Liquids.water, 0.05f).boost();
 
 ::: code-group
 
-```java
+``` java
 new Pump("tutorial-pump");
 ```
 
-```kotlin
+``` kotlin
 Pump("tutorial-pump")
 ```
 
@@ -135,12 +135,12 @@ block.tutorial-mod-tutorial-pump.details = WHY LIQUID TILE ALSO INFINITE
 
 ::: code-group
 
-```java
+``` java
 new SolidPump("tutorial-solid-pump");
 new Fracker("tutorial-fracker");
 ```
 
-```kotlin
+``` kotlin
 SolidPump("tutorial-solid-pump")
 Fracker("tutorial-fracker")
 ```

@@ -10,11 +10,11 @@
 
 ::: code-group
 
-```java
+``` java
 new StatusEffect("tutorial-status-effect-1");
 ```
 
-```kotlin
+``` kotlin
 StatusEffect("tutorial-status-effect-1")
 ```
 
@@ -93,7 +93,7 @@ val wet = StatusEffect("wet").apply {
 
 先来看两个方法在Java中的使用方式。`opposite()`是一个拥有变长参数的方法，接收一系列状态效果，然后将它们设置为与本状态效果冲突。`affinity()`的第一个参数是另一个状态效果，而第二个参数是完全没有见过的结构，有如下的形式：
 
-```java
+``` java
 (参数列表) -> {函数体}
 ```
 

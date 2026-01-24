@@ -12,11 +12,11 @@
 
 ::: code-group
 
-```java
+``` java
 new GenericCrafter("tutorial-crafter");
 ```
 
-```kotlin
+``` kotlin
 GenericCrafter("tutorial-crafter")
 ```
 
@@ -44,7 +44,7 @@ GenericCrafter("tutorial-crafter")
 
 ::: code-group
 
-```java
+``` java
 new GenericCrafter("tutorial-crafter"){{
   health = 100f;
   size = 2;
@@ -53,7 +53,7 @@ new GenericCrafter("tutorial-crafter"){{
 }};
 ```
 
-```kotlin
+``` kotlin
 GenericCrafter("tutorial-crafter").apply{
   health = 100f
   size = 2
@@ -88,7 +88,7 @@ block.tutorial-mod-tutorial-crafter.details = Without factory you cannot spell "
 
 ## 声明消耗器（Consume）
 
-接下来，你可以为工厂添加输入（Input）。在Mindustry中，大部分输入都被抽象成了一个**消耗器（Consumer）**对象。
+接下来，你可以为工厂添加输入（Input）。在 Mindustry 中，大部分输入都被抽象成了一个**消耗器（Consumer）**对象。
 
 Anuke已经封装好了常用的消耗器的声明，这些方法的功能正如其字面义：
 
@@ -172,7 +172,7 @@ drawer = new DrarDefault();
 
 Drawer可以对绘制过程进行一定拓展，在`mindustry.world.draw`包中还有许多drawer可供使用。但是一个方块只有一个`drawer`字段，大部分drawer只能做一件事，需要配合使用。这时，你可以使用`DrawMulti`来对drawer进行组合：
 
-```java
+``` java
 drawer = new DrawMulti(
                 new DrawRegion("-bottom"),
                 new DrawLiquidTile(Liquids.water, 2f),
@@ -268,11 +268,11 @@ drawer = new DrawMulti(
 
 ::: code-group
 
-```java
+``` java
 new Seperator("tutorial-seperator");
 ```
 
-```kotlin
+``` kotlin
 Seperator("tutorial-seperator")
 ```
 

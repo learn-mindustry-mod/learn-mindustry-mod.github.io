@@ -28,7 +28,7 @@
 
 在arc中，帧缓冲被封装为类型`arc.graphics.gl.FrameBuffer`，需要一个帧缓冲只需要构造一个该类型的实例即可，它带有多个构造函数，定义了多种默认帧缓冲的模板：
 
-```java
+``` java
 /**2x2像素尺寸，格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
 FrameBuffer(){/*...*/}
 /**指定大小的格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
@@ -65,7 +65,7 @@ FrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boole
 
 ::: code-group
 
-```java
+``` java
 public void example(){
   FrameBuffer buffer1 = new FrameBuffer();//尺寸为2x2，使用前必须通过resize(w, h)重设尺寸
   FrameBuffer buffer2 = new FrameBuffer(1024, 1024);//rgba8888格式的，大小为1024x1024的帧缓冲
@@ -79,7 +79,7 @@ public void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(){
   val buffer1 = FrameBuffer() //尺寸为2x2，使用前必须通过resize(w, h)重设尺寸
   val buffer2 = FrameBuffer(1024, 1024) //rgba8888格式的，大小为1024x1024的帧缓冲
@@ -113,7 +113,7 @@ fun example(){
 
 ::: code-group
 
-```java
+``` java
 FrameBuffer buffer = new FrameBuffer();
 void example(){
   Fill.square(80f, 80f, 20f);//直接将四边形绘制到屏幕上
@@ -139,7 +139,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 val buffer = FrameBuffer()
 fun example(){
   Fill.square(80f, 80f, 20f)//直接将四边形绘制到屏幕上
@@ -193,7 +193,7 @@ arc中封装的`FrameBuffer`模拟了一条类似链表的绑定结构，一定�
 
 :::code-group
 
-```java
+``` java
 void example(){
   FrameBuffer buf1 = new FrameBuffer();
   FrameBuffer buf2 = new FrameBuffer();
@@ -213,7 +213,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(){
   val buf1 = FrameBuffer()
   val buf2 = FrameBuffer()
@@ -259,7 +259,7 @@ fun example(){
 
 ::: code-group
 
-```java
+``` java
 FrameBuffer pixelator = new FrameBuffer(){{ 
   getTexture().setFilter(Texture.TextureFilter.nearest);
 }};
@@ -281,7 +281,7 @@ public void drawPixelate(){
 }
 ```
 
-```kotlin
+``` kotlin
 val pixelator = FrameBuffer().apply{
   getTexture().setFilter(Texture.TextureFilter.nearest)
 }
@@ -313,7 +313,7 @@ fun drawPixelate(){
 
 打开游戏本身实现像素化的工具类`mindustry.graphics.Pixelator`，查阅其两个核心方法:
 
-```java
+``` java
 public void drawPixelate(){
     //计算缓冲尺寸w与h，已省略
     //...

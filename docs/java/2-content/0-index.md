@@ -113,7 +113,7 @@ bark( ) 							//命令行或调试窗口显示：汪汪！
 - 多态：同一接口不同实现，包括重载`@Override`(编译时)和重写(运行时)
 
 示例代码：
-```java
+``` java
 // 封装示例
 class Person {
     public String name;
@@ -170,7 +170,7 @@ tiles.each(tileConsumer);
     *   `val`: 声明**只读**变量（类似 Java `final`），优先使用。
     *   `var`: 声明**可变**变量。
     *   **类型推断**: 编译器可自动推断类型，类型标注可省略。
-        ```kotlin
+        ``` kotlin
         val name = "Kotlin" // String
         var count = 42 // Int
         val explicit: Double = 3.14 // 显式标注类型
@@ -179,7 +179,7 @@ tiles.each(tileConsumer);
     *   使用 `fun` 关键字。
     *   返回值写在参数列表后，用 `: Type` 表示。
     *   表达式函数体：单表达式函数可省略 `{}` 和 `return`。
-        ```kotlin
+        ``` kotlin
         // 传统写法
         fun sum(a: Int, b: Int): Int {
             return a + b
@@ -193,30 +193,30 @@ tiles.each(tileConsumer);
 ### 空安全 (Null Safety) - 最重要的特性
 1.  **可空类型**
     *   默认类型不可为 `null`。要允许为 `null`，必须在类型后加 `?`。
-        ```kotlin
+        ``` kotlin
         var neverNull: String = "Hello" // 永远不为null
         var canBeNull: String? = null   // 可以为null
         ```
 2.  **安全调用操作符 (`?.`)**
     *   如果对象不为 `null`，则调用方法或访问属性；否则返回 `null`。
-        ```kotlin
+        ``` kotlin
         val length: Int? = canBeNull?.length // 如果canBeNull为null，则length也是null
         ```
 3.  **Elvis 操作符 (`?:`)**
     *   提供 `null` 时的备用值。
-        ```kotlin
+        ``` kotlin
         val length: Int = canBeNull?.length ?: 0 // 如果为null，则返回0
         ```
 4.  **非空断言操作符 (`!!`)**
     *   断言对象不为 `null`，如果为 `null` 则抛出 `NPE`。**应谨慎使用**。
-        ```kotlin
+        ``` kotlin
         val length: Int = canBeNull!!.length // 我保证它不是null！
         ```
 
 ### 类型系统与检查
 1.  **智能转换 (Smart Cast)**
     *   一旦进行了类型检查 (`is`)，编译器会自动转换类型，无需显式 `cast`。
-        ```kotlin
+        ``` kotlin
         fun demo(x: Any) {
             if (x is String) {
                 print(x.length) // x 被自动智能转换为 String 类型
@@ -230,7 +230,7 @@ tiles.each(tileConsumer);
 ### 类与对象
 1.  **主构造函数**
     *   简洁的声明方式，直接在类头声明。
-        ```kotlin
+        ``` kotlin
         class Person(val name: String, var age: Int) { 
             // `val`/`var` 关键字使其同时成为类属性
             // 如果没有注解或可见性修饰符，`constructor` 关键字可省略
@@ -240,13 +240,13 @@ tiles.each(tileConsumer);
     *   主构造函数不能包含代码，初始化代码放在 `init` 块中。
 3.  **数据类 (`data class`)**
     *   用于只保存数据的类。编译器自动生成 `equals()`, `hashCode()`, `toString()`, `copy()` 和 `componentN()` 函数。
-        ```kotlin
+        ``` kotlin
         data class User(val name: String, val age: Int)
         ```
 4.  **属性 (Property)**
     *   Kotlin 的属性是 first-class 特性，替代了字段 + Getter/Setter 的模式。
     *   完整的属性声明包括一个 Getter 和一个可选的 Setter。
-        ```kotlin
+        ``` kotlin
         class Rectangle {
             var width: Int = 0
             var height: Int = 0
@@ -263,7 +263,7 @@ tiles.each(tileConsumer);
 1.  **Lambda 表达式**
     *   语法： `{参数 -> 函数体}`。
     *   **如果 Lambda 是函数的最后一个参数**，它可以移到括号外面。如果它是唯一的参数，括号可以省略。
-        ```kotlin
+        ``` kotlin
         // 假设有一个函数：fun runLater(block: () -> Unit) {}
         runLater({ println("Hi") })   // 传统写法
         runLater() { println("Hi") }  // Lambda 外置
@@ -271,7 +271,7 @@ tiles.each(tileConsumer);
         ```
 2.  **高阶函数**
     *   将函数用作参数或返回值的函数。
-        ```kotlin
+        ``` kotlin
         fun calculate(x: Int, y: Int, operation: (Int, Int) -> Int): Int {
             return operation(x, y)
         }
@@ -281,7 +281,7 @@ tiles.each(tileConsumer);
 ### 伴生对象 (Companion Object) - 替代静态成员
 *   Kotlin 中没有 `static` 关键字。
 *   使用伴生对象来声明类级别的变量和函数，实现类似静态成员的功能。
-    ```kotlin
+    ``` kotlin
     class MyClass {
         companion object {
             const val CONSTANT = "constant" // 编译期常量
@@ -307,7 +307,7 @@ Kotlin 的委托主要分为两类：**类委托**和**属性委托**。
 *   **Kotlin 的解决方案：** 使用 `by` 关键字，编译器会自动为你生成所有转发方法。
 
 **语法：**
-```kotlin
+``` kotlin
 interface Base {
     fun print()
     fun printMessage(msg: String)
@@ -363,7 +363,7 @@ Kotlin 标准库提供了几个极其有用的内置属性委托工厂函数：
 *   **要求：** 必须是 `val`（只读），因为初始值只能在第一次访问时确定。
 *   **线程安全：** 默认情况下 `lazy()` 是同步的（线程安全的）。
 
-```kotlin
+``` kotlin
 val expensiveResource: Resource by lazy {
     // 这个 lambda 只在第一次访问 expensiveResource 时执行
     println("Initializing expensive resource...")
@@ -388,7 +388,7 @@ fun main() {
 *   **`observable`:** 在属性值**被改变后**触发回调。
 *   **`vetoable`:** 在属性值**被改变前**触发回调，允许你“否决”此次修改。
 
-```kotlin
+``` kotlin
 import kotlin.properties.Delegates
 
 var name: String by Delegates.observable("<no name>") { prop, old, new ->
@@ -418,7 +418,7 @@ fun main() {
 ### 其他实用语法糖
 1.  **字符串模板**
     *   在字符串中直接嵌入变量 (`$变量名`) 或表达式 (`${表达式}`)。
-        ```kotlin
+        ``` kotlin
         val name = "Alice"
         println("Hello, $name!") // Hello, Alice!
         println("1 + 2 = ${1 + 2}") // 1 + 2 = 3
@@ -426,7 +426,7 @@ fun main() {
 2.  **默认参数与命名参数**
     *   **默认参数**：函数参数可以指定默认值，避免重载。
     *   **命名参数**：调用时使用参数名指定值，提高可读性且可任意顺序。
-        ```kotlin
+        ``` kotlin
         fun greet(name: String, msg: String = "Hi") {
             println("$msg $name")
         }
@@ -436,7 +436,7 @@ fun main() {
 3.  **`when` 表达式**
     *   强大的 `switch` 替代品，可以匹配值、范围、类型等。
     *   它可以返回值。
-        ```kotlin
+        ``` kotlin
         fun describe(obj: Any): String = when (obj) {
             1 -> "One"
             "Hello" -> "Greeting"
@@ -447,7 +447,7 @@ fun main() {
         ```
 4.  **范围表达式 (`..` 和 `until`)**
     *   用于创建区间，常与 `in` 操作符在循环和 `when` 中使用。
-        ```kotlin
+        ``` kotlin
         for (i in 1..5) { print(i) } // 12345 (闭区间[])
         for (i in 1 until 5) { print(i) } // 1234 (半开区间[))
         if (x in 1..10) { ... } // 判断x是否在1到10之间

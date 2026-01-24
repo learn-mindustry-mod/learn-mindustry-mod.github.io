@@ -26,7 +26,7 @@ Mindustry的图形后台是OpenGL，那么也就是说使用那些工具绘制�
 
 Mindustry内部的渲染几乎完全依赖于批处理渲染，在`arc.Core`中保存了一个静态单例`Core.batch`存储游戏绘图工具使用的共享批处理渲染对象，这个对象究其核心方法即以下几个`draw`方法重载：
 
-```java Batch.java
+``` java Batch.java
 public abstract class Batch{
   //...
   
@@ -52,7 +52,7 @@ public abstract class Batch{
 
 例如我们最常用的`Draw.rect`绘制四边形图像的方法，跟随参数转移重载，它最基本的定义是这样的：
 
-```java Draw.java
+``` java Draw.java
 //...
 
 public static void rect(TextureRegion region, float x, float y, float w, float h, float originX, float originY, float rotation){
@@ -64,7 +64,7 @@ public static void rect(TextureRegion region, float x, float y, float w, float h
 
 这调用的就是`Batch`的矩形绘制方法，而另一个常用的例子`Fill.quad`绘制任意四边形的方法，它的定义是这样的：
 
-```java Fill.java
+``` java Fill.java
 public static void quad(float x1, float y1, float c1, float x2, float y2, float c2, float x3, float y3, float c3, float x4, float y4, float c4){
     TextureRegion region = atlas.white();
     float mcolor = Core.batch.getPackedMixColor();
@@ -104,7 +104,7 @@ public static void quad(float x1, float y1, float c1, float x2, float y2, float 
 
 其中的`Draw.vert`转向的是：
 
-```java Draw.java
+``` java Draw.java
 public static void vert(Texture texture, float[] vertices, int offset, int length){
     Core.batch.draw(texture, vertices, offset, length);
 }
@@ -144,7 +144,7 @@ public static void vert(Texture texture, float[] vertices, int offset, int lengt
 
 我们来看看在`SpriteBatch`中的`flush()`方法实现，我们省略掉所有细节，只看最重要的部分：
 
-```java SpriteBatch.java
+``` java SpriteBatch.java
 public class Batch {
   //...
   
@@ -269,7 +269,7 @@ void main(){
 ::: tip 知识回收
 这里就可以回收我们在*纹理与点阵图*以及*变换与摄像机*中提到但未解决的问题了：
 
-- **“更改正方形的顶点定义”这个方法，这其实不是一个很明智的方式，但是在Mindustry中被普遍的使用**
+- **“更改正方形的顶点定义”这个方法，这其实不是一个很明智的方式，但是在 Mindustry 中被普遍的使用**
 
 - **将纹理放入到mod目录下的任意子目录中（不要放在sprites目录下）**
 
@@ -297,7 +297,7 @@ void main(){
 
 ::: code-group
 
-```java 
+``` java 
 void example(){
   float layer = Draw.z();
   Draw.draw(layer, () -> {
@@ -307,7 +307,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   val layer = Draw.z()
   Draw.draw(layer) {
@@ -323,7 +323,7 @@ fun example() {
 
 ::: code-group
 
-```java
+``` java
 void example(){
   Draw.drawRange(
       layer, 
@@ -334,7 +334,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   Draw.drawRange(
     z = layer,

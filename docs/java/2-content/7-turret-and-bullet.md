@@ -117,7 +117,7 @@ BasicBulletType(1.5f, 9)
 
 示例：让炮管在开火后回缩，并在末段加一点呼吸抖动：
 
-```java
+``` java
 var part = new RegionPart("-barrel");
 part.progress = PartProgress.recoil;
 part.moveY = -3f;

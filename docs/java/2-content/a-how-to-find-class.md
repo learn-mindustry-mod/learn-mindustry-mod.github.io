@@ -69,7 +69,7 @@ public void load(){
 这里只需了解`@Load`各个参数的含义即可。如果只有一个参数，则该参数即为`value`，代表要加载的贴图“名称”，其中可以包含**插值（Interpolation）**：`@`代表方块的名称，`#`、`#1`、`#2`等代表循环的数字；如果有多个参数，还可能包含`fallback`参数，用于指定回滚的目标贴图名称；`length`与`#`搭配使用，指示其循环长度；`lengths`与`#1`、`#2`等搭配使用，所有数字均**从1开始计数**。
 
 比如：
-```java
+``` java
 //把“select-arrow-small”贴图加载到selectArrowRegion中
 public @Load("select-arrow-small") TextureRegion selectArrowRegion;
 

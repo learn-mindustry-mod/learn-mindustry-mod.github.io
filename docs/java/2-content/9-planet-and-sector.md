@@ -8,11 +8,11 @@ Mindustry模组可分为原版拓展和新星球两种类型。添加新星球�
 
 ::: code-group
 
-```java
+``` java
 new Planet("tutorial-planet", Planets.sun, 1f, 3);
 ```
 
-```kotlin
+``` kotlin
 Planet("tutorial-planet", Planets.sun, 1f, 3)
 ```
 
@@ -164,11 +164,11 @@ meshLoader = () -> new HexMesh(this, 6);
 
 ::: code-group
 
-```java
+``` java
 new SectorPreset("testSector", Planets.serpulo, 15);
 ```
 
-```kotlin
+``` kotlin
 SectorPreset("testSector", Planets.serpulo, 15)
 ```
 
@@ -194,12 +194,12 @@ sector.tutorial-mod-testSector.details =
 
 ::: code-group
 
-```java
+``` java
 new RainWeather("hailing");
 new ParticleWeather("gray-pall");
 ```
 
-```kotlin
+``` kotlin
 RainWeather("hailing")
 ParticleWeather("gray-pall")
 ```

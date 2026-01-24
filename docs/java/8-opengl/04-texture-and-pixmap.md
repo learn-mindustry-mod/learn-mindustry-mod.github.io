@@ -14,7 +14,7 @@
 
 ::: code-group
 
-```java
+``` java
 void example(){
   Texture tex1 = new Texture(new Fi("..."));  // 从文件加载纹理
   Texture tex2 = new Texture(pixmap);         // 从Pixmap创建纹理
@@ -27,7 +27,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   val tex1 = Texture(Fi("..."))  // 从文件加载纹理
   val tex2 = Texture(pixmap)     // 从Pixmap创建纹理
@@ -68,14 +68,14 @@ fun example() {
 
 ::: code-group
 
-```java
+``` java
 void example(){
   Fi modRoot = Vars.mods.getMod("example-mod").root;
   Texture tex = new Texture(modRoot.child("texture.png"));
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   val modRoot = Vars.mods.getMod("example-mod").root
   val tex = Texture(modRoot.child("texture.png"))  
@@ -146,7 +146,7 @@ void main() {
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 class Example{
   Mesh mesh = new Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -179,7 +179,7 @@ class Example{
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 class Example{
   val mesh = Mesh(true, 4, 6,
       VertexAttribute.position,
@@ -230,7 +230,7 @@ class Example{
 
 ::: code-group
 
-```java
+``` java
 void example(){
   //...
   mesh.setVertices(new float[]{
@@ -244,7 +244,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   //...
   mesh.setVertices(
@@ -284,7 +284,7 @@ fun example() {
 
 ::: code-group
 
-```java
+``` java
 void example(Texture tex) {
   tex.setWrap(Texture.TextureWrap.clampToEdge);
   tex.setWrap(Texture.TextureWrap.repeat);
@@ -292,7 +292,7 @@ void example(Texture tex) {
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(tex: Texture) {
   tex.setWrap(Texture.TextureWrap.clampToEdge)
   tex.setWrap(Texture.TextureWrap.repeat)
@@ -310,7 +310,7 @@ fun example(tex: Texture) {
 
 ::: code-group
 
-```java
+``` java
 void example(Texture tex) {
   tex.setWrap(
       Texture.TextureWrap.clampToEdge, // u warp
@@ -319,7 +319,7 @@ void example(Texture tex) {
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(tex: Texture) {
   tex.setWrap(
       u = Texture.TextureWrap.clampToEdge, // u warp
@@ -351,14 +351,14 @@ OpenGL也提供了两种基本的纹理过滤方式：
 
 ::: code-group
 
-```java
+``` java
 void example(Texture tex) {
   tex.setFilter(Texture.TextureFilter.nearest);
   tex.setFilter(Texture.TextureFilter.linear);  
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(tex: Texture) {
   tex.setFilter(Texture.TextureFilter.nearest)
   tex.setFilter(Texture.TextureFilter.linear)
@@ -377,7 +377,7 @@ fun example(tex: Texture) {
 
 ::: code-group
 
-```java
+``` java
 void example(Texture tex) {
   tex.setFilter(
       Texture.TextureFilter.nearest, // minify filter
@@ -386,7 +386,7 @@ void example(Texture tex) {
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(tex: Texture) {
   tex.setFilter(
     minFilter = Texture.TextureFilter.nearest, // minify filter
@@ -420,7 +420,7 @@ fun example(tex: Texture) {
 
 ::: code-group
 
-```java
+``` java
 void example(Texture tex) {
   tex.setFilter(Texture.TextureFilter.nearestMipMapNearest);
   tex.setFilter(Texture.TextureFilter.linearMipMapNearest);
@@ -429,7 +429,7 @@ void example(Texture tex) {
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(tex: Texture) {
   tex.setFilter(Texture.TextureFilter.nearestMipMapNearest)
   tex.setFilter(Texture.TextureFilter.linearMipMapNearest)
@@ -452,7 +452,7 @@ ArcGL最多支持32个纹理单元，这对我们来说已经完全够用了。�
 
 ::: code-group
 
-```java
+``` java
 void example() {
   tex0.bind(0);
   tex1.bind(1);
@@ -465,7 +465,7 @@ void example() {
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   tex0.bind(0)
   tex1.bind(1)
@@ -492,7 +492,7 @@ fun example() {
 
 ::: code-group
 
-```java
+``` java
 void example(Shader shader) {
   shader.bind();
   shader.setUniformi("u_texture0", 0);
@@ -502,7 +502,7 @@ void example(Shader shader) {
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   shader.bind()
   shader.setUniformi("u_texture0", 0)
@@ -542,7 +542,7 @@ void main() {
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 class Example{
   // ...
   
@@ -566,7 +566,7 @@ class Example{
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 class Example{
   // ...
   
@@ -600,14 +600,14 @@ class Example{
 
 ::: code-group
 
-```java
+``` java
 Pixmap pixmap = new Pixmap(128, 128);             // 创建一块128x128的空白画布
 Pixmap pixmap = new Pixmap(new Fi("..."));        // 从文件创建点阵图
 Pixmap pixmap = new Pixmap(byteArray);            // 从字节序列创建点阵图
 Pixmap pixmap = new Pixmap(byteBuffer, 128, 128); // 从字节序列创建点阵图
 ```
 
-```kotlin
+``` kotlin
 val pixmap = Pixmap(128, 128)             // 创建一块128x128的空白画布
 val pixmap = Pixmap(Fi("..."))            // 从文件创建点阵图
 val pixmap = Pixmap(byteArray)            // 从字节序列创建点阵图
@@ -622,7 +622,7 @@ val pixmap = Pixmap(byteBuffer, 128, 128) // 从字节序列创建点阵图
 
 ::: code-group
 
-```java
+``` java
 void example(){
   Pixmap pixmap = new Pixmap(128, 128);
   pixmap.fill(Color.white);
@@ -633,7 +633,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   val pixmap = Pixmap(128, 128)
   pixmap.fill(Color.white)
@@ -664,7 +664,7 @@ Pixmap flipped = pixmap.flipY();
 
 ::: code-group
 
-```java
+``` java
 void example(Texture tex){
   Pixmap pixmap = tex.getTextureData().getPixmap();
   Color c = new Color(pixmap.get(10, 10));
@@ -675,7 +675,7 @@ void example(Texture tex){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(tex: Texture){
   val pixmap = tex.textureData.getPixmap()
   val c = Color(pixmap.get(10, 10))

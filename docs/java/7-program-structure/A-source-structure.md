@@ -5,7 +5,7 @@
 - `desktop/`：桌面端的构建代码、启动器、以及与Steam交互的代码，包括成就、统计信息、房间、创意工坊；
 - `ios/`：iOS端的构建代码、资源文件、多语言支持（尽管没有）、图标、和启动器。iOS端的Mindustry是通过**RoboVM**构建的，该工具可以把Java字节码编译成机器码，可以反射但是没有动态加载类的能力，符合App Store的规范因此可以上架；
 - `server/`：服务器端的构建代码、启动器、以及一个启动的示例；
-- `fastlane/`：Fastlane是一种自动在Google Play和App Store发布程序的工具，在Mindustry中还负责Google Play、App Store和Steam上的描述文本的多语言；
+- `fastlane/`：Fastlane是一种自动在Google Play和App Store发布程序的工具，在 Mindustry 中还负责Google Play、App Store和Steam上的描述文本的多语言；
 - `jitpack.yml`：JitPack是一种允许开发者自由发布依赖的网站，也就是你的模组依赖的地址，
 
 源代码组：

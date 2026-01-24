@@ -10,7 +10,7 @@ Arc GL强制使用OpenGL可编程管线，我们绘图时会需要向GL提供一
 
 ::: code-group
 
-```java
+``` java
 void example(){
   String vertexShader = "...";
   String fragmentShader = "...";
@@ -23,7 +23,7 @@ void example(){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example() {
   val vertexShader = "..."
   val fragmentShader = "..."
@@ -248,7 +248,7 @@ void main(){
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 class Example {
   Shader shader = new Shader(
       //顶点着色器
@@ -299,7 +299,7 @@ class Example {
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 class Example {
   val shader = Shader(
       //顶点着色器
@@ -352,13 +352,13 @@ class Example {
 
 :::
 
-OpenGL的直接绘制流程会需要我们配置OpenGl的诸多状态与窗口，并需要手动刷新屏幕，但是我们在Mindustry中编写图形程序直接在绘制流程中去渲染网格即可，无需考虑GL的底层细节。
+OpenGL的直接绘制流程会需要我们配置OpenGl的诸多状态与窗口，并需要手动刷新屏幕，但是我们在 Mindustry 中编写图形程序直接在绘制流程中去渲染网格即可，无需考虑GL的底层细节。
 
 现在我们直接在mod主类的`init()`方法中实例化这个对象，并添加对`EventType.Trigger.uiDrawEnd`的监听器，去调用这个对象的`draw()`：
 
 ::: code-group
 
-```java ExampleMod.java
+``` java ExampleMod.java
 public class ExampleMod extends Mod {
   @Override
   public void init() {
@@ -368,7 +368,7 @@ public class ExampleMod extends Mod {
 }
 ```
 
-```kotlin ExampleMod.kt
+``` kotlin ExampleMod.kt
 class ExampleMod : Mod() {
   override fun init() {
     val example = Example()
@@ -405,7 +405,7 @@ void main(){
 
 ::: code-group
 
-```java
+``` java
 void example(Shader shader){
   shader.bind();
   shader.setUniformi("u_texture", 0);                     //设置单个整数
@@ -417,7 +417,7 @@ void example(Shader shader){
 }
 ```
 
-```kotlin
+``` kotlin
 fun example(shader: Shader){
   shader.bind()
   shader.setUniformi("u_texture", 0)                     //设置单个整数
@@ -448,7 +448,7 @@ void main(){
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 void draw() {
   shader.bind();
   shader.setUniformf("u_color", Color.lightGray);
@@ -456,7 +456,7 @@ void draw() {
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 fun draw() {
   shader.bind()
   shader.setUniformf("u_color", Color.lightGray)

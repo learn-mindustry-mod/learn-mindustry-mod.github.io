@@ -8,19 +8,19 @@ Mindustry的图形后端为OpenGL（在安卓上为OpenGL es, 差异我们在后
 
 **Learn OpenGL： https://learnopengl-cn.github.io/**
 
-与上述教程不同，本篇重点介绍在Mindustry中的图形绘制方法与技巧，我会避免使用那些复杂的术语和概念，而是直接介绍如何使用OpenGL来绘制图形。
+与上述教程不同，本篇重点介绍在 Mindustry 中的图形绘制方法与技巧，我会避免使用那些复杂的术语和概念，而是直接介绍如何使用OpenGL来绘制图形。
 
 ## GL的操作流与工作方式
 
 OpenGL是一个“状态机”，本篇我们并不讨论这个概念，你只需要知道操作OpenGL的流程就是在调用OpenGL的操作函数和GL定义的常量，去设置某些数据和资源，然后将这些资源以某种方式绘制出来而已。
 
-OpenGL的操作函数在Mindustry中由一个单例对象实现，这个单例被存储于`arc.Core`类中的`gl20`和`gl30`字段中，两个字段保存的是同一个对象，但是它们的变量类型不同，分别会记录在OpenGL2.0和OpenGL3.0+上的可用函数与常量值，一般来说你的目标平台都会支持OpenGL3.0的API，但是如果不支持的话，字段`gl30`会为空，请在调用前做好兼容性检查。
+OpenGL的操作函数在 Mindustry 中由一个单例对象实现，这个单例被存储于`arc.Core`类中的`gl20`和`gl30`字段中，两个字段保存的是同一个对象，但是它们的变量类型不同，分别会记录在OpenGL2.0和OpenGL3.0+上的可用函数与常量值，一般来说你的目标平台都会支持OpenGL3.0的API，但是如果不支持的话，字段`gl30`会为空，请在调用前做好兼容性检查。
 
 但是事实上，多数情况下我们只需要使用一个静态调用的工具类`arc.graphic.Gl`来快速访问**gl20**中的所有行为，`gl30`则需要访问其单例。
 
 一个GL的原始工作流形式是这样的：
 
-```java
+``` java
 void example() {
   Gl.clearColor(0.2f, 0.3f, 0.3f, 1.0f);
   Gl.clear(Gl.colorBufferBit);
@@ -51,7 +51,7 @@ Mindustry中几乎维护的都是对GL控制流的封装，极少直接使用GL�
 
 OpenGL es是在安卓上做了针对移动平台性能优化的OpenGL，或者说，它其实是一种“阉割版”的OpenGL。
 
-由于Mindustry的跨平台包含了安卓平台，Arc中的OpenGL API结构是向下兼容了OpenGL es的，这意味着在GL es中被取消的许多API在Arc的GL API中同样被移除了，这会导致你在互联网上查询到的教程与我们在Mindustry中的操作有不同，这些需要考虑如何规避。
+由于Mindustry的跨平台包含了安卓平台，Arc中的OpenGL API结构是向下兼容了OpenGL es的，这意味着在GL es中被取消的许多API在Arc的GL API中同样被移除了，这会导致你在互联网上查询到的教程与我们在 Mindustry 中的操作有不同，这些需要考虑如何规避。
 
 Arc GL与普遍能找到的OpenGL教程所描述的主要不同在与：
 

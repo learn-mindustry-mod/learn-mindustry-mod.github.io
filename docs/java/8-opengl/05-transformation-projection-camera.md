@@ -285,7 +285,7 @@ void main() {
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 class Example{
   //...
   
@@ -301,7 +301,7 @@ class Example{
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 class Example{
   //...
   
@@ -361,7 +361,7 @@ $\left [ \begin{matrix} \cos \theta & -\sin \theta & x \\ \sin \theta & \cos \th
 
 好，所有的基础知识都有了，我们正式开始聊摄像机是如何工作的。
 
-首先，我们将摄像机定义为观察游戏场景的一个“眼睛”，而我们目前仅讨论二维视角，那么摄像机就会有一个二维坐标和一个缩放比例（在Mindustry中大概就是视角的高度）。
+首先，我们将摄像机定义为观察游戏场景的一个“眼睛”，而我们目前仅讨论二维视角，那么摄像机就会有一个二维坐标和一个缩放比例（在 Mindustry 中大概就是视角的高度）。
 
 那么我们思考一下摄像机要做什么才能让场景里的物体正确的显示在屏幕上呢？
 
@@ -401,7 +401,7 @@ void main() {
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 Mat projection = new Mat();
 Vec2 cameraPos = new Vec2(20, 10);
 
@@ -420,7 +420,7 @@ void draw(){
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 val projection = Mat()
 val cameraPos = Vec2(20, 10)
 
@@ -472,7 +472,7 @@ void main() {
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 Mat transform = new Mat();
 
 void draw(){
@@ -493,7 +493,7 @@ void draw(){
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 val transform = Mat()
 
 fun draw(){
@@ -524,7 +524,7 @@ fun draw(){
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 long seed = System.nanoTime();
 void draw(){
   shader.bind();
@@ -550,7 +550,7 @@ void draw(){
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 val seed = System.nanoTime()
 fun draw(){
 shader.bind()
@@ -591,7 +591,7 @@ it work!
 
 ::: code-group
 
-```java Example.java
+``` java Example.java
 Camera camera = new Camera();
 void draw(){
   shader.bind();
@@ -616,7 +616,7 @@ void draw(){
 }
 ```
 
-```kotlin Example.kt
+``` kotlin Example.kt
 val camera = Camera()
 fun draw() {
   shader.bind()
@@ -645,7 +645,7 @@ fun draw() {
 
 效果与先前的完全一样。
 
-而刚刚我们说到的另一种“更改正方形的顶点定义”这个方法，这其实不是一个很明智的方式，但是在Mindustry中被普遍的使用，这里先按下不表，之后的小节我会说明为什么不明智但是又普遍被使用。
+而刚刚我们说到的另一种“更改正方形的顶点定义”这个方法，这其实不是一个很明智的方式，但是在 Mindustry 中被普遍的使用，这里先按下不表，之后的小节我会说明为什么不明智但是又普遍被使用。
 
 ## 小练习
 

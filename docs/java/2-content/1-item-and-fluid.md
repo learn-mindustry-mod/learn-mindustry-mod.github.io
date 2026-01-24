@@ -6,7 +6,7 @@ Mindustry的游戏内容大致可以划分为若干个板块，从作为材料�
 
 ## 创建一个Item
 
-在Mindustry中，物品被封装为一个类型`mindustry.type.Item`，而创建一个Item实际上就是创建一个该类型的对象：
+在 Mindustry 中，物品被封装为一个类型`mindustry.type.Item`，而创建一个Item实际上就是创建一个该类型的对象：
 
 ::: info 全限定名
 全限定名（Fully Qualified Name），是一个Java类的包路径连同类的简单名称，如这里的`mindustry.type.Item`。在情况下，全限定名可以确定唯一一个Java类，因此我们在以后首次遇到某个类的时候都会给出它的全限定名，在不引起歧义时我们会称它的简单名称，如`Item`·
@@ -14,15 +14,15 @@ Mindustry的游戏内容大致可以划分为若干个板块，从作为材料�
 
 ::: code-group
 
-```java
+``` java
 new Item("tutorial-item", Color.red);
 ```
 
-```kotlin
+``` kotlin
 Item("tutorial-item", Color.red)
 ```
 
-```javascript
+``` javascript
 const tutorialItem = extend(Item, "tutorial-item", Color.red, {})
 ```
 
@@ -41,7 +41,7 @@ const tutorialItem = extend(Item, "tutorial-item", Color.red, {})
 
 ::: code-group
 
-```java TurorialMod.java
+``` java TurorialMod.java
 public class TutorialMod extends Mod{
   @Override
   public void loadContent(){
@@ -50,7 +50,7 @@ public class TutorialMod extends Mod{
 }
 ```
 
-```kotlin TutorialMod.kt
+``` kotlin TutorialMod.kt
 class TutorialMod: Mod(){
   override fun loadContent(){
     Item("tutorial-item", Color.red)
@@ -134,7 +134,7 @@ item.tutorial-mod-tutorial-item.details = Shhhhhh
 
 ::: code-group
 
-```java
+``` java
 new Item("tutorial-item"){{
   hardness = 3;
   explosiveness = 0f;
@@ -144,7 +144,7 @@ new Item("tutorial-item"){{
 }};
 ```
 
-```kotlin
+``` kotlin
 Item("tutorial-item").apply{
   hardness = 3
   explosiveness = 0f
@@ -169,17 +169,17 @@ Item("tutorial-item").apply{
 :::
 
 ## 创建一个Liquid
-在Mindustry中，流体被封装为`mindustry.type.Liquid`。虽然叫“液体”，但这样命名的原因是v7前游戏没有原生的气体，而在v7中Anuke简单地把气体实现为不会产生水洼的液体。所以`Liquid`类的正确译名应当是流体。
+在 Mindustry 中，流体被封装为`mindustry.type.Liquid`。虽然叫“液体”，但这样命名的原因是v7前游戏没有原生的气体，而在v7中Anuke简单地把气体实现为不会产生水洼的液体。所以`Liquid`类的正确译名应当是流体。
 
 <!----“流体”一名哪有这么容易，也是当年我在翻译斗争中争取来的---->
 
 ::: code-group
 
-```java
+``` java
 new Liquid("tutorial-liquid", Color.blue);
 ```
 
-```kotlin
+``` kotlin
 Liquid("tutorial-liquid", Color.blue)
 ```
 
@@ -234,7 +234,7 @@ liquid.tutorial-mod-tutorial-liquid.details = And God said, "Let there be an exp
 
 ::: code-group
 
-```java ModItems.java
+``` java ModItems.java
 public class ModItems{
   public static Item item1, 
       item2, 
@@ -261,7 +261,7 @@ public class ModItems{
 }
 ```
 
-```kotlin ModItems.kt
+``` kotlin ModItems.kt
 object ModItems{
   lateinit var item1
   lateinit var item2
@@ -296,7 +296,7 @@ ModLiquids类也类似。
 
 ::: code-group
 
-```java TutorialMod.java
+``` java TutorialMod.java
 public class TutorialMod extends Mod{
   @Override
   public void loadContent(){
@@ -306,7 +306,7 @@ public class TutorialMod extends Mod{
 }
 ```
 
-```kotlin TutorialMod.kt
+``` kotlin TutorialMod.kt
 class TutorialMod: Mod(){
   override fun loadContent(){
     ModItems.load()
