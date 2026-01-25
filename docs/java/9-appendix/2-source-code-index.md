@@ -1,0 +1,855 @@
+# 附.2 源代码功能路径快速索引（全文件）
+
+本索引按目录划分，列出 Mindustry 源码中的全部代码文件，并给出用途定位。用途描述以模块路径与文件职责为主，便于检索与定位。
+
+## 核心逻辑
+
+- core/assets/scripts/base.js：核心逻辑 / 内置脚本，内置脚本工具与 JS 适配函数。
+- core/assets/scripts/global.js：核心逻辑 / 内置脚本，内置脚本全局入口与事件类绑定。
+- core/build.gradle：核心逻辑 / 构建脚本，核心逻辑 模块构建脚本。
+- core/src/mindustry/ClientLauncher.java：核心逻辑 / 根包，客户端启动入口，负责初始化与平台装配。
+- core/src/mindustry/Vars.java：核心逻辑 / 根包，全局单例与常量入口，负责模块引用与环境状态。
+- core/src/mindustry/ai/Astar.java：核心逻辑 / AI 与路径，类（Astar）。
+- core/src/mindustry/ai/BaseBuilderAI.java：核心逻辑 / AI 与路径，AI 控制器类（BaseBuilderAI）。
+- core/src/mindustry/ai/BaseRegistry.java：核心逻辑 / AI 与路径，类（BaseRegistry）。
+- core/src/mindustry/ai/BlockIndexer.java：核心逻辑 / AI 与路径，类（BlockIndexer）。
+- core/src/mindustry/ai/ControlPathfinder.java：核心逻辑 / AI 与路径，类（ControlPathfinder）。
+- core/src/mindustry/ai/ItemUnitStance.java：核心逻辑 / AI 与路径，类（ItemUnitStance）。
+- core/src/mindustry/ai/PathfindQueue.java：核心逻辑 / AI 与路径，类（PathfindQueue）。
+- core/src/mindustry/ai/Pathfinder.java：核心逻辑 / AI 与路径，类（Pathfinder）。
+- core/src/mindustry/ai/RtsAI.java：核心逻辑 / AI 与路径，AI 控制器类（RtsAI）。
+- core/src/mindustry/ai/UnitCommand.java：核心逻辑 / AI 与路径，类（UnitCommand）。
+- core/src/mindustry/ai/UnitGroup.java：核心逻辑 / AI 与路径，类（UnitGroup）。
+- core/src/mindustry/ai/UnitStance.java：核心逻辑 / AI 与路径，类（UnitStance）。
+- core/src/mindustry/ai/WaveSpawner.java：核心逻辑 / AI 与路径，类（WaveSpawner）。
+- core/src/mindustry/ai/types/AssemblerAI.java：核心逻辑 / AI 与路径，AI 控制器类（AssemblerAI）。
+- core/src/mindustry/ai/types/BoostAI.java：核心逻辑 / AI 与路径，AI 控制器类（BoostAI）。
+- core/src/mindustry/ai/types/BuilderAI.java：核心逻辑 / AI 与路径，AI 控制器类（BuilderAI）。
+- core/src/mindustry/ai/types/CargoAI.java：核心逻辑 / AI 与路径，AI 控制器类（CargoAI）。
+- core/src/mindustry/ai/types/CommandAI.java：核心逻辑 / AI 与路径，AI 控制器类（CommandAI）。
+- core/src/mindustry/ai/types/DefenderAI.java：核心逻辑 / AI 与路径，AI 控制器类（DefenderAI）。
+- core/src/mindustry/ai/types/FlyingAI.java：核心逻辑 / AI 与路径，AI 控制器类（FlyingAI）。
+- core/src/mindustry/ai/types/FlyingFollowAI.java：核心逻辑 / AI 与路径，AI 控制器类（FlyingFollowAI）。
+- core/src/mindustry/ai/types/GroundAI.java：核心逻辑 / AI 与路径，AI 控制器类（GroundAI）。
+- core/src/mindustry/ai/types/HugAI.java：核心逻辑 / AI 与路径，AI 控制器类（HugAI）。
+- core/src/mindustry/ai/types/LogicAI.java：核心逻辑 / AI 与路径，AI 控制器类（LogicAI）。
+- core/src/mindustry/ai/types/MinerAI.java：核心逻辑 / AI 与路径，AI 控制器类（MinerAI）。
+- core/src/mindustry/ai/types/MissileAI.java：核心逻辑 / AI 与路径，AI 控制器类（MissileAI）。
+- core/src/mindustry/ai/types/PrebuildAI.java：核心逻辑 / AI 与路径，AI 控制器类（PrebuildAI）。
+- core/src/mindustry/ai/types/RepairAI.java：核心逻辑 / AI 与路径，AI 控制器类（RepairAI）。
+- core/src/mindustry/ai/types/SuicideAI.java：核心逻辑 / AI 与路径，AI 控制器类（SuicideAI）。
+- core/src/mindustry/async/AsyncCore.java：核心逻辑 / 异步任务，类（AsyncCore）。
+- core/src/mindustry/async/AsyncProcess.java：核心逻辑 / 异步任务，接口（AsyncProcess）。
+- core/src/mindustry/async/AvoidanceProcess.java：核心逻辑 / 异步任务，类（AvoidanceProcess）。
+- core/src/mindustry/async/PhysicsProcess.java：核心逻辑 / 异步任务，类（PhysicsProcess）。
+- core/src/mindustry/audio/SoundControl.java：核心逻辑 / 音频系统，类（SoundControl）。
+- core/src/mindustry/audio/SoundLoop.java：核心逻辑 / 音频系统，类（SoundLoop）。
+- core/src/mindustry/audio/SoundPriority.java：核心逻辑 / 音频系统，类（SoundPriority）。
+- core/src/mindustry/content/Blocks.java：核心逻辑 / 原版内容定义，原版方块注册。
+- core/src/mindustry/content/Bullets.java：核心逻辑 / 原版内容定义，原版子弹注册。
+- core/src/mindustry/content/ErekirTechTree.java：核心逻辑 / 原版内容定义，原版科技树（埃里克尔）注册。
+- core/src/mindustry/content/Fx.java：核心逻辑 / 原版内容定义，原版特效注册。
+- core/src/mindustry/content/Items.java：核心逻辑 / 原版内容定义，原版物品注册。
+- core/src/mindustry/content/Liquids.java：核心逻辑 / 原版内容定义，原版液体注册。
+- core/src/mindustry/content/Loadouts.java：核心逻辑 / 原版内容定义，类（Loadouts）。
+- core/src/mindustry/content/Planets.java：核心逻辑 / 原版内容定义，原版行星注册。
+- core/src/mindustry/content/SectorPresets.java：核心逻辑 / 原版内容定义，类（SectorPresets）。
+- core/src/mindustry/content/SerpuloTechTree.java：核心逻辑 / 原版内容定义，原版科技树（塞普罗）注册。
+- core/src/mindustry/content/StatusEffects.java：核心逻辑 / 原版内容定义，原版状态效果注册。
+- core/src/mindustry/content/TeamEntries.java：核心逻辑 / 原版内容定义，类（TeamEntries）。
+- core/src/mindustry/content/TechTree.java：核心逻辑 / 原版内容定义，类（TechTree）。
+- core/src/mindustry/content/UnitTypes.java：核心逻辑 / 原版内容定义，原版单位注册。
+- core/src/mindustry/content/Weathers.java：核心逻辑 / 原版内容定义，原版天气注册。
+- core/src/mindustry/core/ContentLoader.java：核心逻辑 / 核心系统，内容加载与注册入口。
+- core/src/mindustry/core/Control.java：核心逻辑 / 核心系统，游戏控制流程与状态切换。
+- core/src/mindustry/core/FileTree.java：核心逻辑 / 核心系统，类（FileTree）。
+- core/src/mindustry/core/GameState.java：核心逻辑 / 核心系统，游戏状态容器与规则状态存放。
+- core/src/mindustry/core/Logic.java：核心逻辑 / 核心系统，游戏逻辑主循环与波次更新入口。
+- core/src/mindustry/core/NetClient.java：核心逻辑 / 核心系统，客户端网络通信入口。
+- core/src/mindustry/core/NetServer.java：核心逻辑 / 核心系统，服务器网络通信入口。
+- core/src/mindustry/core/PerfCounter.java：核心逻辑 / 核心系统，枚举（PerfCounter）。
+- core/src/mindustry/core/Platform.java：核心逻辑 / 核心系统，接口（Platform）。
+- core/src/mindustry/core/Renderer.java：核心逻辑 / 核心系统，主渲染器，负责世界与 UI 绘制流程。
+- core/src/mindustry/core/UI.java：核心逻辑 / 核心系统，UI 系统初始化与更新。
+- core/src/mindustry/core/Version.java：核心逻辑 / 核心系统，类（Version）。
+- core/src/mindustry/core/World.java：核心逻辑 / 核心系统，世界加载与格子管理。
+- core/src/mindustry/ctype/Content.java：核心逻辑 / 内容类型基类，类（Content）。
+- core/src/mindustry/ctype/ContentType.java：核心逻辑 / 内容类型基类，枚举（ContentType）。
+- core/src/mindustry/ctype/MappableContent.java：核心逻辑 / 内容类型基类，类（MappableContent）。
+- core/src/mindustry/ctype/UnlockableContent.java：核心逻辑 / 内容类型基类，类（UnlockableContent）。
+- core/src/mindustry/editor/BannedContentDialog.java：核心逻辑 / 地图编辑器，对话框类（BannedContentDialog）。
+- core/src/mindustry/editor/DrawOperation.java：核心逻辑 / 地图编辑器，类（DrawOperation）。
+- core/src/mindustry/editor/EditorRenderer.java：核心逻辑 / 地图编辑器，类（EditorRenderer）。
+- core/src/mindustry/editor/EditorSpriteCache.java：核心逻辑 / 地图编辑器，类（EditorSpriteCache）。
+- core/src/mindustry/editor/EditorTile.java：核心逻辑 / 地图编辑器，类（EditorTile）。
+- core/src/mindustry/editor/EditorTool.java：核心逻辑 / 地图编辑器，枚举（EditorTool）。
+- core/src/mindustry/editor/MapEditor.java：核心逻辑 / 地图编辑器，类（MapEditor）。
+- core/src/mindustry/editor/MapEditorDialog.java：核心逻辑 / 地图编辑器，对话框类（MapEditorDialog）。
+- core/src/mindustry/editor/MapGenerateDialog.java：核心逻辑 / 地图编辑器，对话框类（MapGenerateDialog）。
+- core/src/mindustry/editor/MapInfoDialog.java：核心逻辑 / 地图编辑器，对话框类（MapInfoDialog）。
+- core/src/mindustry/editor/MapLoadDialog.java：核心逻辑 / 地图编辑器，对话框类（MapLoadDialog）。
+- core/src/mindustry/editor/MapLocalesDialog.java：核心逻辑 / 地图编辑器，对话框类（MapLocalesDialog）。
+- core/src/mindustry/editor/MapObjectivesCanvas.java：核心逻辑 / 地图编辑器，类（MapObjectivesCanvas）。
+- core/src/mindustry/editor/MapObjectivesDialog.java：核心逻辑 / 地图编辑器，对话框类（MapObjectivesDialog）。
+- core/src/mindustry/editor/MapPatchesDialog.java：核心逻辑 / 地图编辑器，对话框类（MapPatchesDialog）。
+- core/src/mindustry/editor/MapProcessorsDialog.java：核心逻辑 / 地图编辑器，对话框类（MapProcessorsDialog）。
+- core/src/mindustry/editor/MapResizeDialog.java：核心逻辑 / 地图编辑器，对话框类（MapResizeDialog）。
+- core/src/mindustry/editor/MapView.java：核心逻辑 / 地图编辑器，类（MapView）。
+- core/src/mindustry/editor/OperationStack.java：核心逻辑 / 地图编辑器，类（OperationStack）。
+- core/src/mindustry/editor/SectorGenerateDialog.java：核心逻辑 / 地图编辑器，对话框类（SectorGenerateDialog）。
+- core/src/mindustry/editor/WaveGraph.java：核心逻辑 / 地图编辑器，类（WaveGraph）。
+- core/src/mindustry/editor/WaveInfoDialog.java：核心逻辑 / 地图编辑器，对话框类（WaveInfoDialog）。
+- core/src/mindustry/entities/Damage.java：核心逻辑 / 实体系统，类（Damage）。
+- core/src/mindustry/entities/Effect.java：核心逻辑 / 实体系统，类（Effect）。
+- core/src/mindustry/entities/EntityCollisions.java：核心逻辑 / 实体系统，类（EntityCollisions）。
+- core/src/mindustry/entities/EntityGroup.java：核心逻辑 / 实体系统，类（EntityGroup）。
+- core/src/mindustry/entities/EntityIndexer.java：核心逻辑 / 实体系统，接口（EntityIndexer）。
+- core/src/mindustry/entities/Fires.java：核心逻辑 / 实体系统，类（Fires）。
+- core/src/mindustry/entities/GroupDefs.java：核心逻辑 / 实体系统，类（GroupDefs）。
+- core/src/mindustry/entities/Leg.java：核心逻辑 / 实体系统，类（Leg）。
+- core/src/mindustry/entities/LegDestroyData.java：核心逻辑 / 实体系统，类（LegDestroyData）。
+- core/src/mindustry/entities/Lightning.java：核心逻辑 / 实体系统，类（Lightning）。
+- core/src/mindustry/entities/Mover.java：核心逻辑 / 实体系统，接口（Mover）。
+- core/src/mindustry/entities/Predict.java：核心逻辑 / 实体系统，类（Predict）。
+- core/src/mindustry/entities/Puddles.java：核心逻辑 / 实体系统，类（Puddles）。
+- core/src/mindustry/entities/Sized.java：核心逻辑 / 实体系统，接口（Sized）。
+- core/src/mindustry/entities/TargetPriority.java：核心逻辑 / 实体系统，类（TargetPriority）。
+- core/src/mindustry/entities/UnitSorts.java：核心逻辑 / 实体系统，类（UnitSorts）。
+- core/src/mindustry/entities/Units.java：核心逻辑 / 实体系统，类（Units）。
+- core/src/mindustry/entities/abilities/Ability.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（Ability）。
+- core/src/mindustry/entities/abilities/ArmorPlateAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（ArmorPlateAbility）。
+- core/src/mindustry/entities/abilities/EnergyFieldAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（EnergyFieldAbility）。
+- core/src/mindustry/entities/abilities/ForceFieldAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（ForceFieldAbility）。
+- core/src/mindustry/entities/abilities/LiquidExplodeAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（LiquidExplodeAbility）。
+- core/src/mindustry/entities/abilities/LiquidRegenAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（LiquidRegenAbility）。
+- core/src/mindustry/entities/abilities/MoveEffectAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（MoveEffectAbility）。
+- core/src/mindustry/entities/abilities/MoveLightningAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（MoveLightningAbility）。
+- core/src/mindustry/entities/abilities/RegenAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（RegenAbility）。
+- core/src/mindustry/entities/abilities/RepairFieldAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（RepairFieldAbility）。
+- core/src/mindustry/entities/abilities/ShieldArcAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（ShieldArcAbility）。
+- core/src/mindustry/entities/abilities/ShieldRegenFieldAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（ShieldRegenFieldAbility）。
+- core/src/mindustry/entities/abilities/SpawnDeathAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（SpawnDeathAbility）。
+- core/src/mindustry/entities/abilities/StatusFieldAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（StatusFieldAbility）。
+- core/src/mindustry/entities/abilities/SuppressionFieldAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（SuppressionFieldAbility）。
+- core/src/mindustry/entities/abilities/UnitSpawnAbility.java：核心逻辑 / 实体系统 / 单位能力，单位能力类（UnitSpawnAbility）。
+- core/src/mindustry/entities/bullet/ArtilleryBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（ArtilleryBulletType）。
+- core/src/mindustry/entities/bullet/BasicBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（BasicBulletType）。
+- core/src/mindustry/entities/bullet/BombBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（BombBulletType）。
+- core/src/mindustry/entities/bullet/BulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（BulletType）。
+- core/src/mindustry/entities/bullet/ContinuousBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（ContinuousBulletType）。
+- core/src/mindustry/entities/bullet/ContinuousFlameBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（ContinuousFlameBulletType）。
+- core/src/mindustry/entities/bullet/ContinuousLaserBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（ContinuousLaserBulletType）。
+- core/src/mindustry/entities/bullet/EmpBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（EmpBulletType）。
+- core/src/mindustry/entities/bullet/EmptyBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（EmptyBulletType）。
+- core/src/mindustry/entities/bullet/ExplosionBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（ExplosionBulletType）。
+- core/src/mindustry/entities/bullet/FireBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（FireBulletType）。
+- core/src/mindustry/entities/bullet/FlakBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（FlakBulletType）。
+- core/src/mindustry/entities/bullet/InterceptorBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（InterceptorBulletType）。
+- core/src/mindustry/entities/bullet/LaserBoltBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（LaserBoltBulletType）。
+- core/src/mindustry/entities/bullet/LaserBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（LaserBulletType）。
+- core/src/mindustry/entities/bullet/LightningBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（LightningBulletType）。
+- core/src/mindustry/entities/bullet/LiquidBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（LiquidBulletType）。
+- core/src/mindustry/entities/bullet/MassDriverBolt.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（MassDriverBolt）。
+- core/src/mindustry/entities/bullet/MissileBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（MissileBulletType）。
+- core/src/mindustry/entities/bullet/MultiBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（MultiBulletType）。
+- core/src/mindustry/entities/bullet/PointBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（PointBulletType）。
+- core/src/mindustry/entities/bullet/PointLaserBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（PointLaserBulletType）。
+- core/src/mindustry/entities/bullet/RailBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（RailBulletType）。
+- core/src/mindustry/entities/bullet/SapBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（SapBulletType）。
+- core/src/mindustry/entities/bullet/ShrapnelBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（ShrapnelBulletType）。
+- core/src/mindustry/entities/bullet/SpaceLiquidBulletType.java：核心逻辑 / 实体系统 / 子弹类型，子弹类型类（SpaceLiquidBulletType）。
+- core/src/mindustry/entities/comp/BlockUnitComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（BlockUnitComp）。
+- core/src/mindustry/entities/comp/BuilderComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（BuilderComp）。
+- core/src/mindustry/entities/comp/BuildingComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（BuildingComp）。
+- core/src/mindustry/entities/comp/BuildingTetherComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（BuildingTetherComp）。
+- core/src/mindustry/entities/comp/BulletComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（BulletComp）。
+- core/src/mindustry/entities/comp/ChildComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（ChildComp）。
+- core/src/mindustry/entities/comp/CrawlComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（CrawlComp）。
+- core/src/mindustry/entities/comp/DamageComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（DamageComp）。
+- core/src/mindustry/entities/comp/DecalComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（DecalComp）。
+- core/src/mindustry/entities/comp/DrawComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（DrawComp）。
+- core/src/mindustry/entities/comp/EffectStateComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（EffectStateComp）。
+- core/src/mindustry/entities/comp/ElevationMoveComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（ElevationMoveComp）。
+- core/src/mindustry/entities/comp/EntityComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（EntityComp）。
+- core/src/mindustry/entities/comp/FireComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（FireComp）。
+- core/src/mindustry/entities/comp/HealthComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（HealthComp）。
+- core/src/mindustry/entities/comp/HitboxComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（HitboxComp）。
+- core/src/mindustry/entities/comp/ItemsComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（ItemsComp）。
+- core/src/mindustry/entities/comp/LaunchCoreComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（LaunchCoreComp）。
+- core/src/mindustry/entities/comp/LegsComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（LegsComp）。
+- core/src/mindustry/entities/comp/MechComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（MechComp）。
+- core/src/mindustry/entities/comp/MinerComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（MinerComp）。
+- core/src/mindustry/entities/comp/OwnerComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（OwnerComp）。
+- core/src/mindustry/entities/comp/PayloadComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PayloadComp）。
+- core/src/mindustry/entities/comp/PhysicsComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PhysicsComp）。
+- core/src/mindustry/entities/comp/PlayerComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PlayerComp）。
+- core/src/mindustry/entities/comp/PosComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PosComp）。
+- core/src/mindustry/entities/comp/PosTeamDef.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PosTeamDef）。
+- core/src/mindustry/entities/comp/PowerGraphUpdaterComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PowerGraphUpdaterComp）。
+- core/src/mindustry/entities/comp/PuddleComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（PuddleComp）。
+- core/src/mindustry/entities/comp/RotComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（RotComp）。
+- core/src/mindustry/entities/comp/SegmentComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（SegmentComp）。
+- core/src/mindustry/entities/comp/ShieldComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（ShieldComp）。
+- core/src/mindustry/entities/comp/ShielderComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（ShielderComp）。
+- core/src/mindustry/entities/comp/StatusComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（StatusComp）。
+- core/src/mindustry/entities/comp/SyncComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（SyncComp）。
+- core/src/mindustry/entities/comp/TankComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（TankComp）。
+- core/src/mindustry/entities/comp/TeamComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（TeamComp）。
+- core/src/mindustry/entities/comp/TimedComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（TimedComp）。
+- core/src/mindustry/entities/comp/TimedKillComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（TimedKillComp）。
+- core/src/mindustry/entities/comp/TimerComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（TimerComp）。
+- core/src/mindustry/entities/comp/UnderwaterMoveComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（UnderwaterMoveComp）。
+- core/src/mindustry/entities/comp/UnitComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（UnitComp）。
+- core/src/mindustry/entities/comp/UnitTetherComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（UnitTetherComp）。
+- core/src/mindustry/entities/comp/VelComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（VelComp）。
+- core/src/mindustry/entities/comp/WaterCrawlComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（WaterCrawlComp）。
+- core/src/mindustry/entities/comp/WaterMoveComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（WaterMoveComp）。
+- core/src/mindustry/entities/comp/WeaponsComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（WeaponsComp）。
+- core/src/mindustry/entities/comp/WorldLabelComp.java：核心逻辑 / 实体系统 / 实体组件，实体组件类（WorldLabelComp）。
+- core/src/mindustry/entities/effect/ExplosionEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（ExplosionEffect）。
+- core/src/mindustry/entities/effect/MultiEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（MultiEffect）。
+- core/src/mindustry/entities/effect/ParticleEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（ParticleEffect）。
+- core/src/mindustry/entities/effect/RadialEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（RadialEffect）。
+- core/src/mindustry/entities/effect/SeqEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（SeqEffect）。
+- core/src/mindustry/entities/effect/SoundEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（SoundEffect）。
+- core/src/mindustry/entities/effect/WaveEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（WaveEffect）。
+- core/src/mindustry/entities/effect/WrapEffect.java：核心逻辑 / 实体系统 / 特效实体，特效实体类（WrapEffect）。
+- core/src/mindustry/entities/part/DrawPart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（DrawPart）。
+- core/src/mindustry/entities/part/EffectSpawnerPart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（EffectSpawnerPart）。
+- core/src/mindustry/entities/part/FlarePart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（FlarePart）。
+- core/src/mindustry/entities/part/HaloPart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（HaloPart）。
+- core/src/mindustry/entities/part/HoverPart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（HoverPart）。
+- core/src/mindustry/entities/part/RegionPart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（RegionPart）。
+- core/src/mindustry/entities/part/ShapePart.java：核心逻辑 / 实体系统 / 部件绘制，部件绘制类（ShapePart）。
+- core/src/mindustry/entities/pattern/ShootAlternate.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootAlternate）。
+- core/src/mindustry/entities/pattern/ShootBarrel.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootBarrel）。
+- core/src/mindustry/entities/pattern/ShootHelix.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootHelix）。
+- core/src/mindustry/entities/pattern/ShootMulti.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootMulti）。
+- core/src/mindustry/entities/pattern/ShootPattern.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootPattern）。
+- core/src/mindustry/entities/pattern/ShootSine.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootSine）。
+- core/src/mindustry/entities/pattern/ShootSpread.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootSpread）。
+- core/src/mindustry/entities/pattern/ShootSummon.java：核心逻辑 / 实体系统 / 子弹图案，子弹图案类（ShootSummon）。
+- core/src/mindustry/entities/units/AIController.java：核心逻辑 / 实体系统 / 单位与挂载，单位与挂载类（AIController）。
+- core/src/mindustry/entities/units/BuildPlan.java：核心逻辑 / 实体系统 / 单位与挂载，单位与挂载类（BuildPlan）。
+- core/src/mindustry/entities/units/StatusEntry.java：核心逻辑 / 实体系统 / 单位与挂载，单位与挂载类（StatusEntry）。
+- core/src/mindustry/entities/units/UnitController.java：核心逻辑 / 实体系统 / 单位与挂载，接口（UnitController）。
+- core/src/mindustry/entities/units/WeaponMount.java：核心逻辑 / 实体系统 / 单位与挂载，单位与挂载类（WeaponMount）。
+- core/src/mindustry/game/AttackIndicators.java：核心逻辑 / 游戏规则与进程，类（AttackIndicators）。
+- core/src/mindustry/game/CampaignRules.java：核心逻辑 / 游戏规则与进程，类（CampaignRules）。
+- core/src/mindustry/game/Difficulty.java：核心逻辑 / 游戏规则与进程，枚举（Difficulty）。
+- core/src/mindustry/game/EventType.java：核心逻辑 / 游戏规则与进程，事件类型与事件数据结构定义。
+- core/src/mindustry/game/FogControl.java：核心逻辑 / 游戏规则与进程，类（FogControl）。
+- core/src/mindustry/game/GameStats.java：核心逻辑 / 游戏规则与进程，类（GameStats）。
+- core/src/mindustry/game/Gamemode.java：核心逻辑 / 游戏规则与进程，枚举（Gamemode）。
+- core/src/mindustry/game/MapMarkers.java：核心逻辑 / 游戏规则与进程，类（MapMarkers）。
+- core/src/mindustry/game/MapObjectives.java：核心逻辑 / 游戏规则与进程，类（MapObjectives）。
+- core/src/mindustry/game/Objectives.java：核心逻辑 / 游戏规则与进程，类（Objectives）。
+- core/src/mindustry/game/Rules.java：核心逻辑 / 游戏规则与进程，类（Rules）。
+- core/src/mindustry/game/Saves.java：核心逻辑 / 游戏规则与进程，类（Saves）。
+- core/src/mindustry/game/Schematic.java：核心逻辑 / 游戏规则与进程，类（Schematic）。
+- core/src/mindustry/game/Schematics.java：核心逻辑 / 游戏规则与进程，类（Schematics）。
+- core/src/mindustry/game/SectorInfo.java：核心逻辑 / 游戏规则与进程，类（SectorInfo）。
+- core/src/mindustry/game/SpawnGroup.java：核心逻辑 / 游戏规则与进程，类（SpawnGroup）。
+- core/src/mindustry/game/Team.java：核心逻辑 / 游戏规则与进程，类（Team）。
+- core/src/mindustry/game/Teams.java：核心逻辑 / 游戏规则与进程，类（Teams）。
+- core/src/mindustry/game/Universe.java：核心逻辑 / 游戏规则与进程，类（Universe）。
+- core/src/mindustry/game/Waves.java：核心逻辑 / 游戏规则与进程，类（Waves）。
+- core/src/mindustry/graphics/BlockRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（BlockRenderer）。
+- core/src/mindustry/graphics/CacheLayer.java：核心逻辑 / 渲染与图形，渲染相关类（CacheLayer）。
+- core/src/mindustry/graphics/CubemapMesh.java：核心逻辑 / 渲染与图形，渲染相关类（CubemapMesh）。
+- core/src/mindustry/graphics/DebugCollisionRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（DebugCollisionRenderer）。
+- core/src/mindustry/graphics/Drawf.java：核心逻辑 / 渲染与图形，渲染相关类（Drawf）。
+- core/src/mindustry/graphics/EnvRenderers.java：核心逻辑 / 渲染与图形，渲染相关类（EnvRenderers）。
+- core/src/mindustry/graphics/FloorRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（FloorRenderer）。
+- core/src/mindustry/graphics/FogRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（FogRenderer）。
+- core/src/mindustry/graphics/IntelGpuCheck.java：核心逻辑 / 渲染与图形，渲染相关类（IntelGpuCheck）。
+- core/src/mindustry/graphics/InverseKinematics.java：核心逻辑 / 渲染与图形，渲染相关类（InverseKinematics）。
+- core/src/mindustry/graphics/Layer.java：核心逻辑 / 渲染与图形，渲染相关类（Layer）。
+- core/src/mindustry/graphics/LightRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（LightRenderer）。
+- core/src/mindustry/graphics/LoadRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（LoadRenderer）。
+- core/src/mindustry/graphics/MenuRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（MenuRenderer）。
+- core/src/mindustry/graphics/MinimapRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（MinimapRenderer）。
+- core/src/mindustry/graphics/MultiPacker.java：核心逻辑 / 渲染与图形，渲染相关类（MultiPacker）。
+- core/src/mindustry/graphics/NvGpuInfo.java：核心逻辑 / 渲染与图形，渲染相关类（NvGpuInfo）。
+- core/src/mindustry/graphics/OverlayRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（OverlayRenderer）。
+- core/src/mindustry/graphics/Pal.java：核心逻辑 / 渲染与图形，渲染相关类（Pal）。
+- core/src/mindustry/graphics/ParticleRenderer.java：核心逻辑 / 渲染与图形，渲染相关类（ParticleRenderer）。
+- core/src/mindustry/graphics/Pixelator.java：核心逻辑 / 渲染与图形，渲染相关类（Pixelator）。
+- core/src/mindustry/graphics/Shaders.java：核心逻辑 / 渲染与图形，渲染相关类（Shaders）。
+- core/src/mindustry/graphics/Trail.java：核心逻辑 / 渲染与图形，渲染相关类（Trail）。
+- core/src/mindustry/graphics/Voronoi.java：核心逻辑 / 渲染与图形，渲染相关类（Voronoi）。
+- core/src/mindustry/graphics/g3d/GenericMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，接口（GenericMesh）。
+- core/src/mindustry/graphics/g3d/HexMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（HexMesh）。
+- core/src/mindustry/graphics/g3d/HexMesher.java：核心逻辑 / 渲染与图形 / 3D 渲染，接口（HexMesher）。
+- core/src/mindustry/graphics/g3d/HexSkyMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（HexSkyMesh）。
+- core/src/mindustry/graphics/g3d/MatMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（MatMesh）。
+- core/src/mindustry/graphics/g3d/MeshBuilder.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（MeshBuilder）。
+- core/src/mindustry/graphics/g3d/MultiMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（MultiMesh）。
+- core/src/mindustry/graphics/g3d/NoiseMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（NoiseMesh）。
+- core/src/mindustry/graphics/g3d/PlanetGrid.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（PlanetGrid）。
+- core/src/mindustry/graphics/g3d/PlanetMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（PlanetMesh）。
+- core/src/mindustry/graphics/g3d/PlanetParams.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（PlanetParams）。
+- core/src/mindustry/graphics/g3d/PlanetRenderer.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（PlanetRenderer）。
+- core/src/mindustry/graphics/g3d/ShaderSphereMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（ShaderSphereMesh）。
+- core/src/mindustry/graphics/g3d/SunMesh.java：核心逻辑 / 渲染与图形 / 3D 渲染，渲染相关类（SunMesh）。
+- core/src/mindustry/input/Binding.java：核心逻辑 / 输入与交互，类（Binding）。
+- core/src/mindustry/input/DesktopInput.java：核心逻辑 / 输入与交互，类（DesktopInput）。
+- core/src/mindustry/input/InputHandler.java：核心逻辑 / 输入与交互，类（InputHandler）。
+- core/src/mindustry/input/MobileInput.java：核心逻辑 / 输入与交互，类（MobileInput）。
+- core/src/mindustry/input/PlaceMode.java：核心逻辑 / 输入与交互，枚举（PlaceMode）。
+- core/src/mindustry/input/Placement.java：核心逻辑 / 输入与交互，类（Placement）。
+- core/src/mindustry/io/JsonIO.java：核心逻辑 / 数据读写，类（JsonIO）。
+- core/src/mindustry/io/MapIO.java：核心逻辑 / 数据读写，类（MapIO）。
+- core/src/mindustry/io/SaveFileReader.java：核心逻辑 / 数据读写，类（SaveFileReader）。
+- core/src/mindustry/io/SaveIO.java：核心逻辑 / 数据读写，类（SaveIO）。
+- core/src/mindustry/io/SaveMeta.java：核心逻辑 / 数据读写，类（SaveMeta）。
+- core/src/mindustry/io/SavePreviewLoader.java：核心逻辑 / 数据读写，类（SavePreviewLoader）。
+- core/src/mindustry/io/SaveVersion.java：核心逻辑 / 数据读写，类（SaveVersion）。
+- core/src/mindustry/io/TypeIO.java：核心逻辑 / 数据读写，类（TypeIO）。
+- core/src/mindustry/io/versions/LegacyIO.java：核心逻辑 / 数据读写 / 版本迁移，类（LegacyIO）。
+- core/src/mindustry/io/versions/LegacyRegionSaveVersion.java：核心逻辑 / 数据读写 / 版本迁移，类（LegacyRegionSaveVersion）。
+- core/src/mindustry/io/versions/LegacySaveVersion.java：核心逻辑 / 数据读写 / 版本迁移，类（LegacySaveVersion）。
+- core/src/mindustry/io/versions/LegacySaveVersion2.java：核心逻辑 / 数据读写 / 版本迁移，类（LegacySaveVersion2）。
+- core/src/mindustry/io/versions/Save1.java：核心逻辑 / 数据读写 / 版本迁移，类（Save1）。
+- core/src/mindustry/io/versions/Save10.java：核心逻辑 / 数据读写 / 版本迁移，类（Save10）。
+- core/src/mindustry/io/versions/Save11.java：核心逻辑 / 数据读写 / 版本迁移，类（Save11）。
+- core/src/mindustry/io/versions/Save2.java：核心逻辑 / 数据读写 / 版本迁移，类（Save2）。
+- core/src/mindustry/io/versions/Save3.java：核心逻辑 / 数据读写 / 版本迁移，类（Save3）。
+- core/src/mindustry/io/versions/Save4.java：核心逻辑 / 数据读写 / 版本迁移，类（Save4）。
+- core/src/mindustry/io/versions/Save5.java：核心逻辑 / 数据读写 / 版本迁移，类（Save5）。
+- core/src/mindustry/io/versions/Save6.java：核心逻辑 / 数据读写 / 版本迁移，类（Save6）。
+- core/src/mindustry/io/versions/Save7.java：核心逻辑 / 数据读写 / 版本迁移，类（Save7）。
+- core/src/mindustry/io/versions/Save8.java：核心逻辑 / 数据读写 / 版本迁移，类（Save8）。
+- core/src/mindustry/io/versions/Save9.java：核心逻辑 / 数据读写 / 版本迁移，类（Save9）。
+- core/src/mindustry/io/versions/ShortChunkSaveVersion.java：核心逻辑 / 数据读写 / 版本迁移，类（ShortChunkSaveVersion）。
+- core/src/mindustry/logic/ConditionOp.java：核心逻辑 / 逻辑指令系统，枚举（ConditionOp）。
+- core/src/mindustry/logic/Controllable.java：核心逻辑 / 逻辑指令系统，接口（Controllable）。
+- core/src/mindustry/logic/CutsceneAction.java：核心逻辑 / 逻辑指令系统，枚举（CutsceneAction）。
+- core/src/mindustry/logic/FetchType.java：核心逻辑 / 逻辑指令系统，枚举（FetchType）。
+- core/src/mindustry/logic/GlobalVars.java：核心逻辑 / 逻辑指令系统，类（GlobalVars）。
+- core/src/mindustry/logic/GlobalVarsDialog.java：核心逻辑 / 逻辑指令系统，对话框类（GlobalVarsDialog）。
+- core/src/mindustry/logic/LAccess.java：核心逻辑 / 逻辑指令系统，枚举（LAccess）。
+- core/src/mindustry/logic/LAssembler.java：核心逻辑 / 逻辑指令系统，类（LAssembler）。
+- core/src/mindustry/logic/LCanvas.java：核心逻辑 / 逻辑指令系统，类（LCanvas）。
+- core/src/mindustry/logic/LCategory.java：核心逻辑 / 逻辑指令系统，类（LCategory）。
+- core/src/mindustry/logic/LExecutor.java：核心逻辑 / 逻辑指令系统，类（LExecutor）。
+- core/src/mindustry/logic/LLocate.java：核心逻辑 / 逻辑指令系统，枚举（LLocate）。
+- core/src/mindustry/logic/LMarkerControl.java：核心逻辑 / 逻辑指令系统，枚举（LMarkerControl）。
+- core/src/mindustry/logic/LParser.java：核心逻辑 / 逻辑指令系统，类（LParser）。
+- core/src/mindustry/logic/LReadable.java：核心逻辑 / 逻辑指令系统，接口（LReadable）。
+- core/src/mindustry/logic/LStatement.java：核心逻辑 / 逻辑指令系统，类（LStatement）。
+- core/src/mindustry/logic/LStatements.java：核心逻辑 / 逻辑指令系统，类（LStatements）。
+- core/src/mindustry/logic/LUnitControl.java：核心逻辑 / 逻辑指令系统，枚举（LUnitControl）。
+- core/src/mindustry/logic/LVar.java：核心逻辑 / 逻辑指令系统，类（LVar）。
+- core/src/mindustry/logic/LWritable.java：核心逻辑 / 逻辑指令系统，接口（LWritable）。
+- core/src/mindustry/logic/LogicDialog.java：核心逻辑 / 逻辑指令系统，对话框类（LogicDialog）。
+- core/src/mindustry/logic/LogicFx.java：核心逻辑 / 逻辑指令系统，类（LogicFx）。
+- core/src/mindustry/logic/LogicOp.java：核心逻辑 / 逻辑指令系统，枚举（LogicOp）。
+- core/src/mindustry/logic/LogicRule.java：核心逻辑 / 逻辑指令系统，枚举（LogicRule）。
+- core/src/mindustry/logic/MessageType.java：核心逻辑 / 逻辑指令系统，枚举（MessageType）。
+- core/src/mindustry/logic/RadarSort.java：核心逻辑 / 逻辑指令系统，枚举（RadarSort）。
+- core/src/mindustry/logic/RadarTarget.java：核心逻辑 / 逻辑指令系统，枚举（RadarTarget）。
+- core/src/mindustry/logic/Ranged.java：核心逻辑 / 逻辑指令系统，接口（Ranged）。
+- core/src/mindustry/logic/Senseable.java：核心逻辑 / 逻辑指令系统，接口（Senseable）。
+- core/src/mindustry/logic/Settable.java：核心逻辑 / 逻辑指令系统，接口（Settable）。
+- core/src/mindustry/logic/TileLayer.java：核心逻辑 / 逻辑指令系统，枚举（TileLayer）。
+- core/src/mindustry/maps/Map.java：核心逻辑 / 地图与地形，类（Map）。
+- core/src/mindustry/maps/MapException.java：核心逻辑 / 地图与地形，类（MapException）。
+- core/src/mindustry/maps/MapPreviewLoader.java：核心逻辑 / 地图与地形，类（MapPreviewLoader）。
+- core/src/mindustry/maps/Maps.java：核心逻辑 / 地图与地形，类（Maps）。
+- core/src/mindustry/maps/SectorDamage.java：核心逻辑 / 地图与地形，类（SectorDamage）。
+- core/src/mindustry/maps/SectorSubmissions.java：核心逻辑 / 地图与地形，类（SectorSubmissions）。
+- core/src/mindustry/maps/filters/BlendFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（BlendFilter）。
+- core/src/mindustry/maps/filters/ClearFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（ClearFilter）。
+- core/src/mindustry/maps/filters/CoreSpawnFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（CoreSpawnFilter）。
+- core/src/mindustry/maps/filters/DistortFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（DistortFilter）。
+- core/src/mindustry/maps/filters/EnemySpawnFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（EnemySpawnFilter）。
+- core/src/mindustry/maps/filters/FilterOption.java：核心逻辑 / 地图与地形 / 地形滤镜，类（FilterOption）。
+- core/src/mindustry/maps/filters/GenerateFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（GenerateFilter）。
+- core/src/mindustry/maps/filters/LogicFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（LogicFilter）。
+- core/src/mindustry/maps/filters/MedianFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（MedianFilter）。
+- core/src/mindustry/maps/filters/MirrorFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（MirrorFilter）。
+- core/src/mindustry/maps/filters/NoiseFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（NoiseFilter）。
+- core/src/mindustry/maps/filters/OreFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（OreFilter）。
+- core/src/mindustry/maps/filters/OreMedianFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（OreMedianFilter）。
+- core/src/mindustry/maps/filters/RandomItemFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（RandomItemFilter）。
+- core/src/mindustry/maps/filters/RiverNoiseFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（RiverNoiseFilter）。
+- core/src/mindustry/maps/filters/ScatterFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（ScatterFilter）。
+- core/src/mindustry/maps/filters/SpawnPathFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（SpawnPathFilter）。
+- core/src/mindustry/maps/filters/TerrainFilter.java：核心逻辑 / 地图与地形 / 地形滤镜，类（TerrainFilter）。
+- core/src/mindustry/maps/generators/BaseGenerator.java：核心逻辑 / 地图与地形 / 地图生成，类（BaseGenerator）。
+- core/src/mindustry/maps/generators/BasicGenerator.java：核心逻辑 / 地图与地形 / 地图生成，类（BasicGenerator）。
+- core/src/mindustry/maps/generators/BlankPlanetGenerator.java：核心逻辑 / 地图与地形 / 地图生成，类（BlankPlanetGenerator）。
+- core/src/mindustry/maps/generators/FileMapGenerator.java：核心逻辑 / 地图与地形 / 地图生成，类（FileMapGenerator）。
+- core/src/mindustry/maps/generators/PlanetGenerator.java：核心逻辑 / 地图与地形 / 地图生成，类（PlanetGenerator）。
+- core/src/mindustry/maps/generators/WorldGenerator.java：核心逻辑 / 地图与地形 / 地图生成，接口（WorldGenerator）。
+- core/src/mindustry/maps/planet/AsteroidGenerator.java：核心逻辑 / 地图与地形 / 行星地图，类（AsteroidGenerator）。
+- core/src/mindustry/maps/planet/ErekirPlanetGenerator.java：核心逻辑 / 地图与地形 / 行星地图，类（ErekirPlanetGenerator）。
+- core/src/mindustry/maps/planet/SerpuloPlanetGenerator.java：核心逻辑 / 地图与地形 / 行星地图，类（SerpuloPlanetGenerator）。
+- core/src/mindustry/maps/planet/TantrosPlanetGenerator.java：核心逻辑 / 地图与地形 / 行星地图，类（TantrosPlanetGenerator）。
+- core/src/mindustry/mod/ClassLoaderCloser.java：核心逻辑 / 模组系统，类（ClassLoaderCloser）。
+- core/src/mindustry/mod/ClassMap.java：核心逻辑 / 模组系统，类（ClassMap）。
+- core/src/mindustry/mod/ContentParser.java：核心逻辑 / 模组系统，类（ContentParser）。
+- core/src/mindustry/mod/DataPatcher.java：核心逻辑 / 模组系统，类（DataPatcher）。
+- core/src/mindustry/mod/Mod.java：核心逻辑 / 模组系统，类（Mod）。
+- core/src/mindustry/mod/ModClassLoader.java：核心逻辑 / 模组系统，类（ModClassLoader）。
+- core/src/mindustry/mod/ModListing.java：核心逻辑 / 模组系统，类（ModListing）。
+- core/src/mindustry/mod/Mods.java：核心逻辑 / 模组系统，模组加载、管理与生命周期调度。
+- core/src/mindustry/mod/NoPatch.java：核心逻辑 / 模组系统，接口（NoPatch）。
+- core/src/mindustry/mod/Plugin.java：核心逻辑 / 模组系统，类（Plugin）。
+- core/src/mindustry/mod/Scripts.java：核心逻辑 / 模组系统，类（Scripts）。
+- core/src/mindustry/net/Administration.java：核心逻辑 / 网络与通信，类（Administration）。
+- core/src/mindustry/net/ArcNetProvider.java：核心逻辑 / 网络与通信，类（ArcNetProvider）。
+- core/src/mindustry/net/BeControl.java：核心逻辑 / 网络与通信，类（BeControl）。
+- core/src/mindustry/net/CrashHandler.java：核心逻辑 / 网络与通信，类（CrashHandler）。
+- core/src/mindustry/net/Host.java：核心逻辑 / 网络与通信，类（Host）。
+- core/src/mindustry/net/Net.java：核心逻辑 / 网络与通信，网络层总入口与协议调度。
+- core/src/mindustry/net/NetConnection.java：核心逻辑 / 网络与通信，类（NetConnection）。
+- core/src/mindustry/net/NetworkIO.java：核心逻辑 / 网络与通信，类（NetworkIO）。
+- core/src/mindustry/net/Packet.java：核心逻辑 / 网络与通信，类（Packet）。
+- core/src/mindustry/net/Packets.java：核心逻辑 / 网络与通信，类（Packets）。
+- core/src/mindustry/net/ServerGroup.java：核心逻辑 / 网络与通信，类（ServerGroup）。
+- core/src/mindustry/net/Streamable.java：核心逻辑 / 网络与通信，类（Streamable）。
+- core/src/mindustry/net/ValidateException.java：核心逻辑 / 网络与通信，类（ValidateException）。
+- core/src/mindustry/net/WorldReloader.java：核心逻辑 / 网络与通信，类（WorldReloader）。
+- core/src/mindustry/service/Achievement.java：核心逻辑 / 平台服务与集成，枚举（Achievement）。
+- core/src/mindustry/service/GameService.java：核心逻辑 / 平台服务与集成，类（GameService）。
+- core/src/mindustry/service/SStat.java：核心逻辑 / 平台服务与集成，枚举（SStat）。
+- core/src/mindustry/type/AmmoType.java：核心逻辑 / 内容类型实现，接口（AmmoType）。
+- core/src/mindustry/type/Category.java：核心逻辑 / 内容类型实现，枚举（Category）。
+- core/src/mindustry/type/CellLiquid.java：核心逻辑 / 内容类型实现，类（CellLiquid）。
+- core/src/mindustry/type/ErrorContent.java：核心逻辑 / 内容类型实现，类（ErrorContent）。
+- core/src/mindustry/type/Item.java：核心逻辑 / 内容类型实现，类（Item）。
+- core/src/mindustry/type/ItemSeq.java：核心逻辑 / 内容类型实现，类（ItemSeq）。
+- core/src/mindustry/type/ItemStack.java：核心逻辑 / 内容类型实现，类（ItemStack）。
+- core/src/mindustry/type/Liquid.java：核心逻辑 / 内容类型实现，类（Liquid）。
+- core/src/mindustry/type/LiquidStack.java：核心逻辑 / 内容类型实现，类（LiquidStack）。
+- core/src/mindustry/type/MapLocales.java：核心逻辑 / 内容类型实现，类（MapLocales）。
+- core/src/mindustry/type/PayloadSeq.java：核心逻辑 / 内容类型实现，类（PayloadSeq）。
+- core/src/mindustry/type/PayloadStack.java：核心逻辑 / 内容类型实现，类（PayloadStack）。
+- core/src/mindustry/type/Planet.java：核心逻辑 / 内容类型实现，类（Planet）。
+- core/src/mindustry/type/Publishable.java：核心逻辑 / 内容类型实现，接口（Publishable）。
+- core/src/mindustry/type/Sector.java：核心逻辑 / 内容类型实现，类（Sector）。
+- core/src/mindustry/type/SectorPreset.java：核心逻辑 / 内容类型实现，类（SectorPreset）。
+- core/src/mindustry/type/StatusEffect.java：核心逻辑 / 内容类型实现，类（StatusEffect）。
+- core/src/mindustry/type/TeamEntry.java：核心逻辑 / 内容类型实现，类（TeamEntry）。
+- core/src/mindustry/type/UnitType.java：核心逻辑 / 内容类型实现，类（UnitType）。
+- core/src/mindustry/type/Weapon.java：核心逻辑 / 内容类型实现，类（Weapon）。
+- core/src/mindustry/type/Weather.java：核心逻辑 / 内容类型实现，类（Weather）。
+- core/src/mindustry/type/ammo/ItemAmmoType.java：核心逻辑 / 内容类型实现 / 弹药与装填，类（ItemAmmoType）。
+- core/src/mindustry/type/ammo/PowerAmmoType.java：核心逻辑 / 内容类型实现 / 弹药与装填，类（PowerAmmoType）。
+- core/src/mindustry/type/unit/ErekirUnitType.java：核心逻辑 / 内容类型实现 / 单位细分，类（ErekirUnitType）。
+- core/src/mindustry/type/unit/MissileUnitType.java：核心逻辑 / 内容类型实现 / 单位细分，类（MissileUnitType）。
+- core/src/mindustry/type/unit/NeoplasmUnitType.java：核心逻辑 / 内容类型实现 / 单位细分，类（NeoplasmUnitType）。
+- core/src/mindustry/type/unit/TankUnitType.java：核心逻辑 / 内容类型实现 / 单位细分，类（TankUnitType）。
+- core/src/mindustry/type/weapons/BuildWeapon.java：核心逻辑 / 内容类型实现 / 武器系统，类（BuildWeapon）。
+- core/src/mindustry/type/weapons/MineWeapon.java：核心逻辑 / 内容类型实现 / 武器系统，类（MineWeapon）。
+- core/src/mindustry/type/weapons/PointDefenseBulletWeapon.java：核心逻辑 / 内容类型实现 / 武器系统，类（PointDefenseBulletWeapon）。
+- core/src/mindustry/type/weapons/PointDefenseWeapon.java：核心逻辑 / 内容类型实现 / 武器系统，类（PointDefenseWeapon）。
+- core/src/mindustry/type/weapons/RepairBeamWeapon.java：核心逻辑 / 内容类型实现 / 武器系统，类（RepairBeamWeapon）。
+- core/src/mindustry/type/weather/MagneticStorm.java：核心逻辑 / 内容类型实现 / 天气与环境，类（MagneticStorm）。
+- core/src/mindustry/type/weather/ParticleWeather.java：核心逻辑 / 内容类型实现 / 天气与环境，类（ParticleWeather）。
+- core/src/mindustry/type/weather/RainWeather.java：核心逻辑 / 内容类型实现 / 天气与环境，类（RainWeather）。
+- core/src/mindustry/type/weather/SolarFlare.java：核心逻辑 / 内容类型实现 / 天气与环境，类（SolarFlare）。
+- core/src/mindustry/ui/Bar.java：核心逻辑 / UI 系统，类（Bar）。
+- core/src/mindustry/ui/BorderImage.java：核心逻辑 / UI 系统，类（BorderImage）。
+- core/src/mindustry/ui/CoreItemsDisplay.java：核心逻辑 / UI 系统，类（CoreItemsDisplay）。
+- core/src/mindustry/ui/Displayable.java：核心逻辑 / UI 系统，接口（Displayable）。
+- core/src/mindustry/ui/Fonts.java：核心逻辑 / UI 系统，类（Fonts）。
+- core/src/mindustry/ui/GridImage.java：核心逻辑 / UI 系统，类（GridImage）。
+- core/src/mindustry/ui/IntFormat.java：核心逻辑 / UI 系统，类（IntFormat）。
+- core/src/mindustry/ui/ItemsDisplay.java：核心逻辑 / UI 系统，类（ItemsDisplay）。
+- core/src/mindustry/ui/Links.java：核心逻辑 / UI 系统，类（Links）。
+- core/src/mindustry/ui/Menus.java：核心逻辑 / UI 系统，类（Menus）。
+- core/src/mindustry/ui/Minimap.java：核心逻辑 / UI 系统，类（Minimap）。
+- core/src/mindustry/ui/MobileButton.java：核心逻辑 / UI 系统，类（MobileButton）。
+- core/src/mindustry/ui/MultiReqImage.java：核心逻辑 / UI 系统，类（MultiReqImage）。
+- core/src/mindustry/ui/ReqImage.java：核心逻辑 / UI 系统，类（ReqImage）。
+- core/src/mindustry/ui/Styles.java：核心逻辑 / UI 系统，类（Styles）。
+- core/src/mindustry/ui/WarningBar.java：核心逻辑 / UI 系统，类（WarningBar）。
+- core/src/mindustry/ui/dialogs/AboutDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（AboutDialog）。
+- core/src/mindustry/ui/dialogs/AdminsDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（AdminsDialog）。
+- core/src/mindustry/ui/dialogs/BansDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（BansDialog）。
+- core/src/mindustry/ui/dialogs/BaseDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（BaseDialog）。
+- core/src/mindustry/ui/dialogs/CampaignCompleteDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（CampaignCompleteDialog）。
+- core/src/mindustry/ui/dialogs/CampaignRulesDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（CampaignRulesDialog）。
+- core/src/mindustry/ui/dialogs/ColorPicker.java：核心逻辑 / UI 系统 / 对话框，对话框类（ColorPicker）。
+- core/src/mindustry/ui/dialogs/ContentInfoDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（ContentInfoDialog）。
+- core/src/mindustry/ui/dialogs/CustomGameDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（CustomGameDialog）。
+- core/src/mindustry/ui/dialogs/CustomRulesDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（CustomRulesDialog）。
+- core/src/mindustry/ui/dialogs/DatabaseDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（DatabaseDialog）。
+- core/src/mindustry/ui/dialogs/DiscordDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（DiscordDialog）。
+- core/src/mindustry/ui/dialogs/EditorMapsDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（EditorMapsDialog）。
+- core/src/mindustry/ui/dialogs/EffectsDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（EffectsDialog）。
+- core/src/mindustry/ui/dialogs/FileChooser.java：核心逻辑 / UI 系统 / 对话框，对话框类（FileChooser）。
+- core/src/mindustry/ui/dialogs/FullTextDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（FullTextDialog）。
+- core/src/mindustry/ui/dialogs/GameOverDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（GameOverDialog）。
+- core/src/mindustry/ui/dialogs/HostDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（HostDialog）。
+- core/src/mindustry/ui/dialogs/IconSelectDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（IconSelectDialog）。
+- core/src/mindustry/ui/dialogs/JoinDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（JoinDialog）。
+- core/src/mindustry/ui/dialogs/KeybindDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（KeybindDialog）。
+- core/src/mindustry/ui/dialogs/LanguageDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（LanguageDialog）。
+- core/src/mindustry/ui/dialogs/LaunchLoadoutDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（LaunchLoadoutDialog）。
+- core/src/mindustry/ui/dialogs/LoadDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（LoadDialog）。
+- core/src/mindustry/ui/dialogs/LoadoutDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（LoadoutDialog）。
+- core/src/mindustry/ui/dialogs/MapListDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（MapListDialog）。
+- core/src/mindustry/ui/dialogs/MapPlayDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（MapPlayDialog）。
+- core/src/mindustry/ui/dialogs/ModsDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（ModsDialog）。
+- core/src/mindustry/ui/dialogs/PaletteDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（PaletteDialog）。
+- core/src/mindustry/ui/dialogs/PausedDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（PausedDialog）。
+- core/src/mindustry/ui/dialogs/PlanetDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（PlanetDialog）。
+- core/src/mindustry/ui/dialogs/ResearchDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（ResearchDialog）。
+- core/src/mindustry/ui/dialogs/SaveDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（SaveDialog）。
+- core/src/mindustry/ui/dialogs/SchematicsDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（SchematicsDialog）。
+- core/src/mindustry/ui/dialogs/SectorSelectDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（SectorSelectDialog）。
+- core/src/mindustry/ui/dialogs/SettingsMenuDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（SettingsMenuDialog）。
+- core/src/mindustry/ui/dialogs/TraceDialog.java：核心逻辑 / UI 系统 / 对话框，对话框类（TraceDialog）。
+- core/src/mindustry/ui/fragments/BlockConfigFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（BlockConfigFragment）。
+- core/src/mindustry/ui/fragments/BlockInventoryFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（BlockInventoryFragment）。
+- core/src/mindustry/ui/fragments/ChatFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（ChatFragment）。
+- core/src/mindustry/ui/fragments/ConsoleFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（ConsoleFragment）。
+- core/src/mindustry/ui/fragments/FadeInFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（FadeInFragment）。
+- core/src/mindustry/ui/fragments/HintsFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（HintsFragment）。
+- core/src/mindustry/ui/fragments/HudFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（HudFragment）。
+- core/src/mindustry/ui/fragments/LoadingFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（LoadingFragment）。
+- core/src/mindustry/ui/fragments/MenuFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（MenuFragment）。
+- core/src/mindustry/ui/fragments/MinimapFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（MinimapFragment）。
+- core/src/mindustry/ui/fragments/PlacementFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（PlacementFragment）。
+- core/src/mindustry/ui/fragments/PlanConfigFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（PlanConfigFragment）。
+- core/src/mindustry/ui/fragments/PlayerListFragment.java：核心逻辑 / UI 系统 / UI 片段，UI 片段类（PlayerListFragment）。
+- core/src/mindustry/ui/layout/BranchTreeLayout.java：核心逻辑 / UI 系统 / UI 布局，UI 布局类（BranchTreeLayout）。
+- core/src/mindustry/ui/layout/RadialTreeLayout.java：核心逻辑 / UI 系统 / UI 布局，UI 布局类（RadialTreeLayout）。
+- core/src/mindustry/ui/layout/RowTreeLayout.java：核心逻辑 / UI 系统 / UI 布局，UI 布局类（RowTreeLayout）。
+- core/src/mindustry/ui/layout/TreeLayout.java：核心逻辑 / UI 系统 / UI 布局，接口（TreeLayout）。
+- core/src/mindustry/world/Block.java：核心逻辑 / 世界与方块 / 世界基础，类（Block）。
+- core/src/mindustry/world/Build.java：核心逻辑 / 世界与方块 / 世界基础，类（Build）。
+- core/src/mindustry/world/CachedTile.java：核心逻辑 / 世界与方块 / 世界基础，类（CachedTile）。
+- core/src/mindustry/world/ColorMapper.java：核心逻辑 / 世界与方块 / 世界基础，类（ColorMapper）。
+- core/src/mindustry/world/DirectionalItemBuffer.java：核心逻辑 / 世界与方块 / 世界基础，类（DirectionalItemBuffer）。
+- core/src/mindustry/world/Edges.java：核心逻辑 / 世界与方块 / 世界基础，类（Edges）。
+- core/src/mindustry/world/ItemBuffer.java：核心逻辑 / 世界与方块 / 世界基础，类（ItemBuffer）。
+- core/src/mindustry/world/Tile.java：核心逻辑 / 世界与方块 / 世界基础，类（Tile）。
+- core/src/mindustry/world/TileGen.java：核心逻辑 / 世界与方块 / 世界基础，类（TileGen）。
+- core/src/mindustry/world/Tiles.java：核心逻辑 / 世界与方块 / 世界基础，类（Tiles）。
+- core/src/mindustry/world/WorldContext.java：核心逻辑 / 世界与方块 / 世界基础，接口（WorldContext）。
+- core/src/mindustry/world/WorldParams.java：核心逻辑 / 世界与方块 / 世界基础，类（WorldParams）。
+- core/src/mindustry/world/blocks/Attributes.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，方块逻辑类（Attributes）。
+- core/src/mindustry/world/blocks/Autotiler.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，接口（Autotiler）。
+- core/src/mindustry/world/blocks/ConstructBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，方块逻辑类（ConstructBlock）。
+- core/src/mindustry/world/blocks/ControlBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，接口（ControlBlock）。
+- core/src/mindustry/world/blocks/ExplosionShield.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，接口（ExplosionShield）。
+- core/src/mindustry/world/blocks/ItemSelection.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，方块逻辑类（ItemSelection）。
+- core/src/mindustry/world/blocks/LaunchAnimator.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，接口（LaunchAnimator）。
+- core/src/mindustry/world/blocks/RotBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，接口（RotBlock）。
+- core/src/mindustry/world/blocks/TileBitmask.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，方块逻辑类（TileBitmask）。
+- core/src/mindustry/world/blocks/UnitTetherBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 通用基础，接口（UnitTetherBlock）。
+- core/src/mindustry/world/blocks/campaign/Accelerator.java：核心逻辑 / 世界与方块 / 方块实现 / 战役方块，战役方块类（Accelerator）。
+- core/src/mindustry/world/blocks/campaign/LandingPad.java：核心逻辑 / 世界与方块 / 方块实现 / 战役方块，战役方块类（LandingPad）。
+- core/src/mindustry/world/blocks/campaign/LaunchPad.java：核心逻辑 / 世界与方块 / 方块实现 / 战役方块，战役方块类（LaunchPad）。
+- core/src/mindustry/world/blocks/defense/AutoDoor.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（AutoDoor）。
+- core/src/mindustry/world/blocks/defense/BaseShield.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（BaseShield）。
+- core/src/mindustry/world/blocks/defense/BuildTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（BuildTurret）。
+- core/src/mindustry/world/blocks/defense/DirectionalForceProjector.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（DirectionalForceProjector）。
+- core/src/mindustry/world/blocks/defense/Door.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（Door）。
+- core/src/mindustry/world/blocks/defense/ForceProjector.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（ForceProjector）。
+- core/src/mindustry/world/blocks/defense/MendProjector.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（MendProjector）。
+- core/src/mindustry/world/blocks/defense/OverdriveProjector.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（OverdriveProjector）。
+- core/src/mindustry/world/blocks/defense/Radar.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（Radar）。
+- core/src/mindustry/world/blocks/defense/RegenProjector.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（RegenProjector）。
+- core/src/mindustry/world/blocks/defense/ShieldWall.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（ShieldWall）。
+- core/src/mindustry/world/blocks/defense/ShockMine.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（ShockMine）。
+- core/src/mindustry/world/blocks/defense/ShockwaveTower.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（ShockwaveTower）。
+- core/src/mindustry/world/blocks/defense/Thruster.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（Thruster）。
+- core/src/mindustry/world/blocks/defense/Wall.java：核心逻辑 / 世界与方块 / 方块实现 / 防御方块，防御方块类（Wall）。
+- core/src/mindustry/world/blocks/defense/turrets/BaseTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（BaseTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/ContinuousLiquidTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（ContinuousLiquidTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/ContinuousTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（ContinuousTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/ItemTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（ItemTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/LaserTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（LaserTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/LiquidTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（LiquidTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/PayloadAmmoTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（PayloadAmmoTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/PointDefenseTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（PointDefenseTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/PowerTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（PowerTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/ReloadTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（ReloadTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/TractorBeamTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔方块类（TractorBeamTurret）。
+- core/src/mindustry/world/blocks/defense/turrets/Turret.java：核心逻辑 / 世界与方块 / 方块实现 / 炮塔方块，炮塔基类逻辑。
+- core/src/mindustry/world/blocks/distribution/ArmoredConveyor.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（ArmoredConveyor）。
+- core/src/mindustry/world/blocks/distribution/BufferedItemBridge.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（BufferedItemBridge）。
+- core/src/mindustry/world/blocks/distribution/ChainedBuilding.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，接口（ChainedBuilding）。
+- core/src/mindustry/world/blocks/distribution/Conveyor.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（Conveyor）。
+- core/src/mindustry/world/blocks/distribution/DirectionBridge.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（DirectionBridge）。
+- core/src/mindustry/world/blocks/distribution/DirectionLiquidBridge.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（DirectionLiquidBridge）。
+- core/src/mindustry/world/blocks/distribution/DirectionalUnloader.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（DirectionalUnloader）。
+- core/src/mindustry/world/blocks/distribution/Duct.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（Duct）。
+- core/src/mindustry/world/blocks/distribution/DuctBridge.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（DuctBridge）。
+- core/src/mindustry/world/blocks/distribution/DuctJunction.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（DuctJunction）。
+- core/src/mindustry/world/blocks/distribution/DuctRouter.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（DuctRouter）。
+- core/src/mindustry/world/blocks/distribution/ItemBridge.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（ItemBridge）。
+- core/src/mindustry/world/blocks/distribution/Junction.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（Junction）。
+- core/src/mindustry/world/blocks/distribution/MassDriver.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（MassDriver）。
+- core/src/mindustry/world/blocks/distribution/OverflowDuct.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（OverflowDuct）。
+- core/src/mindustry/world/blocks/distribution/OverflowGate.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（OverflowGate）。
+- core/src/mindustry/world/blocks/distribution/Router.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（Router）。
+- core/src/mindustry/world/blocks/distribution/Sorter.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（Sorter）。
+- core/src/mindustry/world/blocks/distribution/StackConveyor.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（StackConveyor）。
+- core/src/mindustry/world/blocks/distribution/StackRouter.java：核心逻辑 / 世界与方块 / 方块实现 / 物流方块，物流方块类（StackRouter）。
+- core/src/mindustry/world/blocks/environment/AirBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（AirBlock）。
+- core/src/mindustry/world/blocks/environment/CharacterOverlay.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（CharacterOverlay）。
+- core/src/mindustry/world/blocks/environment/Cliff.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（Cliff）。
+- core/src/mindustry/world/blocks/environment/ColoredFloor.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（ColoredFloor）。
+- core/src/mindustry/world/blocks/environment/ColoredWall.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（ColoredWall）。
+- core/src/mindustry/world/blocks/environment/EmptyFloor.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（EmptyFloor）。
+- core/src/mindustry/world/blocks/environment/Floor.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（Floor）。
+- core/src/mindustry/world/blocks/environment/OreBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（OreBlock）。
+- core/src/mindustry/world/blocks/environment/OverlayFloor.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（OverlayFloor）。
+- core/src/mindustry/world/blocks/environment/Prop.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（Prop）。
+- core/src/mindustry/world/blocks/environment/RemoveOre.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（RemoveOre）。
+- core/src/mindustry/world/blocks/environment/RemoveWall.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（RemoveWall）。
+- core/src/mindustry/world/blocks/environment/RuneOverlay.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（RuneOverlay）。
+- core/src/mindustry/world/blocks/environment/SeaBush.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（SeaBush）。
+- core/src/mindustry/world/blocks/environment/Seaweed.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（Seaweed）。
+- core/src/mindustry/world/blocks/environment/ShallowLiquid.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（ShallowLiquid）。
+- core/src/mindustry/world/blocks/environment/SpawnBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（SpawnBlock）。
+- core/src/mindustry/world/blocks/environment/StaticTree.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（StaticTree）。
+- core/src/mindustry/world/blocks/environment/StaticWall.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（StaticWall）。
+- core/src/mindustry/world/blocks/environment/SteamVent.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（SteamVent）。
+- core/src/mindustry/world/blocks/environment/TallBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（TallBlock）。
+- core/src/mindustry/world/blocks/environment/TiledFloor.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（TiledFloor）。
+- core/src/mindustry/world/blocks/environment/TiledWall.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（TiledWall）。
+- core/src/mindustry/world/blocks/environment/TreeBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（TreeBlock）。
+- core/src/mindustry/world/blocks/environment/WobbleProp.java：核心逻辑 / 世界与方块 / 方块实现 / 环境方块，环境方块类（WobbleProp）。
+- core/src/mindustry/world/blocks/heat/HeatBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 热量系统方块，接口（HeatBlock）。
+- core/src/mindustry/world/blocks/heat/HeatConductor.java：核心逻辑 / 世界与方块 / 方块实现 / 热量系统方块，热量系统方块类（HeatConductor）。
+- core/src/mindustry/world/blocks/heat/HeatConsumer.java：核心逻辑 / 世界与方块 / 方块实现 / 热量系统方块，接口（HeatConsumer）。
+- core/src/mindustry/world/blocks/heat/HeatProducer.java：核心逻辑 / 世界与方块 / 方块实现 / 热量系统方块，热量系统方块类（HeatProducer）。
+- core/src/mindustry/world/blocks/legacy/LegacyBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 旧版方块兼容，旧版方块兼容类（LegacyBlock）。
+- core/src/mindustry/world/blocks/legacy/LegacyCommandCenter.java：核心逻辑 / 世界与方块 / 方块实现 / 旧版方块兼容，旧版方块兼容类（LegacyCommandCenter）。
+- core/src/mindustry/world/blocks/legacy/LegacyMechPad.java：核心逻辑 / 世界与方块 / 方块实现 / 旧版方块兼容，旧版方块兼容类（LegacyMechPad）。
+- core/src/mindustry/world/blocks/legacy/LegacyUnitFactory.java：核心逻辑 / 世界与方块 / 方块实现 / 旧版方块兼容，旧版方块兼容类（LegacyUnitFactory）。
+- core/src/mindustry/world/blocks/liquid/ArmoredConduit.java：核心逻辑 / 世界与方块 / 方块实现 / 液体方块，液体方块类（ArmoredConduit）。
+- core/src/mindustry/world/blocks/liquid/Conduit.java：核心逻辑 / 世界与方块 / 方块实现 / 液体方块，液体方块类（Conduit）。
+- core/src/mindustry/world/blocks/liquid/LiquidBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 液体方块，液体方块类（LiquidBlock）。
+- core/src/mindustry/world/blocks/liquid/LiquidBridge.java：核心逻辑 / 世界与方块 / 方块实现 / 液体方块，液体方块类（LiquidBridge）。
+- core/src/mindustry/world/blocks/liquid/LiquidJunction.java：核心逻辑 / 世界与方块 / 方块实现 / 液体方块，液体方块类（LiquidJunction）。
+- core/src/mindustry/world/blocks/liquid/LiquidRouter.java：核心逻辑 / 世界与方块 / 方块实现 / 液体方块，液体方块类（LiquidRouter）。
+- core/src/mindustry/world/blocks/logic/CanvasBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（CanvasBlock）。
+- core/src/mindustry/world/blocks/logic/LogicBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（LogicBlock）。
+- core/src/mindustry/world/blocks/logic/LogicDisplay.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（LogicDisplay）。
+- core/src/mindustry/world/blocks/logic/MemoryBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（MemoryBlock）。
+- core/src/mindustry/world/blocks/logic/MessageBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（MessageBlock）。
+- core/src/mindustry/world/blocks/logic/SwitchBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（SwitchBlock）。
+- core/src/mindustry/world/blocks/logic/TileableLogicDisplay.java：核心逻辑 / 世界与方块 / 方块实现 / 逻辑方块，逻辑方块类（TileableLogicDisplay）。
+- core/src/mindustry/world/blocks/payloads/BlockProducer.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（BlockProducer）。
+- core/src/mindustry/world/blocks/payloads/BuildPayload.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（BuildPayload）。
+- core/src/mindustry/world/blocks/payloads/Constructor.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（Constructor）。
+- core/src/mindustry/world/blocks/payloads/Payload.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，接口（Payload）。
+- core/src/mindustry/world/blocks/payloads/PayloadBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadBlock）。
+- core/src/mindustry/world/blocks/payloads/PayloadConveyor.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadConveyor）。
+- core/src/mindustry/world/blocks/payloads/PayloadDeconstructor.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadDeconstructor）。
+- core/src/mindustry/world/blocks/payloads/PayloadLoader.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadLoader）。
+- core/src/mindustry/world/blocks/payloads/PayloadMassDriver.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadMassDriver）。
+- core/src/mindustry/world/blocks/payloads/PayloadRouter.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadRouter）。
+- core/src/mindustry/world/blocks/payloads/PayloadSource.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadSource）。
+- core/src/mindustry/world/blocks/payloads/PayloadUnloader.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadUnloader）。
+- core/src/mindustry/world/blocks/payloads/PayloadVoid.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（PayloadVoid）。
+- core/src/mindustry/world/blocks/payloads/UnitPayload.java：核心逻辑 / 世界与方块 / 方块实现 / 载荷方块，载荷方块类（UnitPayload）。
+- core/src/mindustry/world/blocks/power/Battery.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（Battery）。
+- core/src/mindustry/world/blocks/power/BeamNode.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（BeamNode）。
+- core/src/mindustry/world/blocks/power/ConsumeGenerator.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（ConsumeGenerator）。
+- core/src/mindustry/world/blocks/power/HeaterGenerator.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（HeaterGenerator）。
+- core/src/mindustry/world/blocks/power/ImpactReactor.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（ImpactReactor）。
+- core/src/mindustry/world/blocks/power/LightBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（LightBlock）。
+- core/src/mindustry/world/blocks/power/LongPowerNode.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（LongPowerNode）。
+- core/src/mindustry/world/blocks/power/NuclearReactor.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（NuclearReactor）。
+- core/src/mindustry/world/blocks/power/PowerBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（PowerBlock）。
+- core/src/mindustry/world/blocks/power/PowerDiode.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（PowerDiode）。
+- core/src/mindustry/world/blocks/power/PowerDistributor.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（PowerDistributor）。
+- core/src/mindustry/world/blocks/power/PowerGenerator.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（PowerGenerator）。
+- core/src/mindustry/world/blocks/power/PowerGraph.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（PowerGraph）。
+- core/src/mindustry/world/blocks/power/PowerNode.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力节点方块逻辑，负责电网连接。
+- core/src/mindustry/world/blocks/power/SolarGenerator.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（SolarGenerator）。
+- core/src/mindustry/world/blocks/power/ThermalGenerator.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（ThermalGenerator）。
+- core/src/mindustry/world/blocks/power/VariableReactor.java：核心逻辑 / 世界与方块 / 方块实现 / 电力方块，电力方块类（VariableReactor）。
+- core/src/mindustry/world/blocks/production/AttributeCrafter.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（AttributeCrafter）。
+- core/src/mindustry/world/blocks/production/BeamDrill.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（BeamDrill）。
+- core/src/mindustry/world/blocks/production/BurstDrill.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（BurstDrill）。
+- core/src/mindustry/world/blocks/production/Drill.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，钻头方块逻辑。
+- core/src/mindustry/world/blocks/production/Fracker.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（Fracker）。
+- core/src/mindustry/world/blocks/production/GenericCrafter.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，通用工厂方块逻辑。
+- core/src/mindustry/world/blocks/production/HeatCrafter.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（HeatCrafter）。
+- core/src/mindustry/world/blocks/production/Incinerator.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（Incinerator）。
+- core/src/mindustry/world/blocks/production/ItemIncinerator.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（ItemIncinerator）。
+- core/src/mindustry/world/blocks/production/Pump.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（Pump）。
+- core/src/mindustry/world/blocks/production/Separator.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（Separator）。
+- core/src/mindustry/world/blocks/production/SingleBlockProducer.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（SingleBlockProducer）。
+- core/src/mindustry/world/blocks/production/SolidPump.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（SolidPump）。
+- core/src/mindustry/world/blocks/production/WallCrafter.java：核心逻辑 / 世界与方块 / 方块实现 / 生产方块，生产方块类（WallCrafter）。
+- core/src/mindustry/world/blocks/sandbox/ItemSource.java：核心逻辑 / 世界与方块 / 方块实现 / 沙盒方块，沙盒方块类（ItemSource）。
+- core/src/mindustry/world/blocks/sandbox/ItemVoid.java：核心逻辑 / 世界与方块 / 方块实现 / 沙盒方块，沙盒方块类（ItemVoid）。
+- core/src/mindustry/world/blocks/sandbox/LiquidSource.java：核心逻辑 / 世界与方块 / 方块实现 / 沙盒方块，沙盒方块类（LiquidSource）。
+- core/src/mindustry/world/blocks/sandbox/LiquidVoid.java：核心逻辑 / 世界与方块 / 方块实现 / 沙盒方块，沙盒方块类（LiquidVoid）。
+- core/src/mindustry/world/blocks/sandbox/PowerSource.java：核心逻辑 / 世界与方块 / 方块实现 / 沙盒方块，沙盒方块类（PowerSource）。
+- core/src/mindustry/world/blocks/sandbox/PowerVoid.java：核心逻辑 / 世界与方块 / 方块实现 / 沙盒方块，沙盒方块类（PowerVoid）。
+- core/src/mindustry/world/blocks/storage/CoreBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 储存方块，储存方块类（CoreBlock）。
+- core/src/mindustry/world/blocks/storage/StorageBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 储存方块，储存方块类（StorageBlock）。
+- core/src/mindustry/world/blocks/storage/Unloader.java：核心逻辑 / 世界与方块 / 方块实现 / 储存方块，储存方块类（Unloader）。
+- core/src/mindustry/world/blocks/units/DroneCenter.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（DroneCenter）。
+- core/src/mindustry/world/blocks/units/Reconstructor.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（Reconstructor）。
+- core/src/mindustry/world/blocks/units/RepairTower.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（RepairTower）。
+- core/src/mindustry/world/blocks/units/RepairTurret.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（RepairTurret）。
+- core/src/mindustry/world/blocks/units/UnitAssembler.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位组装机方块逻辑。
+- core/src/mindustry/world/blocks/units/UnitAssemblerModule.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（UnitAssemblerModule）。
+- core/src/mindustry/world/blocks/units/UnitBlock.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（UnitBlock）。
+- core/src/mindustry/world/blocks/units/UnitCargoLoader.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（UnitCargoLoader）。
+- core/src/mindustry/world/blocks/units/UnitCargoUnloadPoint.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位方块类（UnitCargoUnloadPoint）。
+- core/src/mindustry/world/blocks/units/UnitFactory.java：核心逻辑 / 世界与方块 / 方块实现 / 单位生产与控制，单位工厂方块逻辑。
+- core/src/mindustry/world/consumers/Consume.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（Consume）。
+- core/src/mindustry/world/consumers/ConsumeCoolant.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeCoolant）。
+- core/src/mindustry/world/consumers/ConsumeItemCharged.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemCharged）。
+- core/src/mindustry/world/consumers/ConsumeItemDynamic.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemDynamic）。
+- core/src/mindustry/world/consumers/ConsumeItemEfficiency.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemEfficiency）。
+- core/src/mindustry/world/consumers/ConsumeItemExplode.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemExplode）。
+- core/src/mindustry/world/consumers/ConsumeItemExplosive.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemExplosive）。
+- core/src/mindustry/world/consumers/ConsumeItemFilter.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemFilter）。
+- core/src/mindustry/world/consumers/ConsumeItemFlammable.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemFlammable）。
+- core/src/mindustry/world/consumers/ConsumeItemList.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemList）。
+- core/src/mindustry/world/consumers/ConsumeItemRadioactive.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItemRadioactive）。
+- core/src/mindustry/world/consumers/ConsumeItems.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeItems）。
+- core/src/mindustry/world/consumers/ConsumeLiquid.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeLiquid）。
+- core/src/mindustry/world/consumers/ConsumeLiquidBase.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeLiquidBase）。
+- core/src/mindustry/world/consumers/ConsumeLiquidFilter.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeLiquidFilter）。
+- core/src/mindustry/world/consumers/ConsumeLiquidFlammable.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeLiquidFlammable）。
+- core/src/mindustry/world/consumers/ConsumeLiquids.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeLiquids）。
+- core/src/mindustry/world/consumers/ConsumeLiquidsDynamic.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumeLiquidsDynamic）。
+- core/src/mindustry/world/consumers/ConsumePayloadDynamic.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumePayloadDynamic）。
+- core/src/mindustry/world/consumers/ConsumePayloadFilter.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumePayloadFilter）。
+- core/src/mindustry/world/consumers/ConsumePayloads.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumePayloads）。
+- core/src/mindustry/world/consumers/ConsumePower.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumePower）。
+- core/src/mindustry/world/consumers/ConsumePowerCondition.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumePowerCondition）。
+- core/src/mindustry/world/consumers/ConsumePowerDynamic.java：核心逻辑 / 世界与方块 / 资源消耗与产出，资源消耗类（ConsumePowerDynamic）。
+- core/src/mindustry/world/draw/DrawArcSmelt.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawArcSmelt）。
+- core/src/mindustry/world/draw/DrawBlock.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawBlock）。
+- core/src/mindustry/world/draw/DrawBlurSpin.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawBlurSpin）。
+- core/src/mindustry/world/draw/DrawBubbles.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawBubbles）。
+- core/src/mindustry/world/draw/DrawCells.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawCells）。
+- core/src/mindustry/world/draw/DrawCircles.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawCircles）。
+- core/src/mindustry/world/draw/DrawCrucibleFlame.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawCrucibleFlame）。
+- core/src/mindustry/world/draw/DrawCultivator.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawCultivator）。
+- core/src/mindustry/world/draw/DrawDefault.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawDefault）。
+- core/src/mindustry/world/draw/DrawFade.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawFade）。
+- core/src/mindustry/world/draw/DrawFlame.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawFlame）。
+- core/src/mindustry/world/draw/DrawFrames.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawFrames）。
+- core/src/mindustry/world/draw/DrawGlowRegion.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawGlowRegion）。
+- core/src/mindustry/world/draw/DrawHeatInput.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawHeatInput）。
+- core/src/mindustry/world/draw/DrawHeatOutput.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawHeatOutput）。
+- core/src/mindustry/world/draw/DrawHeatRegion.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawHeatRegion）。
+- core/src/mindustry/world/draw/DrawLiquidOutputs.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawLiquidOutputs）。
+- core/src/mindustry/world/draw/DrawLiquidRegion.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawLiquidRegion）。
+- core/src/mindustry/world/draw/DrawLiquidTile.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawLiquidTile）。
+- core/src/mindustry/world/draw/DrawMulti.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawMulti）。
+- core/src/mindustry/world/draw/DrawMultiWeave.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawMultiWeave）。
+- core/src/mindustry/world/draw/DrawParticles.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawParticles）。
+- core/src/mindustry/world/draw/DrawPistons.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawPistons）。
+- core/src/mindustry/world/draw/DrawPlasma.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawPlasma）。
+- core/src/mindustry/world/draw/DrawPower.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawPower）。
+- core/src/mindustry/world/draw/DrawPulseShape.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawPulseShape）。
+- core/src/mindustry/world/draw/DrawPumpLiquid.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawPumpLiquid）。
+- core/src/mindustry/world/draw/DrawRegion.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawRegion）。
+- core/src/mindustry/world/draw/DrawShape.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawShape）。
+- core/src/mindustry/world/draw/DrawSideRegion.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawSideRegion）。
+- core/src/mindustry/world/draw/DrawSoftParticles.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawSoftParticles）。
+- core/src/mindustry/world/draw/DrawSpikes.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawSpikes）。
+- core/src/mindustry/world/draw/DrawTurret.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawTurret）。
+- core/src/mindustry/world/draw/DrawWarmupRegion.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawWarmupRegion）。
+- core/src/mindustry/world/draw/DrawWeave.java：核心逻辑 / 世界与方块 / 方块绘制，方块绘制类（DrawWeave）。
+- core/src/mindustry/world/meta/Attribute.java：核心逻辑 / 世界与方块 / 元数据，元数据类（Attribute）。
+- core/src/mindustry/world/meta/BlockFlag.java：核心逻辑 / 世界与方块 / 元数据，枚举（BlockFlag）。
+- core/src/mindustry/world/meta/BlockGroup.java：核心逻辑 / 世界与方块 / 元数据，枚举（BlockGroup）。
+- core/src/mindustry/world/meta/BlockStatus.java：核心逻辑 / 世界与方块 / 元数据，枚举（BlockStatus）。
+- core/src/mindustry/world/meta/BuildVisibility.java：核心逻辑 / 世界与方块 / 元数据，元数据类（BuildVisibility）。
+- core/src/mindustry/world/meta/Env.java：核心逻辑 / 世界与方块 / 元数据，元数据类（Env）。
+- core/src/mindustry/world/meta/Stat.java：核心逻辑 / 世界与方块 / 元数据，元数据类（Stat）。
+- core/src/mindustry/world/meta/StatCat.java：核心逻辑 / 世界与方块 / 元数据，元数据类（StatCat）。
+- core/src/mindustry/world/meta/StatUnit.java：核心逻辑 / 世界与方块 / 元数据，元数据类（StatUnit）。
+- core/src/mindustry/world/meta/StatValue.java：核心逻辑 / 世界与方块 / 元数据，接口（StatValue）。
+- core/src/mindustry/world/meta/StatValues.java：核心逻辑 / 世界与方块 / 元数据，元数据类（StatValues）。
+- core/src/mindustry/world/meta/Stats.java：核心逻辑 / 世界与方块 / 元数据，元数据类（Stats）。
+- core/src/mindustry/world/modules/BlockModule.java：核心逻辑 / 世界与方块 / 建筑模块，建筑模块类（BlockModule）。
+- core/src/mindustry/world/modules/ItemModule.java：核心逻辑 / 世界与方块 / 建筑模块，建筑模块类（ItemModule）。
+- core/src/mindustry/world/modules/LiquidModule.java：核心逻辑 / 世界与方块 / 建筑模块，建筑模块类（LiquidModule）。
+- core/src/mindustry/world/modules/PowerModule.java：核心逻辑 / 世界与方块 / 建筑模块，建筑模块类（PowerModule）。
+
+## Android 客户端
+
+- android/build.gradle：Android 客户端 / 构建脚本，Android 客户端 模块构建脚本。
+- android/src/mindustry/android/AndroidLauncher.java：Android 客户端 / 平台适配，Android 端启动入口与平台装配。
+- android/src/mindustry/android/AndroidRhinoContext.java：Android 客户端 / 平台适配，类（AndroidRhinoContext）。
+
+## 桌面客户端
+
+- desktop/build.gradle：桌面客户端 / 构建脚本，桌面客户端 模块构建脚本。
+- desktop/src/mindustry/desktop/DesktopLauncher.java：桌面客户端 / 平台适配，桌面端启动入口与平台装配。
+- desktop/src/mindustry/desktop/steam/SNet.java：桌面客户端 / Steam 集成，类（SNet）。
+- desktop/src/mindustry/desktop/steam/SStats.java：桌面客户端 / Steam 集成，类（SStats）。
+- desktop/src/mindustry/desktop/steam/SUser.java：桌面客户端 / Steam 集成，类（SUser）。
+- desktop/src/mindustry/desktop/steam/SVars.java：桌面客户端 / Steam 集成，类（SVars）。
+- desktop/src/mindustry/desktop/steam/SWorkshop.java：桌面客户端 / Steam 集成，类（SWorkshop）。
+
+## iOS 客户端
+
+- ios/build.gradle：iOS 客户端 / 构建脚本，iOS 客户端 模块构建脚本。
+- ios/src/mindustry/ios/IOSLauncher.java：iOS 客户端 / 平台适配，iOS 端启动入口与平台装配。
+
+## 服务器端
+
+- server/build.gradle：服务器端 / 构建脚本，服务器端 模块构建脚本。
+- server/src/mindustry/server/ServerControl.java：服务器端 / 服务器逻辑，服务器生命周期与控制台命令入口。
+- server/src/mindustry/server/ServerLauncher.java：服务器端 / 服务器逻辑，服务器启动入口与初始化。
+
+## 注解与代码生成
+
+- annotations/build.gradle：注解与代码生成 / 构建脚本，注解与代码生成 模块构建脚本。
+- annotations/src/main/java/mindustry/annotations/Annotations.java：注解与代码生成 / 注解定义，类（Annotations）。
+- annotations/src/main/java/mindustry/annotations/BaseProcessor.java：注解与代码生成 / 注解定义，类（BaseProcessor）。
+- annotations/src/main/java/mindustry/annotations/entity/EntityIO.java：注解与代码生成 / 实体代码生成，类（EntityIO）。
+- annotations/src/main/java/mindustry/annotations/entity/EntityProcess.java：注解与代码生成 / 实体代码生成，类（EntityProcess）。
+- annotations/src/main/java/mindustry/annotations/impl/AssetsProcess.java：注解与代码生成 / 实现代码生成，类（AssetsProcess）。
+- annotations/src/main/java/mindustry/annotations/impl/StructProcess.java：注解与代码生成 / 实现代码生成，类（StructProcess）。
+- annotations/src/main/java/mindustry/annotations/misc/LoadRegionProcessor.java：注解与代码生成 / 杂项处理器，类（LoadRegionProcessor）。
+- annotations/src/main/java/mindustry/annotations/misc/LogicStatementProcessor.java：注解与代码生成 / 杂项处理器，类（LogicStatementProcessor）。
+- annotations/src/main/java/mindustry/annotations/remote/CallGenerator.java：注解与代码生成 / 远程调用生成，类（CallGenerator）。
+- annotations/src/main/java/mindustry/annotations/remote/MethodEntry.java：注解与代码生成 / 远程调用生成，类（MethodEntry）。
+- annotations/src/main/java/mindustry/annotations/remote/RemoteProcess.java：注解与代码生成 / 远程调用生成，类（RemoteProcess）。
+- annotations/src/main/java/mindustry/annotations/remote/SerializerResolver.java：注解与代码生成 / 远程调用生成，类（SerializerResolver）。
+- annotations/src/main/java/mindustry/annotations/util/AnnotationProxyMaker.java：注解与代码生成 / 处理器工具，类（AnnotationProxyMaker）。
+- annotations/src/main/java/mindustry/annotations/util/Selement.java：注解与代码生成 / 处理器工具，类（Selement）。
+- annotations/src/main/java/mindustry/annotations/util/Smethod.java：注解与代码生成 / 处理器工具，类（Smethod）。
+- annotations/src/main/java/mindustry/annotations/util/Stype.java：注解与代码生成 / 处理器工具，类（Stype）。
+- annotations/src/main/java/mindustry/annotations/util/Svar.java：注解与代码生成 / 处理器工具，类（Svar）。
+- annotations/src/main/java/mindustry/annotations/util/TypeIOResolver.java：注解与代码生成 / 处理器工具，类（TypeIOResolver）。
+
+## 工具与资源生成
+
+- tools/build.gradle：工具与资源生成 / 构建脚本，工具与资源生成 模块构建脚本。
+- tools/src/mindustry/tools/Generators.java：工具与资源生成 / 工具脚本，类（Generators）。
+- tools/src/mindustry/tools/IconConverter.java：工具与资源生成 / 工具脚本，类（IconConverter）。
+- tools/src/mindustry/tools/ImagePacker.java：工具与资源生成 / 工具脚本，类（ImagePacker）。
+- tools/src/mindustry/tools/ImageTileGenerator.java：工具与资源生成 / 工具脚本，类（ImageTileGenerator）。
+- tools/src/mindustry/tools/ScriptMainGenerator.java：工具与资源生成 / 工具脚本，类（ScriptMainGenerator）。
+
+## 测试与验证
+
+- tests/build.gradle：测试与验证 / 构建脚本，测试与验证 模块构建脚本。
+- tests/src/test/java/ApplicationTests.java：测试与验证 / 测试入口，测试类（ApplicationTests）。
+- tests/src/test/java/GenericModTest.java：测试与验证 / 测试入口，测试类（GenericModTest）。
+- tests/src/test/java/ModTestAllure.java：测试与验证 / 测试入口，测试类（ModTestAllure）。
+- tests/src/test/java/PatcherTests.java：测试与验证 / 测试入口，测试类（PatcherTests）。
+- tests/src/test/java/power/ConsumeGeneratorTests.java：测试与验证 / 电力系统测试，测试类（ConsumeGeneratorTests）。
+- tests/src/test/java/power/DirectConsumerTests.java：测试与验证 / 电力系统测试，测试类（DirectConsumerTests）。
+- tests/src/test/java/power/PowerTestFixture.java：测试与验证 / 电力系统测试，测试类（PowerTestFixture）。
+- tests/src/test/java/power/PowerTests.java：测试与验证 / 电力系统测试，测试类（PowerTests）。
+
+## 其他
+
+- build.gradle：其他 / 构建脚本，Gradle 构建脚本。
+- settings.gradle：其他 / 构建脚本，Gradle 工程设置脚本。
