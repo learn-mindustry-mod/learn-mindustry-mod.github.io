@@ -160,6 +160,8 @@ meshLoader = () -> new HexMesh(this, 6);
 
 环境方块的主要特性是静态性。它们没有实体，不参与游戏逻辑更新，且渲染结果会被缓存。环境方块所需的贴图资源应放置在`sprites/blocks/environment`目录下，否则会显示为`Wrong Texture Folder`贴图，这与1-2节中提到的图集页机制有关。此外，由于错误贴图（内部标识为`error`）位于`main`图集页，当环境方块找不到对应贴图时，也会渲染出`Wrong Texture Folder`。
 
+矿物包含一系列与生成相关的字段，例如`oreScale`与`oreThreshold`，这些字段仅影响自定义地图的默认生成器，而不会影响战役模式中的星球生成器。因此，若需在战役星球生成器中包含自定义矿物，需对相应的生成器进行修改。
+
 ## 创建一个SectorPreset
 
 ::: code-group

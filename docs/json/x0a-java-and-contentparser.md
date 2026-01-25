@@ -13,7 +13,11 @@ public class Drill extends Block{
 }
 ```
 
-`public` 表示公开字段，`int`/`float` 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。方法是类里的“行为”，例如：
+`public` 表示公开字段，`int`/`float` 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。注意 Java 的 `float` 常带 `f` 后缀，表示这是浮点数而不是整数。
+
+`extends` 表示继承。`Drill extends Block` 的意思是“钻头拥有 Block 的所有字段”，所以你在 JSON 里看到的很多字段其实来自父类，比如 `size`、`health`、`requirements`。`super(name)` 是调用父类构造器，确保父类先完成初始化。源码里出现 `@Override` 时，代表子类重写了父类方法；`abstract` 表示抽象类不能直接实例化，必须用具体子类。
+
+方法是类里的“行为”，例如：
 
 ```java
 public void updateTile(){
@@ -39,34 +43,154 @@ new GenericCrafter("x"){ {
 
 这一对大括号的含义就是“创建对象后马上设置字段”。JSON 本质上就是在做这件事。
 
-数组与列表也经常出现。Java 里 `ItemStack[]` 是数组，`Seq<ItemStack>` 是列表。JSON 里通常用数组表示，比如 `"requirements": ["copper/10", "lead/10"]`。
+源码里还会出现大量“箭头函数”写法，例如 `u -> true` 或 `() -> {}`。这是 Java 的 Lambda 表达式，表示“把一段逻辑当作参数传入”。当你看到这些写法时，就应该意识到这是函数类型字段，JSON 通常无法配置，只能用 JS/Java 处理。
+
+数组与列表也经常出现。Java 里 `ItemStack[]` 是数组，`Seq<ItemStack>` 是列表。JSON 里通常用数组表示，比如 `"requirements": ["copper/10", "lead/10"]`。`ObjectMap` 一类的映射通常写成“键值对对象”。
+
+你还会看到 `@Nullable` 注解或字段默认值为 `null`。这类字段通常是“可选项”，JSON 可以不写；但一旦写，就必须符合类型。例如 `Effect` 字段允许写原版名称字符串或自定义对象，如果字段为 `null`，游戏就会走默认行为。理解“可选项”能减少不必要的配置，也能避免写错类型导致报错。
+
+源码里常见的“容器构造”也值得一看，例如：
+
+```java
+requirements = ItemStack.with(Items.copper, 50, Items.lead, 30);
+consumes.add(new ConsumeItems(new ItemStack(Items.graphite, 2)));
+```
+
+它们在 JSON 中对应 `"requirements": ["copper/50", "lead/30"]` 或 `consumes.items` 的写法。看到这些语句时，你就能反推 JSON 的结构。
+
+如果你看到 `static`、`final`、`private` 这些关键字，可以简单理解为“静态”“不可变”“私有”，它们通常不需要也不应该在 JSON 里配置。你只需要关注公开字段与构造器里对字段的默认赋值。
+
+`this` 指向当前对象，`this.field` 只是更明确地引用字段；`super.field` 或 `super.method()` 则是访问父类成员。读源码时不必被这些写法吓到，它们只是告诉你“值来自当前类还是父类”。JSON 里不需要写这些关键字，只需要写字段本身。
+
+把 Java 写法翻译成 JSON 是最实用的练习。例如 Java 中常见的写法：
+
+```java
+new GenericCrafter("silicon-smelter"){{
+    craftTime = 60f;
+    outputItem = new ItemStack(Items.silicon, 1);
+    consumes.power(0.5f);
+}}
+```
+
+对应的 JSON 大致是：
+
+```json
+{
+	"type": "GenericCrafter",
+	"name": "silicon-smelter",
+	"craftTime": 60,
+	"outputItem": "silicon/1",
+	"consumes": {
+		"power": 0.5
+	}
+}
+```
+
+只要你能把“匿名内部类里的字段赋值”翻译成 JSON 键值对，就已经掌握了 70% 的阅读技巧。
+
+再注意 Java 里常见的 `Items.copper`、`Liquids.water`、`Blocks.mechanicalDrill` 这类写法，它们都是静态字段引用。换到 JSON，你要写的是内部名 `copper`、`water`、`mechanical-drill`。这一点是“源码到 JSON”最常见的转换。
+
+同理，单位武器的写法也可以直接翻译：
+
+```java
+weapons.add(new Weapon(){{
+    x = 4f; y = 1f;
+    reload = 30f;
+    bullet = new BasicBulletType(3f, 12);
+}});
+```
+
+对应 JSON 的结构就是：
+
+```json
+{
+	"weapons": [
+		{
+			"x": 4,
+			"y": 1,
+			"reload": 30,
+			"bullet": {
+				"type": "BasicBulletType",
+				"speed": 3,
+				"damage": 12
+			}
+		}
+	]
+}
+```
+
+这类“从 Java 还原 JSON”的练习做多了，就会形成直觉。
 
 ## ContentParser 在做什么
 
 `ContentParser` 是 JSON 解析器，它把 JSON 字段逐个写进 Java 对象。它遵循“字段同名映射”的基本规则：JSON 的键名必须和 Java 字段名一致，类型也要对应。如果类型不一致，游戏会直接报错。
 
-`type` 是最关键的字段之一。方块的 `type` 决定 Java 类（如 `GenericCrafter`、`Drill`、`PowerNode`），单位的 `type` 决定构造器（如 `flying/mech/legs/naval/payload/missile/tank/hover/tether/crawl`），而子类对象（子弹、能力、特效等）也依赖 `type` 指定具体子类。
+解析器还会根据文件夹推断内容类型：`content/blocks` 会被当成方块，`content/units` 会被当成单位。文件名就是内部名，所以文件夹与文件名写错，经常会导致“找不到内容”或“类型不匹配”的报错。
 
-JSON 引用其他内容时，会先尝试 `modName-内部名`，找不到才查原版内部名，所以内部名冲突会导致覆盖或解析失败。
+`type` 是最关键的字段之一。方块的 `type` 决定 Java 类（如 `GenericCrafter`、`Drill`、`PowerNode`），单位的 `type` 决定构造器（如 `flying/mech/legs/naval/payload/missile/tank/hover/tether/crawl`），而子类对象（子弹、能力、特效等）也依赖 `type` 指定具体子类。你可以把它理解成“告诉解析器该用哪个类来建对象”。
 
-### 常见的 JSON 简写
+从源码角度看，解析器的大致流程类似这样（伪代码）：
 
-`ContentParser` 内置了多种简写语法。例如 `"copper/10"` 会被解析为 `ItemStack`，`"water/0.1"` 会被解析为 `LiquidStack`，载荷堆栈则可以用 `"block-or-unit/amount"` 的形式表示。
+```java
+var type = json.getString("type", defaultType);
+var block = makeBlock(type, name);
+readFields(block, json);
+```
 
-这些简写只适合“纯数量”场景，一旦需要额外参数（例如 `booster`、`optional`），就必须改用对象形式。
+因此当你写错 `type`，解析器甚至无法创建对象，后续字段都会失效。
 
-### consumes 不是普通字段
+`type` 的作用不仅体现在方块与单位上，`drawer`、`parts`、`BulletType`、`Ability` 等复杂对象也依赖它来决定具体子类。比如 `DrawTurret`、`DrawMulti`、`RegionPart`、`HaloPart` 都是靠 `type` 识别的。如果你忘了写 `type` 或写错大小写，解析器就会回退到默认类型，表现与预期完全不同。
 
-`consumes` 是特殊语法，它不会直接写进字段，而是被解析成“消耗器”。常见的键包括 `items`、`liquids`、`power`、`itemFlammable`、`itemExplosive`、`coolant` 等。你在 JSON 里写的消耗器最终会变成 `Consume*` 对象，决定方块的效率与输入逻辑。
+解析顺序也很重要。以方块为例，解析器会先读取 `bundle` 文案，然后解析 `consumes`（因为它是特殊语法），接着再把剩余字段逐个写入对象。单位则会先处理 `requirements`（用于挂载工厂与重构厂），再处理 AI 与控制器字段，最后写入剩余字段。理解这个顺序可以帮助你避免“字段被覆盖”或“写了不生效”的情况。
 
-### 覆盖与模板
+解析完成后，类的 `init()` 与 `load()` 会在后续流程中执行，这一步可能继续改字段或加载贴图。比如某些方块在 `init()` 里会根据 `size` 自动计算 `itemCapacity`，这意味着你在 JSON 里写的值可能被逻辑覆盖。看懂这些“后置逻辑”，才能解释“写了却不生效”的现象。
+
+如果 JSON 没有写某个字段，解析器就会保留 Java 默认值。这也是为什么“极简 JSON”能跑起来：默认值已经把大部分东西填好了。但当你使用 `template` 或覆盖原版时，默认值可能来自模板而不是原版，所以在关键字段上最好显式写出，避免被继承值影响。
+
+解析器使用反射写字段，这意味着父类的 `public` 字段同样可写。比如 `Block` 里定义的 `size`、`health`、`requirements`、`category` 都可以直接写在任意方块的 JSON 里。只要字段是 `public` 并且类型可解析，就能被写入。
+
+## 常见的 JSON 简写
+
+`ContentParser` 内置了多种简写语法。例如 `"copper/10"` 会被解析为 `ItemStack`，`"water/0.1"` 会被解析为 `LiquidStack`，载荷堆栈则可以用 `"block-or-unit/amount"` 的形式表示。简写很方便，但只能表达“名称 + 数量”，一旦需要额外参数（例如 `booster`、`optional`），就必须改用对象形式。
+
+`Effect`、`BulletType`、`DrawPart` 等复杂对象也有简写规则。例如 `Effect` 可以直接写原版 `Fx` 名字，或者写一个对象并用 `type` 指定子类。`BulletType` 可以写字符串引用原版子弹，也可以写对象并指定 `type` 创建自定义子弹。理解这些规则后，你会发现 JSON 其实比模板更灵活。
+
+颜色与向量也有常见写法。颜色可以写成十六进制字符串（如 `ffffff` 或 `25C9AB80`），解析器会自动识别透明度；向量类字段往往支持数组或对象形式，例如 `x/y` 或 `[x, y]`。这些细节虽然不影响逻辑，但能显著影响表现，尤其是子弹与特效参数。
+
+读源码时还要注意“时间单位”。Java 里很多逻辑都是以“刻”为单位（`Time.delta` 是每帧增量），所以你在源码里看到的 `reload = 60f`、`craftTime = 120f` 实际对应 1 秒和 2 秒。把这个换算带回 JSON，有助于你把数值写得更直观。
+
+容器类型也有对应关系：`Seq` 与数组一一对应，`ObjectSet` 通常对应“去重数组”，`ObjectMap` 则对应 JSON 对象的键值结构。看到这类类型时先想“它在 JSON 里长什么样”，再决定是否用数组或对象写法。
+
+另外，一些字段本质上是整数（例如 `size`、`tier`），虽然 JSON 支持小数，但写成整数更稳妥，避免因为隐式转换造成困惑。
+
+## consumes 不是普通字段
+
+`consumes` 是特殊语法，它不会直接写进字段，而是被解析成“消耗器”。常见的键包括 `items`、`liquids`、`power`、`itemFlammable`、`itemExplosive`、`coolant` 等。你在 JSON 里写的消耗器最终会变成 `Consume*` 对象，决定方块的效率与输入逻辑。也就是说，`consumes` 更像“配方逻辑”，而不是单纯的“字段赋值”。
+
+不同消耗器还有不同的写法限制。`items` 与 `liquids` 支持数组或对象形式，`coolant` 与 `liquid` 如果需要 `optional`、`booster`、`update` 之类参数，就必须写对象；`power` 与 `powerBuffered` 则决定是持续耗电还是从缓冲中抽取。理解这些差异，可以避免“写了不生效”的常见坑。
+
+类似的“特殊解析”还有 `requirements` 与 `research`。`requirements` 本质是 `ItemStack[]`，解析器允许 `"copper/10"` 这种简写，也允许对象写法；`research` 则是一个带 `parent` 和 `objectives` 的对象，里面会出现 `SectorComplete`、`OnSector` 等目标类型。只要目标复杂，就应该回到源码或 Java 教程核对字段名。
+
+现实中的写法可以直接参考成熟模组。“饱和火力 3.3.0”的“离子钻头”在 `consumes.liquid` 里同时使用 `optional` 与 `booster`，这类对象写法是 `ContentParser` 明确支持的。看到类似配置时，你就能反推出“为什么需要对象而不是简写”。
+
+`requirements` 是“建造成本”，`consumes` 是“运行成本”，两者用途完全不同。很多新人会把运行消耗写进 `requirements`，导致方块只在建造时消耗一次，运行时不耗料。理解这条分界线，会让你的配方更符合玩家预期。
+
+## 覆盖与模板
 
 如果 JSON 文件名与原版内容内部名相同，且不写 `type`，解析器会认为你是在“覆盖原版”。单位还有一个 `template` 字段，可以用现成单位作为模板，再覆盖少量字段。这些机制能减少重复配置，但也更容易出错，建议熟悉后再使用。
 
+模板继承的另一个常见陷阱是“忘记重写关键字段”。比如你用模板继承了某个单位，但忘了改 `weapons` 或 `abilities`，就会得到一个“外形改了但行为没变”的单位。`research` 字段也是类似：它本质上是一个对象，里面包含 `parent` 与 `objectives`，后者往往涉及 `SectorComplete` 等复杂目标，这些结构在 JSON 里能写，但写错一个键就会整个解锁链失效。
+
 ## 常见报错的读法
 
-`No content found with name 'xxx'` 通常是内部名拼写错误或内容解析失败；`Unknown consumption type` 表示 `consumes` 里写了不支持的键；`Invalid unit type` 说明单位 `type` 拼写有误；`Class not found` 则意味着 `type` 指向了不存在的类或类名不完整。
+`No content found with name 'xxx'` 通常是内部名拼写错误或内容解析失败；`Unknown consumption type` 表示 `consumes` 里写了不支持的键；`Invalid unit type` 说明单位 `type` 拼写有误；`Class not found` 则意味着 `type` 指向了不存在的类或类名不完整。遇到这些报错时，先检查拼写，再检查解析器支持的类型，再看原版有没有对应内容。
+
+还有一些更“类型相关”的报错，比如 `Expected object` 或 `Cannot parse`，通常意味着你把对象写成了字符串，或把数组写成了对象。遇到这类问题时，回到类定义看字段类型是最直接的解决方案。另外，报错通常会带文件名和行号，建议先定位那一行，而不是盲目翻全文件。
+
+字段名大小写也会导致报错。JSON 的键名必须和 Java 字段名完全一致，`reloadTime` 与 `reloadtime` 就会被当成两个不同字段。内容内部名同样区分大小写，连字符也不能漏掉。遇到 `No content found` 这类问题时，优先检查拼写。
+
+还有一种“不会报错但看起来不对”的情况：你写了字段，但 UI 没有对应显示。这通常是因为 `setStats()` 或 `setBars()` 没有为该字段添加展示，或者展示逻辑基于其他条件。遇到这种问题时，应该回到类定义看 UI 逻辑，而不是继续调数值。
 
 ## 小结
 
-只要能看懂 Java 类与字段，就能写对 JSON。`ContentParser` 决定了“哪些写法被允许”，遇到问题时先看报错，再查解析器，效率会比盲猜高得多。
+只要能看懂 Java 类与字段，就能写对 JSON。`ContentParser` 决定了“哪些写法被允许”，遇到问题时先看报错，再查解析器，效率会比盲猜高得多。建议多做“源码到 JSON”的逆向练习，熟悉之后写配置会非常顺手。把源码当成说明书，就不会被旧教程误导，学习曲线也会更平滑，后续进阶到 JS/Java 也会更轻松。等你形成自己的“字段词典”，写 JSON 会像在写一份更短的 Java，这时你已经具备独立读源码的能力，也更容易快速定位问题，改数值会更快，整体效率会更高也更稳定、更省心、更顺畅。

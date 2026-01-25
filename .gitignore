@@ -8,4 +8,5 @@
 .vitepress/.temp
 .idea/
 yarn.lock
+docs/general/src
 

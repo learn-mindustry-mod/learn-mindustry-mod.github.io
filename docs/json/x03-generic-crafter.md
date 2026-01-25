@@ -1,16 +1,16 @@
 # 工厂（GenericCrafter）
 
-在JSON模组中，最常见的生产方块就是`GenericCrafter`。它是“把输入变成输出”的基础模板：消耗物品/液体/电力，在经过`craftTime`后产出新的物品或液体。原版中的“硅冶炼厂”“相织布编织器”“相织布合成机”等都属于这个体系。
+在 JSON 模组里，最常见的生产方块就是 `GenericCrafter`。它是“把输入变成输出”的基础模板：消耗物品、液体或电力，经过一段 `craftTime` 后产出物品或液体。原版的“石墨压缩机”“硅冶炼厂”“相织布编织器”“相织布合成机”都属于这一类，所以学会 `GenericCrafter`，基本就掌握了大部分生产链。
 
 ## 一个最小示例
 
-先从一个最简单的把“煤”压成“石墨”的工厂开始：
+先从一个最简单的把“煤炭”压成“石墨”的工厂开始：
 
 ```json content/blocks/tutorial-graphite-press.json
 {
 	"type": "GenericCrafter",
 	"name": "示例石墨压制机",
-	"description": "把煤压成石墨的演示工厂。",
+	"description": "把煤炭压成石墨的演示工厂。",
 	"size": 2,
 	"health": 180,
 	"category": "crafting",
@@ -31,90 +31,241 @@
 	},
 	"research": "graphite-press"
 }
-
 ```
 
-`craftTime`的单位是刻（Tick），`60`就是1秒。`outputItem`表示每次完成一次制造时输出的物品数量。输入则写在`consumes`里。
+这里的 `craftTime` 单位是刻（tick），`60` 约等于 1 秒。`outputItem` 表示每完成一次制造输出多少物品，输入则写在 `consumes` 里。这个结构就是 `GenericCrafter` 的骨架，其他生产方块只是在这个骨架上添加了更多字段和效果。
 
-## 常用字段速览
+## 运转逻辑：进度、效率与消耗
 
-- `type`：固定写`GenericCrafter`；
-- `requirements`：建造花费；
-- `category`：建造分类，例如`crafting`、`production`；
-- `size`/`health`：方块大小和生命值；
-- `craftTime`：单次制造时间（单位为刻）；
-- `consumes`：消耗器，常用子项为`items`、`liquids`、`power`；
-- `outputItem`/`outputItems`：输出物品，二选一；
-- `outputLiquid`/`outputLiquids`：输出流体，二选一；
-- `liquidOutputDirections`：液体输出方向，和`outputLiquids`顺序对应，`-1`表示任意方向；
-- `itemCapacity`/`liquidCapacity`：内部缓冲上限；
-- `dumpExtraLiquid`/`ignoreLiquidFullness`：是否允许在液体输出接近满格时继续进度；
-- `craftEffect`/`updateEffect`/`updateEffectChance`：合成与工作特效；
-- `drawer`：绘制器，控制贴图叠层与动态效果。
+`GenericCrafter` 的核心逻辑是“进度条”。每帧都会按 `efficiency * delta / craftTime` 增加 `progress`，当进度达到 1 时触发一次 `craft()`。`efficiency` 来自消耗器：电力不足、输入缺失时 `efficiency` 会降到 0，进度也就停住。你在数值上看到的只是 `craftTime`，但真正决定产量的是 `craftTime` 和 `efficiency` 的乘积。
 
-## 多输出与配方组织
-
-如果需要一次产出多种物品，使用`outputItems`：
+`consumes` 是特殊语法，它不只是字段，而是“运行时消耗器”。`items` 和 `liquids` 支持字符串或对象写法，`power` 表示持续耗电（单位仍以刻为基准，面板会按每秒显示）。如果你需要可选消耗或增益输入，就必须用对象形式，例如：
 
 ```json
-"outputItems": [
-	{"item": "graphite", "amount": 1},
-	{"item": "sand", "amount": 2}
-]
+"consumes": {
+	"items": [{"item": "sand", "amount": 2}],
+	"liquid": {"liquid": "water", "amount": 0.1, "optional": true, "booster": true},
+	"power": 2.4
+}
 ```
 
-注意：`outputItem`与`outputItems`是互斥的，两个都写时以`outputItems`为准。
+这种写法能表达“没水也能做，但有水就会被消耗”的可选输入，也能让面板把它显示为加速或辅助输入，避免字符串简写无法表达 `optional` 和 `booster` 的限制。
 
-## 关于输出流体
+物品、液体与电力的消耗时机并不一样。`consumes.items` 是“结算式”消耗：进度条走满后才触发 `consume()`，一次性扣掉所需物品，所以输入物品往往会先堆在缓冲里。`consumes.liquid` 与 `consumes.power` 则是“流式”消耗，每帧按 `amount * delta` 扣除，供给不足会把 `efficiency` 拉到 0~1 之间，表现为“速度变慢”而不是直接停机。`optional` 只是把某个消耗从“必须”改成“可选”，它不会让 `GenericCrafter` 变快；如果想要“有水更快”的加速逻辑，需要换成自带加速的方块类型，或在 JS/Java 里自己把 `optionalEfficiency` 乘进进度。
 
-如果你的工厂要输出液体，可以写成这样：
+## 输出与缓冲：物品与液体的差异
+
+`outputItem` 和 `outputItems` 是互斥的。写了 `outputItem` 时，系统会在初始化阶段把它转成单元素的 `outputItems`，而 `outputItems` 本身会覆盖 `outputItem`。同理，`outputLiquid` 会被转成 `outputLiquids`，只要 `outputLiquids` 存在，工厂就会被视为“液体输出工厂”。
+
+物品输出发生在 `craft()`：先 `consume()` 消耗输入，再对每个产物调用 `offload()` 尝试向邻接建筑卸载，失败后才进入本机物品缓冲。也就是说，是否停机只取决于“本机缓冲是否还能容纳下一轮产出”，而不是外部传送带是否有空位。
+
+液体输出是“边生产边注入”。每帧根据进度，把 `outputLiquids` 注入本机液体缓冲。`ignoreLiquidFullness` 为 `false` 时，进度会受液体容量约束：`dumpExtraLiquid = false` 表示“任意一种液体满了就停”，`dumpExtraLiquid = true` 表示“只要有一种液体还有空间就继续”。`ignoreLiquidFullness = true` 则完全忽略满格限制，进度照常但液体会被容量上限截断。
+
+这意味着：输出物品工厂更容易被“缓冲满”卡死，而输出液体工厂更容易被“管网满”拖慢。设计时要把 `itemCapacity` 和 `liquidCapacity` 当作稳定器，容量越大，越能平滑短时堵塞。
+
+还有一点容易被忽略：物品产量与 `craftTime` 强绑定，而液体产量与 `craftTime` 没有直接关系。物品是“合成一次产出一次”，所以单位时间产量约等于 `outputItems.amount * 60 / craftTime`；液体是“每刻注入”，所以把 `craftTime` 调得更长并不会降低液体流量。想改液体产速，需要调 `outputLiquid` 的 `amount`，或让效率受输入限制。
+
+物品输出还有一个节奏字段 `dumpTime`。`craft()` 结束时只会 `offload()` 一次，后续则由 `dumpOutputs()` 按 `dumpTime` 定时 `dump()`，默认值是 5（每 5 刻尝试一次）。高产量工厂如果出口少，就会出现“内部堆满、传送带上断断续续”的表现。这时可以适当降低 `dumpTime`，或增大 `itemCapacity` 给物流更多缓冲。
+
+输入侧也需要考虑缓冲。`itemCapacity` 决定了工厂能够提前囤多少物品，它直接影响“断供多久才会停机”。如果你希望工厂在物流波动时仍能稳定运转，就应该把 `itemCapacity` 设为能覆盖至少一到两轮合成的物品量；反之，如果你希望它对输入更敏感，让玩家必须精确供给，就把容量压小。
+
+多输入配方还要注意“最稀缺物品”的占比。如果某个物品供应断断续续，它会让其他物品在缓冲里越堆越多，最终反向堵住工厂，所以容量设置要考虑最慢输入的节奏。尤其是高消耗配方，输入波动会被放大，越晚期越明显。
+
+## 方向与液体排放
+
+当你同时输出多种液体时，需要用 `liquidOutputDirections` 指定排放方向。方向是相对方块旋转的：0 表示右（东），1 表示上（北），2 表示左（西），3 表示下（南），`-1` 表示任意方向。如果数组长度短于 `outputLiquids`，超出的部分默认按 `-1` 处理。方向写对了，建造预览里会显示对应液体图标，这能让玩家一眼看出管道该怎么接。
+
+当你使用 `outputLiquids` 输出多种液体时，系统会把第一项写回 `outputLiquid`，主要用于逻辑传感器（如 `totalLiquids`）的读取，所以顺序也会影响传感器结果。`GenericCrafter` 还会根据输出自动打开 `hasItems`/`hasLiquids`，`consumes` 里的物品和电力也会自动启用 `acceptsItems` 与 `hasPower`，因此很多模组里写的 `hasItems`、`hasLiquids`、`outputsLiquid` 只是冗余提示，除非你要做特殊逻辑，否则可以省略。
+
+## 简写与对象的选择
+
+`outputItem`/`outputLiquid` 支持字符串简写，例如 `"graphite/2"`、`"cryofluid/0.3"`。简写很快，但当你需要更清晰的语义或要配合工具生成文档时，对象写法更稳。下面是“硝化反应器”的核心字段，它用字符串写法直接表达液体流量，同时在 `drawer` 里指定 `drawLiquid` 让液体颜色更醒目：
 
 ```json
-"outputLiquid": {"liquid": "water", "amount": 0.2}
+{
+	"type": "GenericCrafter",
+	"name": "硝化反应器",
+	"outputLiquid": "硝化重油/0.3",
+	"craftTime": 60,
+	"liquidCapacity": 30,
+	"consumes": {
+		"power": 5,
+		"items": ["spore-pod/1"],
+		"liquid": "oil/0.3"
+	},
+	"drawer": {
+		"type": "DrawMulti",
+		"drawers": [
+			{"type": "DrawRegion", "suffix": "-bottom"},
+			{"type": "DrawLiquidTile", "drawLiquid": "硝化重油"},
+			"DrawDefault"
+		]
+	}
+}
 ```
 
-`amount`表示每次合成周期的产出量，但它会随着进度持续产生，不是瞬间喷出。如果同时输出多种液体，使用`outputLiquids`数组，并用`liquidOutputDirections`指定方向。
+简写与对象写法在功能上等价，关键是保持一致。对于大型模组，建议在同一章节里尽量使用同一种风格，避免读者在不同写法之间频繁切换。
+
+## 视觉与声音
+
+`GenericCrafter` 的视觉表现由 `craftEffect`、`updateEffect`、`updateEffectChance` 和 `drawer` 共同决定。`craftEffect` 在每次合成完成时触发，`updateEffect` 则在运转时按概率触发。`updateEffectChance` 是“每帧概率”，值太大容易堆效果，值太小又看不出工作状态。
+
+`drawer` 决定贴图叠层与动画形式，常见的组合是 `DrawMulti`，再叠加 `DrawFlame`、`DrawWeave`、`DrawLiquidTile` 等。`warmupSpeed` 只影响动画进度，不直接改变产量，但它会驱动 `DrawPart` 的 `warmup` 进度，因此会改变“看起来的节奏”。`ambientSound` 与 `ambientSoundVolume` 则负责“运转中的持续声”，适合让高能工厂有明显存在感。
+
+动画相关的三个进度值也值得理解：`progress` 是 0~1 的合成进度，完成后会归零；`totalProgress` 会随 `warmup` 持续累积，适合驱动持续旋转或循环效果；`warmup` 是平滑后的运转热度，用来避免动画忽快忽慢。很多 `DrawBlock`（如 `DrawWeave`、`DrawSmelt`）默认使用这些值，所以你在自定义 `DrawPart` 时可以按“短周期用 `progress`、长周期用 `totalProgress`、节奏用 `warmup`”的思路选择驱动量。
+
+## 产量与平衡的直觉
+
+`GenericCrafter` 的平衡点通常由“每秒产量”和“每秒消耗”决定。假设效率为 1，那么每秒产量大约等于 `60 / craftTime * 输出数量`，每秒物品消耗也按同样比例计算。电力消耗是持续性的，所以 `consumes.power` 越大，电网压力越明显。如果你的工厂设计为“高爆发低持续”，可以把 `craftTime` 拉长、`outputItem.amount` 拉高；如果想要“稳定持续”，就缩短 `craftTime` 并减少单次产量。
+
+除了产量本身，`requirements`、`category` 与 `research` 也决定了玩家实际感受到的强度。高输出工厂如果仍然放在 “crafting” 分类且造价便宜，会直接掐断原版进度；相反，把成本拉高、把 `research` 指向更晚的节点，就能让它成为真正的“科技升级”。`research` 既可以是字符串（引用父节点内部名），也可以是对象，附带额外的解锁条件，这对大型模组尤其重要。
+
+## 模组示例：饱和火力 3.3.0 的“归中编织器”
+
+“归中编织器”是一个典型的高阶物品工厂。它通过 `DrawMulti` 叠加 `DrawWeave`，同时把 `outputItem` 的产量拉高，让玩家感觉到“这是更快更强的相织布生产线”
 
 ```json
-"outputLiquids": [
-	{"liquid": "water", "amount": 0.15},
-	{"liquid": "oil", "amount": 0.05}
-],
-"liquidOutputDirections": [0, 2]
+{
+	"type": "GenericCrafter",
+	"name": "归中编织器",
+	"outputItem": {"item": "phase-fabric", "amount": 4},
+	"craftTime": 60,
+	"consumes": {
+		"power": 8.75,
+		"items": {"items": ["thorium/4", "sand/20", "裂位能/1"]}
+	},
+	"drawer": {
+		"type": "DrawMulti",
+		"drawers": ["DrawWeave", "DrawDefault"]
+	}
+}
 ```
 
-方向按顺时针递增：0=右（东）、1=上（北）、2=左（西）、3=下（南）。实际方向会叠加方块自身旋转，可理解为`(方块旋转 + 方向值) % 4`，`-1`表示任意方向。
+这个片段展示了“高产量 + 高消耗 + 高视觉”的组合方式，适合用来做中后期升级版本。
 
-## 输入写法小贴士
+## 模组示例：饱和火力 3.3.0 的“激活液化器”
 
-- 物品输入可以写成字符串形式`"coal/2"`，也可以写成对象形式`{"item": "coal", "amount": 2}`；
-- 液体输入更推荐对象形式，例如`{"liquid": "water", "amount": 0.1}`，因为字符串简写只能表达`water/0.1`，无法配置`booster`/`optional`等附加项；
-- 只要在`consumes`里写了对应输入，`GenericCrafter`会自动按需消耗。
+“激活液化器”展示了 `outputLiquid` 与多输入的组合。它同时消耗物品与液体，并持续输出更高级的液体，同时用 `DrawLiquidTile` 与旋转贴图强化“液体工厂”的视觉特征：
 
-## 容量与停机逻辑
+```json
+{
+	"type": "GenericCrafter",
+	"name": "激活液化器",
+	"outputLiquid": "纳米流体/0.9",
+	"craftTime": 120,
+	"liquidCapacity": 120,
+	"consumes": {
+		"power": 24,
+		"items": ["纳米核/9"],
+		"liquid": "water/1.2"
+	},
+	"drawer": {
+		"type": "DrawMulti",
+		"drawers": ["DrawLiquidTile", "DrawDefault"]
+	}
+}
+```
 
-- 物品输出发生在`craft()`里：先`consume()`消耗，再对每个产出调用`offload()`尝试向邻接建筑卸载，失败才进入本机物品缓冲；
-- 停机判断只看**本机物品缓冲**是否还能容纳下一次产出：当`items.get(输出物品) + 输出数量 > itemCapacity`时，`shouldConsume()`返回`false`，进度直接停住；
-- 这与输入堆满无关；即使外部有空位，如果本机缓冲已满到放不下下一次产出，也会停机，直到被`dump()`或邻接建筑取走；
-- 液体输出是“边生产边流出”：每帧按进度把`outputLiquid(s)`注入本机液体缓冲；
-- 当`ignoreLiquidFullness = false`时，进度会按液体缓冲空间缩放：`dumpExtraLiquid = false`表示**任意一种液体满了就卡住**，`dumpExtraLiquid = true`表示**只要有一种液体还有空间就继续**；
-- `ignoreLiquidFullness = true`时完全忽略液体满格，进度照常，但液体会被容量上限截断。
+这类结构非常适合做“液体升级链”，同时也能很好地考验玩家的管道与电网布局。
 
-## 进度与速度
+## 模组示例：多物品输出的写法
 
-- `progress`按`getProgressIncrease(craftTime)`增长，本质是`efficiency * delta / craftTime`，效率越低越慢；
-- `efficiency`由消耗器决定：电力不足或缺少输入会把效率降到0，从而停机；
-- `progress`达到1触发一次`craft()`，并重置到0附近开始下一轮。
+“激发放射塔”使用了 `outputItems`，一次合成会同时产出两种物品。这类写法常用于“副产物”设计，让生产线既输出主产物，也输出少量附带资源：
 
+```json
+{
+	"type": "GenericCrafter",
+	"name": "激发放射塔",
+	"outputItems": ["thorium/2", "裂位能/12"],
+	"craftTime": 60
+}
+```
 
-## 绘制与特效
+当你需要“输出两种物品但只算一次合成周期”时，`outputItems` 是最直接的工具。
 
-- `craftEffect`：完成一次合成时触发；
-- `updateEffect`与`updateEffectChance`：工作中按概率触发；
-- `drawer`：绘制器决定贴图叠层，常见用法是换成`DrawMulti`或`DrawFlame`等，以获得更复杂的动画效果。
+## 模组示例：饱和火力 3.3.0 的“大型冷冻机”
 
-## 常见问题
+“大型冷冻机”可以看作是原版“冷冻液混合器”的强化版本。它用 `outputLiquid` 的对象写法输出“冷冻液”，并把 `updateEffect` 设为 `freezing` 来强化冰冷感。由于液体是连续产出，它还把 `liquidCapacity` 拉高，保证短时间堵管不至于直接停机。下面是字段节选：
 
-- **为什么没有输出？**：检查输出口是否连接了运输线路/管道，缓冲满会停机。
-- **为什么一直不动？**：检查`consumes`是否写对、输入是否满足、电力是否足够。
-- **为什么液体喷不出来？**：确认`outputLiquids`与`liquidOutputDirections`数量一致，或用`-1`允许任意方向排放。
+```json
+{
+	"type": "GenericCrafter",
+	"name": "大型冷冻机",
+	"outputLiquid": {"liquid": "cryofluid", "amount": 0.61},
+	"craftTime": 60,
+	"liquidCapacity": 60,
+	"updateEffect": "freezing",
+	"consumes": {
+		"power": 4,
+		"items": ["titanium/1"],
+		"liquid": "water/0.61"
+	},
+	"drawer": {
+		"type": "DrawMulti",
+		"drawers": [
+			{"type": "DrawRegion", "suffix": "-bottom"},
+			{"type": "DrawLiquidTile", "drawLiquid": "cryofluid"},
+			"DrawDefault"
+		]
+	}
+}
+```
+
+这个例子强调了“流量式液体输出”的直觉：工厂不靠 `craftTime` 控制流量，而是直接通过 `outputLiquid.amount` 来调节产速。
+
+## 模组示例：饱和火力 3.3.0 的“爆破冲压炉”
+
+“爆破冲压炉”主打高产量与强反馈。它一次性产出大量“硅”，`craftTime` 很短，但 `consumes.power` 与物品消耗极高，同时用 `craftEffect` 叠加粒子与波纹，再配上 `ambientSound` 形成持续压迫感。下面只摘取和节奏相关的字段：
+
+```json
+{
+	"type": "GenericCrafter",
+	"name": "爆破冲压炉",
+	"outputItem": {"item": "silicon", "amount": 10},
+	"craftTime": 30,
+	"consumes": {
+		"power": 10,
+		"items": ["blast-compound/1", "sand/10"]
+	},
+	"craftEffect": {
+		"type": "MultiEffect",
+		"effects": [
+			{"type": "ParticleEffect", "particles": 8, "sizeFrom": 8, "sizeTo": 0, "length": 35, "lifetime": 35},
+			{"type": "WaveEffect", "lifetime": 10, "sizeFrom": 0, "sizeTo": 45, "strokeFrom": 3, "strokeTo": 0}
+		]
+	},
+	"ambientSound": "explosion",
+	"ambientSoundVolume": 0.5
+}
+```
+
+这个配置展示了“数值 + 反馈一起拉满”的思路：如果你的工厂定位是“高强度、高风险”，就要用视觉和音效把它的强度表现出来。
+
+## 模组示例：饱和火力 3.3.0 的“纳米打印机”
+
+“纳米打印机”展示了 `outputItem` 的字符串简写和 `research` 的对象写法。它把产物直接写成 `"纳米核/1"`，并在 `research` 里附加解锁条件，用来限制玩家必须完成某些战役内容后才可建造。对于大型模组来说，这种做法比单纯挂在某个父节点更精细。
+
+```json
+{
+	"type": "GenericCrafter",
+	"name": "纳米打印机",
+	"outputItem": "纳米核/1",
+	"craftTime": 20,
+	"consumes": {
+		"power": 15,
+		"items": ["titanium/1", "silicon/1"]
+	},
+	"research": {
+		"parent": "纳米组装机",
+		"objectives": [
+			{"type": "SectorComplete", "preset": "火山岛"}
+		]
+	}
+}
+```
+
+## 常见问题的理解方式
+
+如果工厂没有输出，优先检查“输出口是否通畅 + 本机缓冲是否已满”。如果一直不动，通常是 `consumes` 写错、输入不足或电力不够。如果液体排不出去，除了管道问题，还要检查 `outputLiquids` 和 `liquidOutputDirections` 的数量是否匹配，以及是否把方向写成了绝对方向而不是相对方向。理解这些机制后，排错就会变得很快。
+
+如果工厂能动但速度忽快忽慢，先看 `consumes.liquid` 和 `consumes.power`。它们是按帧扣除的，液体或电力不足会把 `efficiency` 压低，所以看起来像“产线抖动”。另一个容易误判的点是 `dumpTime`：即便已经完成合成，物品也可能因为 `dumpTime` 的节奏而间歇式输出，这种“断续”并不一定是停机。

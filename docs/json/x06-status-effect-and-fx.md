@@ -1,16 +1,22 @@
 # 状态效果、特效、音效
 
-这一节把“战斗表现”拆成三层：状态效果负责数值变化，特效负责视觉反馈，音效负责声音反馈。JSON 可以配置大部分表层效果，但真正的反应联动仍需要 Java 支持。
+这一节把“战斗表现”拆成三层：状态效果负责数值变化，特效负责视觉反馈，音效负责声音反馈。JSON 能完成绝大多数“表层表现”，但涉及反应联动与复杂行为时仍需要 Java 支持。
 
 ## 状态效果（StatusEffect）
 
-状态效果会附着在单位身上并持续生效。它可能来自子弹、液体、天气或某些方块。`damage` 是每刻伤害（60 刻约等于 1 秒），因此 `damage = 0.1` 表示每秒约 6 点伤害。`intervalDamage` 与 `intervalDamageTime` 则提供“间隔伤害”，更适合爆发式的毒素或电击节奏。
+状态效果是持续作用在单位上的“数值修饰器”。它常常来自子弹、液体、天气或地板。例如子弹可以设置 `status` 与 `statusDuration`，液体可以设置 `effect` 和 `status`，天气可以定期施加某种状态。理解状态效果的关键是时间单位：Mindustry 以“刻”为单位，`1 秒 = 60 刻`。因此 `damage = 0.1` 并不是每秒 0.1 伤害，而是每刻 0.1，折算成每秒约 6 点伤害。
 
-倍率类字段决定单位属性的缩放：`speedMultiplier` 影响移动速度，`reloadMultiplier` 影响射速，`buildSpeedMultiplier` 影响建造速度，`damageMultiplier` 与 `healthMultiplier` 则分别影响输出与血量。`disarm` 可以禁用武器，`dragMultiplier` 影响移动阻力。视觉方面，`color` 决定单位的染色，`effect` 是持续播放的特效，`applyEffect` 是刚被施加时的瞬间特效，`effectChance` 决定持续特效的出现频率。
+`damageMultiplier`、`healthMultiplier`、`speedMultiplier`、`reloadMultiplier`、`buildSpeedMultiplier` 等倍率类字段会直接影响单位的基础数值。`speedMultiplier` 影响移动速度，`reloadMultiplier` 影响射速，`buildSpeedMultiplier` 影响建造与修复速度。`damageMultiplier` 与 `healthMultiplier` 会改变单位的输出与血量，但不会改变当前血量的绝对值，只影响“计算时的倍率”。
 
-`show` 控制状态是否出现在数据库里，`outline` 控制图标描边。`permanent` 会让状态一直存在，通常用于“被动能力”，不建议随意开启。单位是否免疫状态由 `UnitType` 的 `immunities` 列表控制。
+还有一些更容易被忽略的字段：`dragMultiplier` 会影响转向和刹车感，适合做“粘滞”或“漂移”类状态；`damage` 可以为负值，表示持续治疗，这在支援类状态里非常常见；`parentizeEffect` 与 `parentizeApplyEffect` 可以让特效跟随单位移动，适合让状态效果“贴身”表现；`show` 与 `outline` 则影响数据库是否显示以及图标描边，用于隐藏内部状态或做视觉区分。
 
-需要注意的是，JSON 里写 `affinities` 或 `opposites` 只会影响数据库展示，不会触发真正的反应逻辑。原版中“潮湿”遇到“电击”的连锁反应，是在 Java 里通过 `affinity`/`opposite`/`trans` 注册的，JSON 目前无法配置这部分逻辑。
+如果你需要“间歇式伤害”，可以用 `intervalDamage` 与 `intervalDamageTime`。前者是每次间隔造成的伤害，后者是间隔刻数。`intervalDamagePierce` 设为 `true` 时会无视护甲。与之对应，`damage` 是“每刻伤害”，适合持续灼烧与毒素。`disarm` 会禁用武器，`applyExtend` 控制“重复施加时是否再次触发 applyEffect”，`permanent` 则让状态不会自然消失。
+
+状态叠加的逻辑也需要注意：同一种状态再次施加时，持续时间取更长的那一个，不会简单叠加伤害；不同状态之间会先检查反应逻辑，若存在反应则可能触发过渡效果并结束此次施加。`reactive` 设为 `true` 的状态本身不会直接施加，它更像“只用于反应”的占位状态。`transitionDamage` 则用于反应时的附加伤害，但它需要配合 Java 里的 `affinity`/`opposite`/`trans` 才能生效。
+
+视觉层面的字段包括 `color`（状态染色）、`effect`（持续特效）、`effectChance`（持续特效出现概率）、`applyEffect`（施加瞬间特效）、`applyColor`（施加特效颜色）、`outline`（图标描边）与 `show`（是否在数据库显示）。这些字段决定玩家“看见的状态”，但不改变数值逻辑。
+
+`effect` 与 `applyEffect` 的差别很容易被忽略：前者是“持续随机触发”，后者是“施加瞬间触发”。如果你希望玩家每次命中都能感知状态，应该用 `applyEffect` 或把 `effectChance` 调高；如果你只想让状态有“淡淡的存在感”，则保持低概率即可。`applyExtend` 设为 `true` 时，重复施加也会再次触发 `applyEffect`，但这会带来更多特效开销，最好结合性能考虑。
 
 ```json content/statuses/tutorial-slow.json
 {
@@ -24,11 +30,74 @@
 
 ```
 
-上面的例子把速度降到 0.7，并附加少量持续伤害。`effect` 引用了原版的 `Fx.wet`，因此会出现“潮湿”的粒子表现。
+这个例子把速度降到 0.7，并附加少量持续伤害。`effect` 引用了原版 `Fx.wet`，因此会出现“潮湿”的粒子表现。
+
+如果你把 `damage` 设成负值，它会变成持续治疗效果，而不是伤害。这种状态很适合配合支援单位或建筑，让它们在特定区域提供“微量修复”。配合 `reloadMultiplier` 或 `buildSpeedMultiplier`，还能做出“修复 + 加速”的复合增益。
+
+状态颜色也值得斟酌。`color` 不仅影响状态图标，还会作为 `effect` 的默认颜色参与渲染。如果你用了透明度较低的颜色，粒子会显得很淡；反之则可能“盖过”其他特效。调色时可以先用原版颜色作参照，再微调饱和度与透明度。
+
+需要注意的是，JSON 里写 `affinities` 或 `opposites` 只会影响数据库展示，并不会触发真正的反应逻辑。原版的“潮湿 + 电击”之类的连锁效果是在 Java 里通过 `affinity`/`opposite`/`trans` 注册的，JSON 无法配置这部分，所以仍需代码支持。（注：笔者已经提交了相关的代码，正在等候 Anuke 合并）
+
+## 状态的来源与扩散
+
+状态效果并不只来自子弹。液体在地面形成水洼时可以施加状态，天气可以周期性施加状态，某些地板也会在单位经过时附加状态。这意味着你在设计状态时，不仅要考虑“命中时的效果”，还要考虑它被环境广泛传播后的影响。例如一个过于强力的减速状态，如果被地板或天气传播，很容易让整张地图的战斗节奏失衡。
+
+状态持续时间的刷新也会影响战斗体验。相同状态再次施加时会把持续时间拉到更长的那个值，而不是叠加两倍伤害。这个机制会让“持续补状态”的武器表现稳定，但也会让“低频高强度”的状态不容易在短时间内叠加。设计时要么提高 `damage`，要么把 `intervalDamageTime` 设得更短，避免状态存在但伤害不明显。
+
+`statusDuration` 在子弹、液体、天气中的来源不同，但都需要与你的节奏匹配。持续时间过短，玩家几乎看不到效果；过长又会让状态“像永久一样”覆盖战场。一个常用的做法是先根据武器的 `reload` 估算触发频率，再反推 `statusDuration`，保证“效果可见但不会堆满”。
+
+单位免疫是另一层平衡手段。`UnitType` 的 `immunities` 可以让单位完全无视某些状态，这常用于“高阶单位”或“Boss”，也可以用来塑造阵营特色。比如你可以让某个阵营对“燃烧”免疫，但对“冻结”更敏感，从而改变玩家的武器选择。
+
+## 模组示例：饱和火力 3.3.0 的“急冻”
+
+在“饱和火力 3.3.0”里，“急冻”是一个典型的高伤害减速状态。它同时降低速度、生命倍率与射速，还加入了自定义的粒子特效。注意 `effect` 使用了 `ParticleEffect` 并指定了 `region`，这意味着它依赖自定义贴图。下面是该状态的节选：
+
+```json
+{
+	"name": "急冻",
+	"color": "c0ecff",
+	"damage": 1.62,
+	"healthMultiplier": 0.7,
+	"speedMultiplier": 0.4,
+	"reloadMultiplier": 0.45,
+	"opposites": ["burning", "melting", "殁火"],
+	"effect": {
+		"type": "ParticleEffect",
+		"particles": 3,
+		"lifetime": 26,
+		"region": "饱和火力-三角形",
+		"colorFrom": "c0ecff",
+		"colorTo": "c0ecff"
+	}
+}
+```
+
+这个例子展示了“数值压制 + 强视觉效果”的组合。`opposites` 在 JSON 里只用于显示，但它至少能让玩家在数据库面板上读到“急冻与燃烧对立”的信息。
+
+## 模组示例：饱和火力 3.3.0 的状态脚本
+
+“饱和火力 3.3.0”里有一批状态是用脚本补逻辑的。例如“阳电/阴电”的亲和反应就写在 `scripts/base/status.js`，通过 `affinity` 把两种状态之间的连锁伤害显式编码出来：
+
+```js
+const 阳电 = extend(StatusEffect, "阳电", {
+	init() {
+		this.affinity(阴电, (unit, result, time) => {
+			unit.damagePierce(this.transitionDamage);
+			result.set(阴电, Math.min(time + result.time, 60));
+		});
+	}
+});
+```
+
+这类逻辑无法用 JSON 表达，但它能让状态从“单一数值”变成“反应体系”。当你需要状态之间的联动时，脚本或 Java 才是正确的解决路径。
 
 ## 特效（Effect / Fx）
 
-特效是短时视觉片段，常见于炮塔开火、方块建造、生产完成、单位死亡等。JSON 里可以直接写原版 `Fx` 的名字（字符串），也可以写一个对象并指定 `type` 来创建自定义特效。若对象里不写 `type`，默认会当成 `ParticleEffect` 解析。你还可以用数组写多个效果，解析器会自动合成为 `MultiEffect`。
+特效是短时视觉片段，常见于炮塔开火、方块建造、生产完成、单位死亡等。JSON 里可以直接写原版 `Fx` 的名字（字符串），也可以写一个对象并指定 `type` 来创建自定义特效。若对象里不写 `type`，解析器会默认把它当成 `ParticleEffect`。如果你写的是数组，解析器会自动合成为 `MultiEffect`，多种特效将同时播放。
+
+`ParticleEffect` 的核心参数是 `particles`（粒子数量）、`lifetime`（持续时间）、`length`（拖尾长度）、`sizeFrom/sizeTo`（大小变化）与 `colorFrom/colorTo`（颜色渐变）。这些字段组合后，就能做出火花、烟雾、能量粒子等常见效果。`WaveEffect` 则更适合做冲击波或环形波纹，它常用 `sizeFrom/sizeTo` 与 `strokeFrom/strokeTo` 描绘“扩散与淡出”。如果你想要更复杂的效果，可以用 `MultiEffect` 组合多种模板，或者直接引用原版 `Fx`。
+
+特效对象还有一些“行为型”的通用字段。`followParent` 与 `rotWithParent` 可以让特效跟随单位或子弹移动并旋转，适合做“贴身效果”；`startDelay` 能推迟播放，用来制造“延迟爆炸”或“余波”；`clip` 与 `layer` 则影响绘制范围与层级，让特效不会被地形遮挡或被 UI 覆盖。你不一定每次都用到这些字段，但当表现“看起来不对”时，往往就是这些细节决定了最终观感。
 
 ```json
 "craftEffect": {
@@ -43,15 +112,32 @@
 }
 ```
 
-粒子类特效最常用的字段是 `particles`、`lifetime`、`length` 与 `sizeFrom/sizeTo`，颜色一般用 `colorFrom/colorTo` 做渐变。波纹类效果会用 `waveRad` 与 `waveStroke`，拖尾类效果会用 `trailLength` 与 `trailWidth`。特效字段非常多，实用策略是先对照原版效果再修改。
+注意 `lifetime` 的单位仍然是刻。一个 `lifetime = 30` 的特效持续约 0.5 秒，过长会显得“拖泥带水”，过短又会看不清。调参时可以先让 `lifetime` 稍长一些，确认效果后再缩短。
+
+## 特效与性能的平衡
+
+特效是最容易“堆出卡顿”的部分。粒子数量、生命周期和范围都会影响性能，尤其是大量单位同时触发时。一个 `particles = 30` 的特效看起来很华丽，但如果你的炮塔射速很高，很快就会在战场上堆出几百个粒子。更稳妥的做法是用较少的粒子配合颜色与大小变化，让效果“看起来很强”，而不是“真的很重”。
+
+除了减粒子，还可以调 `effectChance` 与 `lifetime` 来控制频率与持续时间。很多持续性武器只需要“稀疏但明显”的特效，完全没必要每一帧都生成粒子。再配合较小的 `clip` 范围，渲染开销会明显下降，战斗场面也更干净。
+
+另外，特效的风格要与数值一致。高爆发武器可以用明显的冲击波与闪光，持续性武器可以用细小但连贯的粒子。玩家会通过视觉判断武器强度，如果特效与实际伤害差距太大，会造成体验上的“误导”。
 
 ## 音效（Sound）
 
-音效来源于 `core/assets/sounds`，在 JSON 中通常直接引用 `Sounds` 里的字段名。常见的音效字段包括 `shootSound`、`chargeSound`、`placeSound`、`breakSound`、`destroySound`、`ambientSound` 等。若你自带音效，把 `ogg` 或 `mp3` 放进 `sounds/` 目录，文件名就是你要引用的名字。
+音效来源于 `core/assets/sounds`。在 JSON 中通常直接引用 `Sounds` 里的字段名，例如 `shootSound`、`chargeSound`、`placeSound`、`breakSound`、`destroySound`、`ambientSound`。不同方块或武器对音效字段的支持并不完全一致，所以建议先对照原版配置再填写。
 
-音效的体验很依赖搭配：比如充能类炮塔应同时设置 `chargeSound` 与 `shootSound`，环境类方块则适合用 `ambientSound` 提升氛围。
+若你自带音效，把 `ogg` 或 `mp3` 放进 `sounds/` 目录，文件名就是你要引用的名字。音效的“响度与音高”通常由 `soundVolume`、`soundPitchMin`、`soundPitchMax` 控制，但具体字段是否生效取决于方块或武器的实现。因此更安全的做法是先复用原版字段，再逐步替换。
+
+持续性的声音通常用 `loopSound` 或 `ambientSound`，前者更多用于“正在工作”的设备，后者偏向环境氛围。搭配 `soundPitchMin/soundPitchMax` 做轻微的音高浮动，能让连续播放的声音不至于太机械；而 `soundVolume` 则是最直接的平衡杠杆，尤其在一屏多个炮塔同时开火时，适当降音量能显著减少“噪声疲劳”。
+
+如果你在一个关卡里同时使用了多种自定义音效，最好先做一次“混音检查”，避免同频段叠加导致刺耳或浑浊。很多时候只需要略微降低音量或缩短音效长度，就能让整体听感更清晰。
+
+## 声音作为设计的一部分
+
+音效并不是“可有可无”的装饰。射击音效能告诉玩家“是否在命中”，充能音效能提示“是否即将开火”，环境音效则能让地图氛围更完整。比如高能武器如果没有明显的充能音效，玩家很难感知它的危险性；而持续性武器如果没有稳定的循环音效，又会显得没有存在感。建议在设计时让“听觉反馈”和“数值强度”保持一致。
+
+如果你的模组里有多种炮塔或单位同时开火，音效的“混响”也很重要。过多高频音效会刺耳，过多低频音效会让战场变得浑浊。你可以通过调整音量或替换音效，让战斗听起来更清晰。
 
 ## 小结
 
-状态效果偏数值、特效与音效偏表现。JSON 能完成绝大多数“视觉与数值”配置，但需要复杂联动时仍建议转向 Java。
-
+状态效果偏数值，特效与音效偏表现。只要理解“时间单位”和“叠加逻辑”，你就能做出稳定且易调的状态体系；再配合合适的特效与音效，就能让战斗表现明显提升。很多模组质感的差异，往往就来自这三者的配合，并且要与武器节奏保持一致，也更耐看。
