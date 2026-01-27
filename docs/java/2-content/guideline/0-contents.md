@@ -1,3 +1,6 @@
-- 译名：`sprite` `image` `texture` `altas`：贴图（而不是精灵） 图像 纹理 图集册
-- 给出原版内容示例时，要用双引号+官方中文名称，如“幻型”，而不是`poly`
+- 译名：`sprite` `image` `texture` `altas` `region` `puddles`：贴图（而不是精灵） 图像 纹理 图集册 贴图（极少情况是“区域”）水洼
+- `fragment` `module` `dialog` `tile`：栏 槽 对话框 格子
+- `field`：场/字段
+- 给出原版内容示例时，要用双引号+官方中文名称，如“幻型”，而不是`poly`，但在集中列举时不加双引号，如列表说明原版硬度分布表时
 - 由于不方便处理尖括号，所以泛型都要用语言描述，例如“包含`UnitType[]`的`Seq`，而不是`Seq<UnitType>`
+- 禁止使用“阶级”这个词
