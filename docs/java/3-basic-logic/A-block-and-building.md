@@ -1,32 +1,113 @@
-# 方块和实体
+# 方块与建筑
 
-在上一章，我们刻意地回避了一个问题————什么叫一个方块？一个方块肯定不能代表在**世界（World）**中仅一个**建筑（Building）**，假如我们真的每一个建筑都要自己声明，那该有多么的麻烦？
+恭喜你已成功掌握内容的创建流程。然而，这些并非你选择使用 Java 的全部原因。从本章开始，你将着手编写真正的代码，充分发挥 Java 的语言优势，实现天马行空的想法。但在此之前，仍需打好坚实基础，方能行稳致远。
 
-从这一节开始，我们终于要写真正的代码了。这时，我们首先就要区分**方块**和**建筑**。不过，首先我们要复习Java中一个基本的知识点。
+## 一组辨析
 
-## 多态
+方块（Block）与建筑（Building）是两个相关但本质不同的概念。在编写代码时，需要明确区分二者：
 
-> 多态是指同一操作或方法在不同的对象上有不同的行为。它使得程序能够使用同样的接口来处理不同的对象，从而提高了代码的可扩展性和可维护性。要实现多态，以下三大条件缺一不可：<br>
-> 1.必须在继承体系下<br>
-> 2.子类必须要对父类中方法进行重写<br>
-> 3.通过父类的引用调用重写的方法
+- 方块（Block）：指具有特定功能和属性的一类方块。例如，“石墨压缩机”是一种方块，其内部名称为`graphite-press`，属于通用工厂`GenericCrafter`类型。它定义了通用的行为，如消耗两单位“煤”并产出一单位“石墨”。方块的属性是所有同类建筑共用的，包括最大生命值`health`、尺寸`size`、建造消耗`requirements`等。前一章所配置的内容均属于此范畴。
+- 建筑（Building）：指在世界（World）中实际存在的具体建筑实体，它是一个可独立绘制和更新的对象。例如，在游戏中放置一个“石墨压缩机”后，该实例就是一个建筑。它拥有自己独立的属性，如坐标`x`、`y`，当前生命值`health`、运行效率`efficiency`等。本章大部分操作直接或间接处理的对象都是建筑。
 
-**多态是Mindustry模组的核心，也是Mindustry模组开发几乎唯一的方式**。之所以这样说，是因为其他游戏有着几乎完全不同的开发方式。有的游戏模组是**事件驱动**的，即通过监听原版某一行为而做出一些反应，典型如《半条命2》，在 Mindustry 中服务器开发也常用这一范式，但是Mindustry孱弱的事件系统无法支撑模组所有功能的开发；也有的模组高度依赖于**Mixin**，即直接修改游戏的代码，插入自己的功能，典型如Minecraft。
+明确区分方块和建筑对于代码编写至关重要，它决定了代码的作用层面。例如，若需修改方块在核心数据库中的显示信息，应意识到这是对方块的配置，不涉及任何具体建筑实例。若希望建筑根据其当前生命值变化显示不同贴图，则应理解这是对建筑实例的处理，因为它依赖于每个建筑独立的状态属性`health`。
 
-不过，这三种开发方式并非全部方式，仅为笔者一面之词，并且也都是相互渗透的。在这里只是强调，在Mindustry模组的开发中，**不是你把你的代码交给游戏，而是游戏去主动找你的代码**。
+## 多态与继承
 
-具体说来，我们还是要从多态的三大条件入手，分析多态的作用。
+在深入探讨方块与建筑相关的代码实现之前，一个需要明确的基础问题是：模组的运行机制是怎样的？
 
-### 继承体系
+这个问题有两种答案。第一种答案是，通过内容注册机制将你的内容注册到原版内容管理器中，再通过多态机制运行你的代码。另一件方式是通过事件系统在合适的时机运行代码，并从参数中获得必要的信息，对于这种机制，我们会在3.8中阐明。此处我们只会阐述内容-多态机制。
 
-在上一章，我们已经初步了解了原版内容的继承树，也通过Java知识的学习，明白了子类拥有父类的一切字段，并且在功能上有派生关系，`Content`是所有内容的基类，类中包括了`id`这样最基本的字段。
+首先，我们要明确多态的概念。多态的定义是，允许不同类的对象对同一消息做出不同的响应。简单来说，就是"一个接口，多种实现"。对此问题，通过Mindustry中已有的代码解释再清晰不过。
 
-### 方法重写`@Override`
+例如，原版中设置方块在核心数据库显示内容的方法为`setStats()`，对于`GenericCrafter`、`Pump`、`ConsumeGenerator`三个类而言，内容分别如下：
 
-然而，真正让不同的类有不同行为的，恰恰是那些被重写的方法。
+``` java
+@Override
+public void setStats(){
+    stats.timePeriod = craftTime;
+    super.setStats();
+    if((hasItems && itemCapacity > 0) || outputItems != null){
+        stats.add(Stat.productionTime, craftTime / 60f, StatUnit.seconds);
+    }
 
-比如，不同的方块，会根据自己希望给玩家展示的内容，在统计信息界面显示不同的信息：
+    if(outputItems != null){
+        stats.add(Stat.output, StatValues.items(craftTime, outputItems));
+    }
 
-//TODO 图图
+    if(outputLiquids != null){
+        stats.add(Stat.output, StatValues.liquids(1f, outputLiquids));
+    }
+}
+```
 
-例如，最基本的方块只在统计信息中显示“用途”和”基础“，而电池就会
+``` java
+@Override
+public void setStats(){
+    super.setStats();
+    stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond);
+}
+```
+
+``` java
+@Override
+public void setStats(){
+    stats.timePeriod = itemDuration;
+    super.setStats();
+
+    if(hasItems){
+        stats.add(Stat.productionTime, itemDuration / 60f, StatUnit.seconds);
+    }
+
+    if(outputLiquid != null){
+        stats.add(Stat.output, StatValues.liquid(outputLiquid.liquid, outputLiquid.amount * 60f, true));
+    }
+}
+```
+
+对比各字段的含义与游戏内核心数据库页的具体显示内容，可以确认`setStats()`方法中的代码决定了显示内容。
+
+然而，另一方面，大部分显示内容并未在这些类中定义，这是面向对象编程的另一特征——继承——所导致的结果。以下为其基类`Block`中的相关定义：
+
+``` java
+@Override
+public void setStats(){
+    super.setStats();
+
+    stats.add(Stat.size, "@x@", size, size);
+
+    if(synthetic()){
+        stats.add(Stat.health, health, StatUnit.none);
+        if(armor > 0){
+            stats.add(Stat.armor, armor, StatUnit.none);
+        }
+    }
+
+    if(canBeBuilt() && requirements.length > 0){
+        stats.add(Stat.buildTime, buildTime / 60, StatUnit.seconds);
+        stats.add(Stat.buildCost, StatValues.items(false, requirements));
+    }
+
+    for(var c : consumers){
+        c.display(stats);
+    }
+
+    //Note: Power stats are added by the consumers.
+    if(hasLiquids) stats.add(Stat.liquidCapacity, liquidCapacity, StatUnit.liquidUnits);
+    if(hasItems && itemCapacity > 0) stats.add(Stat.itemCapacity, itemCapacity, StatUnit.items);
+}
+```
+
+从上方的代码中可以看出，`Block`类中添加的统计信息是所有方块通用的。这是因为所有方块都继承了`Block`类，并且在执行`setStats()`时都调用了`super.setStats()`，即执行其超类的`setStats()`方法。实际上，向统计信息中添加方块的贴图和名称是`Block`超类`UnlockableContent`中的`setStats()`执行的结果。继承机制使得子类可以复用超类中已有的代码。
+
+最后，但也是最重要的，游戏是如何知道我们新建了一个内容？Mindustry的机制是，在内容对象的构造过程中自动完成注册。如果一个类直接或间接继承自内容的基类`Content`，其构造方法必须调用超类的构造方法，这个调用链最终会执行到`Content`的构造方法中：
+
+``` java
+public Content(){
+    this.id = (short)Vars.content.getBy(getContentType()).size;
+    Vars.content.handleContent(this);
+}
+```
+
+这两行代码表明，游戏会通过内容管理器`Vars.content`为内容分配一个在其内容类型中唯一的id，并将内容自身注册到管理器中。在后续的加载过程中，该内容会与原版内容以相同的方式被处理。当玩家打开该物品的统计信息界面时，游戏会调用内容的`setStats()`方法来计算需要显示的信息，此时相关的代码逻辑才会被执行。
+
+就以上讨论，我们可以得出结论：想要让游戏执行自己的代码，必须新建一个继承自原版内容的类，并创建此类的实例。

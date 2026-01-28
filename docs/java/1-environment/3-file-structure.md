@@ -61,9 +61,10 @@ java: true
 
 对于`contents/`文件夹，是JSON模组的文件。对于`scripts/`文件夹，是Javascript模组的文件。游戏本身没有禁止模组使用多种编程语言。
 
-对于`sprites/`和`sprites-override/`两个文件夹，它们有两个不同点：
+对于`sprites/`和`sprites-override/`两个文件夹，它们有三个不同点：
 
 - `sprites/`可以认为是你模组的贴图，而`sprites-override/`用于覆盖原版贴图；
-- `sprites/`中的贴图在引用时需要加上你的`modName`前缀，而`sprites-override/`不需要。
+- `sprites/`中的贴图在引用时需要加上你的`modName`前缀，而`sprites-override/`不需要；
+- `sprites/`中的贴图文件名不可以加`modName`前缀，否则引用时就需要写成`modName-modName-fileName`。
   
 实际上，游戏中所有贴图都被打包进入同一个**图集册（Atlas）**。在图集册中，又根据使用频率的不同，将贴图分为四个不同的**分页类型（PageType）**，即主页（main）、环境页（environment）、UI页（ui）和水洼页（rubble），是根据贴图路径进行划分的。如果出现了跨页，如绘制地板时用的贴图在主页，会产生一张“Wrong Texture Place”的贴图。此机制的影响将在后方展开。
