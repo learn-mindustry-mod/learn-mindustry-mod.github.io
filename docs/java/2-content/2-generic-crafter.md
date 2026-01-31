@@ -249,7 +249,7 @@ drawer = new DrawMulti(
 - `maxBoost`：增益效果的最大值，为增量；
 - `minEfficiency`：允许放置方块的最低增益效果，`-1`为无需增益也可放置；
 - `displayEfficiencyScale`：在显示工厂效率时的一个乘数；
-- `displayEfficiency`：是否在方块的 **放置栏（Placement Fragment）**显示工厂效率，即屏幕右下角显示建筑血量的部分；
+- `displayEfficiency`：是否在方块的 **建造栏（Placement Fragment）**显示工厂效率，即屏幕右下角显示建筑血量的部分；
 - `scaleLiquidConsumption`：是否在更改效率的同时改变流体消耗速率。
 
 对于`HeatCrafter`：

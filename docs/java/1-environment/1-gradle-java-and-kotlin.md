@@ -14,64 +14,40 @@ Mindustry是一个Java游戏项目，尽管其搭载了JavaScript引擎 *rhino*�
 
 无论您做什么，基本的运行环境————Java是不可或缺的。`JDK`即为Java开发的基础套件，它包含了Java编译器（`javac`）、Java运行时环境（`JRE`）等工具。
 
-对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 25，本教程的 Java 模组开发也是基于**Java 25**的。
+对于将使用到的JDK版本，你可以在`JDK 8`及以上自由选择java版本，一般来说我们建议使用最新的长期支持版本（LTS），目前最新的LTS版本为JDK 25。但是出于兼容性和原版同步的原因，本教程的 Java 模组开发基于**Java17**的。
 
-需要指出的是，`JDK`只是功能上的描述，实际上有多个厂商的JDK发行版可供选择，一般来说被广泛使用的有OracleJDK、Adoptium及GraalVM等。
+需要指出的是，`JDK`只是功能上的描述，实际上有多个厂商的JDK发行版可供选择，一般来说被广泛使用的有OracleJDK、Adoptium及GraalVM等。但OracleJDK已经不再提供Java 17了。因此，本教程与原版游戏保持一致，使用Adoptium JDK 17。
 
-本教程推荐在`Windows`或`macOS`尽量使用OracleJDK，因为其安装最简单。在`Linux`平台上，OracleJDK是安装包直装的，如果想要更高的性能，可以考虑使用`GraalVM`。
+Adoptium是一个开源的JDK发行版，由社区从属的完全免费JDK，但事实上对于我们个人开发而言并不需要考虑版权和协议问题。
 
+[!NOTE] Windows/macOS
+前往Adoptium官网，选择下载其他平台或版本，选择Java 17与电脑的系统，点击下载链接，选择Windows x64 JDK.msi进行下载：
+![download-adoptium](./imgs/download-adoptium.png)
+下载完成后，右键点击安装包，选择“以管理员身份运行”，与点击安装即可。
 
-[**OracleJDK**](https://www.oracle.com/java/technologies/javase-jdk21-downloads.html)的安装方式较为简单，它为Windows平台及Linux平台都提供了快速安装的发行包。
-
-::: info **Windows**
-
-通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`Windows x64 Installer（.exe）`进行下载：
-
-![download-oracle](./imgs/download-oracle.png)
-
-下载完成后，右键点击安装包，选择“以管理员身份运行”，你不需要做什么额外的设置，一路按照默认设置点击【下一步】直到安装完成即可。
-
-:::
-
-::: info **macOS**
-
-通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`ARM64 DMG Installer`或`x64 DMG Installer`（根据机型）进行下载：
-
-![download-oracle](./imgs/download-oracle.png)
-
-下载完成后，打开`.dmg`文件，运行其中的`.pkg`文件，一路按照默认设置点击【下一步】直到安装完成即可。
-
-:::
-
-::: info **Linux**
-
-Oracle同样为Linux提供了`deb`和`rpm`软件包和，找到符合你系统架构的软件包，下载完成后打开终端，执行以下命令安装：
-
+[!NOTE] Linux
+而Linux下安装Adoptium会相对比较麻烦，你需要下载它的`tar.gz`包，解压后手动配置路径及环境变量。
+下载软件包，将其放到你希望将jdk安装到的位置，打开终端，执行以下命令：
 ```bash
-sudo dpkg -i 你下载的文件.deb
+tar -xvf 你下载的文件.tar.gz
+cd 你解压的文件夹
+ls
 ```
-
-或者
-
+你应当会得到如下输出：
+```
+bin/  conf/  include/  jmods/  legal/  lib/  release  LINCESE.txt
+```
+我们需要的只有`bin`和`lib`这两个目录，要让java可以在命令行中使用，我们需要将`bin`目录添加到系统的环境变量中。
 ```bash
-sudo rpm -i 你下载的文件.rpm
+echo 'export PATH=$PATH:你解压的文件夹/bin'  ~/.bashrc
+source ~/.bashrc
+```
+如果你使用的是fish shell环境，可以直接使用`fish_add_path`来添加路径：
+```fish
+fish_add_path 你解压的文件夹/bin
 ```
 
-:::
-
-无论你通过哪一个方式安装完成JDK，在安装成功后均可通过以下命令检查JDK的安装情况：
-
-```bash
-java -version
-```
-
-如果你看到类似如下的输出，则说明JDK安装成功：
-
-```
-java version "25.0.1" 2025-10-21 LTS
-Java(TM) SE Runtime Environment (build 25.0.1+8-LTS-27)
-Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
-```
+安装完成后使用`java -version`命令检查JDK的安装情况。
 
 ## IDEA
 
@@ -95,7 +71,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 
 - 首先，访问[Google官网](https://developer.android.com/studio?hl=zh-cn)，下载最新的Android Studio；
 - 安装Android Studio，但不要安装`Android Virtual Device`（对Mindustry模组开发没有用处）；
-- 静待其安装完毕，找到Android Studio的设置（与IDEA类似），`Languages & Frameworks -> Android SDK`，记下`Android SDK Location`；
+- 静待其安装完毕，找到Android Studio的设置（与IDEA类似），`Languages & Frameworks - Android SDK`，记下`Android SDK Location`；
 - 访问`Android SDK Location`/build-tools，记下里面最新的版本号；
 - 然后，你需要设置环境变量（请自行百度）。**请注意！**Mindustry所需的安卓环境变量和常规有所不同，你需要将`ANDROID_HOME`（而不是ANDROID_SDK_HOME）设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`。
 

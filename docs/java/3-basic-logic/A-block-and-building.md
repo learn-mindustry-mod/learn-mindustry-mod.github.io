@@ -120,7 +120,7 @@ public Content(){
 
 根据以上的结论，我们已经准备好来向游戏中添加代码了。本教程将以“台灯”为例，向你展示创建一种新的方块的必要流程。
 
-创建任何一种新方块之前，一定要先明确自己的需求，这些需求应当可以通过严谨的流程框图或伪代码来表述。在本例中，我们希望台灯能在玩家手动点击时切换亮/暗形态。
+创建任何一种新方块之前，一定要先明确自己的需求，这些需求应当可以通过严谨的流程框图或伪代码来表述。在本例中，我们希望台灯能在玩家手动点击时切换亮/暗形态，点亮范围为5格。
 
 接下来，你需要创建一个继承于`mindustry.type.Block`的类，命名其为`LampBlock`。在原版的代码架构中，方块的类一般放置在`world.blocks`包下，你可以选择效仿这种组织形式。在创建类后，IDE会自动提示你生成与超类符合的构造方法。
 
@@ -146,6 +146,8 @@ class LampBlock(name: String?) : Block(name) {}
 
 和方块一样，建筑实体也是由一个类型封装的。所有建筑实体的基类是`mindustry.gen.Building`。与方块不同的是，游戏通常会自动寻找一种方块所需的实体类型，而寻找的位置就是此类内部定义的第一个继承自`Building`的内部类。因此，在类的内部创建一个继承自`Building`的内部类即可满足此要求。Kotlin用户需要将这个内部类声明为`open`。
 
+在创建好建筑实体类后，我们可以向其中添加一些会用到的**状态（State）**。在本例中，台灯的亮灭就是一个状态，我们用一个布尔值来表示它。
+
 ::: code-group
 ``` java
 public class LampBlock extends Block{
@@ -155,7 +157,7 @@ public class LampBlock extends Block{
     }
     
     public class LampBuild extends Building{
-        
+        public boolean light;
     }
 }
 ```
@@ -167,7 +169,7 @@ class LampBlock(name: String?) : Block(name) {
     }
     
     open class LampBuild: Building() {
-        
+        var light: boolean = false
     }
 }
 ```
@@ -182,7 +184,7 @@ class LampBlock(name: String?) : Block(name) {
 - `init()`：初始化；执行在所有内容已经加载完毕后，可以在这时将某些空字段赋值为默认值；
 - `load()`：加载贴图；执行在所有内容初始化完毕之后，这时应当通过`Core.atlas`等手段获取贴图（`TextureRegion`）的引用，并存储起来以供绘制功能使用；
 - `setStats()`：设置统计信息；执行在打开此方块的核心数据库时，这时应当向`stats`中添加统计信息的条目；
-- `setBars()`：设置进度条；执行在初始化时，这时应当通过`addBar(String, Func<T, Bar>)`和`removeBar(String)`等方法设置方块的进度条（Bar）；
+- `setBars()`：设置进度条；执行在初始化时，这时应当通过`addBar<T extends Building>(String, Func<T, Bar>)`和`removeBar(String)`等方法设置方块的进度条（Bar）；
 - `drawPlace(int, int, int, boolean)`：玩家在建造栏中点选方块之后，放置之前所绘制的内容（仅桌面端）；因为此时还没有实例被创建，所以使用参数传递位置、方向（与任意角定义相同，`右0上1左2下3`）和建造是否有效；在`Block`中的实现已经包括绘制方块本身。
 
 ### `load()`
@@ -214,7 +216,7 @@ public class LampBlock extends Block{
     }
     
     public class LampBuild extends Building{
-        
+        public boolean light;
     }
 }
 ```
@@ -226,7 +228,7 @@ class LampBlock(name: String?) : Block(name) {
     }
 
     var lightRegion: TextureRegion? = null
-    var darkRegion:TextureRegion? = null
+    var darkRegion: TextureRegion? = null
 
     override fun load() {
         super.load()
@@ -235,23 +237,203 @@ class LampBlock(name: String?) : Block(name) {
     }
     
     open class LampBuild: Building() {
-        
+        var light: Boolean = false
     }
 }
 ```
 :::
 
+对于重写的方法，建议使用`@Override`注解（仅Java）/`override`修辞符（仅Kotlin）。同时，需要调用`super`方法，且`super`方法的调用位置可能影响程序行为。
+
+::: info 小贴士
+
 字段在不同的位置和不同的修辞符代表的含义并不相同：
 
-- 在建筑区中创建的字段：代表一个建筑实体当前的“状态”，对于不同的实体来说是不同的；
-- 在方块区中创建的字段：代表一种方块配置的属性，对于该方块的所有实体来说都是相同的；
+- 在建筑区中创建的字段：代表一个建筑实体当前的“状态”，对于不同的实体来说是不同的。例如，两个不同的台灯可以一开一关；
+- 在方块区中创建的字段：代表一种方块配置的属性，对于该方块的所有实体来说都是相同的。例如，所有台灯绘制的贴图都是相同的；
 - 在方块区中创建的静态字段：代表对此类的所有种方块都相同的设置，对于所有类型为此类的方块都是相同的；
+:::
 
 Core.atlas.find有三种不同的重载版本，另两种重载版本允许你在找不到某张贴图时再尝试获取另一张贴图。如果都找不到，就会获取到`error`（即ohno）的引用。
 
 ### `setStats()`
 
-统计信息在原版中被封装成类型为`mindustry.world.meta.Stats`。
+统计信息在原版中被封装为类型`mindustry.world.meta.Stats`。`Stats`的本质为一个封装了一些工具方法的`OrderedMap<StatCat, OrderedMap<Stat, Seq<StatValue>>>`。这个类型声明可以这样理解：表示条目类别的`StatCat`下辖一个`OrderedMap<Stat, Seq<StatValue>>`，后者是由若干个表示条目名称的`Stat`和若干表示条目值的`StatValue`组成的键值对构成。下图是“石墨压缩机”的stats构成。
 
+![Stats](imgs/stats.png)
 
+`StatValue`是一个 **函数式接口（Functional Interface）** ，又叫 **单一抽象方法类（Single Abstract Method，简称SAM）** 。在Java中，SAM和Lambda是等价的，因此我们可以方便地使用Lambda表达式来构造一个SAM对象。要想理解SAM，以StatValue为例 再好不过了。此接口定义了一个签名为`void display(Table)`的方法，实现此接口的类需要给出此方法，而这个方法要做的是正是向UI系统传来的表格（Table）中添加显示元素（Element），以用于在统计信息页中显示内容。此外，在原版Stats系统中还有一个类`StatUnit`，表示统计信息中使用的单位制，如`blocks`（格）、`itemsSecond`（物品/秒）。
 
+原版在`Stats`中封装了大量现成的方法，使得在多数情况下无需直接处理`StatValue`。在此类中，需要创建一个新的条目来表示照亮范围，因为原版中不存在此`Stat`。要实现这一点，需先创建一个`Stat`。若此`Stat`无需重复使用，可直接在`setStats()`方法中创建；否则，建议参照原版做法，在专门的类/单例中定义模组所需的`Stat`。
+
+::: code-group
+
+``` java
+public class TutorialStatJ{
+    public static Stat lightRadius = new Stat("lightRadius", StatCat.function);
+}
+```
+
+``` kotlin
+object TutorialStat {
+    val lightRadius = Stat("lightRadius", StatCat.function)
+}
+```
+
+:::
+
+接下来就可以在`setStats()`方法中添加新的Stat了，下列代码只展示此方法：
+
+::: code-group
+
+``` java
+@Override
+public void setStats(){
+    super.setStats();
+    stats.add(TutorialStat.lightRadius, 5f, StatUnit.blocks);
+}
+```
+
+``` kotlin
+override fun setStats() {
+    super.setStats()
+    stats.add(TutorialStat.lightRadius, 5f, StatUnit.blocks)
+}
+```
+
+:::
+
+以下是`add(...)`方法重载的介绍：
+
+- `add(Stat, float)`：显示一个数字；虽然传入的是一个float，但会自动删除小数点后无效的0，最多保留小数点后三位；
+- `add(Stat, float, StatUnit)`：显示一个数字和一个单位，数字的显示与上例相同；
+- `add(Stat, boolean)`：显示“是”/“否”；
+- `add(Stat, Item)`：显示一个物品图标；
+- `add(Stat, ItemStack)`：显示一个物品图标，并在右下角显示个数；
+- `add(Stat, Liquid, float, boolean)`：显示一个流体图标，并在右下角显示数量（false）或速率（true）；
+- `add(Stat, Attribute)`：显示当前地图上拥有此属性的地板；
+- `add(Stat, String, Object...)`：显示带格式的字符串，字符串中的`@`将会按照顺序替换成参数列表中的值；
+- `add(Stat, StatValue)`：上述方法的母方法，传入一个`StatValue`，并显示其中代码显示的内容。
+
+在绘制之前，`stats`内部会自动根据注册顺序整理显示顺序。
+
+添加的`Stat`需要配置本地化条目。统计信息系统的本地化键名不会被`modName`前缀修饰，因此建议为键名添加独特前缀以避免与其他模组冲突。`Stat`和`StatUnit`的键名在本地化时会自动转换为全小写，而`StatCat`的键名则保持原样：
+
+``` properties bundle_zh_CN.properties
+# Stat的本地化格式
+stat.lightradius = 照亮范围
+# StatCat的本地化格式
+category.tutorialStatCat = 教程
+# StatUnit的本地化格式
+unit.tutorialstatunit = 个教程
+```
+
+``` properties bundle.properties
+# Stat的本地化格式
+stat.lightradius = Light Radius
+# StatCat的本地化格式
+category.tutorialStatCat = Tutorial
+# StatUnit的本地化格式
+unit.tutorialstatunit = tutorial
+```
+
+### `setBars()`
+
+在游戏中点击一个方块后，游戏右下角的建造栏（Placement Fragment）上方会显示出建筑的显示内容，其中就包括建筑的若干个条（Bar），包括血量条、电量条、物品量条等。你可以给自己的建筑添加自定义的条。本例中，我们希望给台灯添加一个表示其亮暗的条。
+
+添加`Bar`的行为发生在`setBars()`方法中，通过`addBar<T extends Building>(String, Func<T, Bar>)`方法实现。此方法的第一个参数是进度条的内部名称，第二个参数是一个SAM，该SAM接受一个建筑实例，返回一个`Bar`对象。`Bar`是一个与建筑实例状态相关的类，其进度、显示文字和颜色可由建筑实例的独立状态决定，因此每个建筑实例可以拥有不同的`Bar`。控制`Bar`进度、显示文字和颜色的“因素”与建筑实例绑定，这决定了该参数的类型为这样一个SAM。
+
+实际使用过程中，`Func` 只需返回一个 `new Bar` 实例，因此重点在于理解 `Bar` 构造方法的参数含义。`Bar` 提供两个构造方法：一个是 `Bar(String, Color, Floatp)`，其中文本与颜色为静态值，进度为动态值；另一个是 `Bar(Prov<CharSequence>, Prov<Color>, Floatp)`，其中文本、颜色和进度均为动态值，可随时间变化。这里的 `Prov` 表示一个动态提供器，其值会在每次访问时重新计算；相比之下，`String` 和 `Color` 作为静态值，在构造后保持不变。
+
+在本例中，我们需要让文本和进度均可变，因此我们需要选用第二个构造方法。在其中我们可以引用先前用来表示亮暗状态的字段。为了能引用这个字段，这里我们要手动标明`Func`中参数的类型。否则其类型默认是`Building`，不会出现我们添加的字段：
+
+::: code-group
+
+``` java
+@Override
+public void setBars(){
+    super.setBars();
+    addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? "灯开" : "灯关",
+    () -> Pal.accent,
+    () -> lamp.light ? 1f : 0f));
+}
+```
+
+``` kotlin
+override fun setBars() {
+    super.setBars()
+    addBar("light") { lamp: LampBuild ->
+        Bar(
+            { if (lamp.light) "灯开" else "灯关" },
+            { Pal.accent },
+            { if (lamp.light) 1f else 0f }
+        )
+    }
+}
+```
+
+:::
+
+### 国际化
+上述代码如果只在单一语言环境下运行，并不会造成什么问题。但如果模组的受众可能使用多种语言，那么用户可能会对非本地化的文字感到困惑。因此，我们需要对代码中的文本进行 **国际化处理（Internationalization，简称i18n）** 。事实上，原版处理国际化的手段就是`I18nBundle`。接下来让我们看看如何使用Bundle来进行国际化。
+
+`I18nBundle`在游戏中是一个单例对象，其唯一的对象位于`Core.bundle`。使用时我们需要使用这样的语法：
+
+``` java
+//获取当前语言中键名为misc.lightOn的值
+Core.bundle.get("misc.lightOn");
+//获取当前语言中键名为misc.lightOn的值，并将其中的{0}替换成aaa，{1}替换成bbb
+Core.bundle.format("misc.light", "aaa", "bbb");
+```
+
+例如以上的代码可以做如下改写：
+
+::: code-group
+
+``` java
+@Override
+public void setBars(){
+    super.setBars();
+    addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? Core.bundle.get("misc.lampOn") : Core.bundle.get("misc.lampOff"),
+    () -> Pal.accent,
+    () -> lamp.light ? 1f : 0f));
+}
+```
+
+``` kotlin
+override fun setBars() {
+    super.setBars()
+    addBar("light") { lamp: LampBuild ->
+        Bar(
+            { if (lamp.light) Core.bundle.get("misc.lampOn") else Core.bundle.get("misc.lampOff") },
+            { Pal.accent },
+            { if (lamp.light) 1f else 0f }
+        )
+    }
+}
+```
+
+:::
+
+这需要你在Bundle文件中做相应的添加：
+
+``` properties bundle_zh_CN.properties
+misc.lampOn = 灯开
+misc.lampOff = 灯关
+```
+
+``` properties bundle.properites
+misc.lampOn = ON
+misc.lampOff = OFF
+```
+
+关于`Core.bundle.format`方法有两点值得注意。首先，此方法的字符串格式化功能由`java.text.MessageFormat`提供，因此支持`MessageFormat`的所有语法，主要使用`{0}`、`{1}`、`{2}`等占位符依次代表传入的参数。其次，此方法返回的是静态字符串，不会随构造内容的变化而更新；若要响应新值，必须重新调用`format`方法。
+
+在`get`方法无法在当前语言中获取到对应的值时，会尝试从英文bundle中读取。如果英文bundle中也没有此值，则会返回默认值。若未通过第二个参数传入默认值，则会显示`???键名???`。
+
+## 绘制与更新
+
+在处理完毕方块区的代码后，我们继续来处理建筑实体区的代码。实体区的方法大致可分为两类，一类是每时每刻都被调用的，如`update()`和`draw()`，这两者又分别被分拆出了若干个方法。一类是按需调用的，如建筑完毕后执行`placed()`，试图输出物品时调用`dump()`，其他建筑询问是否可以接受物品时调用`acceptItem(Building, Item)`，其中调用方可能是玩家、自身或其他实体。
+
+### `draw()`
+虽然绘制与更新的顺序在逻辑上存在先后关系，但此处基于台灯功能的实现需求，将绘制部分置于更新部分之前进行说明。与更新相关的代码将在下一节中详细阐述。
