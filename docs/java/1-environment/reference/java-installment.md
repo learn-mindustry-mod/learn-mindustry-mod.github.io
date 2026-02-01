@@ -10,7 +10,7 @@
 
 通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`Windows x64 Installer（.exe）`进行下载：
 
-![download-oracle](./imgs/download-oracle.png)
+![download-oracle](../imgs/download-oracle.png)
 
 下载完成后，右键点击安装包，选择“以管理员身份运行”，你不需要做什么额外的设置，一路按照默认设置点击【下一步】直到安装完成即可。
 
@@ -20,7 +20,7 @@
 
 通过上述链接前往Oracle官网，一般来说Oracle只会提供最新的两个LTS版本和最新版本的下载链接，选择最新的LTS版本，点击下载链接，先选择系统，再选择`ARM64 DMG Installer`或`x64 DMG Installer`（根据机型）进行下载：
 
-![download-oracle](./imgs/download-oracle.png)
+![download-oracle](../imgs/download-oracle.png)
 
 下载完成后，打开`.dmg`文件，运行其中的`.pkg`文件，一路按照默认设置点击【下一步】直到安装完成即可。
 
