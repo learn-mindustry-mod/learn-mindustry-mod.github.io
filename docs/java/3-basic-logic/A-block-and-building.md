@@ -144,7 +144,7 @@ class LampBlock(name: String?) : Block(name) {}
 
 你需要将`update`字段设置为`true`，让游戏为这个方块的建筑生成实体。否则放置的建筑将会只能静态地绘制`Block#drawBase(Tile)`这一方块下的内容，而这正是原版环境方块、墙体等不需要复杂实体的方块的默认行为。
 
-和方块一样，建筑实体也是由一个类型封装的。所有建筑实体的基类是`mindustry.gen.Building`。与方块不同的是，游戏通常会自动寻找一种方块所需的实体类型，而寻找的位置就是此类内部定义的第一个继承自`Building`的内部类。因此，在类的内部创建一个继承自`Building`的内部类即可满足此要求。Kotlin用户需要将这个内部类声明为`open`。
+和方块一样，建筑实体也是由一个类型封装的。所有建筑实体的基类是`mindustry.gen.Building`。与方块不同的是，游戏通常会自动寻找一种方块所需的实体类型，而寻找的位置就是此类内部定义的第一个继承自`Building`的内部类。因此，在类的内部创建一个继承自`Building`的内部类即可满足此要求。Kotlin用户需要将这个内部类声明为`open inner`的。
 
 在创建好建筑实体类后，我们可以向其中添加一些会用到的**状态（State）**。在本例中，台灯的亮灭就是一个状态，我们用一个布尔值来表示它。
 
@@ -168,7 +168,7 @@ class LampBlock(name: String?) : Block(name) {
         update = true
     }
     
-    open class LampBuild: Building() {
+    open inner class LampBuild: Building() {
         var light: boolean = false
     }
 }
@@ -236,14 +236,14 @@ class LampBlock(name: String?) : Block(name) {
         darkRegion = Core.atlas.find("$name-dark")
     }
     
-    open class LampBuild: Building() {
+    open inner class LampBuild: Building() {
         var light: Boolean = false
     }
 }
 ```
 :::
 
-对于重写的方法，建议使用`@Override`注解（仅Java）/`override`修辞符（仅Kotlin）。同时，需要调用`super`方法，且`super`方法的调用位置可能影响程序行为。
+对于重写的方法，建议使用`@Override`注解（仅Java）/`override`修辞符（仅Kotlin）。同时，需要根据需求决定是否调用`super`方法，且`super`方法的调用位置可能影响程序行为。
 
 ::: info 小贴士
 
@@ -394,7 +394,8 @@ Core.bundle.format("misc.light", "aaa", "bbb");
 @Override
 public void setBars(){
     super.setBars();
-    addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? Core.bundle.get("misc.lampOn") : Core.bundle.get("misc.lampOff"),
+    addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? "灯开" : "灯关", // [!code --]
+    addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? Core.bundle.get("misc.lampOn") : Core.bundle.get("misc.lampOff"), // [!code ++]
     () -> Pal.accent,
     () -> lamp.light ? 1f : 0f));
 }
@@ -405,7 +406,8 @@ override fun setBars() {
     super.setBars()
     addBar("light") { lamp: LampBuild ->
         Bar(
-            { if (lamp.light) Core.bundle.get("misc.lampOn") else Core.bundle.get("misc.lampOff") },
+            { if (lamp.light) "灯开" else "灯关" }, // [!code --]
+            { if (lamp.light) Core.bundle.get("misc.lampOn") else Core.bundle.get("misc.lampOff") }, // [!code ++]
             { Pal.accent },
             { if (lamp.light) 1f else 0f }
         )
@@ -435,5 +437,85 @@ misc.lampOff = OFF
 
 在处理完毕方块区的代码后，我们继续来处理建筑实体区的代码。实体区的方法大致可分为两类，一类是每时每刻都被调用的，如`update()`和`draw()`，这两者又分别被分拆出了若干个方法。一类是按需调用的，如建筑完毕后执行`placed()`，试图输出物品时调用`dump()`，其他建筑询问是否可以接受物品时调用`acceptItem(Building, Item)`，其中调用方可能是玩家、自身或其他实体。
 
+本部分先讲解绘制部分的代码。虽然绘制与更新的顺序在逻辑上存在先后关系，但此处基于台灯功能的实现需求，将绘制部分置于更新部分之前进行说明。与更新相关的代码将在下一节中详细阐述。
+
 ### `draw()`
-虽然绘制与更新的顺序在逻辑上存在先后关系，但此处基于台灯功能的实现需求，将绘制部分置于更新部分之前进行说明。与更新相关的代码将在下一节中详细阐述。
+
+所有绘制方法中，这是最基本的一个。负责的是绘制方块本身的贴图。在本例中，因为我们没有按照原版的规范加载贴图，即没有提供与内容名称相同的贴图文件，因此这个方法我们需要重写。
+
+在Mindustry中，有一系列专门用于在屏幕上绘制内容的类，他们的名字包括`arc.graphics.g2d.Draw Fill Lines`和`mindustry.graphics.Drawf`。这些类中的方法如果在实体的绘制方法中执行，则可以在屏幕上绘制内容。如果在绘制方法外执行这些方法则是没有意义的。在Arc中，在某个位置绘制一张贴图的方法是`Draw.rect()`。这个方法中的`x`和`y`指绘制区域的中心坐标，建筑实体自带的`x`和`y`即为建筑中心的绘制坐标，你可以直接使用，你还可以设置`w`和`h`来设置宽和高。这时，我们之前在`load()`方法中加载的贴图文件就派上用场了。这次我们不再调用`super.draw()`，这是因为我们不需要super方法中绘制的内容了。
+
+::: code-group
+
+``` java
+@Override
+public void draw(){
+    Draw.rect(light ? lightRegion : darkRegion, x, y);
+}
+```
+
+``` kotlin
+override fun draw() {
+    Draw.rect(if (light) lightRegion else darkRegion, x, y)
+}
+```
+
+:::
+
+### `drawLight()`
+
+这也是基本的绘制方法之一。因为这个方法并不受`draw()`支配，而是自己被渲染系统`BlockRender`调用。把绘制光亮这个功能单独拿出来成为一个方法，是方便使用设置控制是否绘制光亮。
+
+在这个方法中，应该只包括对`Drawf.light()`的调用，这个方法的参数即为光源坐标、半径、颜色和不透明度：
+
+::: code-group
+
+``` java
+@Override
+public void drawLight(){
+    super.drawLight();
+    Drawf.light(x, y, 5f, Color.white, 1f);
+}
+```
+
+``` kotlin
+override fun drawLight() {
+    super.drawLight()
+    Drawf.light(x, y, 5f, Color.white, 1f)
+}
+```
+
+:::
+
+::: danger 不要随意新建对象
+
+如果你想给台灯换一个颜色，你可能会写出来这样的代码：
+
+``` java{4}
+@Override
+public void drawLight(){
+    super.drawLight();
+    Drawf.light(x, y, 5f, new Color("39c5bb"), 1f);
+}
+```
+
+在这种每帧都会执行的代码中直接或间接地新建对象是**非常可怕**的一件事，量化来说，如果同时有三十个方块执行这个代码，那么你的内存吞吐量将可能达到100MB/s，这对游戏体验是致命的。
+
+正确的做法是把这些值不变的对象找个地方缓存起来：
+
+``` java
+public static final Color mikuGreen = new Color("39c5bb");
+
+@Override
+public void drawLight(){
+    super.drawLight();
+    Drawf.light(x, y, 5f, mikuGreen, 1f);
+}
+```
+
+你也可以像原版一样，建一个`Pal`类来存储用到的颜色。至于确实可变的对象，你也应该尽量把他们临时化或池化来减少对象创建。
+
+:::
+
+
+

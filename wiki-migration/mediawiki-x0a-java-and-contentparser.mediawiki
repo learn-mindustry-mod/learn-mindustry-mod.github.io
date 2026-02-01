@@ -1,0 +1,171 @@
+<span id="java-语法初步与-contentparser-解析"></span>
+= Java 语法初步与 ContentParser 解析 =
+
+这一节不是让你“学会 Java”，而是让你看懂源码，并理解 JSON 是如何被解析成游戏内容的。只要你能读懂类、字段与方法，就能推断出 JSON 该怎么写。
+
+<span id="java-语法速通只讲必要部分"></span>
+== Java 语法速通（只讲必要部分） ==
+
+Java 里的“内容定义”通常是一个类，字段就是配置项。比如：
+
+<pre>public class Drill extends Block{
+    public int tier = 1;
+    public float drillTime = 300f;
+}</pre>
+<code>public</code> 表示公开字段，<code>int</code>/<code>float</code> 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。注意 Java 的 <code>float</code> 常带 <code>f</code> 后缀，表示这是浮点数而不是整数。
+
+<code>extends</code> 表示继承。<code>Drill extends Block</code> 的意思是“钻头拥有 Block 的所有字段”，所以你在 JSON 里看到的很多字段其实来自父类，比如 <code>size</code>、<code>health</code>、<code>requirements</code>。<code>super(name)</code> 是调用父类构造器，确保父类先完成初始化。源码里出现 <code>@Override</code> 时，代表子类重写了父类方法；<code>abstract</code> 表示抽象类不能直接实例化，必须用具体子类。
+
+方法是类里的“行为”，例如：
+
+<pre>public void updateTile(){
+    //每帧逻辑
+}</pre>
+构造器名字与类名相同，常用于创建时设定基础值：
+
+<pre>public Drill(String name){
+    super(name);
+}</pre>
+你在 <code>core/src/mindustry/content/*.java</code> 里看到的写法，经常是“匿名内部类”初始化：
+
+<pre>new GenericCrafter("x"){ {
+    craftTime = 60f;
+}}</pre>
+这一对大括号的含义就是“创建对象后马上设置字段”。JSON 本质上就是在做这件事。
+
+源码里还会出现大量“箭头函数”写法，例如 <code>u -&gt; true</code> 或 <code>() -&gt; {}</code>。这是 Java 的 Lambda 表达式，表示“把一段逻辑当作参数传入”。当你看到这些写法时，就应该意识到这是函数类型字段，JSON 通常无法配置，只能用 JS/Java 处理。
+
+数组与列表也经常出现。Java 里 <code>ItemStack[]</code> 是数组，<code>Seq&lt;ItemStack&gt;</code> 是列表。JSON 里通常用数组表示，比如 <code>&quot;requirements&quot;: [&quot;copper/10&quot;, &quot;lead/10&quot;]</code>。<code>ObjectMap</code> 一类的映射通常写成“键值对对象”。
+
+你还会看到 <code>@Nullable</code> 注解或字段默认值为 <code>null</code>。这类字段通常是“可选项”，JSON 可以不写；但一旦写，就必须符合类型。例如 <code>Effect</code> 字段允许写原版名称字符串或自定义对象，如果字段为 <code>null</code>，游戏就会走默认行为。理解“可选项”能减少不必要的配置，也能避免写错类型导致报错。
+
+源码里常见的“容器构造”也值得一看，例如：
+
+<pre>requirements = ItemStack.with(Items.copper, 50, Items.lead, 30);
+consumes.add(new ConsumeItems(new ItemStack(Items.graphite, 2)));</pre>
+它们在 JSON 中对应 <code>&quot;requirements&quot;: [&quot;copper/50&quot;, &quot;lead/30&quot;]</code> 或 <code>consumes.items</code> 的写法。看到这些语句时，你就能反推 JSON 的结构。
+
+如果你看到 <code>static</code>、<code>final</code>、<code>private</code> 这些关键字，可以简单理解为“静态”“不可变”“私有”，它们通常不需要也不应该在 JSON 里配置。你只需要关注公开字段与构造器里对字段的默认赋值。
+
+<code>this</code> 指向当前对象，<code>this.field</code> 只是更明确地引用字段；<code>super.field</code> 或 <code>super.method()</code> 则是访问父类成员。读源码时不必被这些写法吓到，它们只是告诉你“值来自当前类还是父类”。JSON 里不需要写这些关键字，只需要写字段本身。
+
+把 Java 写法翻译成 JSON 是最实用的练习。例如 Java 中常见的写法：
+
+<pre>new GenericCrafter("silicon-smelter"){{
+    craftTime = 60f;
+    outputItem = new ItemStack(Items.silicon, 1);
+    consumes.power(0.5f);
+}}</pre>
+对应的 JSON 大致是：
+
+<pre>{
+    "type": "GenericCrafter",
+    "name": "silicon-smelter",
+    "craftTime": 60,
+    "outputItem": "silicon/1",
+    "consumes": {
+        "power": 0.5
+    }
+}</pre>
+只要你能把“匿名内部类里的字段赋值”翻译成 JSON 键值对，就已经掌握了 70% 的阅读技巧。
+
+再注意 Java 里常见的 <code>Items.copper</code>、<code>Liquids.water</code>、<code>Blocks.mechanicalDrill</code> 这类写法，它们都是静态字段引用。换到 JSON，你要写的是内部名 <code>copper</code>、<code>water</code>、<code>mechanical-drill</code>。这一点是“源码到 JSON”最常见的转换。
+
+同理，单位武器的写法也可以直接翻译：
+
+<pre>weapons.add(new Weapon(){{
+    x = 4f; y = 1f;
+    reload = 30f;
+    bullet = new BasicBulletType(3f, 12);
+}});</pre>
+对应 JSON 的结构就是：
+
+<pre>{
+    "weapons": [
+        {
+            "x": 4,
+            "y": 1,
+            "reload": 30,
+            "bullet": {
+                "type": "BasicBulletType",
+                "speed": 3,
+                "damage": 12
+            }
+        }
+    ]
+}</pre>
+这类“从 Java 还原 JSON”的练习做多了，就会形成直觉。
+
+<span id="contentparser-在做什么"></span>
+== ContentParser 在做什么 ==
+
+<code>ContentParser</code> 是 JSON 解析器，它把 JSON 字段逐个写进 Java 对象。它遵循“字段同名映射”的基本规则：JSON 的键名必须和 Java 字段名一致，类型也要对应。如果类型不一致，游戏会直接报错。
+
+解析器还会根据文件夹推断内容类型：<code>content/blocks</code> 会被当成方块，<code>content/units</code> 会被当成单位。文件名就是内部名，所以文件夹与文件名写错，经常会导致“找不到内容”或“类型不匹配”的报错。
+
+<code>type</code> 是最关键的字段之一。方块的 <code>type</code> 决定 Java 类（如 <code>GenericCrafter</code>、<code>Drill</code>、<code>PowerNode</code>），单位的 <code>type</code> 决定构造器（如 <code>flying/mech/legs/naval/payload/missile/tank/hover/tether/crawl</code>），而子类对象（子弹、能力、特效等）也依赖 <code>type</code> 指定具体子类。你可以把它理解成“告诉解析器该用哪个类来建对象”。
+
+从源码角度看，解析器的大致流程类似这样（伪代码）：
+
+<pre>var type = json.getString("type", defaultType);
+var block = makeBlock(type, name);
+readFields(block, json);</pre>
+因此当你写错 <code>type</code>，解析器甚至无法创建对象，后续字段都会失效。
+
+<code>type</code> 的作用不仅体现在方块与单位上，<code>drawer</code>、<code>parts</code>、<code>BulletType</code>、<code>Ability</code> 等复杂对象也依赖它来决定具体子类。比如 <code>DrawTurret</code>、<code>DrawMulti</code>、<code>RegionPart</code>、<code>HaloPart</code> 都是靠 <code>type</code> 识别的。如果你忘了写 <code>type</code> 或写错大小写，解析器就会回退到默认类型，表现与预期完全不同。
+
+解析顺序也很重要。以方块为例，解析器会先读取 <code>bundle</code> 文案，然后解析 <code>consumes</code>（因为它是特殊语法），接着再把剩余字段逐个写入对象。单位则会先处理 <code>requirements</code>（用于挂载工厂与重构厂），再处理 AI 与控制器字段，最后写入剩余字段。理解这个顺序可以帮助你避免“字段被覆盖”或“写了不生效”的情况。
+
+解析完成后，类的 <code>init()</code> 与 <code>load()</code> 会在后续流程中执行，这一步可能继续改字段或加载贴图。比如某些方块在 <code>init()</code> 里会根据 <code>size</code> 自动计算 <code>itemCapacity</code>，这意味着你在 JSON 里写的值可能被逻辑覆盖。看懂这些“后置逻辑”，才能解释“写了却不生效”的现象。
+
+如果 JSON 没有写某个字段，解析器就会保留 Java 默认值。这也是为什么“极简 JSON”能跑起来：默认值已经把大部分东西填好了。但当你使用 <code>template</code> 或覆盖原版时，默认值可能来自模板而不是原版，所以在关键字段上最好显式写出，避免被继承值影响。
+
+解析器使用反射写字段，这意味着父类的 <code>public</code> 字段同样可写。比如 <code>Block</code> 里定义的 <code>size</code>、<code>health</code>、<code>requirements</code>、<code>category</code> 都可以直接写在任意方块的 JSON 里。只要字段是 <code>public</code> 并且类型可解析，就能被写入。
+
+<span id="常见的-json-简写"></span>
+== 常见的 JSON 简写 ==
+
+<code>ContentParser</code> 内置了多种简写语法。例如 <code>&quot;copper/10&quot;</code> 会被解析为 <code>ItemStack</code>，<code>&quot;water/0.1&quot;</code> 会被解析为 <code>LiquidStack</code>，载荷堆栈则可以用 <code>&quot;block-or-unit/amount&quot;</code> 的形式表示。简写很方便，但只能表达“名称 + 数量”，一旦需要额外参数（例如 <code>booster</code>、<code>optional</code>），就必须改用对象形式。
+
+<code>Effect</code>、<code>BulletType</code>、<code>DrawPart</code> 等复杂对象也有简写规则。例如 <code>Effect</code> 可以直接写原版 <code>Fx</code> 名字，或者写一个对象并用 <code>type</code> 指定子类。<code>BulletType</code> 可以写字符串引用原版子弹，也可以写对象并指定 <code>type</code> 创建自定义子弹。理解这些规则后，你会发现 JSON 其实比模板更灵活。
+
+颜色与向量也有常见写法。颜色可以写成十六进制字符串（如 <code>ffffff</code> 或 <code>25C9AB80</code>），解析器会自动识别透明度；向量类字段往往支持数组或对象形式，例如 <code>x/y</code> 或 <code>[x, y]</code>。这些细节虽然不影响逻辑，但能显著影响表现，尤其是子弹与特效参数。
+
+读源码时还要注意“时间单位”。Java 里很多逻辑都是以“刻”为单位（<code>Time.delta</code> 是每帧增量），所以你在源码里看到的 <code>reload = 60f</code>、<code>craftTime = 120f</code> 实际对应 1 秒和 2 秒。把这个换算带回 JSON，有助于你把数值写得更直观。
+
+容器类型也有对应关系：<code>Seq</code> 与数组一一对应，<code>ObjectSet</code> 通常对应“去重数组”，<code>ObjectMap</code> 则对应 JSON 对象的键值结构。看到这类类型时先想“它在 JSON 里长什么样”，再决定是否用数组或对象写法。
+
+另外，一些字段本质上是整数（例如 <code>size</code>、<code>tier</code>），虽然 JSON 支持小数，但写成整数更稳妥，避免因为隐式转换造成困惑。
+
+<span id="consumes-不是普通字段"></span>
+== consumes 不是普通字段 ==
+
+<code>consumes</code> 是特殊语法，它不会直接写进字段，而是被解析成“消耗器”。常见的键包括 <code>items</code>、<code>liquids</code>、<code>power</code>、<code>itemFlammable</code>、<code>itemExplosive</code>、<code>coolant</code> 等。你在 JSON 里写的消耗器最终会变成 <code>Consume*</code> 对象，决定方块的效率与输入逻辑。也就是说，<code>consumes</code> 更像“配方逻辑”，而不是单纯的“字段赋值”。
+
+不同消耗器还有不同的写法限制。<code>items</code> 与 <code>liquids</code> 支持数组或对象形式，<code>coolant</code> 与 <code>liquid</code> 如果需要 <code>optional</code>、<code>booster</code>、<code>update</code> 之类参数，就必须写对象；<code>power</code> 与 <code>powerBuffered</code> 则决定是持续耗电还是从缓冲中抽取。理解这些差异，可以避免“写了不生效”的常见坑。
+
+类似的“特殊解析”还有 <code>requirements</code> 与 <code>research</code>。<code>requirements</code> 本质是 <code>ItemStack[]</code>，解析器允许 <code>&quot;copper/10&quot;</code> 这种简写，也允许对象写法；<code>research</code> 则是一个带 <code>parent</code> 和 <code>objectives</code> 的对象，里面会出现 <code>SectorComplete</code>、<code>OnSector</code> 等目标类型。只要目标复杂，就应该回到源码或 Java 教程核对字段名。
+
+现实中的写法可以直接参考成熟模组。“饱和火力 3.3.0”的“离子钻头”在 <code>consumes.liquid</code> 里同时使用 <code>optional</code> 与 <code>booster</code>，这类对象写法是 <code>ContentParser</code> 明确支持的。看到类似配置时，你就能反推出“为什么需要对象而不是简写”。
+
+<code>requirements</code> 是“建造成本”，<code>consumes</code> 是“运行成本”，两者用途完全不同。很多新人会把运行消耗写进 <code>requirements</code>，导致方块只在建造时消耗一次，运行时不耗料。理解这条分界线，会让你的配方更符合玩家预期。
+
+== 覆盖与模板 ==
+
+如果 JSON 文件名与原版内容内部名相同，且不写 <code>type</code>，解析器会认为你是在“覆盖原版”。单位还有一个 <code>template</code> 字段，可以用现成单位作为模板，再覆盖少量字段。这些机制能减少重复配置，但也更容易出错，建议熟悉后再使用。
+
+模板继承的另一个常见陷阱是“忘记重写关键字段”。比如你用模板继承了某个单位，但忘了改 <code>weapons</code> 或 <code>abilities</code>，就会得到一个“外形改了但行为没变”的单位。<code>research</code> 字段也是类似：它本质上是一个对象，里面包含 <code>parent</code> 与 <code>objectives</code>，后者往往涉及 <code>SectorComplete</code> 等复杂目标，这些结构在 JSON 里能写，但写错一个键就会整个解锁链失效。
+
+== 常见报错的读法 ==
+
+<code>No content found with name 'xxx'</code> 通常是内部名拼写错误或内容解析失败；<code>Unknown consumption type</code> 表示 <code>consumes</code> 里写了不支持的键；<code>Invalid unit type</code> 说明单位 <code>type</code> 拼写有误；<code>Class not found</code> 则意味着 <code>type</code> 指向了不存在的类或类名不完整。遇到这些报错时，先检查拼写，再检查解析器支持的类型，再看原版有没有对应内容。
+
+还有一些更“类型相关”的报错，比如 <code>Expected object</code> 或 <code>Cannot parse</code>，通常意味着你把对象写成了字符串，或把数组写成了对象。遇到这类问题时，回到类定义看字段类型是最直接的解决方案。另外，报错通常会带文件名和行号，建议先定位那一行，而不是盲目翻全文件。
+
+字段名大小写也会导致报错。JSON 的键名必须和 Java 字段名完全一致，<code>reloadTime</code> 与 <code>reloadtime</code> 就会被当成两个不同字段。内容内部名同样区分大小写，连字符也不能漏掉。遇到 <code>No content found</code> 这类问题时，优先检查拼写。
+
+还有一种“不会报错但看起来不对”的情况：你写了字段，但 UI 没有对应显示。这通常是因为 <code>setStats()</code> 或 <code>setBars()</code> 没有为该字段添加展示，或者展示逻辑基于其他条件。遇到这种问题时，应该回到类定义看 UI 逻辑，而不是继续调数值。
+
+== 小结 ==
+
+只要能看懂 Java 类与字段，就能写对 JSON。<code>ContentParser</code> 决定了“哪些写法被允许”，遇到问题时先看报错，再查解析器，效率会比盲猜高得多。建议多做“源码到 JSON”的逆向练习，熟悉之后写配置会非常顺手。把源码当成说明书，就不会被旧教程误导，学习曲线也会更平滑，后续进阶到 JS/Java 也会更轻松。等你形成自己的“字段词典”，写 JSON 会像在写一份更短的 Java，这时你已经具备独立读源码的能力，也更容易快速定位问题，改数值会更快，整体效率会更高也更稳定、更省心、更顺畅。

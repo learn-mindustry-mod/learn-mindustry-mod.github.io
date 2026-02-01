@@ -1,0 +1,194 @@
+= 模组开发基础 =
+
+== 工具配置 ==
+
+JSON是一种'''标记语言'''，不属于'''编程语言（Programming Language）'''范畴。开发JSON模组不需要使用'''集成开发环境（IDE）'''，仅需一个'''文本编辑器'''即可。然而，具备'''格式化'''功能的编辑器或在移动设备上便于输入符号的工具能够显著提升开发效率，因此不建议直接使用系统自带的<code>notepad.exe</code>进行模组开发。
+
+=== 安卓端 ===
+
+在安卓端上，笔者唯二推荐的编辑器之一就是'''MT管理器'''，理由有下：
+
+* 许多用户长期使用；
+* 自带代码编辑器，是等宽字体，还支持多标签页，方便查代码；
+* 自带代码格式化器，但只支持JSON；
+* 自带压缩功能，方便将模组导入到游戏中；
+* 自带软键盘，方便输入特殊符号。
+
+下载这个软件并不难，但是在各大自带软件市场无法找到这个软件，原因无外乎MT管理器并非一个简单的文件管理器，而是一把瑞士军刀。你甚至可以用MT管理器反编译应用。但请注意，没有必要用破解版MT去反编译Mindustry，因为Mindustry的源代码是公开的，比反编译出来的可读性要好上不少。
+
+<span id="ios"></span>
+=== iOS ===
+
+在iOS上，笔者只推荐'''Spec Editor'''，这也是安卓端推荐的第二个编辑器。后推荐它的原因主要是因为较少有人使用。优点如下：
+
+* 衍生自 '''Visual Studio Code''' ，UI令人舒适；
+* 自动Json纠错，自动检查代码语法错误；
+* 软键盘功能齐全；
+* 压缩导出非常方便；
+* 甚至它是支持Git的！
+
+在iOS上这个软件非常好下载，但在安卓平台上可能要花一些苦功夫去找了。
+
+=== 桌面端 ===
+
+虽然桌面端也有很多选择，但是笔者仍然最推荐 '''Visual Studio Code''' 。而在压缩软件方面，Windows推荐'''Bandzip'''，macOS推荐'''Keka'''，*nix用户请自行使用命令行工作。
+
+如果使用'''VSCode'''，你可以选择安装'''Hjson'''插件，支持Hjson的格式化。不装任何插件也可以浏览Mindustry源代码，如果加装'''Gradle'''插件反而会占用存储空间。
+
+=== 绘图软件 ===
+
+绘图软件不必区分平台，通用的选择就是'''PS'''，我指的不是Adobe Photoshop，而是 '''Pixel Studio''' 。
+
+万事俱备，只欠东风。工具配备齐全后，我们可以开工了！
+
+
+-----
+
+== 模组结构 ==
+
+JSON模组不区分“源代码”和实际可以安装的模组文件。实际上，JSON模组实质就是一个文件夹，或者是一个文件夹的<code>zip</code>压缩包。
+
+当然，为了和官方wiki中的教程贴近一些，你可以选择直接把文件夹建在游戏的mod文件夹里。有的系统直接直接输入路径进行访问相应路径，直接复制下方路径即可。
+
+我还是要再次声明，如果你找不到这些路径在哪里，压缩模组再导入游戏也不会耗费太多时间：
+
+* Linux： ~/.local/share/Mindustry/mods/
+* Steam： steam/steamapps/common/Mindustry/saves/mods/
+* Windows： %appdata%/Mindustry/mods/
+* MacOS： ~/Library/Application Support/Mindustry/mods/
+* Android：/Android/data/io.anuke.mindustry/mods
+* iOS：你在做梦
+
+{|
+|width="9%"| 在这里我可以直接给你Json模组所有要用到的文件夹。你可以选择按需创建，一次性全都创建完成也可以。
+|-
+| - <code>mod.json</code>：模组配置数据，是模组唯一必需的文件； - <code>content/</code>：Json数据，也就是模组的“代码”： - <code>/items/</code>：物品代码； - <code>/liquids/</code>：流体代码； - <code>/blocks/</code>：方块代码； - <code>/units/</code>：单位代码； - <code>/statuses/</code>：状态效果； - <code>/planets/</code>：行星； - <code>/sectors/</code>：区块； - <code>/weathers/</code>：天气； - <code>bundles/</code>：语言文件； - <code>sprites/</code>：模组贴图文件； - <code>/blocks/environment/</code>：'''模组地板的贴图必须放在这里'''； - <code>sprites-override/</code>：'''覆盖原版'''的贴图文件； - <code>schematics/</code>：蓝图文件； - <code>maps/</code>：地图文件； - <code>sounds/</code>：音效文件； - <code>musics/</code>：音乐文件； - <code>scirpts/</code>：Javascript文件。
+|-
+| 以上就是JSON模组基本上所有需要用到的文件夹，以及原版'''唯一必需的文件'''<code>mod.json</code>（也可以是<code>mod.hjson</code>，区别见下文）。为了能完成这个必需的文件，我们需要先一览JSON的语法。
+|-
+| ## Json语法
+|-
+| 与官方教程不同的是，中文版的本教程会先讲'''标准Json语法'''。这是因为国内手机较电脑更为普及，而在手机上缺少Hjson的格式化器导致的。如果你想要更严谨的学习，可以访问[https://www.runoob.com/json/json-tutorial.html 菜鸟教程]。
+|-
+| 一个Mindustry中Json的示例可以是这样的：
+|-
+| <pre> { “type” : “GenericCrafter”, “description” : “Hello /n world!” “health” : 100, “hasItems” : true, “requirements” : [ “copper/10”, { “item” : “lead”, “amount” : 10 }], “research” : { “parent” : “copper-wall” } }
+|-
+| </pre>
+|}
+
+如果要严格地去定义的话，应当有以下表述：
+
+* JSON全称'''Javascript对象表示法'''，Javascript对象表示语法是JSON语法的超集；
+* 一个<code>.json</code>文件为一个JSON对象。对象中的数据由键值对存储，符合<code>key : value</code>的格式，并且每条键值对需要用逗号分隔，不允许尾随逗号；
+* 键必须为字符串格式。值有五只类型，包括数字（Number）、布尔值（Bool）、字符串（String）、列表（List）和对象（Object）。数字类型为纯数字，常用的表示方法均可识别；布尔值仅有两值<code>true</code>和<code>false</code>，表逻辑判断；字符串需要用双引号括起，不支持直接换行，可以使用控制字符；列表用<code>[]</code>包围，是值的集合，值间用逗号隔开；对象用<code>{}</code>包围，是键值对的集合，键值对间用逗号隔开。
+
+
+-----
+
+'''如果你真的能从上面这些东西学到JSON语法，恐怕你是先天程序员圣体了。''' 实际上，你只需要对JSON语法有个朦胧的印象，如果游戏报语法错误，你只需要有使用'''格式化器'''查找错误的能力即可。不过，我还是想提两点常见的错误：
+
+* '''使用英文字符'''：虽然<code>:</code>和<code>：</code>看起来很像，但是游戏只会认可前一个。你需要使用英文键盘输入代码。受影响的字符包括：<code>&quot; , : { } [ ]</code>。有的时候，在英文输入法下也可能会输入英文的前后引号，你要保证你的引号是直的！
+* '''成对字符必须成对'''：这句话表象上是一句将军式的废话，但是我见过的50%的错误都是丢个后引号或者括号没配上对导致的。如果你实在想不起来写引号，还不愿意使用格式化器的话，往下看；
+* 分清方括号和花括号。
+
+如果能克服这两个问题，一般你也就可以声称自己学会JSON语法了。不过，JSON语法本身并不算什么有用的东西。只有JSON文件被解析才产生了意义，对于某些Mindustry中额外添加的规则，比如<code>copper/10</code>，才是本教程存在最大的意义。
+
+<span id="hjson"></span>
+=== Hjson ===
+
+<blockquote>Hjson是一种基于JSON的配置文件格式，旨在提供更人性化的语法，同时保持与JSON的兼容性。它通过减少必要的标点符号、支持注释和更灵活的字符串表示方式，使得配置文件更易于人类读写和维护。
+</blockquote>
+实际上，Mindustry（或者说是Arc）中的JSON并非标准JSON，而是一种'''Hjson'''。正如其标榜的内容一样，Hjson写进来更加轻松，具体来说就是：'''不引起歧义的双引号、逗号可以省略；支持注释；可以省略开头结尾的大括号'''。此外，Mindustry中的解析更为宽松，还允许'''多行字符串不加任何引号；给数字和布尔值加引号'''。比如，上面的示例还可以这样写：
+
+<pre>{
+  //Block Type
+  type: GenericCrafter
+  description: Hello 
+  world!
+  health: 100
+  hasItems: true
+  
+  /* 
+   Nice Boat
+  */
+  
+  requirements: [
+    copper/10
+    {
+      item: lead
+      amount: 10
+    }
+  ]
+  research: {
+    parent: copper-wall
+  }
+}
+</pre>
+可以看出，基本只省下两种括号和冒号了。这也是为什么有的时候你忘掉一个逗号或引号不会引起错误。
+
+关于注释，使用<code>//</code>领起单行注释，<code>/* ... */</code>括起多行注释。Mindustry不支持使用<code>#</code>领起单行注释。
+
+
+-----
+
+虽然Hjson这么美好，但是并非没有代价。虽然可读性变高了，但语法检查也变难了。因此，你需要权衡一下，而且最好在整个模组中保持一致的语法规则。
+
+= <code>mod.json</code> =
+
+接下来，你需要找一个地方安放你的文件夹，并且按上面的目录结构创建了<code>mod.json</code>（或<code>mod.hjson</code>）这个文本文件，然后填入以下内容：
+
+<div class="code-group">
+
+<pre>{
+  "name": "tutorial-json-mod",
+  "displayName": "JSON教程模组",
+  "author": "Learn-Mindustry-Mod",
+  "version": "1.0.0",
+  "minGameVersion": "152.2",
+  "description": "这是一个示例模组"
+}
+</pre>
+<pre>{
+  name: tutorial-json-mod
+  displayName: JSON教程模组
+  author: Learn-Mindustry-Mod
+  version: 1.0.0
+  minGameVersion: 152.2
+  description: 这是一个示例模组
+}</pre>
+
+</div>
+* <code>name</code>：模组的'''内部名称（Internal Name）'''，推荐使用小写字母及连字符，在未来你可能需要在贴图命名的时候用到它，我会用<code>modName</code>指代之；
+* <code>minGameVersion</code>：'''最低游戏版本'''，非常重要，是游戏用来在大版本更新时逼迫作者更新模组的利器。不能低于当前大版本的第一个小版本，例如，现在对JSON模组是<code>136</code>。建议与最新版本<code>152.2</code>保持一致；
+* <code>displayName</code>：模组在模组对话框中显示出来的全称；
+* <code>author</code>：你（作者）的名字；
+* <code>version</code>：模组的版本号；
+* <code>deescription</code>：模组详细页里的简介，你可以在这里简单介绍你的模组。
+
+
+-----
+
+完成上述工作后，你就可以压缩你的模组，然后导入到游戏当中。游戏重启后，如果能在模组页面看到你的模组，就说明没有问题了！
+
+<span id="获取一份源代码可选"></span>
+== 获取一份源代码（可选） ==
+
+Mindustry是开源的游戏，遵守GPL-3许可证。这对你有两点意味：首先，你的模组也必须是开放源'''代码'''的；其次，你可以直接获取Mindustry的源代码来查找数据和贴图，而不必像其他游戏一样要靠'''拆包和反编译。'''
+
+Mindustry的源代码就托管在GitHub上，项目地址为https://github.com/Anuken/Mindustry。此外，Mindustry是基于Arc游戏框架开发的，因此你还需要用到https://github.com/Anuken/Arc。
+
+访问这两个网站，你可以在线访问源代码（很考验你的网速），或者是下载源代码。找到Code-&gt;Download Zip，这样你就将源代码下载到本地了。
+
+如果你的网络不支持你这么做，你可以选择寻找一些GitHub加速的手段。这里我可以给你提供两个网址：[https://ghfast.top/https://github.com/Anuken/Mindustry/archive/master.zip Mindustry最新源代码]和[https://ghfast.top/https://github.com/Anuken/Arc/archive/master.zip Arc最新源代码]。
+
+在Mindustry源代码目录下方<code>core/src</code>就是原版大部分源代码了，<code>core/sprites-raw</code>则是原版所有'''未经处理的'''贴图。
+
+<span id="faq"></span>
+== FAQ ==
+
+* '''在Windows上报错<code>Invalid CEN header</code>怎么办？'''：这说明你的压缩包编码格式不对，你需要确保你的所有文件都是<code>UTF-8（无BOM）</code>编码的；
+* '''我的模组重启后就消失了？'''：如果模组消失，只有可能是加载失败了，在设置-数据中导出日志或直接查看<code>lastlog.txt</code>解决问题；
+* '''报错<code>No mod.json found</code>'''：首先检查文件名的拼写是否有误。如果无误，你需要改变一下压缩的手法，不要压缩包括<code>mod.json</code>文件的文件夹，而是全选所有文件并压缩；
+* '''官方Wiki上指示我把模组文件夹直接建立在Mindustry数据文件夹里，为何本教程不推荐这么做？'''：从国情考虑，大多数人找不到数据文件夹在哪。
+* '''为什么<code>modName</code>命名有那么多限制？'''：因为原版自带一种特殊的处理机制（位于<code>Mod.java</code>的953行），<code>modName</code>会自动把大写字母转成小写字母，并把空格转为连字符。例如，<code>My Mod Name</code>转化成<code>my-mod-name</code>这一过程是全自动的，本来就会被游戏识别成相同的名称。至于中文字符，就是仁者见仁的东西了。

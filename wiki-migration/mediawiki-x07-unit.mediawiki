@@ -1,0 +1,194 @@
+<span id="单位武器能力单位工厂"></span>
+= 单位、武器、能力、单位工厂 =
+
+单位是 Mindustry 的另一条“制造链”。JSON 里单位由 <code>UnitType</code> 定义，武器由 <code>Weapon</code> 定义，能力由 <code>Ability</code> 定义，产出单位的建筑则由单位工厂、重构厂和组装厂负责。理解这些结构以后，单位制作会变成“参数组合”的游戏。
+
+<span id="unittype-的核心字段"></span>
+== UnitType 的核心字段 ==
+
+单位 JSON 文件位于 <code>content/units</code>。<code>type</code> 决定单位的实体构造器，也就是“移动与碰撞的底层行为”。可用值包括 <code>flying</code>、<code>mech</code>、<code>legs</code>、<code>naval</code>、<code>payload</code>、<code>missile</code>、<code>tank</code>、<code>hover</code>、<code>tether</code>、<code>crawl</code>。例如“星辉”“天垠”属于 <code>flying</code>，“战锤”“爬虫”属于 <code>mech</code>，“天蝎”“死星”属于 <code>legs</code>，“梭鱼”“蛟龙”属于 <code>naval</code>，“巨像”“雷霆”“要塞”属于 <code>payload</code>，“围护”“征服”属于 <code>tank</code>。<code>type</code> 只是构造器，真正是否飞行还要看 <code>flying</code>、<code>lowAltitude</code>、<code>hovering</code> 等字段的组合，因此建议先对照原版单位理解差异。
+
+基础运动字段包括 <code>speed</code>、<code>accel</code>、<code>drag</code> 与 <code>rotateSpeed</code>。<code>speed</code> 决定最大移动速度，<code>accel</code> 与 <code>drag</code> 决定起步与刹车的手感，<code>rotateSpeed</code> 决定转向速度。<code>hitSize</code> 影响单位的碰撞体积与受击范围，<code>health</code> 与 <code>armor</code> 决定生存能力。<code>range</code> 通常用于 AI 选择射程范围，如果写成负数会自动根据武器计算；这意味着你只要武器配置合理，<code>range</code> 可以不写。
+
+采矿与建造能力由 <code>mineTier</code>、<code>mineSpeed</code> 与 <code>buildSpeed</code> 控制。<code>mineTier</code> 对应可开采的硬度等级，<code>mineSpeed</code> 决定采矿速度，<code>buildSpeed</code> 决定建造与修复速度。<code>itemCapacity</code> 决定携带物品的容量，<code>payloadCapacity</code> 决定载荷容量，后者常见于“巨像”这类载荷单位。<code>targetAir</code> 与 <code>targetGround</code> 控制自动索敌类型，<code>faceTarget</code> 决定单位是否转向目标，<code>omniMovement</code> 则影响是否允许“全向移动”。
+
+视觉与表现方面，<code>engineOffset</code> 与 <code>engineSize</code> 决定引擎喷口位置和大小，<code>trailLength</code> 与 <code>trailColor</code> 决定尾迹长度与颜色。声音相关字段包括 <code>deathSound</code>、<code>loopSound</code>、<code>moveSound</code>、<code>stepSound</code> 等，用于塑造单位的体感。<code>drawCell</code>、<code>drawShields</code>、<code>drawItems</code> 等字段控制 UI 与渲染细节。
+
+还有一些“规则型”的字段容易被忽略。<code>logicControllable</code> 与 <code>playerControllable</code> 决定单位能否被处理器或玩家直接控制，<code>useUnitCap</code> 决定是否受单位上限限制，<code>hittable</code> 与 <code>targetable</code> 决定能否被命中或锁定，<code>allowedInPayloads</code> 与 <code>pickupUnits</code> 则影响载荷交互。这些字段不会直接改变伤害，但会极大改变单位在战役中的定位，比如“不可选中但可伤害”的单位往往用于剧情或特殊机制。
+
+=== 一个最小单位示例 ===
+
+'''文件：content/units/tutorial-unit.json'''
+
+<pre>{
+    "type": "flying",
+    "name": "示例单位",
+    "description": "最基础的飞行单位。",
+    "speed": 2.6,
+    "health": 120,
+    "hitSize": 8,
+    "flying": true,
+    "weapons": [
+        {
+            "name": "tutorial-weapon",
+            "reload": 25,
+            "x": 3,
+            "y": 1,
+            "bullet": {
+                "type": "BasicBulletType",
+                "speed": 2.5,
+                "damage": 9,
+                "lifetime": 60
+            }
+        }
+    ]
+}
+</pre>
+这个单位选择了 <code>flying</code> 构造器，并显式设置 <code>flying: true</code>。武器字段直接写在 <code>weapons</code> 数组里，<code>reload</code> 是装填时间，<code>x/y</code> 是武器挂点位置。
+
+<span id="武器weapon"></span>
+== 武器（Weapon） ==
+
+单位武器与炮塔非常相似，但更强调“挂载位置”和“开火方式”。<code>x/y</code> 决定武器挂点位置，<code>shootX/shootY</code> 决定枪口位置，<code>mirror</code> 决定是否左右镜像复制，<code>rotate</code> 决定武器是否随单位旋转，<code>top</code> 决定绘制层级。射击节奏由 <code>reload</code>、<code>shootCone</code>、<code>inaccuracy</code> 决定，若需要一次多发或延迟开火，可以写 <code>shoot</code> 子对象（如 <code>shots</code>、<code>shotDelay</code>、<code>firstShotDelay</code>、<code>spread</code>）。
+
+<code>bullet</code> 字段决定子弹类型与属性，写法与炮塔完全一致。武器贴图默认使用 <code>weapon-name.png</code>，热量贴图为 <code>-heat</code>，数据库预览图为 <code>-preview</code>。如果你的单位有多门武器，记得给不同武器取不同 <code>name</code>，以免贴图冲突。
+
+单位武器还有一组更偏“行为”的字段。<code>alternate</code> 控制左右武器是否交替射击，<code>continuous</code> 与 <code>alwaysContinuous</code> 决定是否持续发射（常用于持续激光或喷流）。<code>shootStatus</code> 与 <code>shootStatusDuration</code> 可以让单位在开火时给自己施加状态，例如短暂的护盾或加速；<code>ejectEffect</code> 与 <code>parentizeEffects</code> 则分别控制弹壳特效与特效跟随，让枪口表现更自然。对于高速或持续火力单位，这些字段常常比单纯堆 <code>damage</code> 更能体现风格。
+
+武器也支持 <code>parts</code>（<code>DrawPart</code>）来做局部动画，和炮塔的用法几乎一致。你可以用 <code>reload</code>、<code>warmup</code>、<code>recoil</code> 等进度驱动枪口位移、光效或外壳开合，配合 <code>shootX/shootY</code> 微调出射位置。对于多武器单位，每个武器都能独立配置部件动画，这能显著提升“机体层次感”。
+
+<span id="能力ability"></span>
+== 能力（Ability） ==
+
+Ability 是单位的“额外技能”，更新频率与单位一致。常见类型包括 <code>ForceFieldAbility</code>（护盾）、<code>RepairFieldAbility</code>（修复场）、<code>MoveEffectAbility</code>（移动特效）、<code>StatusFieldAbility</code>（范围状态）、<code>UnitSpawnAbility</code>（生成单位）、<code>ShieldRegenFieldAbility</code>（范围护盾回复）等。它们通常有自己的半径、回复速率、间隔时间等字段。Ability 不一定改变武器数值，但会改变单位的战场定位，因此比你想象中更“决定风格”。
+
+<pre>"abilities": [
+    {
+        "type": "ForceFieldAbility",
+        "radius": 20,
+        "regen": 0.2,
+        "max": 80
+    }
+]</pre>
+如果你希望某个单位承担辅助职责，比如“战斗修复”或“范围增益”，Ability 往往比新增武器更合适。
+
+Ability 的参数通常围绕“范围、频率、强度”展开。以 <code>RepairFieldAbility</code> 为例，它会有 <code>range</code>、<code>reload</code> 与 <code>amount</code> 来控制修复范围、间隔与数值；<code>StatusFieldAbility</code> 则需要 <code>status</code> 与 <code>duration</code> 来指定范围状态。能力不消耗弹药，但会叠加在单位的“战略定位”上，尤其是支援单位，能力强弱往往比武器伤害更重要。
+
+== 数值与定位的关系 ==
+
+单位设计中最重要的是“定位”。高 <code>speed</code> 的单位通常承担侦察或骚扰角色，但它们不一定需要高伤害；高 <code>health</code> 与高 <code>armor</code> 的单位则更适合抗线与拆建筑。<code>hitSize</code> 影响命中概率与碰撞体积，过大的 <code>hitSize</code> 会让单位更容易被集火。<code>range</code> 与武器射程一致时，AI 会更愿意停在安全距离输出；如果 <code>range</code> 过短，单位会更靠近目标，可能导致“高伤害单位冲脸”的意外行为。
+
+<code>mineRange</code> 与 <code>buildRange</code> 决定采矿与建造距离。对于“独影”“幻型”这类支援单位，合理的 <code>buildRange</code> 能显著提升它们的修复效率；对“阿尔法”“贝塔”“伽马”这种核心单位而言，<code>mineRange</code> 与 <code>mineTier</code> 的匹配更重要，否则会出现“能飞到矿上却挖不动”的问题。
+
+采矿单位还要关注 <code>mineSpeed</code> 与 <code>itemCapacity</code> 的配合。<code>mineSpeed</code> 决定单位采一件矿的速度，但如果 <code>itemCapacity</code> 很小，单位会频繁往返核心，实际效率反而下降。设计时可以先确定“预期的运输半径”，再决定 <code>mineSpeed</code> 与容量，让玩家感觉“这台单位就是为某种矿而生”。
+
+视觉与声音字段虽然不影响数值，但会影响玩家判断。例如 <code>engineSize</code> 很小的飞行单位会显得“轻量”，<code>trailLength</code> 较长的单位更容易被玩家注意到。你可以把这些作为“风格刻画”的工具，而不是简单的装饰。
+
+== 单位的弹药与资源 ==
+
+单位也可以有弹药系统。<code>ammoType</code> 决定单位使用的弹药类型，<code>ammoCapacity</code> 决定弹药容量，<code>ammoType</code> 可以是物品或电力。许多“重装单位”会用物品弹药以限制持续火力，而“支援单位”则更倾向于电力弹药以减少物流压力。<code>itemCapacity</code> 与 <code>payloadCapacity</code> 决定单位能携带多少物品或载荷，这会直接影响它在战场上的“后勤价值”。例如大载荷单位不仅能搬运方块，还能承担“机动建造”的角色。
+
+如果你希望单位有明显的“供给需求”，就把 <code>ammoType</code> 指向某种稀缺物品，并给它较大的 <code>ammoCapacity</code>。这样单位的持续作战能力就会依赖你的运输体系，而不是单纯的数值堆叠。
+
+<span id="模组示例饱和火力-3.3.0-的雷鸣"></span>
+== 模组示例：饱和火力 3.3.0 的“雷鸣” ==
+
+“雷鸣”是一个使用电力弹药的飞行单位，它把 <code>ammoType</code> 写成对象形式，并在武器上使用 <code>shootWarmupSpeed</code> 与 <code>minWarmup</code> 做出“预热开火”的节奏，同时用 <code>shootStatus</code> 给自己短暂加成：
+
+<pre>{
+    "type": "flying",
+    "name": "雷鸣",
+    "ammoType": {
+        "type": "PowerAmmoType",
+        "totalPower": 8000
+    },
+    "ammoCapacity": 60,
+    "weapons": [
+        {
+            "name": "雷鸣1",
+            "shootWarmupSpeed": 0.13,
+            "minWarmup": 0.9,
+            "shootStatus": "shielded",
+            "shootStatusDuration": 50
+        }
+    ]
+}</pre>
+这个片段说明了两件事：一是电力弹药适合做“高持续但后勤轻量”的单位；二是预热与自我状态可以让单位的输出节奏更有层次，而不是单纯堆数值。
+
+需要注意的是，电力弹药本质上仍依赖电网或能源补给，战役中断电时这类单位会明显“掉火力”，设计时要预留补能途径。
+
+<span id="ai-与行为控制"></span>
+== AI 与行为控制 ==
+
+<code>aiController</code> 可以指定单位的默认 AI 控制器，它通常是一个类名，例如 <code>FlyingAI</code> 或 <code>GroundAI</code>。<code>defaultController</code> 则用于覆盖更底层的控制器选择。实际运行时，单位会根据是否可被玩家控制、是否属于 AI 队伍等条件决定最终控制器，因此你在 JSON 里指定的 AI 只是“默认策略”。如果你需要完全自定义的行为，就必须转向 Java。
+
+如果你把 <code>playerControllable</code> 设为 <code>false</code>，单位将无法被玩家直接控制；<code>logicControllable</code> 设为 <code>false</code> 则会阻止处理器接管。对剧情单位或 Boss 来说，这能避免玩家“抢走”单位，但也意味着 AI 表现必须足够可靠。
+
+<span id="单位工厂重构厂与组装厂"></span>
+== 单位工厂、重构厂与组装厂 ==
+
+<code>UnitFactory</code> 负责“直接生产单位”。每条 <code>plan</code> 都包含 <code>unit</code>、<code>time</code> 与 <code>requirements</code>（物品堆栈），工厂从传送带或卸货口取物品，完成后直接出厂。<code>Reconstructor</code> 负责“升级单位”，需要指定 <code>previous</code> 作为前置单位，并消耗物品与时间来完成升级。<code>UnitAssembler</code> 则走“载荷 + 模块”的路线：它需要载荷输入，并常与 <code>UnitAssemblerModule</code> 搭配扩展阶级，同时依赖无人机完成组装。
+
+<code>UnitAssembler</code> 的 <code>plans</code> 是 <code>AssemblerUnitPlan</code> 数组，每条计划除了 <code>unit</code> 与 <code>time</code> 外，还能写 <code>requirements</code>（载荷堆栈）、<code>itemReq</code>（物品消耗）、<code>liquidReq</code>（液体消耗）。<code>droneType</code>、<code>dronesCreated</code>、<code>droneConstructTime</code> 共同决定无人机的构建与装配节奏。相比之下，<code>UnitFactory</code> 与 <code>Reconstructor</code> 更像“单体方块”，配置直观；<code>UnitAssembler</code> 更像“工厂线”，需要你理解载荷口对齐、模块位置与装配流程。
+
+== 生产链的设计思路 ==
+
+单位生产链并不只是“做一个工厂就结束”。如果你把单位的 <code>requirements</code> 写得过于昂贵，就会导致它们只能在后期登场；写得过于廉价，则会让战役或生存失衡。原版的“陆军工厂”“空军工厂”“海军工厂”提供的是“基础单位”，而“数增级单位重构工厂”等重构厂负责“阶级跃迁”。这套结构实际上在引导玩家逐步升级单位强度，同时也在限制战场单位的数量。
+
+设计自定义单位时，可以先决定它处于哪一层：是基础单位、重构升级单位，还是装配厂产物。基础单位应该成本可控、数量可量产；重构单位可以更强但应有明显投入；装配单位则适合“高价值、高稀有度”。这样设计出的单位链条更容易被玩家理解。
+
+<span id="模组示例饱和火力-3.3.0-的重构链"></span>
+== 模组示例：饱和火力 3.3.0 的重构链 ==
+
+“反击”是一台 <code>tank</code> 单位，它通过 <code>requirements</code> 挂在重构厂上，并指定了 <code>previous</code>。这意味着它不是基础工厂直接生产的单位，而是由前一阶单位升级而来。下面是该单位的节选：
+
+<pre>{
+    "type": "tank",
+    "name": "反击",
+    "health": 25600,
+    "armor": 30,
+    "ammoType": "surge-alloy",
+    "ammoCapacity": 120,
+    "immunities": ["burning", "shocked"],
+    "requirements": {
+        "block": "exponential-reconstructor",
+        "previous": "陆3"
+    }
+}</pre>
+这个例子体现了“单位强度靠重构链提升”的思路。通过 <code>previous</code> 串联，你可以清晰地控制升级路径，而不用让高阶单位直接出现在基础工厂里。
+
+<span id="模组示例饱和火力-3.3.0-的组装厂计划"></span>
+== 模组示例：饱和火力 3.3.0 的组装厂计划 ==
+
+“悬浮战争工厂”是一个 <code>UnitAssembler</code>，它在 <code>plans</code> 中同时使用 <code>requirements</code> 与 <code>liquidReq</code>，并通过 <code>droneType</code> 指定组装无人机。这个结构展示了“载荷 + 液体”双输入的写法：
+
+<pre>{
+    "type": "UnitAssembler",
+    "name": "悬浮战争工厂",
+    "plans": [
+        {
+            "unit": "竭泽",
+            "time": 4200,
+            "requirements": ["饱和火力-基础收容块/6"],
+            "liquidReq": ["cryofluid/0.6"]
+        }
+    ],
+    "droneType": "组装机"
+}</pre>
+在这种结构里，<code>requirements</code> 不再是物品，而是载荷堆栈。你需要确保载荷输入方向与装配口一致，否则装配会一直卡住。对比 <code>UnitFactory</code> 的“传送带输入”，组装厂更强调布局和物流规划。
+
+<span id="单位文件里的-requirements"></span>
+== 单位文件里的 requirements ==
+
+在单位 JSON 中写 <code>requirements</code> 并不是设置“单位本体材料”，而是把单位挂到某个工厂或重构厂。结构如下：
+
+<pre>"requirements": {
+    "block": "ground-factory",
+    "requirements": ["silicon/10", "lead/10"],
+    "time": 900
+}</pre>
+<code>block</code> 是所属工厂或重构厂的内部名，<code>requirements</code> 是该配方的物品消耗，<code>time</code> 是制造时间，<code>previous</code> 则用于重构厂的升级链。注意：这种 <code>requirements</code> 只对 <code>UnitFactory</code> 与 <code>Reconstructor</code> 生效，无法把单位自动挂到 <code>UnitAssembler</code>。原版中“陆军工厂”“空军工厂”“海军工厂”与“数增级单位重构工厂”是最典型的参考对象。
+
+== 小结 ==
+
+<code>type</code> 决定单位底层行为，<code>weapons</code> 与 <code>abilities</code> 决定战斗风格，<code>requirements</code> 决定生产链挂载方式。先理解原版单位与工厂的规则，再去配置自己的单位，会顺手很多。
