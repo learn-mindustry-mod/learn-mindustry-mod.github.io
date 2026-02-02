@@ -195,7 +195,13 @@ class LampBlock(name: String?) : Block(name) {
 Core.atlas.find("<modName>-<fileName>");
 ```
 
-这样获取的是一个类型为`TextureRegion`子类的、指向这张贴图的引用。在实践中，多次调用此方法可能会造成性能损失，因此你需要把此方法的返回值存在这个方法中。欲达到此目的，你需要在此方块的类中新建一个字段：
+这样获取的是一个类型为`TextureRegion`子类的、指向这张贴图的引用。
+
+::: warning 注解
+`@Load`注解在打包依赖包时未包含注解处理器，因此无法使用`@Load`注解
+:::
+
+在实践中，多次调用此方法可能会造成性能损失，因此你需要把此方法的返回值存在这个方法中。欲达到此目的，你需要在此方块的类中新建一个字段：
 
 ::: code-group
 ``` java
@@ -212,7 +218,7 @@ public class LampBlock extends Block{
     public void load(){
         super.load();
         lightRegion = Core.atlas.find(name + "-light");
-        darkRegion = Core.atlas.find(name + "-dark");
+        region = darkRegion = Core.atlas.find(name + "-dark");
     }
     
     public class LampBuild extends Building{
@@ -233,7 +239,7 @@ class LampBlock(name: String?) : Block(name) {
     override fun load() {
         super.load()
         lightRegion = Core.atlas.find("$name-light")
-        darkRegion = Core.atlas.find("$name-dark")
+        region = darkRegion = Core.atlas.find("$name-dark")
     }
     
     open inner class LampBuild: Building() {
@@ -242,6 +248,8 @@ class LampBlock(name: String?) : Block(name) {
 }
 ```
 :::
+
+这里我们把`darkRegion`也赋值到`region`中，后者是方块的默认贴图，默认会去读取名称与此内容相同的贴图，但是我们没有准备，所以需要我们手动赋值，否则我们将不得不重写所有绘制方法。
 
 对于重写的方法，建议使用`@Override`注解（仅Java）/`override`修辞符（仅Kotlin）。同时，需要根据需求决定是否调用`super`方法，且`super`方法的调用位置可能影响程序行为。
 
@@ -441,7 +449,7 @@ misc.lampOff = OFF
 
 ### `draw()`
 
-所有绘制方法中，这是最基本的一个。负责的是绘制方块本身的贴图。在本例中，因为我们没有按照原版的规范加载贴图，即没有提供与内容名称相同的贴图文件，因此这个方法我们需要重写。
+所有绘制方法中，这是最基本的一个。负责的是绘制方块本身的贴图。在本例中，因为我们有自定义绘制的需求，因此这个方法我们需要重写。
 
 在Mindustry中，有一系列专门用于在屏幕上绘制内容的类，他们的名字包括`arc.graphics.g2d.Draw Fill Lines`和`mindustry.graphics.Drawf`。这些类中的方法如果在实体的绘制方法中执行，则可以在屏幕上绘制内容。如果在绘制方法外执行这些方法则是没有意义的。在Arc中，在某个位置绘制一张贴图的方法是`Draw.rect()`。这个方法中的`x`和`y`指绘制区域的中心坐标，建筑实体自带的`x`和`y`即为建筑中心的绘制坐标，你可以直接使用，你还可以设置`w`和`h`来设置宽和高。这时，我们之前在`load()`方法中加载的贴图文件就派上用场了。这次我们不再调用`super.draw()`，这是因为我们不需要super方法中绘制的内容了。
 
@@ -531,9 +539,421 @@ public void drawLight(){
 
 ### 寄居在方块中的实体绘制
 
-以上所述的绘制方法均针对具有实体方块的绘制。然而，Mindustry中还存在大量无实体的方块，其建筑没有实体，无法自行执行绘制方法。此外，当建筑尚未被放置时，也需要方块进行绘制。以下将分析各个方法的含义，因为此处的代码逻辑相对复杂。
+以上所述的绘制方法均针对具有实体方块的绘制。然而，Mindustry中还存在大量无实体的方块，其建筑没有实体，无法自行执行绘制方法。此外，当建筑尚未被放置时，也需要方块进行绘制。以下将分析各个方法的含义：
 
-- `drawBase(Tile)`：如果建筑有实体，这个方法就会委托给实体的`draw()`方法
+- `drawBase(Tile)`：如果建筑有实体，此方法会委托给实体的`draw()`方法；否则对于无变体（`variant = 0`）方块，绘制默认贴图`region`，否则根据位置随机选择一个变体贴图绘制；
+- `drawShadow(Tile)`：如果方块自定义阴影贴图（`customShadow = true`），则会绘制自定义的阴影贴图，对于无变体（`variant = 0`）方块，绘制自定义阴影`customShadowRegion`（`$name-shadow`），否则根据位置随机选择一个变体阴影贴图绘制；
+- `drawPlace(int, int, int, boolean)`：绘制方块在放置过程中需要额外绘制的内容，如电力节点的潜在连接（委托给`drawPotentialLinks()`）；
+- `drawOverlay(int, int, int)`：在建造和被指针悬停时绘制的内容；
+- `drawPlan(...)`：作为**建造计划（BuildPlan）**时绘制的内容。
+
+以上是游戏在符合条件时会主动调用的方法，但`drawPlaceText(...)`不在这个行列中，此方法的定位是类似于`Drawf`这样的工具方法，用途是在方块上方显示文本。
+
+## 其他按需调用方法
+
+建筑实体中还有很多按需调用的方法，例如在被破坏后调用的`afterDestroyed()`、有单位位于其上时调用的`unitOn(Unit)`、还有建筑被放置后调用的`created()`。我们可以通过覆写这些方法来实现一些功能。
+
+例如，本例中我们需要的方法就是`tapped()`，正如其字面意义，这个方法会在方块被单击后执行。
+
+::: code-group
+
+``` java
+@Override
+public void tapped(){
+    super.tapped();
+    light = !light;
+}
+```
+
+``` kotlin
+override fun tapped() {
+    super.tapped()
+    light = !light
+}
+```
+
+:::
+
+## 存档与同步
+
+以上的代码已经实现了绘制和运行逻辑，但目前这个台灯还存在以下问题：存档再读档后无法保留原有状态，在服务器中使用时无法同步灯的状态，以及使用蓝图复制建筑时无法保留状态。本部分将解决这些问题。
+
+### 存档的写入与读取
+
+#### 存档结构
+
+在讲解存档功能的使用方法之前，十分有必要先介绍Mindustry的存档结构。
+
+Mindustry的存档采取的是**流式（Stream）**存档，在文件中实际存储的形式的是一串二进制流。流式存档的好处十分明显，就是没有不必要的填充和结构内容，可以有效地压缩存档大小；缺点也十分明显，如果读取方式错误，则什么也读不出来。在实际使用中，二进制流内容又是以**区块（Chunk）形式**存储的，一个区块就是一个表示字节流长度的int值与其承载的一段字节流，下图中绿色代表一个区块。
+
+一个存档文件总共有7个大区块，称为是**存档区域（Region）**。与建筑实体中的数据相关的是其中的`map`区域。`map`区块存储的内容包括世界的长与宽、地板与覆盖层的ID和数据、以及建筑的方块ID和数据。而每个建筑数据又是一个区块，我们接下来的方法就是针对此区块进行读写。
+
+![msav](imgs/masv.png)
+
+#### `read()` / `write()`
+
+向刚才这个建筑数据区块读写内容的方法即为`read()`和`write()`。如果想要向存档中添加数据，直接向这两个方法中添加内容即可：
+
+::: code-group
+
+``` java
+@Override
+public void read(Reads read, byte revision){
+    super.read(read, revision);
+    light = read.bool();
+}
+
+@Override
+public void write(Writes write){
+    super.write(write);
+    write.bool(light);
+}
+```
+
+``` kotlin
+override fun read(read: Reads, revision: Byte) {
+    super.read(read, revision)
+    light = read.bool()
+}
+
+override fun write(write: Writes) {
+    super.write(write)
+    write.bool(light)
+}
+```
+
+:::
+
+#### 版本控制
+
+但此时你再打开原有的存档将会报错。提示的错误为`"Error reading region $name: read length mismatch. Expected: @; Actual: @`。根据上方存档原理，我们可以知道这是因为读取的字节数超过了区块中存储的字节数，即`read()`方法读多了。究其原因，是因为存档的区块数据中并没有`light`这一字节。像这样由于`read()` / `write()`方法更新导致无法读取的情况还有很多，规避这种问题的方法是通过`version()` / `revision` 为你的读取/写入协议添加版本控制。
+
+在写入实体数据前，游戏会先写入`version()`方法的返回值，读取时这个值将会作为`read()`的第二个参数传入。因此我们可以做这样的改写：
+
+::: code-group
+
+``` java
+@Override
+public byte version(){
+    return 1;
+}
+
+@Override
+public void read(Reads read, byte revision){
+    super.read(read, revision);
+    if(revision >= 1) light = read.bool();
+}
+```
+
+``` kotlin
+override fun version(): Byte {
+    return 1
+}
+
+override fun read(read: Reads, revision: Byte) {
+    super.read(read, revision)
+    if (revision >= 1) light = read.bool()
+}
+```
+
+:::
+
+### 网络同步——`configure()` 系统
+
+原版中同步方法大致有两种，一是通过读取整个存档，速度较慢；二是通过发送**数据包（Packet）**，速度较快。开关灯是一个即时的操作，适合使用发包的方式进行同步。此处不建议自行处理发包系统，而是推荐通过原版的建筑**配置（Configuration）系统**进行管理。
+
+配置系统的组成包括：在方块中通过`config<T, E extends Building>(Class<T> type, Cons2<E, T> config)`注册一个配置响应器，在建筑中通过`config()`方法返回配置，以及在合适的时机调用建筑的`configure()`方法。
+
+首先我们需要在方法的构造方法中对配置进行注册：
+
+::: code-group
+
+``` java
+public LampBlock(String name){
+    super(name);
+    update = true;
+    config(Boolean.class, (LampBuild build, Boolean state)->{
+        build.light = state;
+    });
+}
+
+@Override
+public Object config(){
+    return light;
+}
+```
+
+``` kotlin
+init {
+    update = true
+    config(Boolean::class.java) { build: LampBuild, state: Boolean? -> build.light = state!! }
+}
+
+override fun config(): Any? {
+    return light
+}
+```
+
+:::
+
+接下来，你需要在原来直接改变方块状态的地方改为调用方块的`configure()`方法：
+
+::: code-group
+
+``` java
+@Override
+public void tapped(){
+    super.tapped();
+    light = !light; // [!code --]
+    configure(!light); // [!code ++]
+}
+```
+
+``` kotlin
+override fun tapped() {
+    super.tapped()
+    light = !light // [!code --]
+    configure(!light) // [!code ++]
+}
+```
+
+:::
+
+注意不要在响应器注册时调用`configure()`，否则你会收到`StackOverflowError`。接下来，你应该已经可以在多人游戏时实时响应灯的开关了。
+
+有关此系统要注意的是，此方法能响应的配置类型只包括基本类型的包装类型、`String`、`Content`以及放置他们的数组和`Seq`。尽量避免在配置中传递过大的对象，必要时可以通过id化来简化。
+
+### 配置
+
+配置系统有一段字段可以设置：
+
+- `configurable`：是否在单击建筑时展示配置菜单`buildConfiguration`；
+- `saveConfig`：是否保存当前的配置以应用到下一次建造中；
+- `copyConfig`：复制方块时是否会一起复制它的配置；
+
+配置系统并非仅能与`tapped`方法配合使用。实际上，将`configurable`设置为`true`后，单击建筑会显示一个配置菜单，开发者可通过该菜单以多种方式调用`configure()`方法，例如原版“分类器”的实现方式。
+
+## 结尾
+
+下面我们给出上述代码的完整实现：
+
+::: code-group
+
+``` java
+package example.world.blocks;
+
+import arc.*;
+import arc.graphics.*;
+import arc.graphics.g2d.*;
+import arc.math.*;
+import arc.util.*;
+import arc.util.io.*;
+import example.world.meta.*;
+import mindustry.entities.units.*;
+import mindustry.gen.*;
+import mindustry.graphics.*;
+import mindustry.ui.*;
+import mindustry.world.*;
+import mindustry.world.meta.*;
+
+public class LampBlock extends Block{
+
+
+    public TextureRegion lightRegion, darkRegion;
+
+    public LampBlock(String name){
+        super(name);
+        update = true;
+        copyConfig = true;
+        config(Boolean.class, (LampBuild build, Boolean state)->{
+            build.light = state;
+        });
+    }
+
+    @Override
+    public void setStats(){
+        super.setStats();
+        stats.add(TutorialStatJ.lightRadius, 5f, StatUnit.blocks);
+    }
+
+    @Override
+    public void setBars(){
+        super.setBars();
+        addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? "灯开" : "灯关",
+        () -> Pal.accent,
+        () -> lamp.light ? 1f : 0f));
+    }
+
+    @Override
+    public void load(){
+        super.load();
+        lightRegion = Core.atlas.find(name + "-light");
+        darkRegion = Core.atlas.find(name + "-dark");
+    }
+
+    @Override
+    public void drawPlan(BuildPlan plan, Eachable<BuildPlan> list, boolean valid, float alpha){
+        Draw.reset();
+        Draw.mixcol(!valid ? Pal.breakInvalid : Color.white, (!valid ? 0.4f : 0.24f) + Mathf.absin(Time.globalTime, 6f, 0.28f));
+        Draw.alpha(alpha);
+        float prevScale = Draw.scl;
+        Draw.scl *= plan.animScale;
+        drawPlanRegion(plan, list);
+        Draw.scl = prevScale;
+        Draw.reset();
+    }
+
+    public class LampBuild extends Building{
+        public boolean light;
+
+        @Override
+        public void draw(){
+            Draw.rect(light ? lightRegion : darkRegion, x, y);
+        }
+
+        @Override
+        public void drawLight(){
+            super.drawLight();
+            Drawf.light(x, y, 5f, Color.white, 1f);
+        }
+
+        @Override
+        public void tapped(){
+            super.tapped();
+            configure(!light);
+        }
+
+        @Override
+        public byte version(){
+            return 1;
+        }
+
+        @Override
+        public void read(Reads read, byte revision){
+            super.read(read, revision);
+            if(revision >= 1) light = read.bool();
+        }
+
+        @Override
+        public void write(Writes write){
+            super.write(write);
+            write.bool(light);
+        }
+
+        @Override
+        public Object config(){
+            return light;
+        }
+    }
+}
+```
+
+``` kotlin 
+package example.world.blocks
+
+import arc.Core
+import arc.graphics.Color
+import arc.graphics.g2d.Draw
+import arc.graphics.g2d.TextureRegion
+import arc.util.io.Reads
+import arc.util.io.Writes
+import example.world.meta.TutorialStatK
+import mindustry.gen.Building
+import mindustry.graphics.Drawf
+import mindustry.graphics.Pal
+import mindustry.ui.Bar
+import mindustry.world.Block
+import mindustry.world.meta.StatUnit
+
+class LampBlock(name: String?) : Block(name) {
+    init {
+        update = true
+        copyConfig = true
+        config(Boolean::class.java) { build: LampBuild, state: Boolean? -> build.light = state!! }
+    }
+
+    var lightRegion: TextureRegion? = null
+    var darkRegion: TextureRegion? = null
+
+    override fun load() {
+        super.load()
+        lightRegion = Core.atlas.find("$name-light")
+        darkRegion = Core.atlas.find("$name-dark")
+    }
+
+    override fun setStats() {
+        super.setStats()
+        stats.add(TutorialStatK.lightRadius, 5f, StatUnit.blocks)
+    }
+
+    override fun setBars() {
+        super.setBars()
+        addBar("light") { lamp: LampBuild ->
+            Bar(
+                { if (lamp.light) "灯开" else "灯关" },
+                { Pal.accent },
+                { if (lamp.light) 1f else 0f }
+            )
+        }
+    }
+
+    open inner class LampBuild : Building() {
+        var light: Boolean = false
+        override fun draw() {
+            Draw.rect(if (light) lightRegion else darkRegion, x, y)
+        }
+
+        override fun drawLight() {
+            super.drawLight()
+            Drawf.light(x, y, 5f, Color.white, 1f)
+        }
+        override fun tapped() {
+            super.tapped()
+            configure(!light)
+        }
+
+        override fun version(): Byte {
+            return 1
+        }
+
+        override fun read(read: Reads, revision: Byte) {
+            super.read(read, revision)
+            if (revision >= 1) light = read.bool()
+        }
+
+        override fun write(write: Writes) {
+            super.write(write)
+            write.bool(light)
+        }
+
+        override fun config(): Any? {
+            return light
+        }
+    }
+}
+
+```
+
+:::
+
+最后一步，不要忘记给你的类新建一个实例：
+
+::: code-group
+
+``` java
+new LampBlock("lamp");
+```
+
+``` kotlin
+LampBlock("lamp")
+```
+
+:::
+
+通过以上代码，我们知晓了如何通过重写方法的方式对功能进行扩充，并介绍了大量方法。下一节中，我们将解析工厂的工作方式。
+
+
+
 
 
 
