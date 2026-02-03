@@ -31,13 +31,14 @@ LearnMindustryMod
 
 **游戏内容背后的程序原理，真正开始进入编程**
 - **3.1** 方块（Block）与建筑（Building）
-- **3.2** 单位类型（UnitType）与单位实体（Unit）
-- **3.3** 电网图（PowerGraph）模型
-- **3.4** 物流/液体/热量的物流传输逻辑
-- **3.5** 载荷（Payload）
-- **3.6** 弹射物类型（BulletType）与弹射物实体（Bullet）
-- **3.7** 全局事件与事件监听
-- **3.8** 星球与星球生成器（PlanetGenerator）
+- **3.2** 方块的消耗项（Consumes）及工厂的生产逻辑
+- **3.3** 单位类型（UnitType）与单位实体（Unit）
+- **3.4** 电网图（PowerGraph）模型
+- **3.5** 物流/液体/热量的物流传输逻辑
+- **3.6** 载荷（Payload）
+- **3.7** 弹射物类型（BulletType）与弹射物实体（Bullet）
+- **3.8** 全局事件与事件监听
+- **3.9** 星球与星球生成器（PlanetGenerator）
 
 ### 第四章 调试
 

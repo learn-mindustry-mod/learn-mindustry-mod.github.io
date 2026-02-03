@@ -122,7 +122,7 @@ public Content(){
 
 创建任何一种新方块之前，一定要先明确自己的需求，这些需求应当可以通过严谨的流程框图或伪代码来表述。在本例中，我们希望台灯能在玩家手动点击时切换亮/暗形态，点亮范围为5格。
 
-接下来，你需要创建一个继承于`mindustry.type.Block`的类，命名其为`LampBlock`。在原版的代码架构中，方块的类一般放置在`world.blocks`包下，你可以选择效仿这种组织形式。在创建类后，IDE会自动提示你生成与超类符合的构造方法。
+接下来，你需要创建一个继承于`mindustry.world.Block`的类，命名其为`LampBlock`。在原版的代码架构中，方块的类一般放置在`world.blocks`包下，你可以选择效仿这种组织形式。在创建类后，IDE会自动提示你生成与超类符合的构造方法。
 
 ::: code-group
 ``` java
@@ -138,11 +138,11 @@ public class LampBlock extends Block{
 ```
 
 ``` kotlin
-class LampBlock(name: String?) : Block(name) {}
+class LampBlock(name: String) : Block(name)
 ```
 :::
 
-你需要将`update`字段设置为`true`，让游戏为这个方块的建筑生成实体。否则放置的建筑将会只能静态地绘制`Block#drawBase(Tile)`这一方块下的内容，而这正是原版环境方块、墙体等不需要复杂实体的方块的默认行为。
+你需要将`update`字段设置为`true`，让方块拥有可更新的建筑实体并进入更新循环（例如`updateTile()`）。`Block`是否创建`Building`取决于`update`或`destructible`：若两者均为`false`，`tile.build`为`null`，只能静态绘制`Block#drawBase(Tile)`；若仅设置`destructible = true`，会有建筑实体但不参与更新循环。原版的环境方块、静态墙体等通常就处于这种“无更新实体/静态绘制”的状态。
 
 和方块一样，建筑实体也是由一个类型封装的。所有建筑实体的基类是`mindustry.gen.Building`。与方块不同的是，游戏通常会自动寻找一种方块所需的实体类型，而寻找的位置就是此类内部定义的第一个继承自`Building`的内部类。因此，在类的内部创建一个继承自`Building`的内部类即可满足此要求。Kotlin用户需要将这个内部类声明为`open inner`的。
 
@@ -163,13 +163,13 @@ public class LampBlock extends Block{
 ```
 
 ``` kotlin
-class LampBlock(name: String?) : Block(name) {
+class LampBlock(name: String) : Block(name) {
     init {
         update = true
     }
     
     open inner class LampBuild: Building() {
-        var light: boolean = false
+        var light: Boolean = false
     }
 }
 ```
@@ -951,8 +951,6 @@ LampBlock("lamp")
 :::
 
 通过以上代码，我们知晓了如何通过重写方法的方式对功能进行扩充，并介绍了大量方法。下一节中，我们将解析工厂的工作方式。
-
-
 
 
 
