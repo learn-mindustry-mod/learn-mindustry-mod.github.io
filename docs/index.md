@@ -18,10 +18,7 @@ hero:
         text: Json教程
         link: /json/index
       - theme: brand
-        text: 内容补丁
-        link: /content-patch/x01-content-patch.md
-      - theme: alt
-        text: 参考文档
-        link: /general/index
+        text: 贴图
+        link: /sprite/index
 
 ---

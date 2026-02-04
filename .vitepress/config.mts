@@ -32,8 +32,7 @@ const viteConfig: UserConfig = {
     nav: [
       { text: "Java", link: "/java" },
       { text: "Json", link: "/json" },
-      { text: "参考", link: "/general" },
-      { text: "内容补丁", link: "/content-patch/x01-content-patch.md"}
+      { text: "贴图", link: "/sprite" },
     ],
   
     socialLinks: [
@@ -46,6 +45,9 @@ const viteConfig: UserConfig = {
       pattern:
         "https://github.com/learn-mindustry-mod/learn-mindustry-mod.github.io/edit/master/docs/:path",
     },
+    search: {
+      provider: 'local'
+    }
   },
 }
 function generateNav(name:string):VitePressSidebarOptions{
