@@ -549,6 +549,33 @@ public void drawLight(){
 
 以上是游戏在符合条件时会主动调用的方法，但`drawPlaceText(...)`不在这个行列中，此方法的定位是类似于`Drawf`这样的工具方法，用途是在方块上方显示文本。
 
+### 裁剪半径`clipSize`
+
+在Mindustry的地图上存在成千上万个方块需要渲染，如果每一帧都要渲染它们，那么消耗的性能将不堪设想。针对这一问题，原版有两大优化，一是对没有实体的方块进行缓存，二是对所有建筑进行**视角裁剪（Clip）**。所谓的视角裁剪，就是不绘制在显示范围外的建筑。`clipSize`正是用于控制何时进行剪裁的，只有方块距屏幕边缘距离超过此值时才会剪裁。有的方块的`clipSize`比它们的`size`要大，比如有体积很大的特效的方块，或者是台灯这样实际绘制范围比方块大很多的方块。
+
+在此处我们不需要直接操作`clipSize`字段，我们可以操作`lightRadius`字段。这个字段的意义比`clipSize`更明确。像上面说的，初始化字段的操作可以放入`init()`方法进行：
+
+::: code-group
+
+``` java
+@Override
+public void init(){
+    lightRadius = 5f * Vars.tileSize
+    super.init();
+}
+```
+
+``` kotlin
+override fun init() {
+    lightRadius = 5f * Vars.tileSize
+    super.init()
+}
+```
+
+:::
+
+这里`lightRadius`的单位是世界单位（`1格=8世界单位`），因此我们通过Vars.tileSize进行单位换算。此外，我们必须让`super.init()`后执行，否则我们对`lightRadius`的更改就不会生效，因为使用`lightRadius`计算`clipSize`正是发生在`Block#init`方法中。
+
 ## 其他按需调用方法
 
 建筑实体中还有很多按需调用的方法，例如在被破坏后调用的`afterDestroyed()`、有单位位于其上时调用的`unitOn(Unit)`、还有建筑被放置后调用的`created()`。我们可以通过覆写这些方法来实现一些功能。
@@ -733,14 +760,65 @@ override fun tapped() {
 
 配置系统并非仅能与`tapped`方法配合使用。实际上，将`configurable`设置为`true`后，单击建筑会显示一个配置菜单，开发者可通过该菜单以多种方式调用`configure()`方法，例如原版“分类器”的实现方式。
 
+## 抽象
+
+在刚才建立的台灯方块中，照亮范围固定为5。若未来需要实现不同照亮范围的方块（例如10或20），为每个范围创建独立的类会导致代码重复，增加维护成本。
+
+因此，可以对`LampBlock`类进行**抽象（Abstraction）**。抽象是指提取多个类之间的共性，将可变部分通过参数或配置机制进行控制，从而减少重复代码。例如，可以在`LampBlock`中定义一个字段`lampRadius`，用于控制照亮范围。这样，当需要不同范围的方块时，只需调整该字段的值，而无需创建新的类。
+
+::: code-group
+
+``` java
+public int lampRadius = 5;
+
+@Override
+public void setStats(){
+    super.setStats();
+    stats.add(TutorialStatJ.lightRadius, 5f, StatUnit.blocks); // [!code --]
+    stats.add(TutorialStatJ.lightRadius, lampRadius, StatUnit.blocks); // [!code ++]
+}
+
+@Override
+public void drawLight(){
+    super.drawLight();
+    Drawf.light(x, y, 5f, Color.white, 1f); // [!code --]
+    Drawf.light(x, y, lampRadius, Color.white, 1f); // [!code ++]
+}
+```
+
+``` kotlin
+var lampRadius: Int = 5;
+override fun setStats() {
+    super.setStats()
+    stats.add(TutorialStatK.lightRadius, l5f, StatUnit.blocks) // [!code --]
+    stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks) // [!code ++]
+}
+    override fun drawLight() {
+    super.drawLight()
+    Drawf.light(x, y, 5f, Color.white, 1f) // [!code --]
+    Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f) // [!code ++]
+}
+```
+
+:::
+
+抽象是编程中的重要概念，适当地使用抽象可以提高代码的健壮性。抽象程度过低可能导致代码冗余，增加调试和维护的难度；抽象程度过高则可能使代码结构过于复杂，降低可读性和可维护性。因此，保持适度的抽象水平是必要的。建议在可行的情况下，将可配置的部分提取为字段进行抽象。
+
 ## 结尾
+
+一般来说，编写一个新的方块的流程大致如上。这里我们再次总结一下：
+
+- 新建一个类，选择一个合适的基类并继承之；
+- 厘清开发需求，研究可行性；
+- 声明必要的字段；
+- 覆写必要的方法，包括配置项、统计信息、绘制、更新、IO；
+- 新建此类的实例。
 
 下面我们给出上述代码的完整实现：
 
 ::: code-group
 
-``` java
-package example.world.blocks;
+``` javapackage example.world.blocks;
 
 import arc.*;
 import arc.graphics.*;
@@ -756,15 +834,13 @@ import mindustry.ui.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 
-public class LampBlock extends Block{
-
-
+public class LampBlockJ extends Block{
+    public int lampRadius = 5;
     public TextureRegion lightRegion, darkRegion;
 
-    public LampBlock(String name){
+    public LampBlockJ(String name){
         super(name);
         update = true;
-        copyConfig = true;
         config(Boolean.class, (LampBuild build, Boolean state)->{
             build.light = state;
         });
@@ -773,7 +849,7 @@ public class LampBlock extends Block{
     @Override
     public void setStats(){
         super.setStats();
-        stats.add(TutorialStatJ.lightRadius, 5f, StatUnit.blocks);
+        stats.add(TutorialStatJ.lightRadius, lampRadius, StatUnit.blocks);
     }
 
     @Override
@@ -814,7 +890,7 @@ public class LampBlock extends Block{
         @Override
         public void drawLight(){
             super.drawLight();
-            Drawf.light(x, y, 5f, Color.white, 1f);
+            Drawf.light(x, y, lampRadius, Color.white, 1f);
         }
 
         @Override
@@ -848,8 +924,7 @@ public class LampBlock extends Block{
 }
 ```
 
-``` kotlin 
-package example.world.blocks
+``` kotlin package example.world.blocks
 
 import arc.Core
 import arc.graphics.Color
@@ -865,11 +940,11 @@ import mindustry.ui.Bar
 import mindustry.world.Block
 import mindustry.world.meta.StatUnit
 
-class LampBlock(name: String?) : Block(name) {
+class LampBlockK(name: String?) : Block(name) {
+    var lampRadius: Int = 5;
     init {
         update = true
-        copyConfig = true
-        config(Boolean::class.java) { build: LampBuild, state: Boolean? -> build.light = state!! }
+        config(Boolean::class.java) { build: LampBlockJ.LampBuild, state: Boolean? -> build.light = state!! }
     }
 
     var lightRegion: TextureRegion? = null
@@ -883,7 +958,7 @@ class LampBlock(name: String?) : Block(name) {
 
     override fun setStats() {
         super.setStats()
-        stats.add(TutorialStatK.lightRadius, 5f, StatUnit.blocks)
+        stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks)
     }
 
     override fun setBars() {
@@ -905,7 +980,7 @@ class LampBlock(name: String?) : Block(name) {
 
         override fun drawLight() {
             super.drawLight()
-            Drawf.light(x, y, 5f, Color.white, 1f)
+            Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f)
         }
         override fun tapped() {
             super.tapped()

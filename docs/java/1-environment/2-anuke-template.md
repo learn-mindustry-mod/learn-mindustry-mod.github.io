@@ -43,7 +43,11 @@ Mindustry作者网名的正确拼写是`Anuke`，而GitHub用户名为`Anuken`�
 ::: info Hjson
 JSON 本应易于人类读写——理论上确实如此。但现实中，JSON 仍存在大量稍不注意就会犯错的陷阱。Hjson 是一种基于 JSON 的语法扩展，它并非要取代 JSON 或将其纳入 JSON 规范，而是旨在为人类提供更友好的交互界面：先由人工阅读编辑，再交由机器解析JSON数据。
 
-Hjson相比JSON的改进包括：省略逗号、支持注释、支持键名无引号、支持字符串无引号、支持多行字符串。Mindustry的所谓的json解析都是hjson解析，并且比hjson标准还要**宽松**，意味着你不如所有逗号和引号都不写了。
+Hjson相比JSON的改进包括：省略逗号、支持注释、支持键名无引号、支持字符串无引号、支持多行字符串。
+:::
+
+::: warning HJSON/JSON
+Mindustry的所谓的json解析都是hjson解析，并且比hjson标准还要**宽松**。在Mindustry中HJSON和JSON没有区别，全部都是按照宽松的HJSON解析的。
 :::
 
 然后，找到`mod.hjson`文件，按照第三节的内容进行更改，特别要注意`minGameVersion`和`main`。`minGameVersion`最好随最好版本保持一致。而`main`必须是`src`下那个继承`mindustry.mod.Mod`的类的 **全限定名（Fully Qualified Name）** ，即“包名+类名”，例如`example.ExampleMod`。

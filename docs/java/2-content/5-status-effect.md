@@ -79,7 +79,7 @@ val wet = StatusEffect("wet").apply {
     effectChance = 0.09f
     transitionDamage = 14
 
-    init {
+    `init` {
         affinity(shocked) { unit, result, time ->
             unit.damage(transitionDamage)
         }
@@ -88,7 +88,7 @@ val wet = StatusEffect("wet").apply {
 }
 
 ```
-
+<!----这段kt代码在154是跑不了的，但是笔者的pr使得在155能跑起来---->
 :::
 
 先来看两个方法在Java中的使用方式。`opposite()`是一个拥有变长参数的方法，接收一系列状态效果，然后将它们设置为与本状态效果冲突。`affinity()`的第一个参数是另一个状态效果，而第二个参数是完全没有见过的结构，有如下的形式：
@@ -102,6 +102,36 @@ val wet = StatusEffect("wet").apply {
 `init` 方法的作用是实现一种**延迟初始化**机制。由于原版游戏中的状态效果之间关系复杂，且在声明冲突和反应时必须确保所引用的字段已加载完成，因此很难找到一个绝对安全的初始化顺序。为解决这一问题，可以将冲突与反应等属性的设置从**构造函数**推迟到专门的 **`init()` 方法**中执行。`init()` 方法是一个约定俗成的执行节点，它会在所有内容（即原版及所有模组的 `loadContent()` 方法）完全加载完毕后被调用。在这个阶段，所有内容都已注册并存于内容管理器中，因此在此设置内容之间的相互引用和关系属性是非常合适的。**总结来说：建议在 `loadContent()` 阶段只完成内容（物品、方块等）的注册声明，而将内容属性的设置（尤其是涉及相互引用的部分）安排在 `init()` 阶段进行。**
 
 在 Kotlin 语言中，提供了一项称为**尾随 Lambda** 的语法特性。当一个函数的最后一个参数是 Lambda 表达式时，可以将其移至函数调用的小括号**外部**。此外，如果该 Lambda 表达式没有参数，则可以省略其参数声明，使代码更加简洁直观。
+
+::: details Kotlin 中的`trans`怎么办？
+这个方法是protected，在Java中可以直接使用，因为匿名类继承了父类。在Kotlin中，如果使用`apply()`等作用域函数，由于没有发生继承，无法直接访问protected方法。此时可以考虑以下两种方式：
+``` kotlin
+//法一：使用匿名类
+val wet1 = object : StatusEffect("wet") {
+    init{
+        `init`{
+            trans(melting){ unit, result, time ->
+                unit.damage(transitionDamage)
+            }
+        }
+    }
+}
+//法二：包装类
+class TutorialStatusEffect(name: String?) : StatusEffect(name){
+    fun transHelper(statusEffect: StatusEffect, transitionHandler: TransitionHandler){
+        trans(statusEffect, transitionHandler)
+    }
+}
+
+val wet2 = TutorialStatusEffect("wet").apply{
+    `init`{
+        transHelper(melting){ unit, result, time ->
+            unit.damage(transitionDamage)
+        }
+    }
+}
+```
+:::
 
 ## 特效
 
