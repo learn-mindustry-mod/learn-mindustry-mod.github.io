@@ -28,6 +28,9 @@ const viteConfig: UserConfig = {
   
 
   themeConfig: {
+    search: {
+      provider: 'local'
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Java", link: "/java" },
@@ -45,9 +48,6 @@ const viteConfig: UserConfig = {
       pattern:
         "https://github.com/learn-mindustry-mod/learn-mindustry-mod.github.io/edit/master/docs/:path",
     },
-    search: {
-      provider: 'local'
-    }
   },
 }
 function generateNav(name:string):VitePressSidebarOptions{
@@ -65,6 +65,5 @@ export default defineConfig(withSidebar(viteConfig,
   [
     generateNav("java"),
     generateNav("json"),
-    generateNav("general")
   ])
 )
