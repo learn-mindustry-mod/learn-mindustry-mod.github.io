@@ -2,7 +2,7 @@
 
 消耗器（Consume）是方块系统中一个重要的组件，它负责管理方法的消耗、效率和统计信息，具有必需/可选/加速三种模式。在Mindustry中，无论是对炮弹供弹，使用相位物增强超速投影，还是使用工厂进行生产，制造单位，都离不开消耗器。本章我们将聚焦方块的消耗器系统和工厂的生产逻辑。
 
-在Mindustry中，方块的工作状态并非直接由一个布尔值变量控制，而是通过其效率值来体现。**效率（Efficiency）**是建筑的一个核心状态，其取值范围通常为0到1。当效率值低于一个特定的极小阈值时，该建筑会被**方块状态（BlockStatus）**系统判定为不工作，并在视觉上显示为红色的状态标识。
+在Mindustry中，方块的工作状态并非直接由一个布尔值变量控制，而是通过其效率值来体现。**效率（Efficiency）** 是建筑的一个核心状态，其取值范围通常为0到1。当效率值低于一个特定的极小阈值时，该建筑会被 **方块状态（BlockStatus）** 系统判定为不工作，并在视觉上显示为红色的状态标识。
 
 ## 消耗器
 
@@ -73,8 +73,9 @@ for(Consume cons : consumers){
 
 上文提到，所有方块的效率都是根据消耗器计算的，奠定了这个组件的基本地位。更新消耗器效率的代码就在`updateConsumption()`中：
 
-``` java
+``` java {2,10,16}
 public void updateConsumption() {
+    //无消耗器或无限火力模式下的路径
     if (!block.hasConsumers || cheating()) {
         potentialEfficiency = enabled && productionValid() ? 1.0F : 0.0F;
         efficiency = optionalEfficiency = shouldConsume() ? potentialEfficiency : 0.0F;
@@ -82,11 +83,13 @@ public void updateConsumption() {
         updateEfficiencyMultiplier();
         return;
     }
+    //未启用时的路径
     if (!enabled) {
         potentialEfficiency = efficiency = optionalEfficiency = 0.0F;
         shouldConsumePower = false;
         return;
     }
+    //有消耗器且启用的路径
     boolean update = shouldConsume() && productionValid();
     float minEfficiency = 1.0F;
     efficiency = optionalEfficiency = 1.0F;
@@ -121,6 +124,144 @@ public void updateEfficiencyMultiplier() {
     optionalEfficiency *= scale;
 }
 ```
+
+从这里可以看出，在非无限火力时，`efficiency`存储了必需消耗器中最低的效率，`optionalEfficiency`存储了非必需消耗器中最低的效率，并且基础最大值为1，在`updateEfficiencyMultiplier()`会将其再乘以`efficiencyScale()`，而后者在某些方块中会委托给`efficiencyMultiplier`，但并不总是。而`potentialEfficiency`存放的是无倍率时的潜在效率。这三种效率的状态变量中，`efficiency`在核心逻辑中被使用，另两种在特定方块的逻辑中发挥作用。
+
+值得注意的是，原版中电力的消耗始终是单独被拿出来考虑的。因此方块非电力消耗器的效率可以影响电力的消耗量。
+
+## 工厂的更新
+
+书接上回，渲染和更新是方块实体最重要的两个功能。对于工厂来说，其更新逻辑是非常值得研究的。
+
+``` java
+@Override
+public void updateTile(){
+    if(efficiency > 0){
+
+        progress += getProgressIncrease(craftTime);
+        warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed);
+
+        //continuously output based on efficiency
+        if(outputLiquids != null){
+            float inc = getProgressIncrease(1f);
+            for(var output : outputLiquids){
+                handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)));
+            }
+        }
+
+        if(wasVisible && Mathf.chanceDelta(updateEffectChance)){
+            updateEffect.at(x + Mathf.range(size * updateEffectSpread), y + Mathf.range(size * updateEffectSpread));
+        }
+    }else{
+        warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+    }
+
+    //TODO may look bad, revert to edelta() if so
+    totalProgress += warmup * Time.delta;
+
+    if(progress >= 1f){
+        craft();
+    }
+
+    dumpOutputs();
+}
+```
+
+如果刚才那个有点复杂，可以看这个去除绘制功能的版本：
+
+``` java
+@Override
+public void updateTile(){
+    if(efficiency > 0){
+        //增加进度
+        progress += getProgressIncrease(craftTime);
+        //不间断地输出流体
+        if(outputLiquids != null){
+            float inc = getProgressIncrease(1f);
+            for(var output : outputLiquids){
+                handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)));
+            }
+        }
+    }
+    //判断进度是否达到1
+    if(progress >= 1f) craft();
+    //输出产品
+    dumpOutputs();
+}
+
+public void craft(){
+    //调用Consume#trigger
+    consume();
+
+    if(outputItems != null){
+        for(var output : outputItems){
+            for(int i = 0; i < output.amount; i++){
+                offload(output.item);
+            }
+        }
+    }
+
+    if(wasVisible){
+        craftEffect.at(x, y);
+    }
+    progress %= 1f;
+}
+```
+
+方块的更新方法`updateTile()`是每一帧都会被执行的方法。凡是每时每刻都要变化的功能，都要放在方块的更新方法内。
+
+工厂的`updateTile()`中，主要做了4+1+1件事：
+
+- 若工厂正常工作（`efficiency > 0`），增加工作进度`progress`，提高炉温`warmup`，根据效率不间断地输出流体，并在可见时生成特效`updateEffect`；若不工作，则缓慢降低`warmup`；
+- 判断进度是否达到1，达到则触发一次生产`craft()`；
+- 主动输出产品，包括物品和流体；
+  
+可见，工厂本身的工作逻辑是：每刻根据效率增加一些进度，在进度达到1时手动触发一次`craft()`以便触发消耗器的`trigger()`和产出物品。工厂的逻辑非常重要，它是以后你工厂类似方块的基础。
+
+但是，工厂的更新中蕴含的不只是工厂的生产逻辑那么简单。你还需要从中学到Mindustry对一些问题的惯用处理方法。
+
+### 绘制接口与平滑变化
+
+在完整的代码中，我们会看到`warmup`（炉温）和`totalProgress`（总进度）两个字段，这两个字段对工厂本身的工作没有任何作用，唯一的作用是供给`drawer`读取并绘制出对应的显示效果。
+
+`warmup`是一个表示炉温的状态变量，在工厂长时间不工作时，炉温自然为0；在工厂开始进行工作后，炉温会逐渐平滑升高到1，并在工作过程中维持在1；在工厂中止工作后，炉温又会逐渐平滑落回0。例如，在原版的`DrawBubbles`中，气泡的透明度与`warmup`正相关，在完全不工作时不产生气泡，在开始工作时逐渐出现并最终维持在一定水平。
+
+而使`warmup`能够平滑变化的，正是`Mathf`下的插值函数，定义如下：
+
+``` java
+/** Approaches a value at linear speed. */
+public static float approach(float from, float to, float speed){
+    return from + Mathf.clamp(to - from, -speed, speed);
+}
+
+/** Approaches a value at linear speed. Multiplied by the delta. */
+public static float approachDelta(float from, float to, float speed){
+    return approach(from, to, Time.delta * speed);
+}
+
+/** Linearly interpolates between fromValue to toValue on progress position. */
+public static float lerp(float fromValue, float toValue, float progress){
+    return fromValue + (toValue - fromValue) * progress;
+}
+
+/** Linearly interpolates between fromValue to toValue on progress position. Multiplied by Time.delta().*/
+public static float lerpDelta(float fromValue, float toValue, float progress){
+    return lerp(fromValue, toValue, clamp(progress * Time.delta));
+}
+```
+
+`approach`方法通过限制单次变化的幅度来实现平滑过渡。以从0变化到1为例，若不限制变化速率，数值会在一帧内直接变为1，只有将近0.02秒的变化时间，导致视觉上的突变。而使用原版默认的速率`0.019f`时，从0到1至少需要53帧（约1秒），在人眼的视觉暂留效应下，就能呈现出连续平滑的变化效果。
+
+至于`Time.delta`，则是代表上一帧到这一帧的时间间隔，通常为1/60秒（0.0167秒）。在Mindustry中，所有与时间相关的数值变化都应乘以`Time.delta`，以确保在**不同帧率下游戏行为保持一致**。例如，工厂的进度增加量`getProgressIncrease(craftTime)`就包含了`Time.delta`的计算，因此无论帧率高低，完成一次生产所需的时间都是固定的。
+
+### 物品槽和流体槽
+
+在工厂输出物品和液体时，分别使用`offload()`和`handleLiquid()`方法，前者又包含对`handleItem()`的委托。这两个handle方法的默认行为是委托给`items`和`liquids`方法，这二者即前方提到的物品槽（`ItemModule`）和流体槽（`LiquidModule`），是方块存放物品和流体的组件。
+
+这两种槽常用的方法包括`has()`（是否包含）、`get()`（获取某种资源的量）、`add()`（添加若干某种资源）、`remove()`（删除若干某种资源）。部分方法在`LiquidModule`没有声明，需要你手动从`ItemModule`抄过来实现。`add()`和`remove()`没有越界检查，你可以让资源超过方块容量或低于0。
+
+虽然这两个槽是`public`的，但是直接操纵它们须谨慎。具体来说，当操作无条件时，直接操作槽是比较明智的。当可能出现超过容量时，最好先使用`acceptItem()`/`acceptLiquid()`判断是否可行，再使用`handleItem()`/`handleLiquid()`进行操作。此外，如果想让方块生产的资源可以算作区块的出产，则必须调用`produce()`方法，这时调用`offload()`就比较明智，因为它封装了出产、输出、产生三大功能。
+
 
 
 
