@@ -254,6 +254,10 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 
 至于`Time.delta`，则是代表上一帧到这一帧的时间间隔，通常为1/60秒（0.0167秒）。在Mindustry中，所有与时间相关的数值变化都应乘以`Time.delta`，以确保在**不同帧率下游戏行为保持一致**。例如，工厂的进度增加量`getProgressIncrease(craftTime)`就包含了`Time.delta`的计算，因此无论帧率高低，完成一次生产所需的时间都是固定的。
 
+至于下文的`lerp`方法，是用来计算定比分点的利器。该方法会给出起点到终点某个比例时的值。
+
+调用以上两个方法的时候都要注意，调用方法的结果不会自动存储到第一个参数，你需要接受这个方法的返回值。
+
 ### 物品槽和流体槽
 
 在工厂输出物品和液体时，分别使用`offload()`和`handleLiquid()`方法，前者又包含对`handleItem()`的委托。这两个handle方法的默认行为是委托给`items`和`liquids`方法，这二者即前方提到的物品槽（`ItemModule`）和流体槽（`LiquidModule`），是方块存放物品和流体的组件。
@@ -262,6 +266,71 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 
 虽然这两个槽是`public`的，但是直接操纵它们须谨慎。具体来说，当操作无条件时，直接操作槽是比较明智的。当可能出现超过容量时，最好先使用`acceptItem()`/`acceptLiquid()`判断是否可行，再使用`handleItem()`/`handleLiquid()`进行操作。此外，如果想让方块生产的资源可以算作区块的出产，则必须调用`produce()`方法，这时调用`offload()`就比较明智，因为它封装了出产、输出、产生三大功能。
 
+### 无法输出
+
+以上的代码只涉及正常工作和无输入时的工厂状态，在原版中工厂还存在“无法输出”的状态。这一状态是由`shouldConsume()`控制的。
+
+``` java
+@Override
+public boolean shouldConsume(){
+    if(outputItems != null){
+        for(var output : outputItems){
+            if(items.get(output.item) + output.amount > itemCapacity){
+                return false;
+            }
+        }
+    }
+    if(outputLiquids != null && !ignoreLiquidFullness){
+        boolean allFull = true;
+        for(var output : outputLiquids){
+            if(liquids.get(output.liquid) >= liquidCapacity - 0.001f){
+                if(!dumpExtraLiquid){
+                    return false;
+                }
+            }else{
+                //if there's still space left, it's not full for all liquids
+                allFull = false;
+            }
+        }
+
+        //if there is no space left for any liquid, it can't reproduce
+        if(allFull){
+            return false;
+        }
+    }
+
+    return enabled;
+}
+```
+
+这个方法虽然长，但是读起来并不难，因此其实现并不是重点。重点在于这个方法控制着生产流程的启停，其返回的`noOutput`状态需要被正确理解和使用。例如，在你自己实现一种新的消耗器的时候，应该通过`effciency`去控制由于原料缺少造成的启停，而不是这个方法。
+
+## 接入drawer
+
+工厂采用drawer这一组件进行渲染，因此需要在代码层面上接入`drawer`。为了接入，需要把一些方法委托给`drawer`：
+
+- `drawer.load(Block)` -> `Block#load`：加载贴图；
+- `drawer.getRegionsToOutline(Block, Seq<TextureRegion>)` -> `Block#getRegionsToOutline`：向游戏提交需要被描边的贴图，提交后游戏会在`createIcons()`时自动为你描边，并添加`-outline`放回atlas；
+- `drawer.finalIcons(Block)` -> `Block#icons`：方块所有用到的贴图；
+- `drawer.drawPlan(Block, BuildPlan, Eachable<BuildPlan>)` -> `Block#drawPlan`：绘制作为建造计划时的方块；
+- `drawer.draw(Building)` -> `Building#draw`：实体的绘制；
+- `drawer.drawLight(Building)` -> `Building#drawLight`：实体光亮的绘制。
+
+除此之外，如果想正常使用某些与炉温或进度有关的drawer的话，需要正确的重写接口：
+
+- `warmupTarget()`：炉温目标值，用来做分母；
+- `warmup()`：炉温，用来做分子；
+- `totalProgress`：总进度。
+
+方块还有一些与物品/流体逻辑和逻辑处理器相关的代码，我们分别会在3.5和7.10介绍。
+
+## 总结
+
+以上我们讨论了消耗器系统与建筑的效率之间的关系，以及工厂的一些方法。如果你想自己实现一种新的能源，推荐接入原版的消耗器系统控制，即使不接入，也要遵守原版对`efficiency`的约定，避免犯把`shouldConsume`当成停产信号的错误。
+
+## 思考题
+
+如何只用原版的类实现一个最基础的多合成？（提示：想想单位工厂）
 
 
 
