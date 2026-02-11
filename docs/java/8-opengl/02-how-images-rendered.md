@@ -1,12 +1,12 @@
 # 图像是如何被渲染到屏幕上的？
 
-> ***“你知道吗？这个世界上的一切的形状都可以用三角形来概括。”***
+> ***“你知道吗？这个世界上一切的形状都可以用三角形来概括。”***
 
-一般来说，OpenGL图形渲染，会将输入的数据经过其渲染管线的各个阶段后，将图像输出到屏幕上，这是一张老生常谈的GL渲染管线示意图：
+一般来说，OpenGL图形渲染会将输入的数据经过其渲染管线的各个阶段后，将图像输出到屏幕上，这是一张老生常谈的GL渲染管线示意图：
 
 ![pipeline](./imgs/pipeline.png)
 
-其中，几何着色器在Arc GL中无法使用，这里，我们会用更直观更容易理解的语言来讲解这个过程。
+其中，几何着色器在Arc GL中无法使用。以下，我们会用更直观更容易理解的语言来讲解这个过程。
 
 ## Mesh
 
@@ -37,14 +37,13 @@
 ::: tip 标准化设备坐标
 OpenGL的绘图坐标以屏幕中心为原点（0, 0），屏幕的左下角（-1, -1），右上角为（1, 1），即**标准化设备坐标（Normalized Device Coordinates）**。
 
-
 运行平台的实际屏幕尺寸并不受关注，在绘图时这个尺寸会被OpenGL标准化，或者通俗点说绘图坐标会被缩放到从-1到1的范围内进行绘图，超出范围的像素会被丢弃，如下所示为标准化坐标的示意图，上面定义的三角形在标准化坐标中看起来是这样的：
 ![ndc](./imgs/normalizedCoord.png)
 :::
 
 而用于提交这些顶点数据的对象为**VAO（Vertex Array Object，顶点数组对象）**或**VBO（Vertex Buffer Object，顶点缓冲对象）**，但是我们通常并不需要使用VAO或者VBO，他们被包装在了一个类型`arc.graphic.Mesh`当中。
 
-一个Mesh对象会保存一组顶点序列，即这些顶点的数据一个接一个排在一起的大序列，同时Mesh还会保存这些顶点的数据模型，即在一个顶点的数据序列中，其中哪一个部分代表的是顶点的哪一个属性。
+一个Mesh对象会保存一组顶点序列，即这些顶点的数据一个接一个排在一起的大序列，同时Mesh还会保存这些顶点的数据模型，即在一个顶点数据序列中，其中哪一个部分代表的是顶点的哪一个属性。
 
 顶点属性被包装为类型`arc.graphic.VertexAttribute`，该类型用于描述一个顶点中某一个属性的数据格式，例如在这个类型中已经定义的几个默认的顶点属性静态常量：
 
@@ -76,17 +75,19 @@ VertexAttribute attr2 = new VertexAttribute(
 
 ``` kotlin
 val attr1 = VertexAttribute(
-  components = 4,
-  type = GL.unsignedByte,
-  normalized = false,
-  alias = "attr1"
+    4,              //components
+    GL.unsignedByte,//type
+    false,          //normalized
+    "attr1"         //alias
 )
 
 //也可以使用简化的构造函数，类型默认为Gl.floatV
 val attr2 = VertexAttribute(
-  components = 3,
-  alias = "attr2"
+    3,             //components
+    "attr2"        //alias
 )
+
+//Kotlin中不支持Java方法的具名调用
 ```
 
 :::
@@ -127,9 +128,9 @@ void example(Color color){
 ``` kotlin
 fun example(color: Color){
   val mesh = Mesh(
-      isStatic = true,
-      maxVertices = 3,
-      maxIndices = 0,
+      true,//isStatic
+      3,   //maxVertices
+      0,   //maxIndices
       VertexAttribute.position,
       VertexAttribute.color,
       VertexAttribute.texCoords
@@ -191,10 +192,10 @@ OpenGL中定义的图元类型有：
 - `Gl.lineStrip` - 将顶点绘制为连续的线段
 - `Gl.lineLoop` - 将顶点绘制为闭合的连续线段
 - `Gl.triangles` - 将每三个顶点绘制为一个三角形
-- `Gl.triangleStrip` - 将顶点与随后的三个顶点连续的绘制为多个三角形
+- `Gl.triangleStrip` - 将顶点与随后的三个顶点连续地绘制为多个三角形
 - `Gl.triangleFan` - 以第一个顶点为原点，按扇形绘制三角形
 
-是的，如果你查阅资料时发现OpenGL中还有`Gl.quads`和`Gl.quadStrip`，那么它们在Arc中是不存在的，因为OpenGL es并不支持这些图元类型。
+你查阅资料时发现OpenGL中还有`Gl.quads`和`Gl.quadStrip`，但是它们在Arc中是不存在的，因为OpenGL es并不支持这些图元类型。
 
 以下是各图元的几何组装效果，`v1`-`v6`依次在顶点序列中顺序提交：
 
@@ -222,7 +223,7 @@ fun example(mesh: Mesh){
 
 :::
 
-> 很诡异的一点是Arc GL支持`points`图元，却没有设置点图元尺寸的相关函数...
+> 很诡异的一点是，Arc GL支持`points`图元，却没有设置点图元尺寸的相关函数...
 
 ## 光栅化
 

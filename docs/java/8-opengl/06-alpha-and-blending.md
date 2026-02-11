@@ -183,7 +183,7 @@ $C_{final} = C_{source} * F_{source} + C_{dest} * F_{dest}$
 | Gl.constant_alpha           | 因子值等于常量颜色alpha值       | $F_{s/d}=A_{constant}$     |
 | Gl.one_minus_constant_alpha | 因子值等于1.0减去常量颜色alpha值  | $F_{s/d}=1.0-A_{constant}$ |
 
-看起来是不是很复杂？实际上我们最常用的就是`Gl.src_alpha`与`Gl.one_minus_dst_alpha`。
+看起来是不是很复杂？实际上我们最常用的就是`Gl.src_alpha`与`Gl.one_minus_src_alpha`。
 
 比如，Mindustry渲染流程中设置的默认混合方式其实就是这两个函数：
 
@@ -219,7 +219,7 @@ $C_{final} = C_{source} * alpha + C_{dest} * (1 - alpha)$
 
 ![通常透明度混合](./imgs/normalBlending.png)
 
-另外，我们还可以将`aplha`通道的计算和`RGB`值的混合函数分开设置，这样做的话计算混合的颜色通道和透明度通道会使用不同的混合函数：
+另外，我们还可以将`alpha`通道的计算和`RGB`值的混合函数分开设置，这样做的话计算混合的颜色通道和透明度通道会使用不同的混合函数：
 
 ::: code-group
 
