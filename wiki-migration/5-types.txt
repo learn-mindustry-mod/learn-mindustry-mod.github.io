@@ -1,0 +1,7013 @@
+<!-- gen -->
+== 类型 ==
+=== Ability ===
+继承自 [[#Object|Object]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| display || boolean || <code> true </code> || 若为 false，该能力不会显示在单位属性中。
+
+|-
+| data || float || <code>  </code> || 
+|}
+=== Accelerator ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| launchBlock || Block || <code> coreNucleus </code> || 将被发射的核心方块。应与目标行星的起始核心匹配。
+
+|-
+| powerBufferRequirement || float || <code> 0.0 </code> || 
+|-
+| launchCandidates || Seq<Planet> || <code>  </code> || 覆盖该方块可发射到的行星。若为 null，则使用该行星的发射候选列表。
+
+|-
+| lightningSound || Sound || <code> shootArc) </code> || 
+|-
+| lightningSoundVolume || float || <code> 0.85 </code> || 
+|-
+| chargeSound || Sound || <code> acceleratorCharge </code> || 
+|-
+| launchSound || Sound || <code> acceleratorLaunch </code> || 
+|-
+| constructSound || Sound || <code> acceleratorConstruct </code> || 
+|-
+| launchDuration || float || <code> 120.0 </code> || 
+|-
+| chargeDuration || float || <code> 220.0 </code> || 
+|-
+| buildDuration || float || <code> 120.0 </code> || 
+|-
+| landZoomInterp || Interp || <code> Interp.pow4In </code> || 
+|-
+| chargeZoomInterp || Interp || <code> Interp.pow4In </code> || 
+|-
+| landZoomFrom || float || <code> 0.02 </code> || 
+|-
+| landZoomTo || float || <code> 4.0 </code> || 
+|-
+| chargeZoomTo || float || <code> 5.0 </code> || 
+|-
+| chargeRings || int || <code> 4 </code> || 
+|-
+| ringRadBase || float || <code> 60.0 </code> || 
+|-
+| ringRadSpacing || float || <code> 25.0 </code> || 
+|-
+| ringRadPow || float || <code> 1.6 </code> || 
+|-
+| ringStroke || float || <code> 3.0 </code> || 
+|-
+| ringSpeedup || float || <code> 1.4 </code> || 
+|-
+| chargeRingMerge || float || <code> 2.0 </code> || 
+|-
+| ringArrowRad || float || <code> 3.0 </code> || 
+|-
+| ringHandleTilt || float || <code> 0.8 </code> || 
+|-
+| ringHandleLen || float || <code> 30.0 </code> || 
+|-
+| ringColor || Color || <code> ffd37fff </code> || 
+|-
+| launchLightning || int || <code> 20 </code> || 
+|-
+| lightningColor || Color || <code> ffd37fff </code> || 
+|-
+| lightningDamage || float || <code> 40.0 </code> || 
+|-
+| lightningOffset || float || <code> 24.0 </code> || 
+|-
+| lightningLengthMin || int || <code> 5 </code> || 
+|-
+| lightningLengthMax || int || <code> 25 </code> || 
+|-
+| lightningLaunchChance || double || <code> 0.8 </code> || 
+|}
+=== AirBlock ===
+继承自 [[#Floor|Floor]]<br>
+=== ArmorPlateAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| plateSuffix || String || <code> "-armor" </code> || 
+|-
+| shineSuffix || String || <code> "-shine" </code> || 
+|-
+| color || Color || <code> null </code> || 高光颜色。若为 null，使用队伍颜色。
+
+|-
+| shineSpeed || float || <code> 1.0 </code> || 
+|-
+| z || float || <code> -1.0 </code> || 
+|-
+| drawPlate || boolean || <code> true </code> || 是否绘制装甲板区域。
+
+|-
+| drawShine || boolean || <code> true </code> || 是否在装甲板区域上方绘制高光。
+
+|-
+| healthMultiplier || float || <code> 0.2 </code> || 
+|}
+=== ArmoredConduit ===
+继承自 [[#Conduit|Conduit]]<br>
+=== ArmoredConveyor ===
+继承自 [[#Conveyor|Conveyor]]<br>
+=== ArtilleryBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| trailMult || float || <code> 1.0 </code> || 
+|-
+| trailSize || float || <code> 4.0 </code> || 
+|}
+=== AttributeCrafter ===
+继承自 [[#GenericCrafter|GenericCrafter]]<br>
+从属性地块获得效率。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| attribute || Attribute || <code> heat </code> || 
+|-
+| baseEfficiency || float || <code> 1.0 </code> || 
+|-
+| boostScale || float || <code> 1.0 </code> || 
+|-
+| maxBoost || float || <code> 1.0 </code> || 
+|-
+| minEfficiency || float || <code> -1.0 </code> || 
+|-
+| displayEfficiencyScale || float || <code> 1.0 </code> || 
+|-
+| displayEfficiency || boolean || <code> true </code> || 
+|-
+| scaleLiquidConsumption || boolean || <code> false </code> || 
+|}
+=== AutoDoor ===
+继承自 [[#Wall|Wall]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| checkInterval || float || <code> 20.0 </code> || 
+|-
+| openfx || Effect || <code> dooropen </code> || 
+|-
+| closefx || Effect || <code> doorclose </code> || 
+|-
+| doorSound || Sound || <code> door </code> || 
+|-
+| triggerMargin || float || <code> 12.0 </code> || 
+|}
+=== BaseShield ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| radius || float || <code> 200.0 </code> || 
+|-
+| sides || int || <code> 24 </code> || 
+|-
+| shieldColor || Color || <code>  </code> || 
+|}
+=== BaseTurret ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || float || <code> 80.0 </code> || 
+|-
+| placeOverlapMargin || float || <code> 56.0 </code> || 
+|-
+| rotateSpeed || float || <code> 5.0 </code> || 
+|-
+| fogRadiusMultiplier || float || <code> 1.0 </code> || 
+|-
+| disableOverlapCheck || boolean || <code> false </code> || 
+|-
+| activationTime || float || <code> 0 </code> || 放置后开始射击前的等待时间。
+
+|-
+| coolEffect || Effect || <code> fuelburn </code> || 特效显示当冷却液用于。
+
+|-
+| coolantMultiplier || float || <code> 5.0 </code> || 装填是降低由每个单位的液体的热量容量。
+
+|}
+=== BasicBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+扩展BulletType用于大多数弹药-基于子弹命中从炮塔与单位。绘制1-2贴图可以旋转或收缩。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| backColor || Color || <code> f9c27aff </code> || 
+|-
+| frontColor || Color || <code> fff8e8ff </code> || 
+|-
+| mixColorFrom || Color || <code> ffffff00 </code> || 
+|-
+| mixColorTo || Color || <code> ffffff00 </code> || 
+|-
+| width || float || <code> 5.0 </code> || 
+|-
+| height || float || <code> 7.0 </code> || 
+|-
+| shrinkX || float || <code> 0.0 </code> || 
+|-
+| shrinkY || float || <code> 0.5 </code> || 
+|-
+| shrinkInterp || Interp || <code> Interp.linear </code> || 
+|-
+| spin || float || <code> 0.0 </code> || 
+|-
+| rotationOffset || float || <code> 0.0 </code> || 
+|-
+| sprite || String || <code>  </code> || 
+|-
+| backSprite || String || <code>  </code> || 
+|}
+=== Battery ===
+继承自 [[#PowerDistributor|PowerDistributor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| drawer || DrawBlock || <code>  </code> || 
+|-
+| emptyLightColor || Color || <code> f8c266ff </code> || 
+|-
+| fullLightColor || Color || <code> fb9567ff </code> || 
+|}
+=== BeamDrill ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| drillTime || float || <code> 200.0 </code> || 
+|-
+| range || int || <code> 5 </code> || 
+|-
+| tier || int || <code> 1 </code> || 
+|-
+| laserWidth || float || <code> 0.65 </code> || 
+|-
+| optionalBoostIntensity || float || <code> 2.5 </code> || 加速倍率钻头会加快进度当由可选消耗器。
+
+|-
+| blockedItem || Item || <code>  </code> || 特殊例外物品该钻头不能开采。
+
+|-
+| blockedItems || Seq<Item> || <code>  </code> || 特殊例外物品该钻头不能开采。
+
+|-
+| sparkColor || Color || <code> fd9e81ff </code> || 
+|-
+| glowColor || Color || <code> ffffffff </code> || 
+|-
+| glowIntensity || float || <code> 0.2 </code> || 
+|-
+| pulseIntensity || float || <code> 0.07 </code> || 
+|-
+| glowScl || float || <code> 3.0 </code> || 
+|-
+| sparks || int || <code> 7 </code> || 
+|-
+| sparkRange || float || <code> 10.0 </code> || 
+|-
+| sparkLife || float || <code> 27.0 </code> || 
+|-
+| sparkRecurrence || float || <code> 4.0 </code> || 
+|-
+| sparkSpread || float || <code> 45.0 </code> || 
+|-
+| sparkSize || float || <code> 3.5 </code> || 
+|-
+| boostHeatColor || Color || <code> 75b3ccff </code> || 
+|-
+| heatColor || Color || <code> ff5959e5 </code> || 
+|-
+| heatPulse || float || <code> 0.3 </code> || 
+|-
+| heatPulseScl || float || <code> 7.0 </code> || 
+|}
+=== BeamNode ===
+继承自 [[#PowerBlock|PowerBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || int || <code> 5 </code> || 
+|-
+| laserColor1 || Color || <code> ffffffff </code> || 
+|-
+| laserColor2 || Color || <code> ffd9c2ff </code> || 
+|-
+| pulseScl || float || <code> 7.0 </code> || 
+|-
+| pulseMag || float || <code> 0.05 </code> || 
+|-
+| laserWidth || float || <code> 0.4 </code> || 
+|}
+=== Block ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| hasItems || boolean || <code> false </code> || 若为 true，建筑有ItemModule。
+
+|-
+| hasLiquids || boolean || <code> false </code> || 若为 true，建筑有LiquidModule。
+
+|-
+| hasPower || boolean || <code> false </code> || 若为 true，建筑有PowerModule。
+
+|-
+| outputsLiquid || boolean || <code> false </code> || 标记用于判定该方块是否输出液体某处；用于。
+
+|-
+| consumesPower || boolean || <code> true </code> || 用于由特定电力方块(节点)标记作为非消耗的电力。true由默认，即使若该方块没有电力。
+
+|-
+| outputsPower || boolean || <code> false </code> || 若为 true，该方块是发电机可以产生电力。
+
+|-
+| connectedPower || boolean || <code> true </code> || 若为 false，电力节点不能连接该方块。
+
+|-
+| conductivePower || boolean || <code> false </code> || 若为 true，该方块可以像电缆一样传导电力。
+
+|-
+| outputsPayload || boolean || <code> false </code> || 若为 true，该方块可以输出载荷；影响混合。
+
+|-
+| acceptsUnitPayloads || boolean || <code> false </code> || 若为 true，该方块可以输入载荷；影响单位载荷进入行为。
+
+|-
+| acceptsPayload || boolean || <code> false </code> || 若为 true，载荷会尝试移动进入该方块。
+
+|-
+| acceptsItems || boolean || <code> false </code> || 用于特定运输方块混合计算的视觉标记。
+
+|-
+| alwaysAllowDeposit || boolean || <code> false </code> || 若为 true，该方块不会受 onlyDepositCore 规则影响。
+
+|-
+| depositCooldown || float || <code> -1 </code> || 玩家向该方块存入任意物品后施加的冷却时间（秒）。若为非负值则覆盖 itemDepositCooldown。
+
+|-
+| separateItemCapacity || boolean || <code> false </code> || 若为 true，该方块的各物品容量彼此独立，而不是合并为一个总数。
+
+|-
+| itemCapacity || int || <code> 10 </code> || 该方块可容纳的最大物品数量（通常按每种物品计算）。
+
+|-
+| liquidCapacity || float || <code> -1.0 </code> || 当 hasLiquids = true 时，该方块可容纳的液体总量。默认值为 10，会随 ConsumeLiquid 的最大液体消耗按比例变化。
+
+|-
+| liquidPressure || float || <code> 1.0 </code> || 更高数值会提高液体输出速度；待办：移除并用更好的液体系统替代。
+
+|-
+| outputFacing || boolean || <code> true </code> || 若为 true，在适用时该方块会朝其朝向方向输出。
+用于混合计算。
+
+|-
+| noSideBlend || boolean || <code> false </code> || 若为 true，该方块不接受来自侧面的输入（用于装甲传送带）。
+
+|-
+| displayFlow || boolean || <code> true </code> || 是否显示流量。
+
+|-
+| inEditor || boolean || <code> true </code> || 该方块在编辑器中是否可见。
+
+|-
+| editorConfigurable || boolean || <code> false </code> || 若为 true，则会调用 {@link #buildEditorConfig(Table)} 以在编辑器中配置该方块。
+
+|-
+| saveConfig || boolean || <code> false </code> || 是否保存最近一次配置并应用到新放置的方块。
+
+|-
+| copyConfig || boolean || <code> true </code> || 是否允许通过中键点击复制配置。
+
+|-
+| clearOnDoubleTap || boolean || <code> false </code> || 若为 true，双点按该可配置方块清除配置。
+
+|-
+| update || boolean || <code> false </code> || 该方块是否具有会更新的 Tile 实体。
+
+|-
+| destructible || boolean || <code> false </code> || 该方块是否拥有生命值并可被摧毁。注意：若 update = true，将其设为 false 不会生效。
+
+|-
+| unloadable || boolean || <code> true </code> || 卸载器是否对该方块生效。
+
+|-
+| isDuct || boolean || <code> false </code> || 若为 true，该方块会作为管道，并可从侧边连接装甲管道。
+
+|-
+| allowResupply || boolean || <code> false </code> || 单位是否可以从该方块取用物品进行补给。
+
+|-
+| solid || boolean || <code> false </code> || 是否为实体。
+
+|-
+| solidifes || boolean || <code> false </code> || 该方块是否可为实体。
+
+|-
+| teamPassable || boolean || <code> false </code> || 若为 true，该方块对该队伍会被视为非实体方块。
+
+|-
+| underBullets || boolean || <code> false </code> || 若为 true，该方块不会被子弹命中，除非被显式锁定。
+
+|-
+| rotate || boolean || <code> false </code> || 是否启用。
+
+|-
+| rotateDraw || boolean || <code> true </code> || 若 rotate 为 true 且该项为 false，绘制时区域不会旋转。
+
+|-
+| rotateDrawEditor || boolean || <code> true </code> || 若 rotate 为 true 且该项为 false，在编辑器中绘制时区域不会旋转。
+
+|-
+| visualRotationOffset || float || <code> 0.0 </code> || 用于破损蓝图渲染时的视觉旋转偏移。
+
+|-
+| lockRotation || boolean || <code> true </code> || 若 rotate = false 且该项为 true，放置时旋转会锁定为 0（默认）；仅内部使用。
+
+|-
+| ignoreLineRotation || boolean || <code> false </code> || 若为 true，该方块不会朝向线阻力方向。
+
+|-
+| invertFlip || boolean || <code> false </code> || 若为 true，蓝图带有该方块。
+
+|-
+| variants || int || <code> 0 </code> || 数量的不同区域使用。
+
+|-
+| drawArrow || boolean || <code> true </code> || 绘制旋转-该不是否应用的方块。
+
+|-
+| drawTeamOverlay || boolean || <code> true </code> || 是否绘制队伍由默认。
+
+|-
+| saveData || boolean || <code> false </code> || 用于静态方块仅：若为 true，地块数据()是在世界数据。
+
+|-
+| breakable || boolean || <code> false </code> || 你是否可以该带有。
+
+|-
+| unitMoveBreakable || boolean || <code> false </code> || 若为 true，该方块会破损由特定单位/移动在。上方。
+
+|-
+| rebuildable || boolean || <code> true </code> || 是否该方块。
+
+|-
+| privileged || boolean || <code> false </code> || 若为 true，该逻辑-相关方块可以仅用于带有处理器(或是一个自身)。
+
+|-
+| requiresWater || boolean || <code> false </code> || 该方块是否可以仅放置在水。
+
+|-
+| placeableLiquid || boolean || <code> false </code> || 该方块是否可以放置在任意液体。
+
+|-
+| placeablePlayer || boolean || <code> true </code> || 该方块是否可以放置由玩家PlacementFragment。
+
+|-
+| placeableOn || boolean || <code> true </code> || 该地面是否可以放置在。
+
+|-
+| insulated || boolean || <code> false </code> || 该方块是否有属性。
+
+|-
+| squareSprite || boolean || <code> true </code> || 是否贴图是满方形。
+
+|-
+| absorbLasers || boolean || <code> false </code> || 该方块是否激光攻击。
+
+|-
+| enableDrawStatus || boolean || <code> true </code> || 若为 false，是绘制。
+
+|-
+| drawDisabled || boolean || <code> true </code> || 是否绘制禁用。
+
+|-
+| autoResetEnabled || boolean || <code> true </code> || 是否自动重置启用之后逻辑方块有不交互用于当。
+
+|-
+| noUpdateDisabled || boolean || <code> false </code> || 若为 true，方块当禁用。
+
+|-
+| updateInUnits || boolean || <code> true </code> || 若为 true，该方块更新当载荷在单位。
+
+|-
+| alwaysUpdateInUnits || boolean || <code> false </code> || 若为 true，该方块更新在载荷在单位无论的实验性规则。
+
+|-
+| canPickup || boolean || <code> true </code> || 若为 true，该方块可以在载荷。
+
+|-
+| deconstructDropAllLiquid || boolean || <code> false </code> || 若为 false，仅液体掉落当；，所有液体掉落。
+
+|-
+| useColor || boolean || <code> true </code> || 是否使用该方块的颜色在小地图。仅用于。
+
+|-
+| itemDrop || Item || <code> null </code> || 物品从该方块，用于钻机。
+
+|-
+| playerUnmineable || boolean || <code> false </code> || 若为 true，该方块不能由玩家。用于事物类似。
+
+|-
+| attributes || Attributes || <code> new Attributes() </code> || 数组的特定事物。
+
+|-
+| scaledHealth || float || <code> -1.0 </code> || 生命值每方形地块该方块；本质上，该是倍增由大小*大小。覆盖若生命值是>0.若<0，默认是40.
+
+|-
+| health || int || <code> -1 </code> || 建筑生命值；-1使用scaledHealth。
+
+|-
+| armor || float || <code> 0.0 </code> || 伤害，单位装甲。
+
+|-
+| baseExplosiveness || float || <code> 0.0 </code> || 基础方块。
+
+|-
+| explosivenessScale || float || <code> 1.0 </code> || 缩放的基于在物品/液体。
+
+|-
+| flammabilityScale || float || <code> 1.0 </code> || 缩放的爆炸基于在物品/液体。
+
+|-
+| baseShake || float || <code> 3.0 </code> || 基础值用于震动当破坏。
+
+|-
+| destroyBullet || BulletType || <code> null </code> || 子弹该方块生成当摧毁。
+
+|-
+| destroyBulletSameTeam || boolean || <code> false </code> || 若为 true，destroyBullet是生成在方块的队伍而非的废弃队伍。
+
+|-
+| lightLiquid || Liquid || <code>  </code> || 液体用于。
+
+|-
+| drawCracks || boolean || <code> true </code> || 是否裂纹绘制当该方块是。
+
+|-
+| createRubble || boolean || <code> true </code> || 是否是创建当该方块是摧毁。
+
+|-
+| floating || boolean || <code> false </code> || 该方块是否可以放置在边缘的液体。
+
+|-
+| size || int || <code> 1 </code> || 多方块大小。
+
+|-
+| offset || float || <code> 0.0 </code> || 多方块偏移。
+
+|-
+| sizeOffset || int || <code> 0 </code> || 偏移用于(内部使用仅)。
+
+|-
+| clipSize || float || <code> -1.0 </code> || 裁剪大小的该方块。应作为较大作为方块会绘制。
+
+|-
+| lightClipSize || float || <code> 0.0 </code> || 裁剪大小用于光照仅。
+
+|-
+| placeOverlapRange || float || <code> 50.0 </code> || 当placeRangeCheck是启用，该是范围检查用于敌方方块。
+
+|-
+| crushDamageMultiplier || float || <code> 1.0 </code> || 倍率的伤害造成该方块由坦克。不应用。
+
+|-
+| crushFragile || boolean || <code> false </code> || 若为 true，该方块是立即摧毁由坦克带有crushFragile设置true。
+
+|-
+| timers || int || <code> 1 </code> || 最大的用于。
+
+|-
+| cacheLayer || CacheLayer || <code> normal </code> || 缓存层。仅用于''。
+
+|-
+| fillsTile || boolean || <code> true </code> || 特殊标记；若为 false，地面会绘制在。下该方块即使若是。
+
+|-
+| forceDark || boolean || <code> false </code> || 若为 true，该方块可以由/迷雾即使若。
+
+|-
+| alwaysReplace || boolean || <code> false </code> || 该方块是否可以替换在所有。
+
+|-
+| replaceable || boolean || <code> true </code> || 若为 false，该方块可以替换。
+
+|-
+| group || BlockGroup || <code> none </code> || 方块组。除非{@link#canReplace}是，方块在相同组可以替换每个其他。
+
+|-
+| flags || EnumSet<BlockFlag> || <code> [] </code> || 列表的方块标记。用于AI。
+
+|-
+| priority || float || <code> 0.0 </code> || 瞄准的该方块，作为可见由敌人。
+
+|-
+| unitCapModifier || int || <code> 0 </code> || 该方块影响单位上限由。
+方块标记必须unitModifier在顺序用于该生效。
+
+|-
+| configurable || boolean || <code> false </code> || 该方块是否可以点按与。
+
+|-
+| configureSound || Sound || <code> click </code> || 声音播放当该方块是已配置。
+
+|-
+| ignoreResizeConfig || boolean || <code> false </code> || 若为 true，该方块不有pointConfig带有调用在地图。
+
+|-
+| commandable || boolean || <code> false </code> || 若为 true，该建筑可以类似单位当。
+
+|-
+| allowConfigInventory || boolean || <code> true </code> || 若为 true，建筑可以带有配置。
+
+|-
+| selectionRows || int || <code> 5 </code> || 定义较大，这类作为的，应。
+
+|-
+| selectionColumns || int || <code> 4 </code> || 定义较大，这类作为的，应。
+
+|-
+| logicConfigurable || boolean || <code> false </code> || 若为 true，该方块可以已配置由逻辑。
+
+|-
+| delayLandingConfig || boolean || <code>  </code> || 若为 true，配置是延迟当着陆方块动画。该可能移除在!。
+
+|-
+| consumesTap || boolean || <code> false </code> || 该方块是否touchDown当点按。
+
+|-
+| drawLiquidLight || boolean || <code> true </code> || 是否绘制的液体用于该方块，若有一个。
+
+|-
+| envRequired || int || <code> 0 </code> || 环境标记*所有*用于该方块功能.0=任意环境。
+
+|-
+| envEnabled || int || <code> 1 </code> || 环境标记该方块可以功能在。若环境匹配任意的这些，会启用。
+
+|-
+| envDisabled || int || <code> 0 </code> || 环境标记该方块*不能*功能在。若环境匹配任意的这些，会*禁用*。
+
+|-
+| sync || boolean || <code> false </code> || 是否同步该方块。
+
+|-
+| conveyorPlacement || boolean || <code> false </code> || 该方块是否使用类型放置模式。
+
+|-
+| allowDiagonal || boolean || <code> true </code> || 若为 false，对角放置()用于该方块是不允许。
+
+|-
+| swapDiagonalPlacement || boolean || <code> false </code> || 是否对角放置。
+
+|-
+| allowRectanglePlacement || boolean || <code> false </code> || 是否允许放置，作为线。
+
+|-
+| schematicPriority || int || <code> 0 </code> || 建造在。
+
+|-
+| mapColor || Color || <code> 000000ff </code> || 颜色的该方块当显示在小地图或地图预览。
+不设置手动!该是当用于大多数方块。
+
+|-
+| hasColor || boolean || <code> false </code> || 该方块是否有小地图颜色。
+
+|-
+| targetable || boolean || <code> true </code> || 是否单位目标该方块。
+
+|-
+| attacks || boolean || <code> false </code> || 若为 true，该方块攻击与是视为炮塔在。建筑必须远程。
+
+|-
+| suppressable || boolean || <code> false </code> || 若为 true，该方块是相关与可以带有特殊单位/导弹。
+
+|-
+| canOverdrive || boolean || <code> true </code> || 该核心是否有任意特效在该方块。
+
+|-
+| outlineColor || Color || <code> 404049ff </code> || 描边图标颜色。
+
+|-
+| outlineIcon || boolean || <code> false </code> || 是否任意图标区域有描边添加。
+
+|-
+| outlineRadius || int || <code> 4 </code> || 描边图标半径。
+
+|-
+| outlinedIcon || int || <code> -1 </code> || 的图标区域描边添加。使用最近图标若<=0.
+
+|-
+| hasShadow || boolean || <code> true </code> || 该方块是否有阴影在。下。
+
+|-
+| customShadow || boolean || <code> false </code> || 若为 true，阴影(名称-阴影)是绘制在。下该方块。
+
+|-
+| placePitchChange || boolean || <code> true </code> || 应声音产生当该方块是建成变化在音调。
+
+|-
+| breakPitchChange || boolean || <code> true </code> || 应声音产生当该方块是拆解变化在音调。
+
+|-
+| placeSound || Sound || <code> unset </code> || 声音产生当该方块是建成。
+
+|-
+| breakSound || Sound || <code> unset </code> || 声音产生当该方块是拆解。
+
+|-
+| destroySound || Sound || <code> unset </code> || 声音产生当该方块是摧毁。
+
+|-
+| destroySoundVolume || float || <code> 1.0 </code> || 音量的破坏声音。
+
+|-
+| destroyPitchMin || float || <code> 1.0 </code> || 范围的声音。
+
+|-
+| destroyPitchMax || float || <code> 1.0 </code> || 范围的声音。
+
+|-
+| albedo || float || <code> 0.0 </code> || 该方块是。
+
+|-
+| lightColor || Color || <code> ffffffff </code> || 环境光颜色。
+
+|-
+| emitLight || boolean || <code> false </code> || 若为 true，drawLight()会调用用于该方块。
+
+|-
+| obstructsLight || boolean || <code> true </code> || 若为 true，该方块光发出由其他方块。
+
+|-
+| lightRadius || float || <code> 60.0 </code> || 半径的光发出由该方块。
+
+|-
+| fogRadius || int || <code> -1 </code> || 迷雾该方块，在地块。不能动态。<=0禁用。
+
+|-
+| ambientSound || Sound || <code> none </code> || 声音该方块当空闲。使用一个声音循环用于所有方块。
+
+|-
+| ambientSoundVolume || float || <code> 0.05 </code> || 空闲声音基础音量。
+
+|-
+| requirements || ItemStack[] || <code> [] </code> || 成本的该方块。
+
+|-
+| category || 分类 || <code> distribution </code> || 分类在放置。
+
+|-
+| buildTime || float || <code> -1.0 </code> || 时间建造该方块在tick。若该值是<0，是计算动态地。
+
+|-
+| buildCostMultiplier || float || <code> 1.0 </code> || 倍率用于速度的建筑该方块。
+
+|-
+| deconstructThreshold || float || <code> 0.0 </code> || 建造在拆解。
+
+|-
+| instantDeconstruct || boolean || <code> false </code> || 若为 true，该方块立即。即时拆解意味着无资源。
+
+|-
+| instantBuild || boolean || <code> false </code> || 若为 true，该方块立即。该意味着无资源需求，与忽略-不使用，该用于仅!。
+
+|-
+| ignoreBuildDarkness || boolean || <code> false </code> || 若为 true，该方块可以放置即使在""。仅用于编辑器静态。
+
+|-
+| placeEffect || Effect || <code> placeBlock </code> || 特效用于放置方块。经过大小作为旋转。
+
+|-
+| breakEffect || Effect || <code> breakBlock </code> || 特效用于方块。经过大小作为旋转。
+
+|-
+| destroyEffect || Effect || <code> dynamicExplosion </code> || 特效用于方块。
+
+|-
+| researchCostMultiplier || float || <code> 1.0 </code> || 倍率用于成本的研究在科技树。
+
+|-
+| researchCost || ItemStack[] || <code>  </code> || 覆盖用于研究成本。使用上方与建筑需求若不设置。
+
+|-
+| forceTeam || Team || <code>  </code> || 若设置，所有方块会强制该队伍。
+
+|-
+| instantTransfer || boolean || <code> false </code> || 该方块是否有即时。
+
+|-
+| quickRotate || boolean || <code> true </code> || 你是否可以旋转该方块之后是放置。
+
+|-
+| allowDerelictRepair || boolean || <code> true </code> || 若为 true，该废弃方块可以修复由。
+
+|-
+| selectScroll || float || <code> 0.0 </code> || 滚动位置用于特定方块。
+
+|-
+| itemFilter || boolean[] || <code> [] </code> || 消耗过滤器。
+
+|-
+| liquidFilter || boolean[] || <code> [] </code> || 消耗过滤器。
+
+|-
+| hasConsumers || boolean || <code> false </code> || 设置true若该方块有任意在其数组。
+
+|-
+| regionRotated1 || int || <code> -1 </code> || 区域从图标()旋转后。若的这些是不-1，其他区域不会旋转后在ConstructBlocks。
+
+|-
+| regionRotated2 || int || <code> -1 </code> || 区域从图标()旋转后。若的这些是不-1，其他区域不会旋转后在ConstructBlocks。
+
+|-
+| dumpTime || int || <code> 5 </code> || 物品在tick。5=12倍/。
+
+|}
+=== BlockProducer ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+通用建筑生产其他建筑。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| buildSpeed || float || <code> 4 </code> || 
+|}
+=== BombBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+模板类用于子弹。
+=== BufferedItemBridge ===
+继承自 [[#ItemBridge|ItemBridge]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 40.0 </code> || 
+|-
+| bufferCapacity || int || <code> 50 </code> || 
+|-
+| displayedSpeed || float || <code> 11.0 </code> || 
+|}
+=== BuildTurret ===
+继承自 [[#BaseTurret|BaseTurret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| targetInterval || int || <code> 15 </code> || 
+|-
+| buildSpeed || float || <code> 1.0 </code> || 
+|-
+| buildBeamOffset || float || <code> 5.0 </code> || 
+|-
+| unitType || UnitType || <code>  </code> || 
+|-
+| elevation || float || <code> -1.0 </code> || 
+|-
+| heatColor || Color || <code> ffd37fe5 </code> || 
+|}
+=== BuildWeapon ===
+继承自 [[#Weapon|Weapon]]<br>
+纯视觉炮塔。不射击。
+=== BulletType ===
+继承自 [[#Content|Content]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| lifetime || float || <code> 40.0 </code> || 生命周期在tick。
+
+|-
+| lifeScaleRandMin || float || <code> 1.0 </code> || 最小/最大用于生命周期应用该子弹当生成。
+
+|-
+| lifeScaleRandMax || float || <code> 1.0 </code> || 最小/最大用于生命周期应用该子弹当生成。
+
+|-
+| speed || float || <code> 1.0 </code> || 速度在单位/tick。
+
+|-
+| velocityScaleRandMin || float || <code> 1.0 </code> || 最小/最大用于速度应用该子弹当生成。
+
+|-
+| velocityScaleRandMax || float || <code> 1.0 </code> || 最小/最大用于速度应用该子弹当生成。
+
+|-
+| damage || float || <code> 1.0 </code> || 直接伤害造成在命中。
+
+|-
+| hitSize || float || <code> 4.0 </code> || 碰撞箱大小。
+
+|-
+| drawSize || float || <code> 40.0 </code> || 裁剪碰撞箱。
+
+|-
+| angleOffset || float || <code> 0.0 </code> || 角度偏移应用子弹当生成每个时间。
+
+|-
+| randomAngleOffset || float || <code> 0.0 </code> || 角度偏移应用子弹当生成每个时间。
+
+|-
+| drag || float || <code> 0.0 </code> || 阻力作为比例的速度。
+
+|-
+| accel || float || <code> 0.0 </code> || 加速度每帧。
+
+|-
+| pierce || boolean || <code> false </code> || 是否穿透单位。
+
+|-
+| pierceBuilding || boolean || <code> false </code> || 是否穿透建筑。
+
+|-
+| pierceCap || int || <code> -1 </code> || 最大#的。
+
+|-
+| pierceDamageFactor || float || <code> 0.0 </code> || 倍率的伤害每生命值。
+
+|-
+| maxDamageFraction || float || <code> -1.0 </code> || 若，非溅射伤害造成比例的最大生命值。
+
+|-
+| removeAfterPierce || boolean || <code> true </code> || 若为 false，该子弹不是移除之后pierceCap是。专家仅。
+
+|-
+| laserAbsorb || boolean || <code> true </code> || 用于穿透，设置该true获得吸收由。
+
+|-
+| optimalLifeFract || float || <code> 0.0 </code> || 生命周期比例在该子弹有范围/伤害/。用于与持续炮塔。
+
+|-
+| layer || float || <code> 100.0 </code> || Z层绘制在。
+
+|-
+| hitEffect || Effect || <code> hitBulletSmall </code> || 特效在命中。
+
+|-
+| despawnEffect || Effect || <code> hitBulletSmall </code> || 特效当子弹。
+
+|-
+| shootEffect || Effect || <code> shootSmall </code> || 特效创建当射击。
+
+|-
+| shootPattern || ShootPattern || <code> null </code> || 模式用于射击该子弹。若为 null，使用默认模式。
+
+|-
+| chargeEffect || Effect || <code> none </code> || 特效创建当充能开始；仅在单个-命中武器带有firstShotDelay/shotDelay。
+
+|-
+| smokeEffect || Effect || <code> shootSmallSmoke </code> || 额外特效创建当射击。
+
+|-
+| shootSound || Sound || <code> none </code> || 覆盖射击声音在炮塔若设置。无效在单位，作为它们不能有多个弹药类型。
+
+|-
+| hitSound || Sound || <code> none </code> || 声音产生当某物或移除。
+
+|-
+| despawnSound || Sound || <code> none </code> || 声音产生当某物或移除。
+
+|-
+| hitSoundPitch || float || <code> 1.0 </code> || 音调的声音产生当某物。
+
+|-
+| hitSoundPitchRange || float || <code> 0.1 </code> || 音调的声音产生当某物。
+
+|-
+| hitSoundVolume || float || <code> 1.0 </code> || 音量的声音产生当某物。
+
+|-
+| inaccuracy || float || <code> 0.0 </code> || 额外当。
+
+|-
+| ammoMultiplier || float || <code> 2.0 </code> || 子弹获得创建每弹药物品/液体。
+
+|-
+| reloadMultiplier || float || <code> 1.0 </code> || 倍增由炮塔装填速度获得最终射击速度。
+
+|-
+| buildingDamageMultiplier || float || <code> 1.0 </code> || 倍率的基础伤害是地块。
+
+|-
+| shieldDamageMultiplier || float || <code> 1.0 </code> || 倍率的基础伤害是。
+
+|-
+| recoil || float || <code> 0.0 </code> || 后坐从。
+
+|-
+| killShooter || boolean || <code> false </code> || 是否当该是命中。用于。
+
+|-
+| instantDisappear || boolean || <code> false </code> || 是否立即使子弹。
+
+|-
+| splashDamage || float || <code> 0.0 </code> || 伤害造成在溅射.0禁用。
+
+|-
+| scaledSplashDamage || boolean || <code> false </code> || 若为 true，溅射伤害是""受影响由单位碰撞箱大小。用于不/有溅射作为它们的主要的伤害。
+
+|-
+| knockback || float || <code> 0.0 </code> || 击退在速度。
+
+|-
+| impact || boolean || <code> false </code> || 应击退跟随方向。
+
+|-
+| statusDuration || float || <code> 480.0 </code> || 强度的应用特效在的持续时间。
+
+|-
+| targetBlocks || boolean || <code> true </code> || 炮塔仅。若为 false，方块会不锁定。
+
+|-
+| targetMissiles || boolean || <code> true </code> || 炮塔仅。若为 false，导弹会不锁定。
+
+|-
+| collidesTiles || boolean || <code> true </code> || 该子弹类型是否带有地块。
+
+|-
+| collidesTeam || boolean || <code> false </code> || 该子弹类型是否带有地块的相同队伍。
+
+|-
+| collidesAir || boolean || <code> true </code> || 该子弹类型是否带有空中/地面单位。
+
+|-
+| collidesGround || boolean || <code> true </code> || 该子弹类型是否带有空中/地面单位。
+
+|-
+| collides || boolean || <code> true </code> || 该子弹类型是否带有在所有。
+
+|-
+| collideFloor || boolean || <code> false </code> || 若为 true，该投射物带有非表面地面。
+
+|-
+| collideTerrain || boolean || <code> false </code> || 若为 true，该投射物带有静态。
+
+|-
+| keepVelocity || boolean || <code> true </code> || 是否速度是从。
+
+|-
+| scaleLife || boolean || <code> false </code> || 是否缩放生命周期(不实际速度!)在目标位置。用于。
+
+|-
+| hittable || boolean || <code> true </code> || 子弹是否可以命中由。
+
+|-
+| reflectable || boolean || <code> true </code> || 子弹是否可以反射。
+
+|-
+| absorbable || boolean || <code> true </code> || 投射物是否可以吸收由。
+
+|-
+| ignoreSpawnAngle || boolean || <code> false </code> || 若为 true，角度在创建是。
+
+|-
+| createChance || float || <code> 1.0 </code> || 概率用于该子弹创建。
+
+|-
+| maxRange || float || <code> -1.0 </code> || 子弹范围覆盖。
+
+|-
+| rangeOverride || float || <code> -1.0 </code> || 当>0，覆盖范围即使若比基础范围。
+
+|-
+| rangeChange || float || <code> 0.0 </code> || 当用于在炮塔带有多个弹药类型，该可以设置非值范围。
+
+|-
+| extraRangeMargin || float || <code> 0.0 </code> || 当用于在炮塔带有limitRange()应用，该额外范围子弹瞄准范围。仅在原版。
+
+|-
+| range || float || <code> 0.0 </code> || 范围初始化在()。
+
+|-
+| minRangeChange || float || <code> 0.0 </code> || 当用于在炮塔带有多个弹药类型，该可以设置非值minRange。
+
+|-
+| healPercent || float || <code> 0.0 </code> || %的方块生命值治疗*。
+
+|-
+| healAmount || float || <code> 0.0 </code> || 平坦数量的方块生命值治疗。
+
+|-
+| healSound || Sound || <code> blockHeal </code> || 声音播放当方块是治疗。
+
+|-
+| healSoundVolume || float || <code> 0.9 </code> || 音量的治疗声音。
+
+|-
+| lifesteal || float || <code> 0.0 </code> || 比例的子弹伤害。
+
+|-
+| makeFire || boolean || <code> false </code> || 是否使开火在。
+
+|-
+| hitUnder || boolean || <code> false </code> || 子弹是否会始终命中方块在。下。
+
+|-
+| despawnHit || boolean || <code> false </code> || 是否创建命中特效在消失。强制true若该子弹有任意特殊特效类似溅射伤害。禁用setDefaults覆盖。
+
+|-
+| fragOnHit || boolean || <code> true </code> || 若为 true，该子弹会创建子弹当命中。
+
+|-
+| fragOnDespawn || boolean || <code> true </code> || 若为 true，该子弹会创建子弹当。
+
+|-
+| fragOnAbsorb || boolean || <code> true </code> || 若为 false，该子弹会不创建当吸收由护盾。
+
+|-
+| pierceArmor || boolean || <code> false </code> || 若为 true，单位装甲是在伤害计算。
+
+|-
+| armorMultiplier || float || <code> 1 </code> || 乘以单位装甲用于在伤害计算。用于装甲，装甲穿透，与装甲。
+
+|-
+| sticky || boolean || <code> false </code> || 若为 true，子弹会""敌人与获得在。
+
+|-
+| stickyExtraLifetime || float || <code> 0.0 </code> || 额外时间添加子弹当某物。
+
+|-
+| setDefaults || boolean || <code> true </code> || 与despawnHit是否应自动设置。
+
+|-
+| hitShake || float || <code> 0.0 </code> || 数量的产生当该子弹命中某物或。
+
+|-
+| despawnShake || float || <code> 0.0 </code> || 数量的产生当该子弹命中某物或。
+
+|-
+| fragBullet || BulletType || <code> null </code> || 子弹类型是创建当该子弹。
+
+|-
+| delayFrags || boolean || <code> false </code> || 若为 true，破片子弹延迟下一帧。固定带有穿透子弹类型立即与伤害。
+
+|-
+| fragRandomSpread || float || <code> 360.0 </code> || 角度散布范围的破片子弹。
+
+|-
+| fragSpread || float || <code> 0.0 </code> || 均匀散布每个破片子弹在度。
+
+|-
+| fragAngle || float || <code> 0.0 </code> || 角度偏移的破片子弹。
+
+|-
+| fragBullets || int || <code> 9 </code> || 数量的破片子弹创建。
+
+|-
+| fragVelocityMin || float || <code> 0.2 </code> || 随机范围的破片速度作为倍率。
+
+|-
+| fragVelocityMax || float || <code> 1.0 </code> || 随机范围的破片速度作为倍率。
+
+|-
+| fragLifeMin || float || <code> 1.0 </code> || 随机范围的破片生命周期作为倍率。
+
+|-
+| fragLifeMax || float || <code> 1.0 </code> || 随机范围的破片生命周期作为倍率。
+
+|-
+| fragOffsetMin || float || <code> 1.0 </code> || 随机偏移的破片子弹从父级子弹。
+
+|-
+| fragOffsetMax || float || <code> 7.0 </code> || 随机偏移的破片子弹从父级子弹。
+
+|-
+| pierceFragCap || int || <code> -1 </code> || 倍该子弹可以破片子弹，若穿透=true。
+
+|-
+| intervalBullet || BulletType || <code>  </code> || 子弹是创建在间隔。
+
+|-
+| bulletInterval || float || <code> 20.0 </code> || 间隔，在tick，子弹生成。
+
+|-
+| intervalBullets || int || <code> 1 </code> || 数量的子弹生成每间隔。
+
+|-
+| intervalRandomSpread || float || <code> 360.0 </code> || 随机角度添加间隔子弹。
+
+|-
+| intervalSpread || float || <code> 0.0 </code> || 角度散布间隔子弹。
+
+|-
+| intervalAngle || float || <code> 0.0 </code> || 角度偏移用于间隔子弹。
+
+|-
+| intervalDelay || float || <code> -1.0 </code> || 使用值禁用间隔子弹。
+
+|-
+| underwater || boolean || <code> false </code> || 若为 true，该子弹是。高度实验性!。
+
+|-
+| hitColor || Color || <code> ffffffff </code> || 颜色用于命中/消失特效。
+
+|-
+| healColor || Color || <code> 98ffa9ff </code> || 颜色用于方块治疗特效。
+
+|-
+| healEffect || Effect || <code> healBlockFull </code> || 特效发出当方块治疗。
+
+|-
+| spawnBullets || Seq<BulletType> || <code> [] </code> || 子弹生成当该子弹是创建。很少，用于。
+
+|-
+| showStats || boolean || <code> false </code> || 是否属性的生成子弹。
+
+|-
+| spawnBulletRandomSpread || float || <code> 0.0 </code> || 随机角度散布的生成子弹。
+
+|-
+| spawnUnit || UnitType || <code>  </code> || 单位生成_而非的_该子弹。有用用于导弹。
+
+|-
+| despawnUnit || UnitType || <code>  </code> || 单位生成当该子弹命中某物或末端的其生命周期。
+
+|-
+| despawnUnitChance || float || <code> 1.0 </code> || 概率用于消失单位生成。
+
+|-
+| despawnUnitCount || int || <code> 1 </code> || 数量的单位生成当该子弹。
+
+|-
+| despawnUnitRadius || float || <code> 0.1 </code> || 随机偏移从子弹消失/命中。
+
+|-
+| faceOutwards || boolean || <code> false </code> || 若为 true，单位生成当该子弹朝向从子弹而非的相同方向作为子弹。
+
+|-
+| parts || Seq<DrawPart> || <code> [] </code> || 额外视觉用于该子弹。
+
+|-
+| trailColor || Color || <code> e58956ff </code> || 颜色的拖尾子弹。
+
+|-
+| trailChance || float || <code> -1.0E-4 </code> || 概率的拖尾特效在子弹每tick。
+
+|-
+| trailInterval || float || <code> 0.0 </code> || 均匀间隔在拖尾特效是生成。
+
+|-
+| trailMinVelocity || float || <code> 0.0 </code> || 最小速度用于拖尾特效生成。
+
+|-
+| trailEffect || Effect || <code> missileTrail </code> || 拖尾特效是生成。
+
+|-
+| trailSpread || float || <code> 0.0 </code> || 随机偏移的拖尾特效。
+
+|-
+| trailParam || float || <code> 2.0 </code> || 旋转/大小是拖尾。通常，该大小。
+
+|-
+| trailRotation || boolean || <code> false </code> || 是否拖尾是子弹旋转，而非的平坦值。
+
+|-
+| trailInterp || Interp || <code> Interp.one </code> || 插值用于拖尾作为功能的子弹生命周期。
+
+|-
+| trailLength || int || <code> -1 </code> || 长度的拖尾。任意值<=0禁用拖尾。
+
+|-
+| trailWidth || float || <code> 2.0 </code> || 宽度的拖尾，若trailLength>0。
+
+|-
+| trailSinMag || float || <code> 0.0 </code> || 若trailSinMag>0，这些应用作为拖尾。
+
+|-
+| trailSinScl || float || <code> 3.0 </code> || 若trailSinMag>0，这些应用作为拖尾。
+
+|-
+| circleShooter || boolean || <code> false </code> || 若为 true，子弹会尝试圆形周围其射击实体。
+
+|-
+| circleShooterRadius || float || <code> 13.0 </code> || 半径子弹圆形在。
+
+|-
+| circleShooterRadiusSmooth || float || <code> 10.0 </code> || 平滑额外半径值用于。
+
+|-
+| circleShooterRotateSpeed || float || <code> 0.3 </code> || 倍率的速度用于速度当。
+
+|-
+| splashDamageRadius || float || <code> -1.0 </code> || 使用值禁用溅射伤害。
+
+|-
+| splashDamagePierce || boolean || <code> false </code> || 若为 true，溅射伤害通过地块。
+
+|-
+| incendAmount || int || <code> 0 </code> || 数量的周围子弹。
+
+|-
+| incendSpread || float || <code> 8.0 </code> || 散布的周围子弹。
+
+|-
+| incendChance || float || <code> 1.0 </code> || 概率的开火被创建。
+
+|-
+| homingPower || float || <code> 0.0 </code> || 电力的子弹能力。通常数量0与1；0.1作为起始。
+
+|-
+| homingRange || float || <code> 50.0 </code> || 范围的追踪特效周围子弹。
+
+|-
+| homingDelay || float || <code> -1.0 </code> || 使用值禁用追踪。
+
+|-
+| followAimSpeed || float || <code> 0.0 </code> || 速度在子弹跟随。<=0禁用。
+
+|-
+| suppressionRange || float || <code> -1.0 </code> || 范围的方块压制特效。
+
+|-
+| suppressionDuration || float || <code> 480.0 </code> || 持续时间的方块压制特效。
+
+|-
+| suppressionEffectChance || float || <code> 50.0 </code> || 概率的压制特效在方块，由数量的方块。
+
+|-
+| suppressColor || Color || <code> bf92f9ff </code> || 颜色用于regenSuppressSeek特效。
+
+|-
+| lightningColor || Color || <code> f3e979ff </code> || 颜色的闪电创建由子弹。
+
+|-
+| lightning || int || <code> 0 </code> || 数量的独立闪电""。
+
+|-
+| lightningLength || int || <code> 5 </code> || 长度的每个闪电。
+
+|-
+| lightningLengthRand || int || <code> 0 </code> || 额外随机长度添加基础长度的闪电。
+
+|-
+| lightningDamage || float || <code> -1.0 </code> || 使用值使用默认子弹伤害。
+
+|-
+| lightningCone || float || <code> 360.0 </code> || 散布的闪电，相对子弹旋转。
+
+|-
+| lightningAngle || float || <code> 0.0 </code> || 偏移的闪电相对子弹旋转。
+
+|-
+| lightningType || BulletType || <code> null </code> || 子弹创建在闪电。
+
+|-
+| weaveScale || float || <code> 1.0 </code> || 缩放的子弹模式。更高->更少。
+
+|-
+| weaveMag || float || <code> 0.0 </code> || 强度的子弹。注意该可能使子弹。
+
+|-
+| weaveRandom || boolean || <code> true </code> || 若为 true，子弹会随机地在生成。
+
+|-
+| rotateSpeed || float || <code> 0.0 </code> || 旋转速度的子弹速度作为。
+
+|-
+| puddles || int || <code> 0 </code> || 数量的创建。
+
+|-
+| puddleRange || float || <code> 0.0 </code> || 范围的周围子弹位置。
+
+|-
+| puddleAmount || float || <code> 5.0 </code> || 液体的每个创建。
+
+|-
+| puddleLiquid || Liquid || <code> water </code> || 液体创建产生的。
+
+|-
+| displayAmmoMultiplier || boolean || <code> true </code> || 是否弹药用于该子弹类型在其属性。
+
+|-
+| statLiquidConsumed || float || <code> 0.0 </code> || 若>0，该是显示由弹药倍率。
+
+|-
+| lightRadius || float || <code> -1.0 </code> || 半径的光发出由该子弹；<0使用。
+
+|-
+| lightOpacity || float || <code> 0.3 </code> || 不透明度的光颜色。
+
+|-
+| lightColor || Color || <code> fbd367ff </code> || 颜色的光发出由该子弹。
+
+|}
+=== BurstDrill ===
+继承自 [[#Drill|Drill]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| shake || float || <code> 2.0 </code> || 
+|-
+| speedCurve || Interp || <code> Interp.pow2In </code> || 
+|-
+| invertedTime || float || <code> 200.0 </code> || 
+|-
+| arrowSpacing || float || <code> 4.0 </code> || 
+|-
+| arrowOffset || float || <code> 0.0 </code> || 
+|-
+| arrows || int || <code> 3 </code> || 
+|-
+| arrowColor || Color || <code> feb380ff </code> || 
+|-
+| baseArrowColor || Color || <code> 6e7080ff </code> || 
+|-
+| glowColor || Color || <code> feb380ff </code> || 
+|-
+| drillSound || Sound || <code> drillImpact </code> || 
+|-
+| drillSoundVolume || float || <code> 0.6 </code> || 
+|-
+| drillSoundPitchRand || float || <code> 0.1 </code> || 
+|}
+=== CanvasBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| padding || float || <code> 0.0 </code> || 
+|-
+| canvasSize || int || <code> 8 </code> || 
+|-
+| palette || int[] || <code> { 0x362944_ff, 0xc45d9f_ff, 0xe39aac_ff, 0xf0dab1_ff, 0x6461c2_ff, 0x2ba9b4_ff, 0x93d4b5_ff, 0xf0f6e8_ff } </code> || 
+|-
+| bitsPerPixel || int || <code> 0 </code> || 
+|}
+=== CellLiquid ===
+继承自 [[#Liquid|Liquid]]<br>
+液体绘制在其。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| colorFrom || Color || <code> ffffffff </code> || 
+|-
+| colorTo || Color || <code> ffffffff </code> || 
+|-
+| cells || int || <code> 6 </code> || 
+|-
+| spreadTarget || Liquid || <code>  </code> || 
+|-
+| maxSpread || float || <code> 0.75 </code> || 
+|-
+| spreadConversion || float || <code> 1.2 </code> || 
+|-
+| spreadDamage || float || <code> 0.11 </code> || 
+|-
+| removeScaling || float || <code> 0.25 </code> || 
+|}
+=== CharacterOverlay ===
+继承自 [[#OverlayFloor|OverlayFloor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ffffffff </code> || 
+|}
+=== Cliff ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| size || float || <code> 11.0 </code> || 
+|}
+=== ColoredFloor ===
+继承自 [[#Floor|Floor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| defaultColor || Color || <code> ffffffff </code> || 
+|}
+=== ColoredWall ===
+继承自 [[#StaticWall|StaticWall]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| defaultColor || Color || <code> ffffffff </code> || 
+|}
+=== Conduit ===
+继承自 [[#LiquidBlock|LiquidBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| botColor || Color || <code> 565656ff </code> || 
+|-
+| padCorners || boolean || <code> true </code> || 若为 true，液体区域是在，外部。
+
+|-
+| leaks || boolean || <code> true </code> || 
+|-
+| junctionReplacement || Block || <code>  </code> || 
+|-
+| bridgeReplacement || Block || <code>  </code> || 
+|-
+| rotBridgeReplacement || Block || <code>  </code> || 
+|}
+=== ConstructBlock ===
+继承自 [[#Block|Block]]<br>
+方块在的。
+=== Constructor ===
+继承自 [[#BlockProducer|BlockProducer]]<br>
+可配置BlockProducer。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| filter || Seq<Block> || <code> [] </code> || 空用于无。
+
+|-
+| minBlockSize || int || <code> 1 </code> || 
+|-
+| maxBlockSize || int || <code> 2 </code> || 
+|}
+=== ConsumeGenerator ===
+继承自 [[#PowerGenerator|PowerGenerator]]<br>
+发电机仅在特定物品或液体。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| itemDuration || float || <code> 120.0 </code> || 时间在数量的tick单个物品会产生电力。
+
+|-
+| warmupSpeed || float || <code> 0.05 </code> || 
+|-
+| effectChance || float || <code> 0.01 </code> || 
+|-
+| generateEffect || Effect || <code> none </code> || 
+|-
+| consumeEffect || Effect || <code> none </code> || 
+|-
+| generateEffectRange || float || <code> 3.0 </code> || 
+|-
+| baseLightRadius || float || <code> 65.0 </code> || 
+|-
+| outputLiquid || LiquidStack || <code>  </code> || 
+|-
+| explodeOnFull || boolean || <code> false </code> || 若为 true，该方块当outputLiquid容量。
+
+|}
+=== Content ===
+继承自 [[#Object|Object]]<br>
+基础类用于内容类型是在{@linkmindustry。core。ContentLoader}。
+=== ContinuousBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+基础持续(线)子弹类型不绘制自身。本质上。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| length || float || <code> 220.0 </code> || 
+|-
+| shake || float || <code> 0.0 </code> || 
+|-
+| damageInterval || float || <code> 5.0 </code> || 
+|-
+| largeHit || boolean || <code> false </code> || 
+|-
+| continuous || boolean || <code> true </code> || 
+|-
+| timescaleDamage || boolean || <code> false </code> || 若建筑发射该，是否伤害由其。
+
+|}
+=== ContinuousFlameBulletType ===
+继承自 [[#ContinuousBulletType|ContinuousBulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| lightStroke || float || <code> 40.0 </code> || 
+|-
+| width || float || <code> 3.7 </code> || 
+|-
+| oscScl || float || <code> 1.2 </code> || 
+|-
+| oscMag || float || <code> 0.02 </code> || 
+|-
+| divisions || int || <code> 25 </code> || 
+|-
+| drawFlare || boolean || <code> true </code> || 
+|-
+| flareColor || Color || <code> e189f5ff </code> || 
+|-
+| flareWidth || float || <code> 3.0 </code> || 
+|-
+| flareInnerScl || float || <code> 0.5 </code> || 
+|-
+| flareLength || float || <code> 40.0 </code> || 
+|-
+| flareInnerLenScl || float || <code> 0.5 </code> || 
+|-
+| flareLayer || float || <code> 99.9999 </code> || 
+|-
+| flareRotSpeed || float || <code> 1.2 </code> || 
+|-
+| rotateFlare || boolean || <code> false </code> || 
+|-
+| lengthInterp || Interp || <code> Interp.slope </code> || 
+|-
+| lengthWidthPans || float[] || <code> [1.121.30.321.01.00.30.80.90.20.50.80.150.250.70.1] </code> || 长度，，，与偏移，所有作为的基础与长度。存储作为''数组的：LWPO1LWPO2LWPO3.。。
+
+|-
+| colors || Color[] || <code> [eb7abe8ce189f5b2907ef7cc91a4ffffffffffff] </code> || 
+|}
+=== ContinuousLaserBulletType ===
+继承自 [[#ContinuousBulletType|ContinuousBulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| fadeTime || float || <code> 16.0 </code> || 
+|-
+| lightStroke || float || <code> 40.0 </code> || 
+|-
+| divisions || int || <code> 13 </code> || 
+|-
+| colors || Color[] || <code> [ec745855ec7458aaff9c5affffffffff] </code> || 
+|-
+| strokeFrom || float || <code> 2.0 </code> || 
+|-
+| strokeTo || float || <code> 0.5 </code> || 
+|-
+| pointyScaling || float || <code> 0.75 </code> || 
+|-
+| backLength || float || <code> 7.0 </code> || 
+|-
+| frontLength || float || <code> 35.0 </code> || 
+|-
+| width || float || <code> 9.0 </code> || 
+|-
+| oscScl || float || <code> 0.8 </code> || 
+|-
+| oscMag || float || <code> 1.5 </code> || 
+|}
+=== ContinuousLiquidTurret ===
+继承自 [[#ContinuousTurret|ContinuousTurret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| liquidConsumed || float || <code> 0.016666668 </code> || 
+|}
+=== ContinuousTurret ===
+继承自 [[#Turret|Turret]]<br>
+炮塔持续子弹带没有装填或冷却液。子弹仅当炮塔射击。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| shootType || BulletType || <code> placeholder </code> || 
+|-
+| aimChangeSpeed || float || <code> Infinity </code> || 速度在炮塔可以变化其子弹""。该是仅用于激光子弹。
+
+|-
+| scaleDamageEfficiency || boolean || <code> false </code> || 
+|}
+=== Conveyor ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 0.0 </code> || 
+|-
+| displayedSpeed || float || <code> 0.0 </code> || 
+|-
+| pushUnits || boolean || <code> true </code> || 
+|-
+| junctionReplacement || Block || <code>  </code> || 
+|-
+| bridgeReplacement || Block || <code>  </code> || 
+|}
+=== CoreBlock ===
+继承自 [[#StorageBlock|StorageBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| thrusterLength || float || <code> 3.5 </code> || 
+|-
+| thrusterOffset || float || <code> 0.0 </code> || 
+|-
+| isFirstTier || boolean || <code> false </code> || 
+|-
+| allowSpawn || boolean || <code> true </code> || 若为 false，玩家不能在该核心。
+
+|-
+| requiresCoreZone || boolean || <code> false </code> || 若为 true，该核心类型核心。
+
+|-
+| incinerateNonBuildable || boolean || <code> false </code> || 
+|-
+| unitType || UnitType || <code> alpha </code> || 
+|-
+| landDuration || float || <code> 160.0 </code> || 
+|-
+| landMusic || Music || <code> land </code> || 
+|-
+| launchSoundVolume || float || <code> 1.0 </code> || 
+|-
+| landSoundVolume || float || <code> 1.0 </code> || 
+|-
+| launchSound || Sound || <code> coreLaunch </code> || 
+|-
+| landSound || Sound || <code> coreLand </code> || 
+|-
+| launchEffect || Effect || <code> launch </code> || 
+|-
+| landZoomInterp || Interp || <code> Interp.pow3 </code> || 
+|-
+| landZoomFrom || float || <code> 0.02 </code> || 
+|-
+| landZoomTo || float || <code> 4.0 </code> || 
+|-
+| captureInvicibility || float || <code> 900.0 </code> || 
+|}
+=== DirectionBridge ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || int || <code> 4 </code> || 
+|}
+=== DirectionLiquidBridge ===
+继承自 [[#DirectionBridge|DirectionBridge]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 5.0 </code> || 
+|-
+| liquidPadding || float || <code> 1.0 </code> || 
+|}
+=== DirectionalForceProjector ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| width || float || <code> 30.0 </code> || 
+|-
+| shieldHealth || float || <code> 3000.0 </code> || 
+|-
+| cooldownNormal || float || <code> 1.75 </code> || 
+|-
+| cooldownLiquid || float || <code> 1.5 </code> || 
+|-
+| cooldownBrokenBase || float || <code> 0.35 </code> || 
+|-
+| absorbEffect || Effect || <code> absorb </code> || 
+|-
+| shieldBreakEffect || Effect || <code> shieldBreak </code> || 
+|-
+| length || float || <code> 40.0 </code> || 
+|-
+| padSize || float || <code> 40.0 </code> || 
+|}
+=== DirectionalUnloader ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 1.0 </code> || 
+|-
+| allowCoreUnload || boolean || <code> false </code> || 
+|}
+=== Door ===
+继承自 [[#Wall|Wall]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| openfx || Effect || <code> dooropen </code> || 
+|-
+| closefx || Effect || <code> doorclose </code> || 
+|-
+| doorSound || Sound || <code> door </code> || 
+|-
+| chainEffect || boolean || <code> false </code> || 
+|}
+=== DrawArcSmelt ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| flameColor || Color || <code> f58349ff </code> || 
+|-
+| midColor || Color || <code> f2d585ff </code> || 
+|-
+| flameRad || float || <code> 1.0 </code> || 
+|-
+| circleSpace || float || <code> 2.0 </code> || 
+|-
+| flameRadiusScl || float || <code> 3.0 </code> || 
+|-
+| flameRadiusMag || float || <code> 0.3 </code> || 
+|-
+| circleStroke || float || <code> 1.5 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| alpha || float || <code> 0.68 </code> || 
+|-
+| particles || int || <code> 25 </code> || 
+|-
+| particleLife || float || <code> 40.0 </code> || 
+|-
+| particleRad || float || <code> 7.0 </code> || 
+|-
+| particleStroke || float || <code> 1.1 </code> || 
+|-
+| particleLen || float || <code> 3.0 </code> || 
+|-
+| drawCenter || boolean || <code> true </code> || 
+|-
+| blending || Blending || <code> additive </code> || 
+|}
+=== DrawBlock ===
+继承自 [[#Object|Object]]<br>
+的行为用于方块。
+该用于。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| iconOverride || String[] || <code> null </code> || 若设置，图标是这些，在顺序。每个是。
+
+|}
+=== DrawBlurSpin ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| suffix || String || <code> "" </code> || 
+|-
+| rotateSpeed || float || <code> 1.0 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| blurThresh || float || <code> 0.7 </code> || 
+|}
+=== DrawBubbles ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> 7457ceff </code> || 
+|-
+| amount || int || <code> 12 </code> || 
+|-
+| sides || int || <code> 8 </code> || 
+|-
+| strokeMin || float || <code> 0.2 </code> || 
+|-
+| spread || float || <code> 3.0 </code> || 
+|-
+| timeScl || float || <code> 30.0 </code> || 
+|-
+| recurrence || float || <code> 6.0 </code> || 
+|-
+| radius || float || <code> 3.0 </code> || 
+|-
+| fill || boolean || <code> false </code> || 
+|}
+=== DrawCells ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| particleColorFrom || Color || <code> 000000ff </code> || 
+|-
+| particleColorTo || Color || <code> 000000ff </code> || 
+|-
+| particles || int || <code> 12 </code> || 
+|-
+| range || float || <code> 4.0 </code> || 
+|-
+| recurrence || float || <code> 2.0 </code> || 
+|-
+| radius || float || <code> 1.8 </code> || 
+|-
+| lifetime || float || <code> 180.0 </code> || 
+|}
+=== DrawCircles ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> 7457ceff </code> || 
+|-
+| amount || int || <code> 5 </code> || 
+|-
+| sides || int || <code> 15 </code> || 
+|-
+| strokeMin || float || <code> 0.2 </code> || 
+|-
+| strokeMax || float || <code> 2.0 </code> || 
+|-
+| timeScl || float || <code> 160.0 </code> || 
+|-
+| radius || float || <code> 12.0 </code> || 
+|-
+| radiusOffset || float || <code> 0.0 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| strokeInterp || Interp || <code> Interp.pow3In </code> || 
+|}
+=== DrawCrucibleFlame ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| flameColor || Color || <code> f58349ff </code> || 
+|-
+| midColor || Color || <code> f2d585ff </code> || 
+|-
+| flameRad || float || <code> 1.0 </code> || 
+|-
+| circleSpace || float || <code> 2.0 </code> || 
+|-
+| flameRadiusScl || float || <code> 10.0 </code> || 
+|-
+| flameRadiusMag || float || <code> 0.6 </code> || 
+|-
+| circleStroke || float || <code> 1.5 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| alpha || float || <code> 0.5 </code> || 
+|-
+| particles || int || <code> 30 </code> || 
+|-
+| particleLife || float || <code> 70.0 </code> || 
+|-
+| particleRad || float || <code> 7.0 </code> || 
+|-
+| particleSize || float || <code> 3.0 </code> || 
+|-
+| fadeMargin || float || <code> 0.4 </code> || 
+|-
+| rotateScl || float || <code> 1.5 </code> || 
+|-
+| particleInterp || Interp || <code> new PowIn(1.5f) </code> || 
+|}
+=== DrawCultivator ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| plantColor || Color || <code> 5541b1ff </code> || 
+|-
+| plantColorLight || Color || <code> 7457ceff </code> || 
+|-
+| bottomColor || Color || <code> 474747ff </code> || 
+|-
+| bubbles || int || <code> 12 </code> || 
+|-
+| sides || int || <code> 8 </code> || 
+|-
+| strokeMin || float || <code> 0.2 </code> || 
+|-
+| spread || float || <code> 3.0 </code> || 
+|-
+| timeScl || float || <code> 70.0 </code> || 
+|-
+| recurrence || float || <code> 6.0 </code> || 
+|-
+| radius || float || <code> 3.0 </code> || 
+|}
+=== DrawDefault ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+=== DrawFade ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| suffix || String || <code> "-top" </code> || 
+|-
+| alpha || float || <code> 0.6 </code> || 
+|-
+| scale || float || <code> 3.0 </code> || 
+|}
+=== DrawFlame ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| flameColor || Color || <code> ffc999ff </code> || 
+|-
+| lightRadius || float || <code> 60.0 </code> || 
+|-
+| lightAlpha || float || <code> 0.65 </code> || 
+|-
+| lightSinScl || float || <code> 10.0 </code> || 
+|-
+| lightSinMag || float || <code> 5.0 </code> || 
+|-
+| flameRadius || float || <code> 3.0 </code> || 
+|-
+| flameRadiusIn || float || <code> 1.9 </code> || 
+|-
+| flameRadiusScl || float || <code> 5.0 </code> || 
+|-
+| flameRadiusMag || float || <code> 2.0 </code> || 
+|-
+| flameRadiusInMag || float || <code> 1.0 </code> || 
+|-
+| flameX || float || <code> 0.0 </code> || 
+|-
+| flameY || float || <code> 0.0 </code> || 
+|}
+=== DrawFrames ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| frames || int || <code> 3 </code> || 数量的帧绘制。
+
+|-
+| interval || float || <code> 5.0 </code> || tick帧。
+
+|-
+| sine || boolean || <code> true </code> || 若为 true，帧后方与在。
+
+|}
+=== DrawGlowRegion ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| blending || Blending || <code> additive </code> || 
+|-
+| suffix || String || <code> "-glow" </code> || 
+|-
+| alpha || float || <code> 0.9 </code> || 
+|-
+| glowScale || float || <code> 10.0 </code> || 
+|-
+| glowIntensity || float || <code> 0.5 </code> || 
+|-
+| rotateSpeed || float || <code> 0.0 </code> || 
+|-
+| layer || float || <code> 31.0 </code> || 
+|-
+| rotate || boolean || <code> false </code> || 
+|-
+| color || Color || <code> ff0000ff </code> || 
+|}
+=== DrawHeatInput ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| suffix || String || <code> "-heat" </code> || 
+|-
+| heatColor || Color || <code> ff3838cc </code> || 
+|-
+| heatPulse || float || <code> 0.3 </code> || 
+|-
+| heatPulseScl || float || <code> 10.0 </code> || 
+|}
+=== DrawHeatOutput ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| heatColor || Color || <code> ff3838cc </code> || 
+|-
+| heatPulse || float || <code> 0.3 </code> || 
+|-
+| heatPulseScl || float || <code> 10.0 </code> || 
+|-
+| glowMult || float || <code> 1.2 </code> || 
+|-
+| rotOffset || int || <code> 0 </code> || 
+|-
+| drawGlow || boolean || <code> true </code> || 
+|}
+=== DrawHeatRegion ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ff3838cc </code> || 
+|-
+| pulse || float || <code> 0.3 </code> || 
+|-
+| pulseScl || float || <code> 10.0 </code> || 
+|-
+| layer || float || <code> 31.0 </code> || 
+|-
+| suffix || String || <code> "-glow" </code> || 
+|}
+=== DrawLiquidOutputs ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+该必须用于在带有DrawBlock；仅绘制输出。
+=== DrawLiquidRegion ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| drawLiquid || Liquid || <code>  </code> || 
+|-
+| suffix || String || <code> "-liquid" </code> || 
+|-
+| alpha || float || <code> 1.0 </code> || 
+|}
+=== DrawLiquidTile ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| drawLiquid || Liquid || <code>  </code> || 
+|-
+| padding || float || <code> 0.0 </code> || 
+|-
+| padLeft || float || <code> -1.0 </code> || 
+|-
+| padRight || float || <code> -1.0 </code> || 
+|-
+| padTop || float || <code> -1.0 </code> || 
+|-
+| padBottom || float || <code> -1.0 </code> || 
+|-
+| alpha || float || <code> 1.0 </code> || 
+|}
+=== DrawMulti ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+DrawBlocks进入一个。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| drawers || DrawBlock[] || <code> [] </code> || 
+|}
+=== DrawMultiWeave ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| rotateSpeed || float || <code> 1.0 </code> || 
+|-
+| rotateSpeed2 || float || <code> -0.9 </code> || 
+|-
+| fadeWeave || boolean || <code> false </code> || 
+|-
+| glowColor || Color || <code> ff6666cc </code> || 
+|-
+| weaveColor || Color || <code> ffffffff </code> || 
+|-
+| pulse || float || <code> 0.3 </code> || 
+|-
+| pulseScl || float || <code> 10.0 </code> || 
+|}
+=== DrawParticles ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> f2d585ff </code> || 
+|-
+| sides || int || <code> 12 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| alpha || float || <code> 0.5 </code> || 
+|-
+| particles || int || <code> 30 </code> || 
+|-
+| particleRotation || float || <code> 0.0 </code> || 
+|-
+| particleLife || float || <code> 70.0 </code> || 
+|-
+| particleRad || float || <code> 7.0 </code> || 
+|-
+| particleSize || float || <code> 3.0 </code> || 
+|-
+| fadeMargin || float || <code> 0.4 </code> || 
+|-
+| rotateScl || float || <code> 3.0 </code> || 
+|-
+| reverse || boolean || <code> false </code> || 
+|-
+| poly || boolean || <code> false </code> || 
+|-
+| particleInterp || Interp || <code> new PowIn(1.5f) </code> || 
+|-
+| particleSizeInterp || Interp || <code> Interp.slope </code> || 
+|-
+| blending || Blending || <code> normal </code> || 
+|}
+=== DrawPistons ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| sinMag || float || <code> 4.0 </code> || 
+|-
+| sinScl || float || <code> 6.0 </code> || 
+|-
+| sinOffset || float || <code> 50.0 </code> || 
+|-
+| sideOffset || float || <code> 0.0 </code> || 
+|-
+| lenOffset || float || <code> -1.0 </code> || 
+|-
+| horiOffset || float || <code> 0.0 </code> || 
+|-
+| angleOffset || float || <code> 0.0 </code> || 
+|-
+| sides || int || <code> 4 </code> || 
+|-
+| suffix || String || <code> "-piston" </code> || 
+|}
+=== DrawPlasma ===
+继承自 [[#DrawFlame|DrawFlame]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| suffix || String || <code> "-plasma-" </code> || 
+|-
+| plasmas || int || <code> 4 </code> || 
+|-
+| plasma1 || Color || <code> ffd06bff </code> || 
+|-
+| plasma2 || Color || <code> ff361bff </code> || 
+|}
+=== DrawPower ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| suffix || String || <code> "-power" </code> || 
+|-
+| drawPlan || boolean || <code> true </code> || 
+|-
+| mixcol || boolean || <code> true </code> || 若为 false，emptyRegion与fullRegion而非的空与满。
+
+|-
+| emptyLightColor || Color || <code> f8c266ff </code> || 
+|-
+| fullLightColor || Color || <code> fb9567ff </code> || 
+|-
+| layer || float || <code> -1.0 </code> || 任意数量<=0禁用层。
+
+|}
+=== DrawPulseShape ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ffd37fff </code> || 
+|-
+| stroke || float || <code> 2.0 </code> || 
+|-
+| timeScl || float || <code> 100.0 </code> || 
+|-
+| minStroke || float || <code> 0.2 </code> || 
+|-
+| radiusScl || float || <code> 1.0 </code> || 
+|-
+| layer || float || <code> -1.0 </code> || 
+|-
+| square || boolean || <code> true </code> || 
+|}
+=== DrawPumpLiquid ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+=== DrawRegion ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| suffix || String || <code> "" </code> || 
+|-
+| name || String || <code>  </code> || 若设置，覆盖区域名称。
+
+|-
+| color || Color || <code>  </code> || 
+|-
+| spinSprite || boolean || <code> false </code> || 
+|-
+| drawPlan || boolean || <code> true </code> || 
+|-
+| buildingRotate || boolean || <code> false </code> || 
+|-
+| rotateSpeed || float || <code> 0.0 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| rotation || float || <code> 0.0 </code> || 
+|-
+| layer || float || <code> -1.0 </code> || 任意数量<=0禁用层。
+
+|}
+=== DrawShape ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ffd37fff </code> || 
+|-
+| sides || int || <code> 4 </code> || 
+|-
+| radius || float || <code> 2.0 </code> || 
+|-
+| timeScl || float || <code> 1.0 </code> || 
+|-
+| layer || float || <code> -1.0 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| useWarmupRadius || boolean || <code> false </code> || 
+|}
+=== DrawSideRegion ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+=== DrawSoftParticles ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> e3ae6fff </code> || 
+|-
+| color2 || Color || <code> d04d46ff </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| alpha || float || <code> 0.5 </code> || 
+|-
+| particles || int || <code> 30 </code> || 
+|-
+| particleLife || float || <code> 70.0 </code> || 
+|-
+| particleRad || float || <code> 7.0 </code> || 
+|-
+| particleSize || float || <code> 3.0 </code> || 
+|-
+| fadeMargin || float || <code> 0.4 </code> || 
+|-
+| rotateScl || float || <code> 1.5 </code> || 
+|-
+| particleInterp || Interp || <code> new PowIn(1.5f) </code> || 
+|}
+=== DrawSpikes ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> 7457ceff </code> || 
+|-
+| amount || int || <code> 10 </code> || 
+|-
+| layers || int || <code> 1 </code> || 
+|-
+| stroke || float || <code> 2.0 </code> || 
+|-
+| rotateSpeed || float || <code> 0.8 </code> || 
+|-
+| radius || float || <code> 6.0 </code> || 
+|-
+| length || float || <code> 4.0 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| layerSpeed || float || <code> -1.0 </code> || 
+|}
+=== DrawTurret ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+扩展绘制行为用于炮塔。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| parts || Seq<DrawPart> || <code> [] </code> || 
+|-
+| basePrefix || String || <code> "" </code> || 前缀使用当基础区域。
+
+|-
+| liquidDraw || Liquid || <code>  </code> || 覆盖液体绘制在液体区域。
+
+|-
+| turretLayer || float || <code> 50.0 </code> || 
+|-
+| shadowLayer || float || <code> 49.5 </code> || 
+|-
+| heatLayer || float || <code> 50.1 </code> || 
+|}
+=== DrawWarmupRegion ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| sinMag || float || <code> 0.6 </code> || 
+|-
+| sinScl || float || <code> 8.0 </code> || 
+|-
+| color || Color || <code> ff9b59ff </code> || 
+|}
+=== DrawWeave ===
+继承自 [[#DrawBlock|DrawBlock]]<br>
+=== Drill ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| hardnessDrillMultiplier || float || <code> 50.0 </code> || 
+|-
+| tier || int || <code> 0 </code> || 最大的方块该钻头可以开采。
+
+|-
+| drillTime || float || <code> 300.0 </code> || 基础时间钻头一个矿石，在帧。
+
+|-
+| liquidBoostIntensity || float || <code> 1.6 </code> || 液体增幅时，钻头进度的加速倍率。
+
+|-
+| warmupSpeed || float || <code> 0.015 </code> || 速度在钻头速度。
+
+|-
+| blockedItem || Item || <code>  </code> || 特殊例外物品该钻头不能开采。
+
+|-
+| blockedItems || Seq<Item> || <code>  </code> || 特殊例外物品该钻头不能开采。
+
+|-
+| drawMineItem || boolean || <code> true </code> || 是否绘制物品该钻头是。
+
+|-
+| drillEffect || Effect || <code> mine </code> || 特效播放当物品是产生。该是。
+
+|-
+| drillEffectRnd || float || <code> -1.0 </code> || 钻头特效。方块大小由默认。
+
+|-
+| drillEffectChance || float || <code> 0.02 </code> || 概率的特效。有用用于快速钻机。
+
+|-
+| rotateSpeed || float || <code> 2.0 </code> || 速度钻头在。
+
+|-
+| updateEffect || Effect || <code> pulverizeSmall </code> || 钻进时随机播放的特效。
+
+|-
+| updateEffectChance || float || <code> 0.02 </code> || 概率特效会。
+
+|-
+| drawRim || boolean || <code> false </code> || 
+|-
+| drawSpinSprite || boolean || <code> true </code> || 
+|-
+| heatColor || Color || <code> ff5512ff </code> || 
+|}
+=== DroneCenter ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| unitsSpawned || int || <code> 4 </code> || 
+|-
+| droneType || UnitType || <code>  </code> || 
+|-
+| droneConstructTime || float || <code> 180.0 </code> || 
+|-
+| statusDuration || float || <code> 120.0 </code> || 
+|-
+| droneRange || float || <code> 50.0 </code> || 
+|}
+=== Duct ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 5.0 </code> || 
+|-
+| armored || boolean || <code> false </code> || 
+|-
+| transparentColor || Color || <code> 66666619 </code> || 
+|-
+| bridgeReplacement || Block || <code>  </code> || 
+|-
+| junctionReplacement || Block || <code>  </code> || 
+|}
+=== DuctBridge ===
+继承自 [[#DirectionBridge|DirectionBridge]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 5.0 </code> || 
+|}
+=== DuctJunction ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| transparentColor || Color || <code> 66666619 </code> || 
+|-
+| speed || float || <code> 5.0 </code> || 
+|}
+=== DuctRouter ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 5.0 </code> || 
+|}
+=== Effect ===
+继承自 [[#Object|Object]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| lifetime || float || <code> 50.0 </code> || 
+|-
+| clip || float || <code> 0.0 </code> || 裁剪大小。
+
+|-
+| startDelay || float || <code> 0.0 </code> || 时间特效开始。
+
+|-
+| baseRotation || float || <code> 0.0 </code> || 数量添加旋转。
+
+|-
+| followParent || boolean || <code> true </code> || 若为 true，父级单位是数据。
+
+|-
+| rotWithParent || boolean || <code> false </code> || 若该与followParenttrue，特效会偏移与旋转带有旋转。
+
+|-
+| layer || float || <code> 110.0 </code> || 
+|-
+| layerDuration || float || <code> 0.0 </code> || 
+|}
+=== EmpBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| radius || float || <code> 100.0 </code> || 
+|-
+| timeIncrease || float || <code> 2.5 </code> || 
+|-
+| timeDuration || float || <code> 600.0 </code> || 
+|-
+| powerDamageScl || float || <code> 2.0 </code> || 
+|-
+| powerSclDecrease || float || <code> 0.2 </code> || 
+|-
+| hitPowerEffect || Effect || <code> hitEmpSpark </code> || 
+|-
+| chainEffect || Effect || <code> chainEmp </code> || 
+|-
+| applyEffect || Effect || <code> heal </code> || 
+|-
+| hitUnits || boolean || <code> true </code> || 
+|-
+| unitDamageScl || float || <code> 0.7 </code> || 
+|}
+=== EmptyBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+=== EmptyFloor ===
+继承自 [[#Floor|Floor]]<br>
+空地面是*不*空中。不同于空中，是实体，与绘制地块边缘。
+=== EnergyFieldAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| damage || float || <code> 1 </code> || 
+|-
+| reload || float || <code> 100 </code> || 
+|-
+| range || float || <code> 60 </code> || 
+|-
+| healEffect || Effect || <code> heal </code> || 
+|-
+| hitEffect || Effect || <code> hitLaserBlast </code> || 
+|-
+| damageEffect || Effect || <code> chainLightning </code> || 
+|-
+| shootSound || Sound || <code> shootEnergyField </code> || 
+|-
+| statusDuration || float || <code> 60f * 6 </code> || 
+|-
+| x || float || <code>  </code> || 
+|-
+| y || float || <code>  </code> || 
+|-
+| targetGround || boolean || <code> true </code> || 
+|-
+| targetAir || boolean || <code> true </code> || 
+|-
+| hitBuildings || boolean || <code> true </code> || 
+|-
+| hitUnits || boolean || <code> true </code> || 
+|-
+| maxTargets || int || <code> 25 </code> || 
+|-
+| healPercent || float || <code> 3 </code> || 
+|-
+| sameTypeHealMult || float || <code> 1 </code> || 乘以单位的相同类型由该数量。
+
+|-
+| displayHeal || boolean || <code> true </code> || 
+|-
+| layer || float || <code> 001 </code> || 
+|-
+| blinkScl || float || <code> 20 </code> || 
+|-
+| blinkSize || float || <code> 1 </code> || 
+|-
+| effectRadius || float || <code> 5 </code> || 
+|-
+| sectorRad || float || <code> 14 </code> || 
+|-
+| rotateSpeed || float || <code> 5 </code> || 
+|-
+| sectors || int || <code> 5 </code> || 
+|-
+| color || Color || <code> heal </code> || 
+|-
+| useAmmo || boolean || <code> true </code> || 
+|}
+=== ErekirUnitType ===
+继承自 [[#UnitType|UnitType]]<br>
+配置类用于特殊Erekir单位属性。
+=== ErrorContent ===
+继承自 [[#Content|Content]]<br>
+表示类型的内容有。替代。
+=== ExplosionBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+模板类用于非绘制子弹类型爆炸与立即。
+=== ExplosionEffect ===
+继承自 [[#Effect|Effect]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| waveColor || Color || <code> ffd2aeff </code> || 
+|-
+| smokeColor || Color || <code> 7f7f7fff </code> || 
+|-
+| sparkColor || Color || <code> e58956ff </code> || 
+|-
+| waveLife || float || <code> 6.0 </code> || 
+|-
+| waveStroke || float || <code> 3.0 </code> || 
+|-
+| waveRad || float || <code> 15.0 </code> || 
+|-
+| waveRadBase || float || <code> 2.0 </code> || 
+|-
+| sparkStroke || float || <code> 1.0 </code> || 
+|-
+| sparkRad || float || <code> 23.0 </code> || 
+|-
+| sparkLen || float || <code> 3.0 </code> || 
+|-
+| smokeSize || float || <code> 4.0 </code> || 
+|-
+| smokeSizeBase || float || <code> 0.5 </code> || 
+|-
+| smokeRad || float || <code> 23.0 </code> || 
+|-
+| smokes || int || <code> 5 </code> || 
+|-
+| sparks || int || <code> 4 </code> || 
+|}
+=== FireBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| colorFrom || Color || <code> ffdd55ff </code> || 
+|-
+| colorMid || Color || <code> db401cff </code> || 
+|-
+| colorTo || Color || <code> 7f7f7fff </code> || 
+|-
+| radius || float || <code> 3.0 </code> || 
+|-
+| velMin || float || <code> 0.6 </code> || 
+|-
+| velMax || float || <code> 2.6 </code> || 
+|-
+| fireTrailChance || float || <code> 0.04 </code> || 
+|-
+| trailEffect2 || Effect || <code> ballfire </code> || 
+|-
+| fireEffectChance || float || <code> 0.1 </code> || 
+|-
+| fireEffectChance2 || float || <code> 0.1 </code> || 
+|}
+=== FlakBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| explodeRange || float || <code> 30.0 </code> || 
+|-
+| explodeDelay || float || <code> 5.0 </code> || 
+|-
+| flakDelay || float || <code> 0.0 </code> || 
+|-
+| flakInterval || float || <code> 6.0 </code> || 
+|}
+=== Floor ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| edge || String || <code> "stone" </code> || 兜底，用于矿石。
+
+|-
+| speedMultiplier || float || <code> 1.0 </code> || 乘以单位速度由该当在。
+
+|-
+| dragMultiplier || float || <code> 1.0 </code> || 乘以单位阻力由该当在。
+
+|-
+| damageTaken || float || <code> 0.0 </code> || 伤害每tick在该地块。
+
+|-
+| drownTime || float || <code> 0.0 </code> || tick在该.0禁用。
+
+|-
+| walkEffect || Effect || <code> none </code> || 特效当在该地面。
+
+|-
+| walkSound || Sound || <code> none </code> || 声音产生当。
+
+|-
+| walkSoundVolume || float || <code> 0.1 </code> || 音量的声音产生当。
+
+|-
+| walkSoundPitchMin || float || <code> 0.8 </code> || 音量的声音产生当。
+
+|-
+| walkSoundPitchMax || float || <code> 1.2 </code> || 音量的声音产生当。
+
+|-
+| drownUpdateEffect || Effect || <code> bubble </code> || 特效显示当在该地面。
+
+|-
+| statusDuration || float || <code> 60.0 </code> || 强度的应用特效。
+
+|-
+| liquidDrop || Liquid || <code> null </code> || 液体从该方块，用于。
+
+|-
+| liquidMultiplier || float || <code> 1.0 </code> || 倍率用于液体，用于水。
+
+|-
+| isLiquid || boolean || <code> false </code> || 该方块是否液体。
+
+|-
+| overlayAlpha || float || <code> 0.65 </code> || 用于液体地面，该是不透明度的绘制在顶部。
+
+|-
+| supportsOverlay || boolean || <code> false </code> || 该地面是否地面。
+
+|-
+| shallow || boolean || <code> false </code> || 水标记用于。
+
+|-
+| blendGroup || Block || <code> this </code> || 组的方块该方块不绘制边缘在。
+
+|-
+| oreDefault || boolean || <code> false </code> || 是否矿石在由默认。
+
+|-
+| oreScale || float || <code> 24.0 </code> || 矿石。
+
+|-
+| oreThreshold || float || <code> 0.828 </code> || 矿石。
+
+|-
+| wall || Block || <code> air </code> || 墙体的该方块。可能方块。空中若不存在。
+
+|-
+| decoration || Block || <code> air </code> || 装饰方块。通常。可能空中。
+
+|-
+| canShadow || boolean || <code> true </code> || 单位是否可以绘制在。上方该。
+
+|-
+| forceDrawLight || boolean || <code> false </code> || 若为 true，该地面忽略obstructsLight标记的。
+
+|-
+| needsSurface || boolean || <code> true </code> || 该表面是否在。false用于方块，类似生成。
+
+|-
+| allowCorePlacement || boolean || <code> false </code> || 若为 true，核心可以放置在该地面。
+
+|-
+| wallOre || boolean || <code> false </code> || 若为 true，该矿石是允许在。
+
+|-
+| blendId || int || <code> -1 </code> || 实际ID用于混合组。内部。
+
+|-
+| tilingVariants || int || <code> 0 </code> || 若>0，该地面是绘制作为的较大。
+
+|-
+| autotile || boolean || <code> false </code> || 若为 true，该地面使用；变体不支持。见：//。/GglLfr/地块-。
+
+|-
+| autotileMidVariants || int || <code> 1 </code> || 若>1，中键区域的自动贴图有随机变体。
+
+|-
+| autotileVariants || int || <code> 1 </code> || 变体的主要自动贴图贴图。
+
+|-
+| drawEdgeIn || boolean || <code> true </code> || 若true(默认)，该地面会绘制边缘的其他地面在自身。
+
+|-
+| drawEdgeOut || boolean || <code> true </code> || 若true(默认)，该地面会绘制其边缘其他地面。
+
+|}
+=== ForceFieldAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| radius || float || <code> 60 </code> || 护盾半径。
+
+|-
+| regen || float || <code> 1 </code> || 护盾速度在伤害/tick。
+
+|-
+| max || float || <code> 200 </code> || 最大护盾。
+
+|-
+| cooldown || float || <code> 60f * 5 </code> || 冷却之后护盾是破损，在tick。
+
+|-
+| sides || int || <code> 6 </code> || 侧面的护盾。
+
+|-
+| rotation || float || <code> 0 </code> || 旋转的护盾。
+
+|-
+| breakSound || Sound || <code> shieldBreakSmall </code> || 
+|-
+| hitSound || Sound || <code> shieldHit </code> || 
+|-
+| hitSoundVolume || float || <code> 12 </code> || 
+|}
+=== ForceProjector ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| phaseUseTime || float || <code> 350.0 </code> || 
+|-
+| phaseRadiusBoost || float || <code> 80.0 </code> || 
+|-
+| phaseShieldBoost || float || <code> 400.0 </code> || 
+|-
+| radius || float || <code> 101.7 </code> || 
+|-
+| sides || int || <code> 6 </code> || 
+|-
+| shieldRotation || float || <code> 0.0 </code> || 
+|-
+| shieldHealth || float || <code> 700.0 </code> || 
+|-
+| cooldownNormal || float || <code> 1.75 </code> || 
+|-
+| cooldownLiquid || float || <code> 1.5 </code> || 
+|-
+| cooldownBrokenBase || float || <code> 0.35 </code> || 
+|-
+| coolantConsumption || float || <code> 0.1 </code> || 
+|-
+| consumeCoolant || boolean || <code> true </code> || 
+|-
+| crashDamageMultiplier || float || <code> 2.0 </code> || 
+|-
+| breakSound || Sound || <code> shieldBreak </code> || 
+|-
+| hitSound || Sound || <code> shieldHit </code> || 
+|-
+| hitSoundVolume || float || <code> 0.12 </code> || 
+|-
+| absorbEffect || Effect || <code> absorb </code> || 
+|-
+| shieldBreakEffect || Effect || <code> shieldBreak </code> || 
+|}
+=== Fracker ===
+继承自 [[#SolidPump|SolidPump]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| itemUseTime || float || <code> 100.0 </code> || 
+|}
+=== GenericCrafter ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| outputItem || ItemStack || <code>  </code> || 写入outputItems作为单个-数组若outputItems是null。
+
+|-
+| outputItems || ItemStack[] || <code>  </code> || 覆盖outputItem若不null。
+
+|-
+| outputLiquid || LiquidStack || <code>  </code> || 写入outputLiquids作为单个-数组若outputLiquids是null。
+
+|-
+| outputLiquids || LiquidStack[] || <code>  </code> || 覆盖outputLiquid若不null。
+
+|-
+| liquidOutputDirections || int[] || <code> { -1 } </code> || 液体输出，在相同顺序作为outputLiquids。使用-1在每个方向。旋转相对方块。
+
+|-
+| dumpExtraLiquid || boolean || <code> true </code> || 若为 true，带有多个液体输出会当用于在一个液体类型。
+
+|-
+| ignoreLiquidFullness || boolean || <code> false </code> || 
+|-
+| craftTime || float || <code> 80.0 </code> || 
+|-
+| craftEffect || Effect || <code> none </code> || 
+|-
+| updateEffect || Effect || <code> none </code> || 
+|-
+| updateEffectChance || float || <code> 0.04 </code> || 
+|-
+| updateEffectSpread || float || <code> 4.0 </code> || 
+|-
+| warmupSpeed || float || <code> 0.019 </code> || 
+|-
+| legacyReadWarmup || boolean || <code> false </code> || 仅用于方块。
+
+|-
+| drawer || DrawBlock || <code> new DrawDefault() </code> || 
+|}
+=== HeatConductor ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| visualMaxHeat || float || <code> 15.0 </code> || 
+|-
+| drawer || DrawBlock || <code> new DrawDefault() </code> || 
+|-
+| splitHeat || boolean || <code> false </code> || 
+|}
+=== HeatCrafter ===
+继承自 [[#GenericCrafter|GenericCrafter]]<br>
+从方块。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| heatRequirement || float || <code> 10.0 </code> || 基础热量需求用于100%效率。
+
+|-
+| overheatScale || float || <code> 1.0 </code> || 之后热量该需求，热量会由该数量。
+
+|-
+| maxEfficiency || float || <code> 4.0 </code> || 最大效率之后。
+
+|}
+=== HeatProducer ===
+继承自 [[#GenericCrafter|GenericCrafter]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| heatOutput || float || <code> 10.0 </code> || 
+|-
+| warmupRate || float || <code> 0.15 </code> || 
+|}
+=== HeaterGenerator ===
+继承自 [[#ConsumeGenerator|ConsumeGenerator]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| heatOutput || float || <code> 10.0 </code> || 
+|-
+| warmupRate || float || <code> 0.15 </code> || 
+|}
+=== ImpactReactor ===
+继承自 [[#PowerGenerator|PowerGenerator]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| warmupSpeed || float || <code> 0.001 </code> || 
+|-
+| itemDuration || float || <code> 60.0 </code> || 
+|}
+=== 焚化炉 ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| effect || Effect || <code> fuelburn </code> || 
+|-
+| flameColor || Color || <code> ffad9dff </code> || 
+|}
+=== InterceptorBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+该类可以仅用于带有PointDefenseBulletWeapon。尝试生成在的武器会标准行为。
+=== Item ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code>  </code> || 
+|-
+| explosiveness || float || <code> 0.0 </code> || 该物品是。
+
+|-
+| flammability || float || <code> 0.0 </code> || 上方0.3该用于物品。
+
+|-
+| radioactivity || float || <code> 0.0 </code> || 该物品是。
+
+|-
+| charge || float || <code> 0.0 </code> || 该物品是。
+
+|-
+| hardness || int || <code> 0 </code> || 钻头的物品。
+
+|-
+| cost || float || <code> 1.0 </code> || 基础材质成本的该物品，用于放置倍。
+1成本=1tick添加建造时间。
+
+|-
+| healthScaling || float || <code> 0.0 </code> || 当该物品是在建造成本，方块的<>默认</>生命值是倍增由1+缩放，'缩放'用于所有物品需求类型。
+
+|-
+| lowPriority || boolean || <code> false </code> || 若为 true，该物品是的钻机。
+
+|-
+| frames || int || <code> 0 </code> || 若>0，该物品是动画。
+
+|-
+| transitionFrames || int || <code> 0 </code> || 数量的生成帧每个帧。
+
+|-
+| frameTime || float || <code> 5.0 </code> || tick在-动画帧。
+
+|-
+| buildable || boolean || <code> true </code> || 若为 true，该材质用于由建筑。若为 false，该材质会在特定核心。
+
+|-
+| hidden || boolean || <code> false </code> || 
+|}
+=== ItemBridge ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || int || <code> 0 </code> || 
+|-
+| transportTime || float || <code> 0.0 </code> || 
+|-
+| fadeIn || boolean || <code> true </code> || 
+|-
+| moveArrows || boolean || <code> true </code> || 
+|-
+| pulse || boolean || <code> false </code> || 
+|-
+| arrowSpacing || float || <code> 4.0 </code> || 
+|-
+| arrowOffset || float || <code> 2.0 </code> || 
+|-
+| arrowPeriod || float || <code> 0.4 </code> || 
+|-
+| arrowTimeScl || float || <code> 6.2 </code> || 
+|-
+| bridgeWidth || float || <code> 6.5 </code> || 
+|}
+=== ItemIncinerator ===
+继承自 [[#Block|Block]]<br>
+焚化炉仅物品与液体。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| effect || Effect || <code> incinerateSlag </code> || 
+|-
+| effectChance || float || <code> 0.2 </code> || 
+|}
+=== ItemSource ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| itemsPerSecond || int || <code> 100 </code> || 
+|}
+=== ItemTurret ===
+继承自 [[#Turret|Turret]]<br>
+=== ItemUnitStance ===
+继承自 [[#UnitStance|UnitStance]]<br>
+=== ItemVoid ===
+继承自 [[#Block|Block]]<br>
+=== Junction ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 26.0 </code> || 
+|-
+| capacity || int || <code> 6 </code> || 
+|-
+| displayedSpeed || float || <code> 13.0 </code> || 
+|}
+=== LandingPad ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| arrivalDuration || float || <code> 150.0 </code> || 
+|-
+| cooldownTime || float || <code> 150.0 </code> || 
+|-
+| consumeLiquidAmount || float || <code> 100.0 </code> || 
+|-
+| consumeLiquid || Liquid || <code> water </code> || 
+|-
+| landEffect || Effect || <code> podLandShockwave </code> || 
+|-
+| coolingEffect || Effect || <code> none </code> || 
+|-
+| coolingEffectChance || float || <code> 0.2 </code> || 
+|-
+| liquidPad || float || <code> 2.0 </code> || 
+|-
+| bottomColor || Color || <code> 565666ff </code> || 
+|-
+| landSoundVolume || float || <code> 0.75 </code> || 
+|-
+| landSound || Sound || <code> padLand </code> || 
+|}
+=== LaserBoltBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| width || float || <code> 2.0 </code> || 
+|-
+| height || float || <code> 7.0 </code> || 
+|}
+=== LaserBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| colors || Color[] || <code> [a9d8ff66a9d8ffffffffffff] </code> || 
+|-
+| laserEffect || Effect || <code> lancerLaserShootSmoke </code> || 
+|-
+| length || float || <code> 160.0 </code> || 
+|-
+| width || float || <code> 15.0 </code> || 
+|-
+| lengthFalloff || float || <code> 0.5 </code> || 
+|-
+| sideLength || float || <code> 29.0 </code> || 
+|-
+| sideWidth || float || <code> 0.7 </code> || 
+|-
+| sideAngle || float || <code> 90.0 </code> || 
+|-
+| lightningSpacing || float || <code> -1.0 </code> || 
+|-
+| lightningDelay || float || <code> 0.1 </code> || 
+|-
+| lightningAngleRand || float || <code> 0.0 </code> || 
+|-
+| largeHit || boolean || <code> false </code> || 
+|}
+=== LaserTurret ===
+继承自 [[#PowerTurret|PowerTurret]]<br>
+炮塔持续带有。液体冷却液是。是，该类名称是。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| firingMoveFract || float || <code> 0.25 </code> || 
+|-
+| shootDuration || float || <code> 100.0 </code> || 
+|}
+=== LaunchPad ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| launchTime || float || <code> 1.0 </code> || 时间。
+
+|-
+| launchSoundPitchRand || float || <code> 0.1 </code> || 
+|-
+| launchSound || Sound || <code> padLaunch </code> || 
+|-
+| lightColor || Color || <code> eab678ff </code> || 
+|-
+| acceptMultipleItems || boolean || <code> false </code> || 
+|-
+| lightStep || float || <code> 1.0 </code> || 
+|-
+| lightSteps || int || <code> 3 </code> || 
+|-
+| liquidPad || float || <code> 2.0 </code> || 
+|-
+| drawLiquid || Liquid || <code>  </code> || 
+|-
+| bottomColor || Color || <code> 565666ff </code> || 
+|}
+=== LegacyBlock ===
+继承自 [[#Block|Block]]<br>
+任意的该会移除当世界。
+=== LegacyCommandCenter ===
+继承自 [[#LegacyBlock|LegacyBlock]]<br>
+=== LegacyMechPad ===
+继承自 [[#LegacyBlock|LegacyBlock]]<br>
+=== LegacyUnitFactory ===
+继承自 [[#LegacyBlock|LegacyBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| replacement || Block || <code> air </code> || 
+|}
+=== LightBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| brightness || float || <code> 0.9 </code> || 
+|-
+| radius || float || <code> 200.0 </code> || 
+|}
+=== LightningBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+=== Liquid ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+更好名称用于该类"流体"，用于。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| gas || boolean || <code> false </code> || 若为 true，该流体是作为(与不创建)。
+
+|-
+| color || Color || <code>  </code> || 颜色用于在与在地面。
+
+|-
+| gasColor || Color || <code> bfbfbfff </code> || 颜色的该液体在。
+
+|-
+| barColor || Color || <code>  </code> || 颜色用于在。
+
+|-
+| lightColor || Color || <code> 00000000 </code> || 颜色用于绘制光照。注意用于。
+
+|-
+| flammability || float || <code> 0.0 </code> || 0-1， 0是不，上方可能开火当热量，0.5+是。
+
+|-
+| temperature || float || <code> 0.5 </code> || 温度：0.5是''温度，0是，1是。
+
+|-
+| heatCapacity || float || <code> 0.5 </code> || 热量该液体可以.0.4=水()，是更少与在。
+
+|-
+| viscosity || float || <code> 0.5 </code> || 该液体是.0.5=水()，1某物类似()。
+
+|-
+| explosiveness || float || <code> 0.0 </code> || 该液体是，当.0=无效，1=。
+
+|-
+| blockReactive || boolean || <code> true </code> || 是否流体在方块在所有(。。带有水)。
+
+|-
+| coolant || boolean || <code> true </code> || 若为 false，该液体不能冷却液。
+
+|-
+| moveThroughBlocks || boolean || <code> false </code> || 若为 true，该液体可以移动通过方块作为。
+
+|-
+| incinerable || boolean || <code> true </code> || 若为 true，该液体可以在方块。
+
+|-
+| particleEffect || Effect || <code> none </code> || 特效在。
+
+|-
+| particleSpacing || float || <code> 60.0 </code> || 粒子特效间距在tick。
+
+|-
+| boilPoint || float || <code> 2.0 </code> || 温度在该液体。该不是仅。
+
+|-
+| capPuddles || boolean || <code> true </code> || 若为 true，大小是。
+
+|-
+| vaporEffect || Effect || <code> vapor </code> || 特效当该液体。
+
+|-
+| hidden || boolean || <code> false </code> || 若为 true，该液体是隐藏在大多数UI。
+
+|-
+| canStayOn || ObjectSet<Liquid> || <code> new ObjectSet<>() </code> || 液体该可以在。。在水。
+
+|}
+=== LiquidBlock ===
+继承自 [[#Block|Block]]<br>
+=== LiquidBridge ===
+继承自 [[#ItemBridge|ItemBridge]]<br>
+=== LiquidBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| liquid || Liquid || <code>  </code> || 
+|-
+| puddleSize || float || <code> 6.0 </code> || 
+|-
+| orbSize || float || <code> 3.0 </code> || 
+|-
+| boilTime || float || <code> 5.0 </code> || 
+|}
+=== LiquidExplodeAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| liquid || Liquid || <code> water </code> || 
+|-
+| amount || float || <code> 120.0 </code> || 
+|-
+| radAmountScale || float || <code> 5.0 </code> || 
+|-
+| radScale || float || <code> 1.0 </code> || 
+|-
+| noiseMag || float || <code> 6.5 </code> || 
+|-
+| noiseScl || float || <code> 5.0 </code> || 
+|}
+=== LiquidJunction ===
+继承自 [[#LiquidBlock|LiquidBlock]]<br>
+=== LiquidRegenAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| liquid || Liquid || <code>  </code> || 
+|-
+| slurpSpeed || float || <code> 5.0 </code> || 
+|-
+| regenPerSlurp || float || <code> 6.0 </code> || 
+|-
+| slurpEffectChance || float || <code> 0.4 </code> || 
+|-
+| slurpEffect || Effect || <code> heal </code> || 
+|}
+=== LiquidRouter ===
+继承自 [[#LiquidBlock|LiquidBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| liquidPadding || float || <code> 0.0 </code> || 
+|}
+=== LiquidSource ===
+继承自 [[#Block|Block]]<br>
+=== LiquidTurret ===
+继承自 [[#Turret|Turret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| extinguish || boolean || <code> true </code> || 
+|}
+=== LiquidVoid ===
+继承自 [[#Block|Block]]<br>
+=== LogicBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| maxInstructionScale || int || <code> 5 </code> || 
+|-
+| instructionsPerTick || int || <code> 1 </code> || 
+|-
+| maxInstructionsPerTick || int || <code> 40 </code> || 
+|-
+| range || float || <code> 80.0 </code> || 
+|}
+=== LogicDisplay ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| maxSides || int || <code> 25 </code> || 
+|-
+| displaySize || int || <code> 64 </code> || 
+|-
+| scaleFactor || float || <code> 1.0 </code> || 
+|}
+=== LongPowerNode ===
+继承自 [[#PowerNode|PowerNode]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| glowColor || Color || <code> cbfd8172 </code> || 
+|-
+| glowScl || float || <code> 16.0 </code> || 
+|-
+| glowMag || float || <code> 0.6 </code> || 
+|}
+=== MagneticStorm ===
+继承自 [[#Weather|Weather]]<br>
+=== MappableContent ===
+继承自 [[#Content|Content]]<br>
+=== MassDriver ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || float || <code> 0.0 </code> || 
+|-
+| rotateSpeed || float || <code> 5.0 </code> || 
+|-
+| translation || float || <code> 7.0 </code> || 
+|-
+| minDistribute || int || <code> 10 </code> || 
+|-
+| knockback || float || <code> 4.0 </code> || 
+|-
+| reload || float || <code> 100.0 </code> || 
+|-
+| bulletSpeed || float || <code> 5.5 </code> || 
+|-
+| bulletLifetime || float || <code> 200.0 </code> || 
+|-
+| shootEffect || Effect || <code> shootBig2 </code> || 
+|-
+| smokeEffect || Effect || <code> shootBigSmoke2 </code> || 
+|-
+| receiveEffect || Effect || <code> mineBig </code> || 
+|-
+| shootSound || Sound || <code> massdriver </code> || 
+|-
+| receiveSound || Sound || <code> massdriverReceive </code> || 
+|-
+| shootSoundVolume || float || <code> 0.5 </code> || 
+|-
+| shake || float || <code> 3.0 </code> || 
+|}
+=== MassDriverBolt ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+=== MemoryBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| memoryCapacity || int || <code> 32 </code> || 
+|}
+=== MendProjector ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| baseColor || Color || <code> 84f491ff </code> || 
+|-
+| phaseColor || Color || <code> 84f491ff </code> || 
+|-
+| reload || float || <code> 250.0 </code> || 
+|-
+| range || float || <code> 60.0 </code> || 
+|-
+| healPercent || float || <code> 12.0 </code> || 
+|-
+| phaseBoost || float || <code> 12.0 </code> || 
+|-
+| phaseRangeBoost || float || <code> 50.0 </code> || 
+|-
+| useTime || float || <code> 400.0 </code> || 
+|-
+| mendSound || Sound || <code> healWave </code> || 
+|-
+| mendSoundVolume || float || <code> 0.5 </code> || 
+|}
+=== MessageBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| maxTextLength || int || <code> 220 </code> || 
+|-
+| maxNewlines || int || <code> 24 </code> || 
+|}
+=== MineWeapon ===
+继承自 [[#Weapon|Weapon]]<br>
+=== MissileBulletType ===
+继承自 [[#BasicBulletType|BasicBulletType]]<br>
+=== MissileUnitType ===
+继承自 [[#UnitType|UnitType]]<br>
+场模板用于单位类型。无新。
+=== MoveEffectAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| minVelocity || float || <code> 0.08 </code> || 
+|-
+| interval || float || <code> 3.0 </code> || 
+|-
+| chance || float || <code> 0.0 </code> || 
+|-
+| amount || int || <code> 1 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| rotation || float || <code> 0.0 </code> || 
+|-
+| rangeX || float || <code> 0.0 </code> || 
+|-
+| rangeY || float || <code> 0.0 </code> || 
+|-
+| rangeLengthMin || float || <code> 0.0 </code> || 
+|-
+| rangeLengthMax || float || <code> 0.0 </code> || 
+|-
+| rotateEffect || boolean || <code> false </code> || 
+|-
+| effectParam || float || <code> 3.0 </code> || 
+|-
+| teamColor || boolean || <code> false </code> || 
+|-
+| parentizeEffects || boolean || <code> false </code> || 
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| effect || Effect || <code> missileTrail </code> || 
+|}
+=== MoveLightningAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| damage || float || <code> 35 </code> || 闪电伤害。
+
+|-
+| chance || float || <code> 15 </code> || 概率的每个tick。设置>=1始终开火闪电每个tick在最大速度。
+
+|-
+| length || int || <code> 12 </code> || 长度的闪电。<=0禁用。
+
+|-
+| minSpeed || float || <code> 8 </code> || 速度用于当开始与当更快。
+
+|-
+| maxSpeed || float || <code> 2 </code> || 速度用于当开始与当更快。
+
+|-
+| color || Color || <code> valueOf("a9d8ff") </code> || 闪电颜色。
+
+|-
+| y || float || <code> 0 </code> || 偏移闪电生成Y。
+
+|-
+| x || float || <code> 0 </code> || 偏移X。
+
+|-
+| alternate || boolean || <code> true </code> || 是否生成侧边。
+
+|-
+| heatRegion || String || <code> "error" </code> || 抖动热量贴图类似护盾在v5标枪。
+
+|-
+| bullet || BulletType || <code>  </code> || 子弹类型是发射。可以null。
+
+|-
+| bulletAngle || float || <code> 0 </code> || 子弹角度参数。
+
+|-
+| bulletSpread || float || <code> 0 </code> || 子弹角度参数。
+
+|-
+| shootEffect || Effect || <code> sparkShoot </code> || 
+|-
+| parentizeEffects || boolean || <code>  </code> || 
+|-
+| shootSound || Sound || <code> shootArc </code> || 
+|}
+=== MultiBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+子弹类型生成多个子弹当"发射"。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| bullets || BulletType[] || <code> [] </code> || 
+|-
+| repeat || int || <code> 1 </code> || 数量的倍子弹数组是。
+
+|}
+=== MultiEffect ===
+继承自 [[#Effect|Effect]]<br>
+渲染多个特效在。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| effects || Effect[] || <code> [] </code> || 
+|}
+=== NeoplasmUnitType ===
+继承自 [[#UnitType|UnitType]]<br>
+该是仅。包含无新行为。
+=== NuclearReactor ===
+继承自 [[#PowerGenerator|PowerGenerator]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| lightColor || Color || <code> 7f19eaff </code> || 
+|-
+| coolColor || Color || <code> ffffff00 </code> || 
+|-
+| hotColor || Color || <code> ff9575a3 </code> || 
+|-
+| itemDuration || float || <code> 120.0 </code> || tick 1。
+
+|-
+| heating || float || <code> 0.01 </code> || 每帧*。
+
+|-
+| heatOutput || float || <code> 15.0 </code> || 最大热量该方块可以输出。
+
+|-
+| heatWarmupRate || float || <code> 1.0 </code> || 在热量进度。
+
+|-
+| ambientCooldownTime || float || <code> 1200.0 </code> || 时间冷却若无是即使若冷却液是不。
+
+|-
+| smokeThreshold || float || <code> 0.3 </code> || 在方块开始。
+
+|-
+| flashThreshold || float || <code> 0.46 </code> || 热量在光照开始。
+
+|-
+| coolantPower || float || <code> 0.5 </code> || 热量移除每单位的冷却液。
+
+|-
+| fuelItem || Item || <code> thorium </code> || 
+|}
+=== OreBlock ===
+继承自 [[#OverlayFloor|OverlayFloor]]<br>
+矿石用于物品类型。
+=== OverdriveProjector ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| reload || float || <code> 60.0 </code> || 
+|-
+| range || float || <code> 80.0 </code> || 
+|-
+| speedBoost || float || <code> 1.5 </code> || 
+|-
+| speedBoostPhase || float || <code> 0.75 </code> || 
+|-
+| useTime || float || <code> 400.0 </code> || 
+|-
+| phaseRangeBoost || float || <code> 20.0 </code> || 
+|-
+| hasBoost || boolean || <code> true </code> || 
+|-
+| baseColor || Color || <code> feb380ff </code> || 
+|-
+| phaseColor || Color || <code> ffd59eff </code> || 
+|}
+=== OverflowDuct ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 5.0 </code> || 
+|-
+| invert || boolean || <code> false </code> || 
+|}
+=== OverflowGate ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 1.0 </code> || 
+|-
+| invert || boolean || <code> false </code> || 
+|}
+=== OverlayFloor ===
+继承自 [[#Floor|Floor]]<br>
+类型的地面是在顶部的其他地面。
+=== ParticleEffect ===
+继承自 [[#Effect|Effect]]<br>
+大多数特效类。可以创建在多种。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| colorFrom || Color || <code> ffffffff </code> || 
+|-
+| colorTo || Color || <code> ffffffff </code> || 
+|-
+| particles || int || <code> 6 </code> || 
+|-
+| randLength || boolean || <code> true </code> || 
+|-
+| casingFlip || boolean || <code> false </code> || 提供特效类似特效。
+
+|-
+| cone || float || <code> 180.0 </code> || 
+|-
+| length || float || <code> 20.0 </code> || 
+|-
+| baseLength || float || <code> 0.0 </code> || 
+|-
+| interp || Interp || <code> Interp.linear </code> || 粒子大小/长度/半径插值。
+
+|-
+| sizeInterp || Interp || <code> null </code> || 粒子大小插值。null使用。
+
+|-
+| offsetX || float || <code> 0.0 </code> || 
+|-
+| offsetY || float || <code> 0.0 </code> || 
+|-
+| lightScl || float || <code> 2.0 </code> || 
+|-
+| lightOpacity || float || <code> 0.6 </code> || 
+|-
+| lightColor || Color || <code>  </code> || 
+|-
+| spin || float || <code> 0.0 </code> || 旋转在度每tick。
+
+|-
+| sizeFrom || float || <code> 2.0 </code> || 控制与最终贴图。
+
+|-
+| sizeTo || float || <code> 0.0 </code> || 控制与最终贴图。
+
+|-
+| sizeChangeStart || float || <code> 0.0 </code> || 控制数量的tick特效大小。
+
+|-
+| useRotation || boolean || <code> true </code> || 是否旋转带有父级。
+
+|-
+| offset || float || <code> 0.0 </code> || 旋转偏移。
+
+|-
+| region || String || <code> "circle" </code> || 贴图绘制。
+
+|-
+| line || boolean || <code> false </code> || 
+|-
+| strokeFrom || float || <code> 2.0 </code> || 
+|-
+| strokeTo || float || <code> 0.0 </code> || 
+|-
+| lenFrom || float || <code> 4.0 </code> || 
+|-
+| lenTo || float || <code> 2.0 </code> || 
+|-
+| cap || boolean || <code> true </code> || 
+|}
+=== ParticleWeather ===
+继承自 [[#Weather|Weather]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| particleRegion || String || <code> "circle-shadow" </code> || 
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| yspeed || float || <code> -2.0 </code> || 
+|-
+| xspeed || float || <code> 0.25 </code> || 
+|-
+| padding || float || <code> 16.0 </code> || 
+|-
+| sizeMin || float || <code> 2.4 </code> || 
+|-
+| sizeMax || float || <code> 12.0 </code> || 
+|-
+| density || float || <code> 1200.0 </code> || 
+|-
+| minAlpha || float || <code> 1.0 </code> || 
+|-
+| maxAlpha || float || <code> 1.0 </code> || 
+|-
+| force || float || <code> 0.0 </code> || 
+|-
+| noiseScale || float || <code> 2000.0 </code> || 
+|-
+| baseSpeed || float || <code> 6.1 </code> || 
+|-
+| sinSclMin || float || <code> 30.0 </code> || 
+|-
+| sinSclMax || float || <code> 80.0 </code> || 
+|-
+| sinMagMin || float || <code> 1.0 </code> || 
+|-
+| sinMagMax || float || <code> 7.0 </code> || 
+|-
+| noiseColor || Color || <code> ffffffff </code> || 
+|-
+| drawNoise || boolean || <code> false </code> || 
+|-
+| drawParticles || boolean || <code> true </code> || 
+|-
+| useWindVector || boolean || <code> false </code> || 
+|-
+| randomParticleRotation || boolean || <code> false </code> || 
+|-
+| noiseLayers || int || <code> 1 </code> || 
+|-
+| noiseLayerSpeedM || float || <code> 1.1 </code> || 
+|-
+| noiseLayerAlphaM || float || <code> 0.8 </code> || 
+|-
+| noiseLayerSclM || float || <code> 0.99 </code> || 
+|-
+| noiseLayerColorM || float || <code> 1.0 </code> || 
+|-
+| noisePath || String || <code> "noiseAlpha" </code> || 
+|}
+=== PayloadAmmoTurret ===
+继承自 [[#Turret|Turret]]<br>
+不使用该类!。
+=== PayloadBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| payloadSpeed || float || <code> 0.7 </code> || 
+|-
+| payloadRotateSpeed || float || <code> 5.0 </code> || 
+|-
+| regionSuffix || String || <code> "" </code> || 
+|}
+=== PayloadConveyor ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| moveTime || float || <code> 45.0 </code> || 
+|-
+| moveForce || float || <code> 201.0 </code> || 
+|-
+| interp || Interp || <code> Interp.pow5 </code> || 
+|-
+| payloadLimit || float || <code> 3.0 </code> || 
+|-
+| pushUnits || boolean || <code> true </code> || 
+|}
+=== PayloadDeconstructor ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| maxPayloadSize || float || <code> 4.0 </code> || 
+|-
+| deconstructSpeed || float || <code> 2.5 </code> || 
+|-
+| dumpRate || int || <code> 4 </code> || 
+|}
+=== PayloadLoader ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| loadTime || float || <code> 2.0 </code> || 
+|-
+| itemsLoaded || int || <code> 8 </code> || 
+|-
+| liquidsLoaded || float || <code> 40.0 </code> || 
+|-
+| maxBlockSize || int || <code> 3 </code> || 
+|-
+| maxPowerConsumption || float || <code> 40.0 </code> || 
+|-
+| loadPowerDynamic || boolean || <code> true </code> || 
+|}
+=== PayloadMassDriver ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || float || <code> 100.0 </code> || 
+|-
+| rotateSpeed || float || <code> 5.0 </code> || 
+|-
+| length || float || <code> 11.125 </code> || 
+|-
+| knockback || float || <code> 5.0 </code> || 
+|-
+| reload || float || <code> 30.0 </code> || 
+|-
+| chargeTime || float || <code> 100.0 </code> || 
+|-
+| maxPayloadSize || float || <code> 3.0 </code> || 
+|-
+| grabWidth || float || <code> 8.0 </code> || 
+|-
+| grabHeight || float || <code> 2.75 </code> || 
+|-
+| shootEffect || Effect || <code> shootBig2 </code> || 
+|-
+| smokeEffect || Effect || <code> shootPayloadDriver </code> || 
+|-
+| receiveEffect || Effect || <code> payloadReceive </code> || 
+|-
+| shootSound || Sound || <code> massdriver </code> || 
+|-
+| receiveSound || Sound || <code> massdriverReceive </code> || 
+|-
+| shootSoundVolume || float || <code> 0.7 </code> || 
+|-
+| shake || float || <code> 3.0 </code> || 
+|}
+=== PayloadRouter ===
+继承自 [[#PayloadConveyor|PayloadConveyor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| invert || boolean || <code> false </code> || 
+|}
+=== PayloadSource ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+通用建筑生产其他建筑。
+=== PayloadUnloader ===
+继承自 [[#PayloadLoader|PayloadLoader]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| offloadSpeed || int || <code> 4 </code> || 
+|-
+| maxPowerUnload || float || <code> 80.0 </code> || 
+|}
+=== PayloadVoid ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| incinerateEffect || Effect || <code> blastExplosion </code> || 
+|-
+| incinerateSound || Sound || <code> unitExplode1 </code> || 
+|}
+=== Planet ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| position || Vec3 || <code> new Vec3() </code> || 位置在全局。会0，0，0宇宙更新。
+
+|-
+| generator || PlanetGenerator || <code>  </code> || 发电机会使行星。可以null用于行星在。
+
+|-
+| sectors || Seq<Sector> || <code> new Seq<>() </code> || 数组的区块；地块在。
+
+|-
+| orbitSpacing || float || <code> 12 </code> || 默认间距行星在世界单位。该是每-父级!。
+
+|-
+| radius || float || <code>  </code> || 半径的该行星的。不携带进入。
+
+|-
+| camRadius || float || <code>  </code> || 相机半径偏移。
+
+|-
+| minZoom || float || <code> 5 </code> || 最小相机值。
+
+|-
+| maxZoom || float || <code> 2 </code> || 最大相机值。
+
+|-
+| drawOrbit || boolean || <code> true </code> || 是否绘制圆形。
+
+|-
+| atmosphereRadIn || float || <code> 0 </code> || 大气半径参数。
+
+|-
+| atmosphereRadOut || float || <code> 3 </code> || 大气半径参数。
+
+|-
+| clipRadius || float || <code> -1 </code> || 视锥半径。
+
+|-
+| orbitRadius || float || <code>  </code> || 轨道半径周围。不变化除非你你。
+
+|-
+| totalRadius || float || <code>  </code> || 总半径的该行星与所有其。
+
+|-
+| orbitTime || float || <code>  </code> || 时间用于行星周围，在秒。一个。
+
+|-
+| rotateTime || float || <code> 24f * 60 </code> || 时间用于行星满，在秒。一个。
+
+|-
+| orbitOffset || float || <code>  </code> || 随机角度偏移行星从起始外部在线。
+
+|-
+| sectorApproxRadius || float || <code>  </code> || 约。半径的一个区块。
+
+|-
+| tidalLock || boolean || <code> false </code> || 该行星是否是锁定相对其父级-见：//。。//Tidal_locking。
+
+|-
+| accessible || boolean || <code> true </code> || 该行星是否是在行星UI。*。
+
+|-
+| defaultEnv || int || <code> oxygen </code> || 环境标记用于区块在该行星。
+
+|-
+| defaultAttributes || Attributes || <code> new Attributes() </code> || 环境。
+
+|-
+| updateLighting || boolean || <code> true </code> || 若为 true，/是。
+
+|-
+| lightSrcFrom || float || <code> 0 </code> || 昼夜/参数。
+
+|-
+| lightSrcTo || float || <code> 8 </code> || 昼夜/参数。
+
+|-
+| lightDstFrom || float || <code> 2 </code> || 昼夜/参数。
+
+|-
+| lightDstTo || float || <code> 1 </code> || 昼夜/参数。
+
+|-
+| startSector || int || <code> 0 </code> || 默认起始区块显示地图对话框。
+
+|-
+| sectorSeed || int || <code> -1 </code> || 种子用于区块基础在该行星。-1使用随机一个基于在ID。
+
+|-
+| launchCapacityMultiplier || float || <code> 25 </code> || 倍率用于核心物品容量当。
+
+|-
+| bloom || boolean || <code> false </code> || 是否特效是启用。
+
+|-
+| visible || boolean || <code> true </code> || 该行星是否是显示。
+
+|-
+| landCloudColor || Color || <code> 5f) </code> || 色调的显示当着陆。
+
+|-
+| lightColor || Color || <code> cpy() </code> || 用于，该是颜色在其他行星。无效用于。
+
+|-
+| atmosphereColor || Color || <code> 0f) </code> || 大气用于行星。
+
+|-
+| iconColor || Color || <code> cpy() </code> || 图标用于在行星列表。
+
+|-
+| hasAtmosphere || boolean || <code> true </code> || 该行星是否有大气。
+
+|-
+| allowLaunchSchematics || boolean || <code> false </code> || 是否允许用户指定发射蓝图用于该地图。
+
+|-
+| allowLaunchLoadout || boolean || <code> false </code> || 是否允许用户指定它们携带该地图。
+
+|-
+| allowSectorInvasion || boolean || <code> false </code> || 是否区块从敌方。
+
+|-
+| allowLegacyLaunchPads || boolean || <code> false </code> || 若为 true，发射可以启用。
+
+|-
+| clearSectorOnLose || boolean || <code> false </code> || 若为 true，区块当。
+
+|-
+| enemyBuildSpeedMultiplier || float || <code> 1 </code> || 倍率用于敌方速度；仅应用在(不标准规则)。
+
+|-
+| enemyInfiniteItems || boolean || <code> true </code> || 若为 true，敌方队伍始终有物品。
+
+|-
+| enemyCoreSpawnReplace || boolean || <code> false </code> || 若为 true，敌方核心替换带有在该行星(用于)。
+
+|-
+| prebuildBase || boolean || <code> true </code> || 若为 true，方块在半径的核心会移除与"建成"在当着陆。
+
+|-
+| allowWaves || boolean || <code> false </code> || 若为 true，波创建在区块。待办移除。
+
+|-
+| allowLaunchToNumbered || boolean || <code> true </code> || 若为 false，玩家在该行星的区块。
+
+|-
+| allowCampaignRules || boolean || <code> false </code> || 若为 true，玩家是允许变化难度/规则在行星UI。
+
+|-
+| icon || String || <code> "planet" </code> || 图标作为显示在行星对话框。该是，作为null在时间。
+
+|-
+| launchMusic || Music || <code> launch </code> || 播放在行星对话框当该行星是。
+
+|-
+| defaultCore || Block || <code> coreShard </code> || 默认核心方块用于。
+
+|-
+| parent || Planet || <code>  </code> || 父级机体该行星周围。若为 null，该行星是视为在中键的系统。
+
+|-
+| solarSystem || Planet || <code>  </code> || 父级的系统该行星是在。
+
+|-
+| children || Seq<Planet> || <code> new Seq<>() </code> || 所有行星该一个，在顺序的半径。
+
+|-
+| launchCandidates || Seq<Planet> || <code> new Seq<>() </code> || 行星可以发射从该一个。
+
+|-
+| allowSelfSectorLaunch || boolean || <code>  </code> || 是否可以发射'任意'区块在该行星的表面。
+
+|-
+| autoAssignPlanet || boolean || <code> true </code> || 若为 true，所有内容在该行星的科技树会分配该行星在它们的shownPlanets。
+
+|-
+| updateGroup || ObjectSet<Planet> || <code> new ObjectSet<>() </code> || 行星允许在相同时间作为该一个用于计算。
+
+|-
+| campaignRules || CampaignRules || <code> new CampaignRules() </code> || 全局难度/用于该行星的。
+
+|-
+| campaignRuleDefaults || CampaignRules || <code> new CampaignRules() </code> || 默认应用规则。
+
+|-
+| showRtsAIRule || boolean || <code> false </code> || 若为 true，RTSAI可以。
+
+|-
+| loadPlanetData || boolean || <code> false </code> || 若为 true，行星数据是作为'行星/{名称}。'。该是仅/在原版!。
+
+|-
+| data || PlanetData || <code>  </code> || 数据攻击区块与区块。
+
+|}
+=== PointBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| trailSpacing || float || <code> 10.0 </code> || 
+|}
+=== PointDefenseBulletWeapon ===
+继承自 [[#Weapon|Weapon]]<br>
+发射子弹敌方子弹。发射子弹必须的类型InterceptorBulletType。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| damageTargetWeight || float || <code> 10.0 </code> || 
+|}
+=== PointDefenseTurret ===
+继承自 [[#ReloadTurret|ReloadTurret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| retargetTime || float || <code> 5.0 </code> || 
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| beamEffect || Effect || <code> pointBeam </code> || 
+|-
+| hitEffect || Effect || <code> pointHit </code> || 
+|-
+| shootEffect || Effect || <code> sparkShoot </code> || 
+|-
+| shootSound || Sound || <code> shootSegment </code> || 
+|-
+| shootCone || float || <code> 5.0 </code> || 
+|-
+| bulletDamage || float || <code> 10.0 </code> || 
+|-
+| shootLength || float || <code> 3.0 </code> || 
+|}
+=== PointDefenseWeapon ===
+继承自 [[#Weapon|Weapon]]<br>
+注意该事物：。
+-子弹带有maxRange。
+-子弹带有伤害。
+-旋转。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| beamEffect || Effect || <code> pointBeam </code> || 
+|}
+=== PointLaserBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+持续子弹类型仅在。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| sprite || String || <code> "point-laser" </code> || 
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| beamEffect || Effect || <code> colorTrail </code> || 
+|-
+| beamEffectInterval || float || <code> 3.0 </code> || 
+|-
+| beamEffectSize || float || <code> 3.5 </code> || 
+|-
+| oscScl || float || <code> 2.0 </code> || 
+|-
+| oscMag || float || <code> 0.3 </code> || 
+|-
+| damageInterval || float || <code> 5.0 </code> || 
+|-
+| shake || float || <code> 0.0 </code> || 
+|}
+=== PowerBlock ===
+继承自 [[#Block|Block]]<br>
+=== PowerDiode ===
+继承自 [[#Block|Block]]<br>
+=== PowerDistributor ===
+继承自 [[#PowerBlock|PowerBlock]]<br>
+=== PowerGenerator ===
+继承自 [[#PowerDistributor|PowerDistributor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| powerProduction || float || <code> 0.0 </code> || 数量的电力产生每tick在的效率的1.0，100%。
+
+|-
+| drawer || DrawBlock || <code> new DrawDefault() </code> || 
+|-
+| explosionRadius || int || <code> 12 </code> || 
+|-
+| explosionDamage || int || <code> 0 </code> || 
+|-
+| explodeEffect || Effect || <code> none </code> || 
+|-
+| explodeSound || Sound || <code> none </code> || 
+|-
+| explosionPuddles || int || <code> 10 </code> || 
+|-
+| explosionPuddleRange || float || <code> 16.0 </code> || 
+|-
+| explosionPuddleAmount || float || <code> 100.0 </code> || 
+|-
+| explosionPuddleLiquid || Liquid || <code>  </code> || 
+|-
+| explosionMinWarmup || float || <code> 0.0 </code> || 
+|-
+| explosionShake || float || <code> 0.0 </code> || 
+|-
+| explosionShakeDuration || float || <code> 6.0 </code> || 
+|}
+=== PowerNode ===
+继承自 [[#PowerBlock|PowerBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| laserRange || float || <code> 6.0 </code> || 
+|-
+| maxNodes || int || <code> 3 </code> || 
+|-
+| autolink || boolean || <code> true </code> || 
+|-
+| drawRange || boolean || <code> true </code> || 
+|-
+| sameBlockConnection || boolean || <code> false </code> || 
+|-
+| laserScale || float || <code> 0.25 </code> || 
+|-
+| powerLayer || float || <code> 70.0 </code> || 
+|-
+| laserColor1 || Color || <code> ffffffff </code> || 
+|-
+| laserColor2 || Color || <code> fbd367ff </code> || 
+|}
+=== PowerSource ===
+继承自 [[#PowerNode|PowerNode]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| powerProduction || float || <code> 10000.0 </code> || 
+|}
+=== PowerTurret ===
+继承自 [[#Turret|Turret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| shootType || BulletType || <code>  </code> || 
+|}
+=== PowerVoid ===
+继承自 [[#PowerBlock|PowerBlock]]<br>
+=== Prop ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| layer || float || <code> 32.0 </code> || 
+|}
+=== 泵 ===
+继承自 [[#LiquidBlock|LiquidBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| pumpAmount || float || <code> 0.2 </code> || 泵数量每地块。
+
+|-
+| consumeTime || float || <code> 300.0 </code> || 间隔在-物品，若适用。
+
+|-
+| warmupSpeed || float || <code> 0.019 </code> || 
+|-
+| drawer || DrawBlock || <code> new DrawMulti(new DrawDefault(), new DrawPumpLiquid()) </code> || 
+|}
+=== Radar ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| discoveryTime || float || <code> 600.0 </code> || 
+|-
+| rotateSpeed || float || <code> 2.0 </code> || 
+|-
+| glowColor || Color || <code> ab3400ff </code> || 
+|-
+| glowScl || float || <code> 5.0 </code> || 
+|-
+| glowMag || float || <code> 0.6 </code> || 
+|}
+=== RadialEffect ===
+继承自 [[#Effect|Effect]]<br>
+渲染一个特效在角度。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| effect || Effect || <code> none </code> || 
+|-
+| rotationSpacing || float || <code> 90.0 </code> || 
+|-
+| rotationOffset || float || <code> 0.0 </code> || 
+|-
+| effectRotationOffset || float || <code> 0.0 </code> || 
+|-
+| lengthOffset || float || <code> 0.0 </code> || 
+|-
+| amount || int || <code> 4 </code> || 
+|}
+=== RailBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| pierceEffect || Effect || <code> hitBulletSmall </code> || 
+|-
+| pointEffect || Effect || <code> none </code> || 
+|-
+| lineEffect || Effect || <code> none </code> || 
+|-
+| endEffect || Effect || <code> none </code> || 
+|-
+| length || float || <code> 100.0 </code> || 
+|-
+| pointEffectSpace || float || <code> 20.0 </code> || 
+|}
+=== RainWeather ===
+继承自 [[#Weather|Weather]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| yspeed || float || <code> 5.0 </code> || 
+|-
+| xspeed || float || <code> 1.5 </code> || 
+|-
+| padding || float || <code> 16.0 </code> || 
+|-
+| density || float || <code> 1200.0 </code> || 
+|-
+| stroke || float || <code> 0.75 </code> || 
+|-
+| sizeMin || float || <code> 8.0 </code> || 
+|-
+| sizeMax || float || <code> 40.0 </code> || 
+|-
+| splashTimeScale || float || <code> 22.0 </code> || 
+|-
+| liquid || Liquid || <code> water </code> || 
+|-
+| color || Color || <code> 7a95eaff </code> || 
+|}
+=== Reconstructor ===
+继承自 [[#UnitBlock|UnitBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| constructTime || float || <code> 120.0 </code> || 
+|-
+| upgrades || Seq<UnitType[]> || <code> [] </code> || 
+|-
+| capacities || int[] || <code> [] </code> || 
+|-
+| createSound || Sound || <code> unitCreate </code> || 
+|-
+| createSoundVolume || float || <code> 1.0 </code> || 
+|}
+=== RegenAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| percentAmount || float || <code> 0.0 </code> || 数量治疗作为每tick。
+
+|-
+| amount || float || <code> 0.0 </code> || 数量治疗作为平坦数量每tick。
+
+|}
+=== RegenProjector ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || int || <code> 14 </code> || 
+|-
+| healPercent || float || <code> 0.2 </code> || 
+|-
+| optionalMultiplier || float || <code> 2.0 </code> || 
+|-
+| optionalUseTime || float || <code> 480.0 </code> || 
+|-
+| drawer || DrawBlock || <code> new DrawDefault() </code> || 
+|-
+| effectChance || float || <code> 0.003 </code> || 
+|-
+| baseColor || Color || <code> ffd37fff </code> || 
+|-
+| effect || Effect || <code> regenParticle </code> || 
+|}
+=== ReloadTurret ===
+继承自 [[#BaseTurret|BaseTurret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| reload || float || <code> 10.0 </code> || 
+|}
+=== RemoveOre ===
+继承自 [[#OverlayFloor|OverlayFloor]]<br>
+=== RemoveWall ===
+继承自 [[#Block|Block]]<br>
+=== RepairBeamWeapon ===
+继承自 [[#Weapon|Weapon]]<br>
+注意该武器子弹带有maxRange。
+旋转必须设置true。固定修复不支持。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| targetBuildings || boolean || <code> false </code> || 
+|-
+| targetUnits || boolean || <code> true </code> || 
+|-
+| repairSpeed || float || <code> 0.3 </code> || 
+|-
+| fractionRepairSpeed || float || <code> 0.0 </code> || 
+|-
+| beamWidth || float || <code> 1.0 </code> || 
+|-
+| pulseRadius || float || <code> 6.0 </code> || 
+|-
+| pulseStroke || float || <code> 2.0 </code> || 
+|-
+| widthSinMag || float || <code> 0.0 </code> || 
+|-
+| widthSinScl || float || <code> 4.0 </code> || 
+|-
+| recentDamageMultiplier || float || <code> 0.1 </code> || 
+|-
+| laserColor || Color || <code> 98ffa9ff </code> || 
+|-
+| laserTopColor || Color || <code> ffffffff </code> || 
+|-
+| healColor || Color || <code> 98ffa9ff </code> || 
+|-
+| healEffect || Effect || <code> healBlockFull </code> || 
+|}
+=== RepairFieldAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| amount || float || <code> 1 </code> || 
+|-
+| reload || float || <code> 100 </code> || 
+|-
+| range || float || <code> 60 </code> || 
+|-
+| healPercent || float || <code> 0 </code> || 
+|-
+| healEffect || Effect || <code> heal </code> || 
+|-
+| activeEffect || Effect || <code> healWaveDynamic </code> || 
+|-
+| sound || Sound || <code> healWave </code> || 
+|-
+| soundVolume || float || <code> 5 </code> || 
+|-
+| parentizeEffects || boolean || <code> false </code> || 
+|-
+| sameTypeHealMult || float || <code> 1 </code> || 乘以单位的相同类型由该数量。
+
+|}
+=== RepairTower ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| range || float || <code> 80.0 </code> || 
+|-
+| circleColor || Color || <code> 98ffa9ff </code> || 
+|-
+| glowColor || Color || <code> 98ffa97f </code> || 
+|-
+| circleSpeed || float || <code> 120.0 </code> || 
+|-
+| circleStroke || float || <code> 3.0 </code> || 
+|-
+| squareRad || float || <code> 3.0 </code> || 
+|-
+| squareSpinScl || float || <code> 0.8 </code> || 
+|-
+| glowMag || float || <code> 0.5 </code> || 
+|-
+| glowScl || float || <code> 8.0 </code> || 
+|-
+| healAmount || float || <code> 1.0 </code> || 
+|}
+=== RepairTurret ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| timerTarget || int || <code> 1 </code> || 
+|-
+| timerEffect || int || <code> 2 </code> || 
+|-
+| repairRadius || float || <code> 50.0 </code> || 
+|-
+| repairSpeed || float || <code> 0.3 </code> || 
+|-
+| powerUse || float || <code> 0.0 </code> || 
+|-
+| length || float || <code> 5.0 </code> || 
+|-
+| beamWidth || float || <code> 1.0 </code> || 
+|-
+| pulseRadius || float || <code> 6.0 </code> || 
+|-
+| pulseStroke || float || <code> 2.0 </code> || 
+|-
+| acceptCoolant || boolean || <code> false </code> || 
+|-
+| coolantUse || float || <code> 0.5 </code> || 
+|-
+| coolEffect || Effect || <code> fuelburn </code> || 特效显示当冷却液用于。
+
+|-
+| coolantMultiplier || float || <code> 1.0 </code> || 是由带有热量容量。
+
+|-
+| laserColor || Color || <code> 98ffa9ff </code> || 
+|-
+| laserTopColor || Color || <code> ffffffff </code> || 
+|}
+=== Router ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 8.0 </code> || 
+|}
+=== RuneOverlay ===
+继承自 [[#OverlayFloor|OverlayFloor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| color || Color || <code> ffffffff </code> || 
+|}
+=== SapBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| length || float || <code> 100.0 </code> || 
+|-
+| lengthRand || float || <code> 0.0 </code> || 
+|-
+| sapStrength || float || <code> 0.5 </code> || 
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| width || float || <code> 0.4 </code> || 
+|-
+| sprite || String || <code> "laser" </code> || 
+|}
+=== SeaBush ===
+继承自 [[#Prop|Prop]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| lobesMin || int || <code> 7 </code> || 
+|-
+| lobesMax || int || <code> 7 </code> || 
+|-
+| botAngle || float || <code> 60.0 </code> || 
+|-
+| origin || float || <code> 0.1 </code> || 
+|-
+| sclMin || float || <code> 30.0 </code> || 
+|-
+| sclMax || float || <code> 50.0 </code> || 
+|-
+| magMin || float || <code> 5.0 </code> || 
+|-
+| magMax || float || <code> 15.0 </code> || 
+|-
+| timeRange || float || <code> 40.0 </code> || 
+|-
+| spread || float || <code> 0.0 </code> || 
+|}
+=== Seaweed ===
+继承自 [[#Prop|Prop]]<br>
+=== SectorPreset ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| planet || Planet || <code>  </code> || 
+|-
+| sector || Sector || <code>  </code> || 
+|-
+| captureWave || int || <code> 0 </code> || 
+|-
+| difficulty || float || <code>  </code> || 难度，0-10.
+
+|-
+| startWaveTimeMultiplier || float || <code> 2 </code> || 
+|-
+| addStartingItems || boolean || <code> false </code> || 
+|-
+| noLighting || boolean || <code> false </code> || 
+|-
+| isLastSector || boolean || <code>  </code> || 若为 true，该是最近区块在其。
+
+|-
+| requireUnlock || boolean || <code> true </code> || 若为 true，该区块必须解锁着陆是。
+
+|-
+| showHidden || boolean || <code> false </code> || 若为 true，图标与名称是，即使当'隐藏'始终-解锁区块。待办：该场可能，不应生效。
+
+|-
+| showSectorLandInfo || boolean || <code> true </code> || 
+|-
+| overrideLaunchDefaults || boolean || <code> false </code> || 若为 true，使用该发射而非。
+
+|-
+| allowLaunchSchematics || boolean || <code> false </code> || 是否允许用户指定发射蓝图用于该地图。
+
+|-
+| allowLaunchLoadout || boolean || <code> false </code> || 是否允许用户指定它们携带该地图。
+
+|-
+| attackAfterWaves || boolean || <code> false </code> || 若为 true，攻击模式之后波末端。
+
+|-
+| originalPosition || int || <code>  </code> || 位置的该区块；用于。内部使用用于原版仅!。
+
+|-
+| shieldSectors || Seq<Sector> || <code> new Seq<>() </code> || 区块该区块从被在它们。
+
+|}
+=== Separator ===
+继承自 [[#Block|Block]]<br>
+提取随机列表的物品从输入物品与输入液体。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| results || ItemStack[] || <code>  </code> || 
+|-
+| craftTime || float || <code> 0.0 </code> || 
+|-
+| drawer || DrawBlock || <code> new DrawDefault() </code> || 
+|}
+=== SeqEffect ===
+继承自 [[#Effect|Effect]]<br>
+渲染多个特效在。
+会不生效用于特效动态地。
+Z层的特效是。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| effects || Effect[] || <code> [] </code> || 
+|}
+=== ShallowLiquid ===
+继承自 [[#Floor|Floor]]<br>
+混合水带有标准地面。无新。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| liquidBase || Floor || <code>  </code> || 
+|-
+| floorBase || Floor || <code>  </code> || 
+|-
+| liquidOpacity || float || <code> 0.35 </code> || 
+|}
+=== ShieldArcAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| radius || float || <code> 60.0 </code> || 护盾半径。
+
+|-
+| regen || float || <code> 0.1 </code> || 护盾速度在伤害/tick。
+
+|-
+| max || float || <code> 200.0 </code> || 最大护盾。
+
+|-
+| cooldown || float || <code> 300.0 </code> || 冷却之后护盾是破损，在tick。
+
+|-
+| angle || float || <code> 80.0 </code> || 角度的护盾。
+
+|-
+| angleOffset || float || <code> 0.0 </code> || 偏移参数用于护盾。
+
+|-
+| x || float || <code> 0.0 </code> || 偏移参数用于护盾。
+
+|-
+| y || float || <code> 0.0 </code> || 偏移参数用于护盾。
+
+|-
+| whenShooting || boolean || <code> true </code> || 若为 true，仅当射击。
+
+|-
+| width || float || <code> 6.0 </code> || 宽度的护盾线。
+
+|-
+| chanceDeflect || float || <code> -1.0 </code> || 子弹偏转概率。-1禁用。
+
+|-
+| reflectBuildingDamage || float || <code> 1 </code> || 倍率用于反射子弹建筑伤害。-1禁用。
+
+|-
+| reflectVel || float || <code> 1 </code> || 速度倍率用于反射子弹在。负值=，=。
+
+|-
+| reflectTime || float || <code> 5 </code> || 时间倍率用于反射子弹。
+
+|-
+| deflectSound || Sound || <code> none </code> || 偏转声音。
+
+|-
+| breakSound || Sound || <code> shieldBreakSmall </code> || 
+|-
+| hitSound || Sound || <code> shieldHit </code> || 
+|-
+| hitSoundVolume || float || <code> 0.12 </code> || 
+|-
+| missileUnitMultiplier || float || <code> 2.0 </code> || 倍率用于护盾伤害从导弹单位。
+
+|-
+| drawArc || boolean || <code> true </code> || 是否绘制线。
+
+|-
+| region || String || <code>  </code> || 若不null，会绘制在顶部。
+
+|-
+| color || Color || <code>  </code> || 颜色覆盖的护盾。使用单位护盾由默认。
+
+|-
+| offsetRegion || boolean || <code> false </code> || 若为 true，贴图位置会由/。
+
+|-
+| pushUnits || boolean || <code> true </code> || 若为 true，敌方单位外部。
+
+|-
+| pushEffect || Effect || <code> circleColorSpark </code> || 
+|}
+=== ShieldRegenFieldAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| amount || float || <code> 1 </code> || 
+|-
+| max || float || <code> 100 </code> || 
+|-
+| reload || float || <code> 100 </code> || 
+|-
+| range || float || <code> 60 </code> || 
+|-
+| applyEffect || Effect || <code> shieldApply </code> || 
+|-
+| activeEffect || Effect || <code> shieldWave </code> || 
+|-
+| sound || Sound || <code> shieldWave </code> || 
+|-
+| soundVolume || float || <code> 7 </code> || 
+|-
+| parentizeEffects || boolean || <code>  </code> || 
+|}
+=== ShieldWall ===
+继承自 [[#Wall|Wall]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| shieldHealth || float || <code> 900.0 </code> || 
+|-
+| breakCooldown || float || <code> 600.0 </code> || 
+|-
+| regenSpeed || float || <code> 2.0 </code> || 
+|-
+| glowColor || Color || <code> ff75317f </code> || 
+|-
+| glowMag || float || <code> 0.6 </code> || 
+|-
+| glowScl || float || <code> 8.0 </code> || 
+|}
+=== ShockMine ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| cooldown || float || <code> 80.0 </code> || 
+|-
+| tileDamage || float || <code> 5.0 </code> || 
+|-
+| damage || float || <code> 13.0 </code> || 
+|-
+| length || int || <code> 10 </code> || 
+|-
+| tendrils || int || <code> 6 </code> || 
+|-
+| lightningColor || Color || <code> a9d8ffff </code> || 
+|-
+| shots || int || <code> 6 </code> || 
+|-
+| inaccuracy || float || <code> 0.0 </code> || 
+|-
+| bullet || BulletType || <code>  </code> || 
+|-
+| teamAlpha || float || <code> 0.3 </code> || 
+|}
+=== ShockwaveTower ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| timerCheck || int || <code> 1 </code> || 
+|-
+| range || float || <code> 110.0 </code> || 
+|-
+| reload || float || <code> 90.0 </code> || 
+|-
+| bulletDamage || float || <code> 160.0 </code> || 
+|-
+| falloffCount || float || <code> 20.0 </code> || 
+|-
+| shake || float || <code> 2.0 </code> || 
+|-
+| checkInterval || float || <code> 8.0 </code> || 
+|-
+| shootSound || Sound || <code> shockwaveTower </code> || 
+|-
+| waveColor || Color || <code> ffd37fff </code> || 
+|-
+| heatColor || Color || <code> ab3400ff </code> || 
+|-
+| shapeColor || Color || <code> f29c83ff </code> || 
+|-
+| cooldownMultiplier || float || <code> 1.0 </code> || 
+|-
+| hitEffect || Effect || <code> hitSquaresColor </code> || 
+|-
+| waveEffect || Effect || <code> pointShockwave </code> || 
+|-
+| shapeRotateSpeed || float || <code> 1.0 </code> || 
+|-
+| shapeRadius || float || <code> 6.0 </code> || 
+|-
+| shapeSides || int || <code> 4 </code> || 
+|}
+=== ShrapnelBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| length || float || <code> 100.0 </code> || 
+|-
+| width || float || <code> 20.0 </code> || 
+|-
+| fromColor || Color || <code> ffffffff </code> || 
+|-
+| toColor || Color || <code> a9d8ffff </code> || 
+|-
+| hitLarge || boolean || <code> false </code> || 
+|-
+| serrations || int || <code> 7 </code> || 
+|-
+| serrationLenScl || float || <code> 10.0 </code> || 
+|-
+| serrationWidth || float || <code> 4.0 </code> || 
+|-
+| serrationSpacing || float || <code> 8.0 </code> || 
+|-
+| serrationSpaceOffset || float || <code> 80.0 </code> || 
+|-
+| serrationFadeOffset || float || <code> 0.5 </code> || 
+|}
+=== SingleBlockProducer ===
+继承自 [[#BlockProducer|BlockProducer]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| result || Block || <code> router </code> || 
+|}
+=== SolarFlare ===
+继承自 [[#Weather|Weather]]<br>
+=== SolarGenerator ===
+继承自 [[#PowerGenerator|PowerGenerator]]<br>
+=== SolidPump ===
+继承自 [[#泵|泵]]<br>
+泵液体从与在电力。仅在实体地面方块。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| result || Liquid || <code> water </code> || 
+|-
+| updateEffect || Effect || <code> none </code> || 
+|-
+| updateEffectChance || float || <code> 0.02 </code> || 
+|-
+| rotateSpeed || float || <code> 1.0 </code> || 
+|-
+| baseEfficiency || float || <code> 1.0 </code> || 
+|-
+| attribute || Attribute || <code>  </code> || 属性是检查当输出。
+
+|}
+=== Sorter ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| invert || boolean || <code> false </code> || 
+|}
+=== SoundEffect ===
+继承自 [[#Effect|Effect]]<br>
+播放声音特效当创建与渲染特效。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| sound || Sound || <code> none </code> || 
+|-
+| minPitch || float || <code> 0.8 </code> || 
+|-
+| maxPitch || float || <code> 1.2 </code> || 
+|-
+| minVolume || float || <code> 1.0 </code> || 
+|-
+| maxVolume || float || <code> 1.0 </code> || 
+|-
+| effect || Effect || <code>  </code> || 
+|}
+=== SpaceLiquidBulletType ===
+继承自 [[#BulletType|BulletType]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| orbSize || float || <code> 5.5 </code> || 
+|}
+=== SpawnBlock ===
+继承自 [[#OverlayFloor|OverlayFloor]]<br>
+=== SpawnDeathAbility ===
+继承自 [[#Ability|Ability]]<br>
+生成特定数量的单位当。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| unit || UnitType || <code>  </code> || 
+|-
+| amount || int || <code> 1 </code> || 
+|-
+| randAmount || int || <code> 0 </code> || 
+|-
+| spread || float || <code> 8.0 </code> || 随机散布的单位从生成。
+
+|-
+| faceOutwards || boolean || <code> true </code> || 若为 true，单位生成朝向从中键。
+
+|}
+=== StackConveyor ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| glowAlpha || float || <code> 1.0 </code> || 
+|-
+| glowColor || Color || <code> feb380ff </code> || 
+|-
+| baseEfficiency || float || <code> 0.0 </code> || 
+|-
+| speed || float || <code> 0.0 </code> || 
+|-
+| outputRouter || boolean || <code> true </code> || 
+|-
+| recharge || float || <code> 2.0 </code> || (最小)数量的线。
+
+|-
+| loadEffect || Effect || <code> conveyorPoof </code> || 
+|-
+| unloadEffect || Effect || <code> conveyorPoof </code> || 
+|}
+=== StackRouter ===
+继承自 [[#DuctRouter|DuctRouter]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| baseEfficiency || float || <code> 0.0 </code> || 
+|-
+| glowAlpha || float || <code> 1.0 </code> || 
+|-
+| glowColor || Color || <code> feb380ff </code> || 
+|}
+=== StaticTree ===
+继承自 [[#StaticWall|StaticWall]]<br>
+=== StaticWall ===
+继承自 [[#Prop|Prop]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| autotile || boolean || <code> false </code> || 若为 true，该墙体使用；变体不支持。见：//。/GglLfr/地块-。
+
+|-
+| autotileMidVariants || int || <code> 1 </code> || 若>1，中键区域的自动贴图有随机变体。
+
+|}
+=== StatusEffect ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| damageMultiplier || float || <code> 1.0 </code> || 伤害造成由单位带有特效。
+
+|-
+| healthMultiplier || float || <code> 1.0 </code> || 单位生命值倍率。
+
+|-
+| speedMultiplier || float || <code> 1.0 </code> || 单位速度倍率。
+
+|-
+| reloadMultiplier || float || <code> 1.0 </code> || 单位装填倍率。
+
+|-
+| buildSpeedMultiplier || float || <code> 1.0 </code> || 单位建造速度倍率。
+
+|-
+| dragMultiplier || float || <code> 1.0 </code> || 单位阻力倍率。
+
+|-
+| transitionDamage || float || <code> 0.0 </code> || 伤害造成当。
+
+|-
+| disarm || boolean || <code> false </code> || 单位武器()禁用。
+
+|-
+| damage || float || <code> 0.0 </code> || 伤害每帧。
+
+|-
+| intervalDamageTime || float || <code> 0.0 </code> || 间距(在tick)间隔伤害。<=0禁用。
+
+|-
+| intervalDamage || float || <code> 0.0 </code> || 伤害造成由间隔伤害。
+
+|-
+| intervalDamagePierce || boolean || <code> false </code> || 若为 true，间隔伤害是装甲穿透。
+
+|-
+| effectChance || float || <code> 0.15 </code> || 概率的特效。
+
+|-
+| parentizeEffect || boolean || <code> false </code> || 应特效给定父级。
+
+|-
+| permanent || boolean || <code> false </code> || 若为 true，特效。
+
+|-
+| reactive || boolean || <code> false </code> || 若为 true，该特效会仅带有其他特效与不能应用。
+
+|-
+| dynamic || boolean || <code> false </code> || 特殊标记用于动态特效类型带有属性-不使用。
+
+|-
+| show || boolean || <code> true </code> || 是否该特效在。
+
+|-
+| color || Color || <code> ffffffff </code> || 色调颜色的特效。
+
+|-
+| effect || Effect || <code> none </code> || 特效随机地在顶部的受影响单位。
+
+|-
+| applyEffect || Effect || <code> none </code> || 特效是显示当应用单位。
+
+|-
+| applyExtend || boolean || <code> false </code> || 应用特效是否应即使若特效是在单位。
+
+|-
+| applyColor || Color || <code> ffffffff </code> || 色调颜色的应用特效。
+
+|-
+| parentizeApplyEffect || boolean || <code> false </code> || 应应用特效给定父级。
+
+|-
+| outline || boolean || <code> true </code> || 设置false禁用描边。
+
+|}
+=== StatusFieldAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| duration || float || <code> 60 </code> || 
+|-
+| reload || float || <code> 100 </code> || 
+|-
+| range || float || <code> 20 </code> || 
+|-
+| onShoot || boolean || <code> false </code> || 
+|-
+| applyEffect || Effect || <code> none </code> || 
+|-
+| activeEffect || Effect || <code> overdriveWave </code> || 
+|-
+| effectX || float || <code>  </code> || 
+|-
+| effectY || float || <code>  </code> || 
+|-
+| parentizeEffects || boolean || <code>  </code> || 
+|-
+| effectSizeParam || boolean || <code> true </code> || 
+|-
+| color || Color || <code> accent </code> || 
+|}
+=== SteamVent ===
+继承自 [[#Floor|Floor]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| parent || Block || <code> air </code> || 
+|-
+| effect || Effect || <code> ventSteam </code> || 
+|-
+| effectColor || Color || <code> 6b4e4eff </code> || 
+|-
+| effectSpacing || float || <code> 15.0 </code> || 
+|}
+=== StorageBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| coreMerge || boolean || <code> true </code> || 
+|}
+=== SuppressionFieldAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| reload || float || <code> 90.0 </code> || 
+|-
+| maxDelay || float || <code> 90.0 </code> || 
+|-
+| range || float || <code> 200.0 </code> || 
+|-
+| orbRadius || float || <code> 4.1 </code> || 
+|-
+| orbMidScl || float || <code> 0.33 </code> || 
+|-
+| orbSinScl || float || <code> 8.0 </code> || 
+|-
+| orbSinMag || float || <code> 1.0 </code> || 
+|-
+| color || Color || <code> a393feff </code> || 
+|-
+| layer || float || <code> 110.0 </code> || 
+|-
+| x || float || <code> 0.0 </code> || 
+|-
+| y || float || <code> 0.0 </code> || 
+|-
+| particles || int || <code> 15 </code> || 
+|-
+| particleSize || float || <code> 4.0 </code> || 
+|-
+| particleLen || float || <code> 7.0 </code> || 
+|-
+| rotateScl || float || <code> 3.0 </code> || 
+|-
+| particleLife || float || <code> 110.0 </code> || 
+|-
+| active || boolean || <code> true </code> || 
+|-
+| particleColor || Color || <code> 665c9fff </code> || 
+|-
+| effectColor || Color || <code> bf92f9ff </code> || 
+|-
+| applyParticleChance || float || <code> 13.0 </code> || 
+|}
+=== SwitchBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| clickSound || Sound || <code> click </code> || 
+|}
+=== TallBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| shadowOffset || float || <code> -3.0 </code> || 
+|-
+| layer || float || <code> 71.0 </code> || 
+|-
+| shadowLayer || float || <code> 69.0 </code> || 
+|-
+| rotationRand || float || <code> 20.0 </code> || 
+|-
+| shadowAlpha || float || <code> 0.6 </code> || 
+|}
+=== TankUnitType ===
+继承自 [[#ErekirUnitType|ErekirUnitType]]<br>
+=== TeamEntry ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+=== ThermalGenerator ===
+继承自 [[#PowerGenerator|PowerGenerator]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| generateEffect || Effect || <code> none </code> || 
+|-
+| effectChance || float || <code> 0.05 </code> || 
+|-
+| minEfficiency || float || <code> 0.0 </code> || 
+|-
+| displayEfficiencyScale || float || <code> 1.0 </code> || 
+|-
+| displayEfficiency || boolean || <code> true </code> || 
+|-
+| outputLiquid || LiquidStack || <code>  </code> || 
+|-
+| attribute || Attribute || <code> heat </code> || 
+|}
+=== Thruster ===
+继承自 [[#Wall|Wall]]<br>
+=== TileableLogicDisplay ===
+继承自 [[#LogicDisplay|LogicDisplay]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| maxDisplayDimensions || int || <code> 16 </code> || 
+|-
+| frameSize || int || <code> 6 </code> || 
+|}
+=== TractorBeamTurret ===
+继承自 [[#BaseTurret|BaseTurret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| retargetTime || float || <code> 5.0 </code> || 
+|-
+| shootCone || float || <code> 6.0 </code> || 
+|-
+| shootLength || float || <code> 5.0 </code> || 
+|-
+| laserWidth || float || <code> 0.6 </code> || 
+|-
+| force || float || <code> 0.3 </code> || 
+|-
+| scaledForce || float || <code> 0.0 </code> || 
+|-
+| damage || float || <code> 0.0 </code> || 
+|-
+| targetAir || boolean || <code> true </code> || 
+|-
+| targetGround || boolean || <code> false </code> || 
+|-
+| laserColor || Color || <code> ffffffff </code> || 
+|-
+| statusDuration || float || <code> 300.0 </code> || 
+|-
+| shootSound || Sound || <code> beamParallax </code> || 
+|-
+| shootSoundVolume || float || <code> 0.9 </code> || 
+|}
+=== TreeBlock ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| shadowOffset || float || <code> -4.0 </code> || 
+|}
+=== Turret ===
+继承自 [[#ReloadTurret|ReloadTurret]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| targetInterval || float || <code> 20.0 </code> || tick尝试在目标。
+
+|-
+| newTargetInterval || float || <code> -1.0 </code> || 目标间隔用于当该炮塔有目标。-1=targetInterval。
+
+|-
+| maxAmmo || int || <code> 30 </code> || 最大弹药单位。
+
+|-
+| ammoPerShot || int || <code> 1 </code> || 弹药单位用于每命中。
+
+|-
+| consumeAmmoOnce || boolean || <code> true </code> || 若为 true，弹药是仅每命中无论的子弹。
+
+|-
+| heatRequirement || float || <code> -1.0 </code> || 最小输入热量开火。
+
+|-
+| maxHeatEfficiency || float || <code> 3.0 </code> || 最大效率，若该炮塔使用热量。
+
+|-
+| inaccuracy || float || <code> 0.0 </code> || 子弹角度在度。
+
+|-
+| velocityRnd || float || <code> 0.0 </code> || 比例的子弹速度是随机。
+
+|-
+| scaleLifetimeOffset || float || <code> 0.0 </code> || 比例的生命周期是添加子弹带有lifeScale。
+
+|-
+| shootCone || float || <code> 8.0 </code> || 最大角度在度在炮塔会射击。
+
+|-
+| shootX || float || <code> 0.0 </code> || 炮塔射击。
+
+|-
+| shootY || float || <code> -Infinity </code> || 炮塔射击。
+
+|-
+| xRand || float || <code> 0.0 </code> || 随机散布在X。
+
+|-
+| drawMinRange || boolean || <code> false </code> || 若为 true，范围是绘制用于minRange。
+
+|-
+| trackingRange || float || <code> 0.0 </code> || 范围在与在目标，不射击。
+
+|-
+| minRange || float || <code> 0.0 </code> || 最小子弹范围。用于仅。
+
+|-
+| minWarmup || float || <code> 0.0 </code> || 最小预热开火。
+
+|-
+| accurateDelay || boolean || <code> true </code> || 若为 true，该炮塔会目标移动目标带有射击。firstShotDelay。
+
+|-
+| moveWhileCharging || boolean || <code> true </code> || 若为 false，该炮塔不能移动当充能。
+
+|-
+| reloadWhileCharging || boolean || <code> true </code> || 若为 false，该炮塔不能装填当充能。
+
+|-
+| warmupMaintainTime || float || <code> 0.0 </code> || 预热是即使若该炮塔不是射击。
+
+|-
+| shoot || ShootPattern || <code> new ShootPattern() </code> || 模式用于子弹。
+
+|-
+| targetAir || boolean || <code> true </code> || 若为 true，该方块目标空中单位。
+
+|-
+| targetGround || boolean || <code> true </code> || 若为 true，该方块目标地面单位与。
+
+|-
+| targetBlocks || boolean || <code> true </code> || 若为 true，该方块目标方块。
+
+|-
+| targetHealing || boolean || <code> false </code> || 若为 true，该方块目标方块，治疗。
+
+|-
+| playerControllable || boolean || <code> true </code> || 若为 true，该炮塔可以受控由玩家。
+
+|-
+| displayAmmoMultiplier || boolean || <code> true </code> || 若为 true，该方块会弹药在其属性(用于特定类型的炮塔)。
+
+|-
+| targetUnderBlocks || boolean || <code> true </code> || 若为 false，'在。下'方块类似传送带不锁定。
+
+|-
+| alwaysShooting || boolean || <code> false </code> || 若为 true，炮塔会始终射击当有弹药，无论的目标在范围或任意控制。
+
+|-
+| predictTarget || boolean || <code> true </code> || 是否炮塔单位移动。
+
+|-
+| unitSort || Sortf || <code> closest </code> || 功能用于单位目标。
+
+|-
+| heatColor || Color || <code> ab3400ff </code> || 颜色的热量区域绘制在顶部(若存在)。
+
+|-
+| shootEffect || Effect || <code>  </code> || 可选覆盖用于所有射击特效。
+
+|-
+| smokeEffect || Effect || <code>  </code> || 可选覆盖用于所有特效。
+
+|-
+| ammoUseEffect || Effect || <code> none </code> || 特效创建当弹药用于。不可选。
+
+|-
+| shootSound || Sound || <code> shootDuo </code> || 声音发出当单个子弹是命中。
+
+|-
+| shootSoundVolume || float || <code> 1.0 </code> || 音量的射击声音。
+
+|-
+| chargeSound || Sound || <code> none </code> || 声音发出当射击。firstShotDelay是>0与射击。
+
+|-
+| loopSound || Sound || <code> none </code> || 声音该方块当。一个声音循环。不。
+
+|-
+| loopSoundVolume || float || <code> 0.5 </code> || 激活声音基础音量。
+
+|-
+| soundPitchMin || float || <code> 0.9 </code> || 范围用于音调的射击声音。
+
+|-
+| soundPitchMax || float || <code> 1.1 </code> || 范围用于音调的射击声音。
+
+|-
+| ammoEjectBack || float || <code> 1.0 </code> || 向后Y偏移的弹药特效。
+
+|-
+| shootWarmupSpeed || float || <code> 0.1 </code> || 插值速度的炮塔预热。
+
+|-
+| linearWarmup || boolean || <code> false </code> || 若为 true，炮塔预热是线性而非的。
+
+|-
+| recoil || float || <code> 1.0 </code> || 视觉数量由炮塔后方每命中。
+
+|-
+| recoils || int || <code> -1 </code> || 数量的用于。
+
+|-
+| recoilTime || float || <code> -1.0 </code> || tick用于炮塔起始位置在tick。使用装填时间由默认。
+
+|-
+| recoilPow || float || <code> 1.8 </code> || 电力应用视觉。
+
+|-
+| cooldownTime || float || <code> 20.0 </code> || tick冷却热量区域。
+
+|-
+| elevation || float || <code> -1.0 </code> || 视觉抬升的炮塔阴影，-1使用。
+
+|-
+| shake || float || <code> 0.0 </code> || 每命中。
+
+|-
+| drawer || DrawBlock || <code> new DrawTurret() </code> || 定义绘制行为用于该炮塔。
+
+|}
+=== UnitAssembler ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| areaSize || int || <code> 11 </code> || 
+|-
+| droneType || UnitType || <code> assemblyDrone </code> || 
+|-
+| dronesCreated || int || <code> 4 </code> || 
+|-
+| droneConstructTime || float || <code> 240.0 </code> || 
+|-
+| capacities || int[] || <code> [] </code> || 
+|-
+| plans || Seq<AssemblerUnitPlan> || <code> [] </code> || 
+|-
+| createSound || Sound || <code> unitCreateBig </code> || 
+|-
+| createSoundVolume || float || <code> 1.0 </code> || 
+|}
+=== UnitAssemblerModule ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| tier || int || <code> 1 </code> || 
+|}
+=== UnitBlock ===
+继承自 [[#PayloadBlock|PayloadBlock]]<br>
+=== UnitCargoLoader ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| unitType || UnitType || <code> manifold </code> || 
+|-
+| unitBuildTime || float || <code> 480.0 </code> || 
+|-
+| polyStroke || float || <code> 1.8 </code> || 
+|-
+| polyRadius || float || <code> 8.0 </code> || 
+|-
+| polySides || int || <code> 6 </code> || 
+|-
+| polyRotateSpeed || float || <code> 1.0 </code> || 
+|-
+| polyColor || Color || <code> ffd37fff </code> || 
+|}
+=== UnitCargoUnloadPoint ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| staleTimeDuration || float || <code> 360.0 </code> || 若方块是满用于该数量的时间，会不。
+
+|}
+=== UnitCommand ===
+继承自 [[#MappableContent|MappableContent]]<br>
+定义模式的行为RTS-受控单位应跟随。显示在命令UI。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| switchToMove || boolean || <code> true </code> || 若为 true，该单位会自动移动命令当给定位置。
+
+|-
+| drawTarget || boolean || <code> false </code> || 是否绘制移动/攻击目标。
+
+|-
+| resetTarget || boolean || <code> true </code> || 是否重置目标当或从该命令。
+
+|-
+| snapToBuilding || boolean || <code> false </code> || 是否命令建筑。
+
+|-
+| exactArrival || boolean || <code> false </code> || 
+|-
+| refreshOnSelect || boolean || <code> false </code> || 若为 true，该命令列表的姿态当待办：不使用，该会移除!。
+
+|}
+=== UnitFactory ===
+继承自 [[#UnitBlock|UnitBlock]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| capacities || int[] || <code> [] </code> || 
+|-
+| plans || Seq<UnitPlan> || <code> [] </code> || 
+|-
+| createSound || Sound || <code> unitCreate </code> || 
+|-
+| createSoundVolume || float || <code> 1.0 </code> || 
+|}
+=== UnitSpawnAbility ===
+继承自 [[#Ability|Ability]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| unit || UnitType || <code>  </code> || 
+|-
+| spawnTime || float || <code> 60.0 </code> || 
+|-
+| spawnX || float || <code> 0.0 </code> || 
+|-
+| spawnY || float || <code> 0.0 </code> || 
+|-
+| spawnEffect || Effect || <code> spawn </code> || 
+|-
+| parentizeEffects || boolean || <code> false </code> || 
+|}
+=== UnitStance ===
+继承自 [[#MappableContent|MappableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| icon || String || <code>  </code> || 名称的UI图标(从图标类)。
+
+|-
+| incompatibleStances || Seq<UnitStance> || <code> new Seq<>() </code> || 姿态该。该用于，用于仅!。
+
+|-
+| toggle || boolean || <code> true </code> || 若为 true，该可以在或关闭。
+
+|}
+=== UnitType ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| envRequired || int || <code> 0 </code> || 环境标记*所有*用于该单位功能.0=任意环境。
+
+|-
+| envEnabled || int || <code> 1 </code> || 环境标记该单位可以功能在。若环境匹配任意的这些，会启用。
+
+|-
+| envDisabled || int || <code> 16 </code> || 环境标记该单位*不能*功能在。若环境匹配任意的这些，会或禁用。
+
+|-
+| speed || float || <code> 1.1 </code> || 移动速度(世界单位/)。
+
+|-
+| boostMultiplier || float || <code> 1.0 </code> ||  倍率用于速度当加速。
+|-
+| floorMultiplier || float || <code> 1.0 </code> ||  受影响该单位是由。
+|-
+| rotateSpeed || float || <code> 5.0 </code> ||  机体旋转速度在度/。
+|-
+| baseRotateSpeed || float || <code> 5.0 </code> ||  机甲基础旋转速度在度/。
+|-
+| drag || float || <code> 0.3 </code> ||  移动阻力作为比例。
+|-
+| accel || float || <code> 0.5 </code> ||  作为比例的速度。
+|-
+| hitSize || float || <code> 6.0 </code> ||  大小的一个侧边的碰撞箱方形。
+|-
+| deathShake || float || <code> -1.0 </code> ||  震动在单位。
+|-
+| stepShake || float || <code> -1.0 </code> ||  震动在每个用于腿/机甲单位。
+|-
+| rippleScale || float || <code> 1.0 </code> ||  /大小用于多足单位。
+|-
+| riseSpeed || float || <code> 0.08 </code> ||  加速速度作为比例。
+|-
+| descentSpeed || float || <code> 08 </code> ||  加速速度作为比例。
+|-
+| fallSpeed || float || <code> 0.018 </code> ||  快速该单位当。
+|-
+| missileAccelTime || float || <code> 0.0 </code> ||  多tick该导弹满速度。
+|-
+| health || float || <code> 200.0 </code> ||  生命值数量。
+|-
+| armor || float || <code> 0.0 </code> ||  伤害是由该数量。
+|-
+| range || float || <code> -1.0 </code> ||  最小范围的任意武器；用于目标。可以由设置值>0.
+|-
+| maxRange || float || <code> -1.0 </code> ||  最大范围的任意武器。
+|-
+| mineRange || float || <code> 70.0 </code> ||  范围在该单位可以开采矿石。
+|-
+| buildRange || float || <code> 220.0 </code> ||  范围在该单位可以建造。
+|-
+| circleTargetRadius || float || <code> 80.0 </code> ||  半径用于circleTarget，若true。
+|-
+| crashDamageMultiplier || float || <code> 1.0 </code> ||  倍率用于伤害该(飞行)单位当在敌方事物。
+|-
+| wreckHealthMultiplier || float || <code> 0.25 </code> ||  倍率用于生命值该飞行单位有用于其残骸，基于在其最大生命值。
+|-
+| dpsEstimate || float || <code> -1.0 </code> ||  VERY ROUGH的单位DPS；初始化在()。
+|-
+| clipSize || float || <code> -1.0 </code> ||  裁剪大小；<0自动。
+|-
+| drownTimeMultiplier || float || <code> 1.0 </code> ||  倍率用于该单位-更高数值。
+|-
+| strafePenalty || float || <code> 0.5 </code> ||  移动速度用于该单位当是移动在方向是。
+|-
+| researchCostMultiplier || float || <code> 50.0 </code> ||  倍率用于成本的研究在科技树。
+|-
+| groundLayer || float || <code> 60.0 </code> ||  用于地面单位，层当该单位是绘制。
+|-
+| flyingLayer || float || <code> -1.0 </code> ||  用于单位，层当该单位是绘制。若无值是设置，层。flyingUnitLow或层。flyingUnit在lowAltitude。
+|-
+| payloadCapacity || float || <code> 8.0 </code> ||  载荷容量的该单位在世界单位^2。
+|-
+| buildSpeed || float || <code> -1.0 </code> ||  建筑速度倍率；<0禁用。
+|-
+| aimDst || float || <code> -1.0 </code> ||  最小从该单位武器可以目标。防止单位从""单位。
+|-
+| buildBeamOffset || float || <code> 3.8 </code> ||  视觉偏移的建造从前方。
+|-
+| mineBeamOffset || float || <code> -Infinity </code> ||  视觉偏移的从前方。默认。
+|-
+| targetPriority || float || <code> 0.0 </code> ||  WIP：单位的会始终在的带有更高，无论的。
+|-
+| shadowElevation || float || <code> -1.0 </code> ||  抬升的阴影绘制在。下该(地面)单位。视觉仅。
+|-
+| shadowElevationScl || float || <code> 1.0 </code> ||  缩放用于长度的阴影绘制在。下该单位。无效若该单位没有阴影。
+|-
+| engineOffset || float || <code> 5.0 </code> ||  向后偏移从中心的单位。
+|-
+| engineSize || float || <code> 2.5 </code> ||  主要半径。
+|-
+| engineLayer || float || <code> -1.0 </code> ||  层的所有(<0用于默认)。
+|-
+| itemOffsetY || float || <code> 3.0 </code> ||  视觉向后偏移的物品在单位。
+|-
+| lightRadius || float || <code> -1.0 </code> ||  半径的光发出，<0用于默认。
+|-
+| lightOpacity || float || <code> 0.6 </code> ||  光颜色不透明度。
+|-
+| softShadowScl || float || <code> 1.0 </code> ||  缩放的阴影-其大小是计算基于关闭的区域大小。
+|-
+| fogRadius || float || <code> -1.0 </code> ||  迷雾半径在地块。<0用于半径。
+|-
+| waveTrailX || float || <code> 4.0 </code> ||  偏移的拖尾在海军单位。
+|-
+| waveTrailY || float || <code> -3.0 </code> ||  偏移的拖尾在海军单位。
+|-
+| trailScl || float || <code> 1.0 </code> ||  的所有(海军)。
+|-
+| isEnemy || boolean || <code> true </code> || 若为 true，该单位计为作为敌方在(通常false用于仅单位)。
+
+|-
+| flying || boolean || <code> false </code> ||  若为 true，单位是始终在抬升1。
+|-
+| wobble || boolean || <code> true </code> ||  飞行单位是否应周围。
+|-
+| targetAir || boolean || <code> true </code> ||  该单位是否攻击空中单位。
+|-
+| targetGround || boolean || <code> true </code> ||  该单位是否攻击地面单位。
+|-
+| faceTarget || boolean || <code> true </code> ||  若为 true，该单位会尝试朝向其目标当射击/在。
+|-
+| circleTarget || boolean || <code> false </code> ||  AI标记：若为 true，该飞行单位周围其目标类似。
+|-
+| autoDropBombs || boolean || <code> false </code> ||  AI标记：若为 true，该单位会在。下自身即使当是不下一其''目标。用于。
+|-
+| targetBuildingsMobile || boolean || <code> true </code> ||  用于仅：若为 false，该单位会不目标建筑当玩家。
+|-
+| canBoost || boolean || <code> false </code> ||  若为 true，该单位可以增幅进入空中若玩家/处理器。
+|-
+| boostWhenBuilding || boolean || <code> true </code> ||  若为 true，该单位会始终增幅当使用AI。
+|-
+| boostWhenMining || boolean || <code> true </code> ||  若为 true，该单位会始终增幅当使用AI。
+|-
+| logicControllable || boolean || <code> true </code> ||  若为 false，逻辑处理器不能控制该单位。
+|-
+| playerControllable || boolean || <code> true </code> ||  若为 false，玩家不能控制该单位。
+|-
+| controlSelectGlobal || boolean || <code> true </code> ||  若为 true，单位可以带有全局(+)。
+|-
+| allowedInPayloads || boolean || <code> true </code> ||  若为 false，该单位不能进入载荷。
+|-
+| hittable || boolean || <code> true </code> ||  若为 false，该单位不能命中由子弹或。
+|-
+| killable || boolean || <code> true </code> ||  若为 false，该单位不携带伤害与不能()/()-。
+|-
+| targetable || boolean || <code> true </code> ||  若为 false，该单位是不锁定由。
+|-
+| vulnerableWithPayloads || boolean || <code> false </code> ||  若为 true，该单位可以命中/锁定当有载荷(/是false)。
+|-
+| pickupUnits || boolean || <code> true </code> ||  若为 true，该载荷单位可以单位。
+|-
+| physics || boolean || <code> true </code> ||  若为 false，该单位不带有。
+|-
+| canDrown || boolean || <code> true </code> ||  若为 true，该地面单位会在液体。
+|-
+| useUnitCap || boolean || <code> true </code> ||  若为 false，该单位忽略单位上限与可以生成。
+|-
+| coreUnitDock || boolean || <code> false </code> ||  若为 true，该核心单位会""其他单位，当""。
+|-
+| createWreck || boolean || <code> true </code> ||  若为 false，无下落""是创建当该单位。
+|-
+| createScorch || boolean || <code> true </code> ||  若为 false，无创建当该单位。
+|-
+| lowAltitude || boolean || <code> false </code> ||  若为 true，该单位会绘制在。下特效/子弹；该是视觉变化仅。
+|-
+| rotateToBuilding || boolean || <code> true </code> ||  若为 true，该单位会在是建筑。
+|-
+| allowLegStep || boolean || <code> false </code> ||  若true与该是多足单位，该单位可以在。上方方块。
+|-
+| legPhysicsLayer || boolean || <code> true </code> ||  用于多足单位，设置该false在地面层。
+|-
+| hovering || boolean || <code> false </code> ||  若为 true，该单位会不受影响由地面在。下。
+|-
+| omniMovement || boolean || <code> true </code> ||  若为 true，该单位可以移动在任意方向无论的旋转。若为 false，该单位可以仅移动在方向是。
+|-
+| rotateMoveFirst || boolean || <code> false </code> ||  若为 true，单位其移动方向实际移动。
+|-
+| healFlash || boolean || <code> true </code> ||  若为 true，该单位当被治疗。
+|-
+| canHeal || boolean || <code> false </code> ||  该单位是否可以治疗方块。初始化在()。
+|-
+| singleTarget || boolean || <code> false </code> ||  若为 true，所有武器会攻击相同目标。
+|-
+| forceMultiTarget || boolean || <code> false </code> ||  若为 true，该单位会有多个目标，即使若仅有一个武器。
+|-
+| canAttack || boolean || <code> true </code> ||  若为 false，该单位没有武器可以攻击。
+|-
+| hidden || boolean || <code> false </code> ||  若为 true，该单位不会在或多种其他UIs。
+|-
+| internal || boolean || <code> false </code> ||  若为 true，该单位用于内部使用仅与不有贴图生成。
+|-
+| internalGenerateSprites || boolean || <code> false </code> ||  用于特定单位，贴图是，被内部。
+|-
+| bounded || boolean || <code> true </code> ||  若为 false，该单位是不从地图边缘。
+|-
+| naval || boolean || <code> false </code> ||  若为 true，该单位是作为海军-不分配该手动!初始化在()。
+|-
+| autoFindTarget || boolean || <code> true </code> ||  若为 false，RTSAI受控单位不自动攻击事物当移动。该是自动分配。
+|-
+| targetUnderBlocks || boolean || <code> true </code> ||  若为 false，'在。下'方块类似传送带不锁定。
+|-
+| alwaysShootWhenMoving || boolean || <code> false </code> ||  若为 true，该单位会始终射击当移动无论的。
+|-
+| hoverable || boolean || <code> true </code> ||  该单位是否有。
+|-
+| alwaysCreateOutline || boolean || <code> false </code> ||  若为 true，该单位始终有-描边区域生成用于其基础。通常，若无顶部=false武器。
+|-
+| generateFullIcon || boolean || <code> true </code> ||  用于原版内容仅-若为 false，满图标。
+|-
+| squareShape || boolean || <code> false </code> ||  若为 true，该单位有方形阴影。
+|-
+| drawBuildBeam || boolean || <code> true </code> ||  若为 true，该单位会绘制其建筑方块。
+|-
+| drawMineBeam || boolean || <code> true </code> ||  若为 true，该单位会绘制其方块。
+|-
+| drawCell || boolean || <code> true </code> ||  若为 false，队伍/是不绘制。
+|-
+| drawItems || boolean || <code> true </code> ||  若为 false，物品不绘制。
+|-
+| drawShields || boolean || <code> true </code> ||  若为 false，单位护盾(通常可见在波)是不绘制。
+|-
+| drawBody || boolean || <code> true </code> ||  若为 false，单位机体是不绘制。
+|-
+| drawSoftShadow || boolean || <code> true </code> ||  若为 false，阴影是不绘制。
+|-
+| drawMinimap || boolean || <code> true </code> ||  若为 false，单位是不绘制在小地图。
+|-
+| abilities || Seq<Ability> || <code> [] </code> || 列表的""，多种每个帧。
+
+|-
+| weapons || Seq<Weapon> || <code> [] </code> || 所有武器该单位会射击带有。
+
+|-
+| healColor || Color || <code> 98ffa9ff </code> || 颜色该单位当治疗(若healFlash是true)。
+
+|-
+| lightColor || Color || <code> fbd367ff </code> || 颜色的光该单位生产当是启用在地图。
+
+|-
+| shieldColor || Color || <code>  </code> || 覆盖用于单位护盾。
+
+|-
+| deathSound || Sound || <code> unset </code> || 声音播放当该单位(*不*当是命中)。
+
+|-
+| deathSoundVolume || float || <code> 1.0 </code> || 音量的声音。
+
+|-
+| wreckSound || Sound || <code> unset </code> || 声音播放当单位残骸是命中。
+
+|-
+| wreckSoundVolume || float || <code> 1.0 </code> || 音量的残骸下落声音。
+
+|-
+| loopSound || Sound || <code> none </code> || 声音播放在循环当该单位是周围。
+
+|-
+| loopSoundVolume || float || <code> 0.5 </code> || 音量的循环声音。
+
+|-
+| stepSound || Sound || <code> mechStepSmall </code> || 声音播放当该机甲/单位。
+
+|-
+| stepSoundVolume || float || <code> 0.5 </code> || 音量的声音。
+
+|-
+| stepSoundPitch || float || <code> 1.0 </code> || 基础音调的声音。
+
+|-
+| stepSoundPitchRange || float || <code> 0.1 </code> || 基础音调的声音。
+
+|-
+| tankMoveSound || Sound || <code> tankMove </code> || 声音当。
+
+|-
+| moveSound || Sound || <code> none </code> || 声音当单位；音量在速度。
+
+|-
+| moveSoundVolume || float || <code> 1.0 </code> || 音量的移动声音。
+
+|-
+| moveSoundPitchMin || float || <code> 1.0 </code> || 音调的移动声音基于在速度。
+
+|-
+| moveSoundPitchMax || float || <code> 1.0 </code> || 音调的移动声音基于在速度。
+
+|-
+| tankMoveVolume || float || <code> 0.5 </code> || 音量的移动。
+
+|-
+| fallEffect || Effect || <code> fallSmoke </code> || 特效该单位当下落。
+
+|-
+| fallEngineEffect || Effect || <code> fallSmoke </code> || 特效创建在当单位。
+
+|-
+| deathExplosionEffect || Effect || <code> dynamicExplosion </code> || 特效创建当该单位。
+
+|-
+| treadEffect || Effect || <code>  </code> || 可选特效创建当该。
+
+|-
+| parts || Seq<DrawPart> || <code> [] </code> || 额外(通常动画)视觉。
+
+|-
+| useEngineElevation || boolean || <code> true </code> || 若为 false，推进器是始终显示在其大小无论的抬升。
+
+|-
+| engineColor || Color || <code> null </code> || 覆盖用于所有。
+
+|-
+| engineColorInner || Color || <code> ffffffff </code> || 颜色用于的。
+
+|-
+| trailLength || int || <code> 0 </code> || 长度的拖尾(若飞行)或拖尾(若海军)。
+
+|-
+| trailColor || Color || <code>  </code> || 覆盖用于拖尾颜色。
+
+|-
+| flowfieldPathType || int || <code> -1 </code> || 成本类型ID用于流量场/敌方AI。
+
+|-
+| pathCostId || int || <code> 0 </code> || ID用于成本，用于在控制。该是值实际；不分配手动。设置在()。
+
+|-
+| sample || Unit || <code>  </code> || 的单位该类型。不!。
+
+|-
+| targetFlags || BlockFlag[] || <code> [core] </code> || 标记目标基于在。null目标应存在。敌方核心用于作为兜底。
+
+|-
+| allowChangeCommands || boolean || <code> true </code> || 值的false用于命令UI在单位。
+
+|-
+| commands || Seq<UnitCommand> || <code> [] </code> || 命令该单位通过RTS。空数组会分配基于在单位在()。
+
+|-
+| defaultCommand || UnitCommand || <code>  </code> || 命令分配该单位当。null命令在数组。
+
+|-
+| stances || Seq<UnitStance> || <code> [] </code> || 姿态该单位可以有。空数组姿态会分配基于在单位在()。
+
+|-
+| outlineColor || Color || <code> 565666ff </code> || 颜色用于描边生成周围贴图。
+
+|-
+| outlineRadius || int || <code> 3 </code> || 用于贴图描边。
+
+|-
+| outlines || boolean || <code> true </code> || 若为 false，无贴图生成。
+
+|-
+| itemCapacity || int || <code> -1 </code> || 数量的物品该单位可以容纳；<0基于在hitSize。
+
+|-
+| ammoCapacity || int || <code> -1 </code> || 数量的弹药该单位可以(若规则是启用)；<0基于在武器开火。
+
+|-
+| ammoType || AmmoType || <code> copper) </code> || 弹药该单位使用，若系统是启用。
+
+|-
+| mineTier || int || <code> -1 </code> || 最大的矿石该单位可以开采(<0禁用)。
+
+|-
+| mineSpeed || float || <code> 1.0 </code> || 速度在单位。
+
+|-
+| mineWalls || boolean || <code> false </code> || 该单位是否可以开采矿石从地面/。
+
+|-
+| mineFloor || boolean || <code> true </code> || 该单位是否可以开采矿石从地面/。
+
+|-
+| mineHardnessScaling || boolean || <code> true </code> || 若为 true，会携带开采。
+
+|-
+| mineSound || Sound || <code> loopMineBeam </code> || 持续声音发出当。
+
+|-
+| mineSoundVolume || float || <code> 0.6 </code> || 音量的声音。
+
+|-
+| mineItems || Seq<Item> || <code> [铜铅钛钍] </code> || 目标物品开采。用于在MinerAI。
+
+|-
+| legCount || int || <code> 4 </code> || 数量的腿该单位有(必须有类型功能!)。
+
+|-
+| legGroupSize || int || <code> 2 </code> || 大小的组在腿移动。用于示例，(6腿)通常移动腿在组的3.
+
+|-
+| legLength || float || <code> 10.0 </code> || 总长度的腿(节段)。
+
+|-
+| legSpeed || float || <code> 0.1 </code> ||  快速腿移动它们的(非线性)。
+|-
+| legForwardScl || float || <code> 1.0 </code> ||  缩放用于远在前方(相对单位速度)腿放置；若腿单位，提高该数量。
+|-
+| legBaseOffset || float || <code> 0.0 </code> ||  腿偏移从中心的单位。
+|-
+| legMoveSpace || float || <code> 1.0 </code> ||  缩放用于腿。
+|-
+| legExtension || float || <code> 0.0 </code> ||  用于腿无需""，该是腿贴图是"后方"由，区域(无需)。
+|-
+| legPairOffset || float || <code> 0.0 </code> ||  更高的该场使组的腿移动更少在-同步带有每个其他。
+|-
+| legLengthScl || float || <code> 1.0 </code> ||  缩放用于远腿**从机体(不它们的长度)；。。若设置0.5，腿会。
+|-
+| legStraightLength || float || <code> 1.0 </code> ||  若legStraightness>0，该是缩放用于远腿从机体。
+|-
+| legMaxLength || float || <code> 1.75 </code> ||  最大长度的腿作为比例的长度。
+|-
+| legMinLength || float || <code> 0.0 </code> ||  最小长度的腿作为比例的长度。
+|-
+| legSplashDamage || float || <code> 0.0 </code> ||  溅射伤害造成当腿地面。
+|-
+| legSplashRange || float || <code> 5.0 </code> ||  溅射伤害半径的腿。
+|-
+| baseLegStraightness || float || <code> 0.0 </code> ||  腿基础/是(0=，1=线)。
+|-
+| legStraightness || float || <code> 0.0 </code> ||  腿(0=，1=线)。
+|-
+| legBaseUnder || boolean || <code> false </code> || 若为 true，基础()腿区域是绘制在。下而非的在。上方。
+
+|-
+| lockLegBase || boolean || <code> false </code> || 若为 true，腿锁定基础的单位而非的被在""。
+
+|-
+| legContinuousMove || boolean || <code> false </code> || 若为 true，腿始终移动周围即使当单位是不移动(行为)。
+
+|-
+| flipBackLegs || boolean || <code> true </code> || 待办的这些。
+
+|-
+| flipLegSide || boolean || <code> false </code> || 待办的这些。
+
+|-
+| emitWalkSound || boolean || <code> true </code> || 是否在水。
+
+|-
+| emitWalkEffect || boolean || <code> true </code> || 是否特效在水(意味着emitWalkSoundfalse)。
+
+|-
+| mechLandShake || float || <code> 0.0 </code> || 震动数量用于当该机甲之后加速。
+
+|-
+| mechSideSway || float || <code> 0.54 </code> || 参数用于机甲动画。
+
+|-
+| mechFrontSway || float || <code> 0.1 </code> || 参数用于机甲动画。
+
+|-
+| mechStride || float || <code> -1.0 </code> || 参数用于机甲动画。
+
+|-
+| mechStepParticles || boolean || <code> false </code> || 是否创建当该机甲。
+
+|-
+| mechLegColor || Color || <code> 6e7080ff </code> || 颜色腿变化当移动。
+
+|-
+| treadFrames || int || <code> 18 </code> || 数量的帧的移动在。
+
+|-
+| treadPullOffset || int || <code> 0 </code> || 的顶部的贴图是"关闭"相对模式；该用于。
+
+|-
+| crushFragile || boolean || <code> false </code> || 若为 true，''方块会立即在1x1周围。
+
+|-
+| segments || int || <code> 0 </code> || 数量的节段。
+
+|-
+| segmentUnits || int || <code> 1 </code> || 待办-用于单位单位，该是数量的单位生成。
+
+|-
+| segmentUnit || UnitType || <code>  </code> || 单位生成在节段；若为 null，相同单位用于。
+
+|-
+| segmentEndUnit || UnitType || <code>  </code> || 单位生成在末端；若为 null，节段单位用于。
+
+|-
+| segmentLayerOrder || boolean || <code> true </code> || true -父级节段在更高层；false-父级节段在层比。
+
+|-
+| segmentMag || float || <code> 2.0 </code> || 的偏移节段。
+
+|-
+| segmentScl || float || <code> 4.0 </code> ||  缩放的偏移节段。
+|-
+| segmentPhase || float || <code> 5.0 </code> ||  倍率的偏移节段。
+|-
+| segmentRotSpeed || float || <code> 1.0 </code> ||  快速每个节段下一一个。
+|-
+| segmentMaxRot || float || <code> 30.0 </code> ||  最大节段。
+|-
+| segmentSpacing || float || <code> -1.0 </code> ||  间距独立单位节段(仅用于单位)。
+|-
+| segmentRotationRange || float || <code> 80.0 </code> ||  旋转节段是该范围。
+|-
+| crawlSlowdown || float || <code> 0.5 </code> ||  速度倍率该单位会有当crawlSlowdownFrac是。
+|-
+| crushDamage || float || <code> 0.0 </code> ||  伤害造成方块在。下该/每个帧。
+|-
+| crawlSlowdownFrac || float || <code> 0.55 </code> ||  比例的在。下该方块用于crawlSlowdown。
+|-
+| lifetime || float || <code> 300.0 </code> || 生命周期的该导弹。
+
+|-
+| homingDelay || float || <code> 10.0 </code> || tick必须该导弹开始追踪。
+
+|}
+=== Unloader ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| speed || float || <code> 1.0 </code> || 
+|-
+| allowCoreUnload || boolean || <code> true </code> || 
+|}
+=== UnlockableContent ===
+继承自 [[#MappableContent|MappableContent]]<br>
+基础用于内容类型。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| localizedName || String || <code>  </code> || 本地化，名称。从不null。设置内部名称若不存在在。
+
+|-
+| description || String || <code>  </code> || 本地化&详情。可能null。
+
+|-
+| details || String || <code>  </code> || 本地化&详情。可能null。
+
+|-
+| credit || String || <code>  </code> || 本地化&详情。可能null。
+
+|-
+| alwaysUnlocked || boolean || <code> false </code> || 是否内容是始终解锁在科技树。
+
+|-
+| inlineDescription || boolean || <code> true </code> || 是否在研究对话框预览。
+
+|-
+| hideDetails || boolean || <code> true </code> || 是否详情隐藏在若该解锁在模式。
+
+|-
+| hideDatabase || boolean || <code> false </code> || 是否是隐藏从核心数据库。
+
+|-
+| generateIcons || boolean || <code> true </code> || 若为 false，所有图标是禁用用于该内容；createIcons是不调用。
+
+|-
+| selectionSize || float || <code> 24 </code> || 内容在特定。
+
+|-
+| fullOverride || String || <code> "" </code> || 覆盖用于满图标。有用用于内容带有图标。覆盖任意其他满图标。
+
+|-
+| allDatabaseTabs || boolean || <code> false </code> || 若为 true，该内容会在所有。
+
+|-
+| shownPlanets || ObjectSet<Planet> || <code> new ObjectSet<>() </code> || 行星该内容是产生用于。若空，行星是基于在物品需求。
+当前，该是仅用于方块。
+
+|-
+| databaseCategory || String || <code>  </code> || 内容。定义的内容在核心。
+用于示例，"方块"，"液体"，"单位"。
+使用getContentType()。名称()作为兜底当值是null或空。
+
+|-
+| databaseTag || String || <code>  </code> || 分类。次级的内容在核心。
+用于示例，"炮塔"，"墙体"在。下databaseCategory"方块"，"核心-单位"，"地面-单位"在。下databaseCategory"单位"。
+使用"默认"作为兜底当值是null或空。当使用"默认"，无额外显示。
+
+|}
+=== VariableReactor ===
+继承自 [[#PowerGenerator|PowerGenerator]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| maxHeat || float || <code> 100.0 </code> || 
+|-
+| unstableSpeed || float || <code> 0.0055555557 </code> || 1，每帧。
+
+|-
+| warmupSpeed || float || <code> 0.1 </code> || 
+|-
+| effect || Effect || <code> fluxVapor </code> || 
+|-
+| effectChance || float || <code> 0.05 </code> || 
+|-
+| effectColor || Color || <code> ffdf9dff </code> || 
+|-
+| flashThreshold || float || <code> 0.01 </code> || 
+|-
+| flashAlpha || float || <code> 0.4 </code> || 
+|-
+| flashSpeed || float || <code> 7.0 </code> || 
+|-
+| flashColor1 || Color || <code> ff0000ff </code> || 
+|-
+| flashColor2 || Color || <code> 89e8b6ff </code> || 
+|}
+=== Wall ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| lightningChance || float || <code> -1.0 </code> || 光照概率。-1禁用。
+
+|-
+| lightningDamage || float || <code> 20.0 </code> || 
+|-
+| lightningLength || int || <code> 17 </code> || 
+|-
+| lightningColor || Color || <code> f3e979ff </code> || 
+|-
+| lightningSound || Sound || <code> shootArc </code> || 
+|-
+| chanceDeflect || float || <code> -1.0 </code> || 子弹偏转概率。-1禁用。
+
+|-
+| flashHit || boolean || <code> false </code> || 
+|-
+| flashColor || Color || <code> ffffffff </code> || 
+|-
+| deflectSound || Sound || <code> none </code> || 
+|}
+=== WallCrafter ===
+继承自 [[#Block|Block]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| drillTime || float || <code> 150.0 </code> || 在 100% 效率下产出一个物品所需时间。
+
+|-
+| liquidBoostIntensity || float || <code> 1.6 </code> || 液体增幅时，钻头进度的加速倍率。
+
+|-
+| updateEffect || Effect || <code> mineWallSmall </code> || 钻进时随机播放的特效。
+
+|-
+| updateEffectChance || float || <code> 0.02 </code> || 
+|-
+| rotateSpeed || float || <code> 2.0 </code> || 
+|-
+| attribute || Attribute || <code> sand </code> || 用于墙体产出的属性。
+
+|-
+| output || Item || <code> sand </code> || 
+|-
+| boostItemUseTime || float || <code> 120.0 </code> || 
+|-
+| itemBoostIntensity || float || <code> 1.6 </code> || 物品增幅时钻头进度的加速倍率。注意：不支持同时使用物品与液体增幅。
+
+|-
+| hasLiquidBooster || boolean || <code> false </code> || 
+|}
+=== WaveEffect ===
+继承自 [[#Effect|Effect]]<br>
+用于渲染基础冲击波的特效。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| colorFrom || Color || <code> ffffffff </code> || 
+|-
+| colorTo || Color || <code> ffffffff </code> || 
+|-
+| lightColor || Color || <code>  </code> || 
+|-
+| sizeFrom || float || <code> 0.0 </code> || 
+|-
+| sizeTo || float || <code> 100.0 </code> || 
+|-
+| lightScl || float || <code> 3.0 </code> || 
+|-
+| lightOpacity || float || <code> 0.8 </code> || 
+|-
+| sides || int || <code> -1 </code> || 
+|-
+| rotation || float || <code> 0.0 </code> || 
+|-
+| strokeFrom || float || <code> 2.0 </code> || 
+|-
+| strokeTo || float || <code> 0.0 </code> || 
+|-
+| interp || Interp || <code> Interp.linear </code> || 
+|-
+| lightInterp || Interp || <code> Interp.reverse </code> || 
+|-
+| offsetX || float || <code> 0.0 </code> || 
+|-
+| offsetY || float || <code> 0.0 </code> || 
+|}
+=== Weapon ===
+继承自 [[#Object|Object]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| name || String || <code>  </code> || 显示武器区域。
+
+|-
+| bullet || BulletType || <code> placeholder </code> || 子弹命中。
+
+|-
+| ejectEffect || Effect || <code> none </code> || 特效。
+
+|-
+| display || boolean || <code> true </code> || 武器是否应在属性的单位带有该武器。
+
+|-
+| useAmmo || boolean || <code> true </code> || 是否弹药当弹药是启用在规则。
+
+|-
+| mirror || boolean || <code> true </code> || 是否创建的该武器当。默认：true。
+
+|-
+| flipSprite || boolean || <code> false </code> || 是否贴图当。内部使用仅-不设置!。
+
+|-
+| alternate || boolean || <code> true </code> || 是否射击武器在不同一个之后，比所有在；仅当=true。
+
+|-
+| rotate || boolean || <code> false </code> || 是否旋转目标的单位。
+
+|-
+| showStatSprite || boolean || <code> true </code> || 是否贴图的武器在。
+
+|-
+| baseRotation || float || <code> 0.0 </code> || 旋转在该武器开始在。
+
+|-
+| top || boolean || <code> true </code> || 是否绘制描边在顶部。
+
+|-
+| continuous || boolean || <code> false </code> || 是否子弹在放置当；会装填。
+
+|-
+| alwaysContinuous || boolean || <code> false </code> || 该武器是否使用持续开火无需；意味着持续=true。
+
+|-
+| aimChangeSpeed || float || <code> Infinity </code> || 速度在炮塔可以变化其子弹""。该是仅用于激光子弹。
+
+|-
+| controllable || boolean || <code> true </code> || 该武器是否可以手动由玩家。
+
+|-
+| aiControllable || boolean || <code> true </code> || 该武器是否可以自动由单位。
+
+|-
+| alwaysShooting || boolean || <code> false </code> || 该武器是否是始终射击，无论的目标矿石。
+
+|-
+| autoTarget || boolean || <code> false </code> || 是否自动目标单位在()；仅当=false。
+
+|-
+| predictTarget || boolean || <code> true </code> || 是否目标。
+
+|-
+| useAttackRange || boolean || <code> true </code> || 若为 true，该武器用于攻击范围计算。
+
+|-
+| targetInterval || float || <code> 40.0 </code> || tick在-目标。
+
+|-
+| targetSwitchInterval || float || <code> 70.0 </code> || tick在-目标。
+
+|-
+| rotateSpeed || float || <code> 20.0 </code> || 旋转速度的武器当旋转是启用，在度/。
+
+|-
+| reload || float || <code> 1.0 </code> || 武器装填在帧。
+
+|-
+| inaccuracy || float || <code> 0.0 </code> || 的度的每个命中。
+
+|-
+| shake || float || <code> 0.0 </code> || 强度与持续时间的每个震动。
+
+|-
+| recoil || float || <code> 1.5 </code> || 视觉武器击退。
+
+|-
+| recoils || int || <code> -1 </code> || 数量的用于。
+
+|-
+| recoilTime || float || <code> -1.0 </code> || 时间用于武器起始位置在tick。使用装填时间由默认。
+
+|-
+| recoilPow || float || <code> 1.8 </code> || 电力应用视觉。
+
+|-
+| cooldownTime || float || <code> 20.0 </code> || tick冷却热量区域。
+
+|-
+| shootX || float || <code> 0.0 </code> || 投射物/特效偏移从中心的武器。
+
+|-
+| shootY || float || <code> 3.0 </code> || 投射物/特效偏移从中心的武器。
+
+|-
+| x || float || <code> 5.0 </code> || 偏移的武器位置在单位。
+
+|-
+| y || float || <code> 0.0 </code> || 偏移的武器位置在单位。
+
+|-
+| xRand || float || <code> 0.0 </code> || 随机散布在X/Y。
+
+|-
+| yRand || float || <code> 0.0 </code> || 随机散布在X/Y。
+
+|-
+| shoot || ShootPattern || <code> new ShootPattern() </code> || 模式用于子弹。
+
+|-
+| shadow || float || <code> -1.0 </code> || 半径的阴影绘制在。下武器；<0禁用。
+
+|-
+| velocityRnd || float || <code> 0.0 </code> || 比例的速度是随机。
+
+|-
+| extraVelocity || float || <code> 0.0 </code> || 额外速度是添加作为比例。
+
+|-
+| shootCone || float || <code> 5.0 </code> || 半径的在射击会开始。
+
+|-
+| rotationLimit || float || <code> 361.0 </code> || 锥形在武器可以旋转相对其。
+
+|-
+| minWarmup || float || <code> 0.0 </code> || 最小武器预热(该是不线性，不使用1!)。
+
+|-
+| shootWarmupSpeed || float || <code> 0.1 </code> || 插值速度用于射击预热，仅用于。
+
+|-
+| smoothReloadSpeed || float || <code> 0.15 </code> || 插值速度用于射击预热，仅用于。
+
+|-
+| linearWarmup || boolean || <code> false </code> || 若为 true，射击预热是线性而非的。
+
+|-
+| soundPitchMin || float || <code> 0.8 </code> || 随机声音音调范围。
+
+|-
+| soundPitchMax || float || <code> 1.0 </code> || 随机声音音调范围。
+
+|-
+| ignoreRotation || boolean || <code> false </code> || 是否旋转是当射击。
+
+|-
+| noAttack || boolean || <code> false </code> || 若为 true，该武器不能用于攻击目标。
+
+|-
+| minShootVelocity || float || <code> -1.0 </code> || 最小速度用于该武器射击。
+
+|-
+| parentizeEffects || boolean || <code> false </code> || 应射击特效跟随单位(特效followParent设置true用于该生效)。
+
+|-
+| otherSide || int || <code> -1 </code> || 内部值用于-不变化!。
+
+|-
+| layerOffset || float || <code> 0.0 </code> || 绘制Z偏移相对默认值。
+
+|-
+| activeSound || Sound || <code> none </code> || 声音当射击。
+
+|-
+| activeSoundVolume || float || <code> 1.0 </code> || 音量的声音。
+
+|-
+| shootSound || Sound || <code> shoot </code> || 声音用于射击。
+
+|-
+| shootSoundVolume || float || <code> 1.0 </code> || 音量的射击声音。
+
+|-
+| initialShootSound || Sound || <code> none </code> || 声音用于当该武器；用于持续武器仅。
+
+|-
+| chargeSound || Sound || <code> none </code> || 声音用于武器有。
+
+|-
+| heatColor || Color || <code> ab3400ff </code> || 热量区域。
+
+|-
+| shootStatusDuration || float || <code> 300.0 </code> || 特效持续时间当命中。
+
+|-
+| shootOnDeath || boolean || <code> false </code> || 该武器是否应开火当其。
+
+|-
+| shootOnDeathEffect || Effect || <code> null </code> || 若不null与shootOnDeath==true，覆盖射击特效仅当其。
+
+|-
+| parts || Seq<DrawPart> || <code> [] </code> || 额外动画。
+
+|}
+=== Weather ===
+继承自 [[#UnlockableContent|UnlockableContent]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| duration || float || <code> 36000.0 </code> || 默认持续时间的该在tick。
+
+|-
+| opacityMultiplier || float || <code> 1.0 </code> || 
+|-
+| attrs || Attributes || <code> new Attributes() </code> || 
+|-
+| sound || Sound || <code> none </code> || 
+|-
+| soundVol || float || <code> 0.1 </code> || 
+|-
+| soundVolMin || float || <code> 0.0 </code> || 
+|-
+| soundVolOscMag || float || <code> 0.0 </code> || 
+|-
+| soundVolOscScl || float || <code> 20.0 </code> || 
+|-
+| hidden || boolean || <code> false </code> || 
+|-
+| statusDuration || float || <code> 120.0 </code> || 
+|-
+| statusAir || boolean || <code> true </code> || 
+|-
+| statusGround || boolean || <code> true </code> || 
+|}
+=== WobbleProp ===
+继承自 [[#Prop|Prop]]<br>
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| wscl || float || <code> 25.0 </code> || 
+|-
+| wmag || float || <code> 0.4 </code> || 
+|-
+| wtscl || float || <code> 1.0 </code> || 
+|-
+| wmag2 || float || <code> 1.0 </code> || 
+|}
+=== WrapEffect ===
+继承自 [[#Effect|Effect]]<br>
+包裹特效带有参数。
+{| class="wikitable sortable"
+|+ 字段
+|-
+! 名称 !! 类型 !! 默认值 !! 注释
+|-
+| effect || Effect || <code> none </code> || 
+|-
+| color || Color || <code> ffffffff </code> || 
+|-
+| rotation || float || <code> 0.0 </code> || 
+|}
