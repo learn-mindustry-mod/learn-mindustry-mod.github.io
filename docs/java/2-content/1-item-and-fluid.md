@@ -166,6 +166,7 @@ Item("tutorial-item").apply{
 
 这并不重要，但是如果你很在意这一份开销的话，也可以把java声明拆开写。
 
+另外，Java和Kotlin中的小数默认都是`double`类型而非游戏常用的`float`类型，你需要在小数末尾手动加上`f`才能让这一小数字面量类型为`float`。
 :::
 
 ## 创建一个Liquid
