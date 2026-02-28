@@ -4,15 +4,80 @@
 
 ## UnitType 的核心字段
 
-单位 JSON 文件位于 `content/units`。`type` 决定单位的实体构造器，也就是“移动与碰撞的底层行为”。可用值包括 `flying`、`mech`、`legs`、`naval`、`payload`、`missile`、`tank`、`hover`、`tether`、`crawl`。例如“星辉”“天垠”属于 `flying`，“战锤”“爬虫”属于 `mech`，“天蝎”“死星”属于 `legs`，“梭鱼”“蛟龙”属于 `naval`，“巨像”“雷霆”“要塞”属于 `payload`，“围护”“征服”属于 `tank`。`type` 只是构造器，真正是否飞行还要看 `flying`、`lowAltitude`、`hovering` 等字段的组合，因此建议先对照原版单位理解差异。
+单位的 JSON 文件位于 `content/units`。
 
-基础运动字段包括 `speed`、`accel`、`drag` 与 `rotateSpeed`。`speed` 决定最大移动速度，`accel` 与 `drag` 决定起步与刹车的手感，`rotateSpeed` 决定转向速度。`hitSize` 影响单位的碰撞体积与受击范围，`health` 与 `armor` 决定生存能力。`range` 通常用于 AI 选择射程范围，如果写成负数会自动根据武器计算；这意味着你只要武器配置合理，`range` 可以不写。
+- **实体构造器** `type`
 
-采矿与建造能力由 `mineTier`、`mineSpeed` 与 `buildSpeed` 控制。`mineTier` 对应可开采的硬度等级，`mineSpeed` 决定采矿速度，`buildSpeed` 决定建造与修复速度。`itemCapacity` 决定携带物品的容量，`payloadCapacity` 决定载荷容量，后者常见于“巨像”这类载荷单位。`targetAir` 与 `targetGround` 控制自动索敌类型，`faceTarget` 决定单位是否转向目标，`omniMovement` 则影响是否允许“全向移动”。
+实体类型决定了单位使用UnitType的哪些数据，有什么渲染表现，有什么不同的行为，下表是所有可用的 `type` 及对应的原版单位例子:
+| type | 原版单位(例) |
+| ------- | ------------------ |
+| flying | 独影，星辉 |
+| mech | 尖刀，新星，爬虫 |
+| legs | 天蝎，死星 |
+| naval | 梭鱼，海神 |
+| payload | 巨像，要塞 |
+| missile | 悲怆导弹，创伤导弹 |
+| tank | 围护，征服 |
+| hover | 挣脱 |
+| tether | 货运无人机 |
+| crawl | renale, latum |
 
-视觉与表现方面，`engineOffset` 与 `engineSize` 决定引擎喷口位置和大小，`trailLength` 与 `trailColor` 决定尾迹长度与颜色。声音相关字段包括 `deathSound`、`loopSound`、`moveSound`、`stepSound` 等，用于塑造单位的体感。`drawCell`、`drawShields`、`drawItems` 等字段控制 UI 与渲染细节。
+> Note
+> **需要注意的是**：`type` 仅决定实体的类型，实际的行为依然可受数据的影响
 
-还有一些“规则型”的字段容易被忽略。`logicControllable` 与 `playerControllable` 决定单位能否被处理器或玩家直接控制，`useUnitCap` 决定是否受单位上限限制，`hittable` 与 `targetable` 决定能否被命中或锁定，`allowedInPayloads` 与 `pickupUnits` 则影响载荷交互。这些字段不会直接改变伤害，但会极大改变单位在战役中的定位，比如“不可选中但可伤害”的单位往往用于剧情或特殊机制。
+比如 `type: flying`，并不代表单位一定飞行，而是取决于单位的数据 `flying`。
+
+- **基础运动**
+  - `speed` - 最大移动速度
+  - `accel` - 起步的加速度
+  - `drag` - 移动阻力
+  - `rotateSpeed` - 转向速度 (度/帧)
+  - `hitSize` - 圆形碰撞箱的半径 (格)，用于处理碰撞与索敌
+  - `health` - 单位血量
+  - `armor` - 单位护甲
+  - `range` - 通常用作单位AI的索敌半径与靠近的半径，不填(或<0)会默认取武器最小范围
+
+- **采矿与建造能力**
+  - `mineTier` - 可采矿的硬度等级
+  - `mineSpeed` - 决定采矿速度
+  - `buildSpeed` - 决定建造速度
+  - `itemCapacity` - 携带物品的容量
+  - `payloadCapacity` - 载荷容量，仅用于 `payload` 实体的单位
+  - `targetAir` - 是否索敌空军
+  - `targetGround` - 是否索敌地面敌人
+  - `faceTarget` - 是否朝向敌人
+  - `ominiMovement` - 是否允许"全向移动"，否则会转弯移动
+
+- **视觉与表现方面**
+
+  引擎与尾迹:
+  - `engineOffset` - 引擎喷口的位置
+  - `engineSize` - 引擎喷口的大小
+  - `trailLength` - 尾迹长度
+  - `trailColor` - 尾迹颜色
+
+  音效相关:
+  - `deathSound` - 死亡音效
+  - `loopSound` - 在场循环音效
+  - `moveSound` - 移动音效
+  - `stepSound` - 步行音效
+
+  控制 UI 与渲染细节:
+  - `drawCell` - 是否显示 cell (单位的状态灯)
+  - `drawShields` - 是否显示护盾
+  - `drawItems` - 是否显示携带物品
+  - ...
+
+- **规则**
+  - `logicControllable` - 是否能被逻辑控制
+  - `playerControllable` - 是否能被玩家控制
+  - `useUnitCap` - 是否占用单位数量上限
+  - `hittable` - 能否被命中
+  - `targetable` - 能否被锁定
+  - `allowedInPayloads` - 能否作为载荷
+  - `pickupUnits` - 能否被单位拾取
+
+  这些字段不会直接改变伤害，但会极大改变单位在战役中的定位，比如“不可选中但可伤害”的单位往往用于剧情或特殊机制。
 
 ### 一个最小单位示例
 
