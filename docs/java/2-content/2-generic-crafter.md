@@ -66,6 +66,11 @@ GenericCrafter("tutorial-crafter").apply{
 
 从这里开始，你将会需要在代码当中 **引用（Refer to）** 原版的内容。原版的内容的引用大部分都存放在`mindustry.content`这个包下对应的类中，例如`mindustry.content.Items`存放了所有物品的引用，`mindustry.content.Blocks`存放了所有的方块的引用。在这些存放内容的类中，变量名起到标识的作用，通常与内容的内部名称或英文名是保持一致的，例如铜（Copper）是`mindustry.content.Items.copper`，双管（Duo）是`mindustry.content.Blocks.duo`。引用本模组的内容也是类似的，如果你的内容声明在`loadContents`方法中，你需要用一个变量把它的引用存起来，然后直接引用变量即可。如果你仿照原版的组织架构，那么引用时也和原版类似。关于引用其他模组的内容，详见本章最后一节。
 
+::: warning 辨析
+- `mindustry.content.Items`：原版中存放所有物品引用的类；
+- `mindustry.type.Item`：用来表示一个物品的类。
+:::
+
 值得注意的是，方块的建造时间并不是手动设置的，而是由建造需求决定的，计算公式为需求物品的`cost`总和再乘以`buildCostMultiplier`。如果你觉得某个方块的建造时间过长，但又不想更改物品的`cost`时，可以设置`buildCostMultiplier`为一个比1小的数来降低建造时间。 **直接设置`buildCost`不会起效，因为计算`buildCost`在创建对象之后很久之后才会发生**。
 
 方块也是物品、流体、电力的容器，这三种物质分别存储在建筑的物品槽（ItemModule）、流体槽（LiquidModule）和电力槽（PowerModule）中。你需要分别使用`hasItems` `hasLiquids` `hasPower`去标记建筑需要这三种槽。你还可以设置物品和流体的容量，分别为`itemCapacity` `liquidCapacity`。
