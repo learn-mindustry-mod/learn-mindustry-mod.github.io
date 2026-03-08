@@ -96,7 +96,8 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 - 安装Android Studio，但不要安装`Android Virtual Device`（对Mindustry模组开发没有用处）；
 - 静待其安装完毕，找到Android Studio的设置（与IDEA类似），`Languages & Frameworks - Android SDK`，记下`Android SDK Location`；
 - 访问`Android SDK Location`/build-tools，记下里面最新的版本号；
-- 然后，你需要设置环境变量（请自行百度）。** 请注意！ **Mindustry所需的安卓环境变量和常规有所不同，你需要添加一个新的环境变量`ANDROID_HOME`（而不是ANDROID_SDK_HOME），并把他设置为设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`。
+- 然后，你需要设置环境变量（请自行百度），设置为系统环境变量与用户环境变量均可。** 请注意！ **Mindustry所需的安卓环境变量和常规有所不同，你需要添加一个新的环境变量`ANDROID_HOME`（而不是ANDROID_SDK_HOME），并把他设置为设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`；
+- 最后，重启你的IDEA（如使用命令行需重启sh），使刚才所做的更改生效。
 
 ## Gradle和Kotlin
 
