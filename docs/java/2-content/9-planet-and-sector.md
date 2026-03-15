@@ -122,6 +122,8 @@ planet.tutorial-mod-tutorial-planet.details = Here are they.
 - `MultiMesh`：组合多个PlanetMesh，以实现多层效果。各个PlanetMesh为简单叠加，渲染时仅显示最终多面体的最外层轮廓；
 - 小行星：由若干个`NoiseMesh`在随机方向上通过`MultiMesh`组合而成，具体逻辑位于`Planets::makeAsteroid`中。
 
+行星mesh中alpha通道不再表示透明度，而是主动发光的亮度。
+
 ::: details JSON下的小行星
 如果你不是JSON用户，你只需要强行使用`Planet#makeAsteroid()`方法就可以了，它会给你自动用噪声组装一个`mesh`，但如果使用JSON就没有这么多好事了，不过你仍然可以自己组装合适的`MultiMesh`，下摘取`gier`的`mesh`以供参考：
 
