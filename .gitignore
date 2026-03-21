@@ -10,4 +10,5 @@
 yarn.lock
 docs/general/src
 
-.continue/rules/.md
+.continue/
+.claude/
