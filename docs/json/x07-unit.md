@@ -115,13 +115,42 @@ JSON 只能复用原版已有的 AI，如需自定义行为控制，请使用 Ja
 
 ## 武器（Weapon）
 
-单位武器与炮塔非常相似，但更强调“挂载位置”和“开火方式”。`x/y` 决定武器挂点位置，`shootX/shootY` 决定枪口位置，`mirror` 决定是否左右镜像复制，`rotate` 决定武器是否随单位旋转，`top` 决定绘制层级。射击节奏由 `reload`、`shootCone`、`inaccuracy` 决定，若需要一次多发或延迟开火，可以写 `shoot` 子对象（如 `shots`、`shotDelay`、`firstShotDelay`、`spread`）。
+> “**_武器即工具_**”
 
-`bullet` 字段决定子弹类型与属性，写法与炮塔完全一致。武器贴图默认使用 `weapon-name.png`，热量贴图为 `-heat`，数据库预览图为 `-preview`。如果你的单位有多门武器，记得给不同武器取不同 `name`，以免贴图冲突。
+单位的武器与炮塔非常相似，是发射子弹的工具，不同的是：武器**挂载**在单位上，并且拥有其独特的**开火方式**。
 
-单位武器还有一组更偏“行为”的字段。`alternate` 控制左右武器是否交替射击，`continuous` 与 `alwaysContinuous` 决定是否持续发射（常用于持续激光或喷流）。`shootStatus` 与 `shootStatusDuration` 可以让单位在开火时给自己施加状态，例如短暂的护盾或加速；`ejectEffect` 与 `parentizeEffects` 则分别控制弹壳特效与特效跟随，让枪口表现更自然。对于高速或持续火力单位，这些字段常常比单纯堆 `damage` 更能体现风格。
+- **挂载位置**
+  - `x/y` - 武器挂载点（相对单位中心）
+  - `shootX/shootY` - 枪口位置（相对于挂载点）
+  - `mirror` - 是否左右镜像复制
+  - `rotate` - 是否随单位旋转
+  - `top` - 决定绘制层级
 
-武器也支持 `parts`（`DrawPart`）来做局部动画，和炮塔的用法几乎一致。你可以用 `reload`、`warmup`、`recoil` 等进度驱动枪口位移、光效或外壳开合，配合 `shootX/shootY` 微调出射位置。对于多武器单位，每个武器都能独立配置部件动画，这能显著提升“机体层次感”。
+- **开火方式**
+  - `reload` - 冷却时间
+  - `shootCone` - 起射的半角
+  - `inaccuracy` - 不稳定张角
+  - `continuous` - 是否持续发射，常用于持续激光或喷流
+  - `alwaysContinuous` - 无视冷却的 `continuous`
+  - `bullet` - 发射的子弹类型，与炮塔的子弹一致且共通
+  - `shoot` - 控制开火方式，是**发射子弹**的核心
+
+- **多武器的搭配开火**
+
+  左右镜像的武器往往不会死板地同时开火，而是互相配合，**轮流开火**。
+  - `otherSize` - 配合其他武器的**索引**（使用`mirror`的武器会设置到镜像武器上）
+  - `alternate` - 是否与其他的武器配合
+
+- **开火的影响**
+  - `shootStatus` - 开火时给单位施加状态，例如短暂的护盾或加速
+  - `shootStatusDuration` - 给单位施加状态的时长
+
+- **渲染与表现**
+  - `name` - 仅用作加载贴图
+  - `ejectEffect` - 弹壳特效
+  - `parentizeEffects` - 跟随的特效，可以让枪口表现更自然，对于高速或持续火力单位，特效的表现常常比单纯堆 `damage` 更能体现风格。
+  - `parts` - 部件动画，与炮塔的用法几乎一致。
+    你可以用 `reload`、`warmup`、`recoil` 等进度驱动枪口位移、光效或外壳开合，配合 `shootX/shootY` 微调出射位置。对于多武器单位，每个武器都能独立配置部件动画，这能显著提升“机体层次感”。
 
 ## 能力（Ability）
 
