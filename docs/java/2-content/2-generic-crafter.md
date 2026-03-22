@@ -49,7 +49,7 @@ new GenericCrafter("tutorial-crafter"){{
   health = 100f;
   size = 2;
   //使用此重载，Anuke会贴心地帮你设置成BuildVisibility.shown
-  requirements(Category.crafting, ItemStack.with(Items.copper,50,Items.lead,50));
+  requirements(Category.crafting, ItemStack.with(Items.copper,50,ModItems.item1,50));
 }};
 ```
 
@@ -58,13 +58,20 @@ GenericCrafter("tutorial-crafter").apply{
   health = 100f
   size = 2
     //使用此重载，Anuke会贴心地帮你设置成BuildVisibility.shown
-  requirements(Category.crafting, ItemStack.with(Items.copper,50,Items.lead,50))
+  requirements(Category.crafting, ItemStack.with(Items.copper,50,ModItems.item1,50))
 }
 ```
 
 :::
 
-从这里开始，你将会需要在代码当中 **引用（Refer to）** 原版的内容。原版的内容的引用大部分都存放在`mindustry.content`这个包下对应的类中，例如`mindustry.content.Items`存放了所有物品的引用，`mindustry.content.Blocks`存放了所有的方块的引用。在这些存放内容的类中，变量名起到标识的作用，通常与内容的内部名称或英文名是保持一致的，例如铜（Copper）是`mindustry.content.Items.copper`，双管（Duo）是`mindustry.content.Blocks.duo`。引用本模组的内容也是类似的，如果你的内容声明在`loadContents`方法中，你需要用一个变量把它的引用存起来，然后直接引用变量即可。如果你仿照原版的组织架构，那么引用时也和原版类似。关于引用其他模组的内容，详见本章最后一节。
+从这里开始，你将会需要在代码当中 **引用（Refer to）** 原版的内容。**原版**的内容的引用大部分都存放在`mindustry.content`这个包下对应的类中，例如`mindustry.content.Items`存放了所有物品的引用，`mindustry.content.Blocks`存放了所有的方块的引用。在这些存放内容的类中，变量名起到标识的作用，通常与内容的内部名称或英文名是保持一致的，例如铜（Copper）是`mindustry.content.Items.copper`，双管（Duo）是`mindustry.content.Blocks.duo`。如上文中对原版的铅的引用`Items.lead`（假如你已经import了`mindustry.type.*`）
+
+引用本模组的内容也是类似的，如果你的内容声明在`loadContents`方法中，你需要用一个变量把它的引用存起来，然后直接在需要引用内容的地方填入变量即可。如果你仿照原版的组织架构，那么引用时也和原版类似。（如上文的`ModItems.item1`）关于引用其他模组的内容，详见本章最后一节。
+
+::: warning 辨析
+- `mindustry.content.Items`：原版中存放所有物品引用的类；
+- `mindustry.type.Item`：用来表示一个物品的类。
+:::
 
 值得注意的是，方块的建造时间并不是手动设置的，而是由建造需求决定的，计算公式为需求物品的`cost`总和再乘以`buildCostMultiplier`。如果你觉得某个方块的建造时间过长，但又不想更改物品的`cost`时，可以设置`buildCostMultiplier`为一个比1小的数来降低建造时间。 **直接设置`buildCost`不会起效，因为计算`buildCost`在创建对象之后很久之后才会发生**。
 

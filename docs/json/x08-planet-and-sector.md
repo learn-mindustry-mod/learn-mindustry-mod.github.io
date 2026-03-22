@@ -27,7 +27,7 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json content/planets/tutorial-planet.json
 {
-	"name": "示例行星",
+	"localizedName": "示例行星",
 	"parent": "sun",
 	"radius": 1,
 	"orbitTime": 60,

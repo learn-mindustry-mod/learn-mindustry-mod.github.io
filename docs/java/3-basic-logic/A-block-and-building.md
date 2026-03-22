@@ -203,7 +203,7 @@ class LampBlock(name: String) : Block(name) {
 Core.atlas.find("<modName>-<fileName>");
 ```
 
-这样获取的是一个类型为`TextureRegion`子类的、指向这张贴图的引用。
+在游戏加载贴图时，会自动把`sprites`文件夹下的贴图加上modName前缀。**因此务必加上modName前缀，或者使用`Vars.content.transformName()才能获得贴图`**这样获取的是一个类型为`TextureRegion`子类的、指向这张贴图的引用。
 
 ::: warning 注解
 `@Load`注解在打包依赖包时未包含注解处理器，因此无法使用`@Load`注解

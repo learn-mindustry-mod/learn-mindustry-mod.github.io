@@ -208,7 +208,7 @@ OpenGL中定义的图元类型有：
 ``` java
 void example(Mesh mesh){
   shader.bind();
-  Core.gl20.lineWidth(10f);
+  Core.gl20.glLineWidth(10f);
   mesh.render(shader, Gl.lines);
 }
 ```
