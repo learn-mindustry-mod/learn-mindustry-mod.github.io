@@ -63,7 +63,6 @@
   - `drawCell` - 是否显示 cell (单位的状态灯)
   - `drawShields` - 是否显示护盾
   - `drawItems` - 是否显示携带物品
-  - ...
 
 - **规则**
   - `logicControllable` - 是否能被逻辑控制
@@ -74,7 +73,14 @@
   - `allowedInPayloads` - 能否作为载荷
   - `pickupUnits` - 能否被单位拾取
 
-  这些字段不会直接改变伤害，但会极大改变单位在战役中的定位，比如“不可选中但可伤害”的单位往往用于剧情或特殊机制。
+- **行为控制**
+  - `aiController` - 单位的默认 AI 控制器，例如 `FlyingAI` 或 `GroundAI`
+  - `defaultController` - 根据单位实体的状态决定最终控制器    
+      默认值是根据是否可被玩家控制、是否属于 AI 队伍条件，选择 `aiController`，或者 `CommandAI`(RTS AI)
+
+::: info
+JSON 只能复用原版已有的 AI，如需自定义行为控制，请使用 JavaScript / Java 编写。
+:::
 
 ### 一个最小单位示例
 
@@ -180,12 +186,6 @@ Ability 的参数通常围绕“范围、频率、强度”展开。以 `RepairF
 这个片段说明了两件事：一是电力弹药适合做“高持续但后勤轻量”的单位；二是预热与自我状态可以让单位的输出节奏更有层次，而不是单纯堆数值。
 
 需要注意的是，电力弹药本质上仍依赖电网或能源补给，战役中断电时这类单位会明显“掉火力”，设计时要预留补能途径。
-
-## AI 与行为控制
-
-`aiController` 可以指定单位的默认 AI 控制器，它通常是一个类名，例如 `FlyingAI` 或 `GroundAI`。`defaultController` 则用于覆盖更底层的控制器选择。实际运行时，单位会根据是否可被玩家控制、是否属于 AI 队伍等条件决定最终控制器，因此你在 JSON 里指定的 AI 只是“默认策略”。如果你需要完全自定义的行为，就必须转向 Java。
-
-如果你把 `playerControllable` 设为 `false`，单位将无法被玩家直接控制；`logicControllable` 设为 `false` 则会阻止处理器接管。对剧情单位或 Boss 来说，这能避免玩家“抢走”单位，但也意味着 AI 表现必须足够可靠。
 
 ## 单位工厂、重构厂与组装厂
 
