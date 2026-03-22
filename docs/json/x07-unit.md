@@ -154,7 +154,16 @@ JSON 只能复用原版已有的 AI，如需自定义行为控制，请使用 Ja
 
 ## 能力（Ability）
 
-Ability 是单位的“额外技能”，更新频率与单位一致。常见类型包括 `ForceFieldAbility`（护盾）、`RepairFieldAbility`（修复场）、`MoveEffectAbility`（移动特效）、`StatusFieldAbility`（范围状态）、`UnitSpawnAbility`（生成单位）、`ShieldRegenFieldAbility`（范围护盾回复）等。它们通常有自己的半径、回复速率、间隔时间等字段。Ability 不一定改变武器数值，但会改变单位的战场定位，因此比你想象中更“决定风格”。
+Ability 是单位的“额外技能”，常见类型包括：
+
+* `ForceFieldAbility`（护盾）
+* `RepairFieldAbility`（修复场）
+* `MoveEffectAbility`（移动特效）
+* `StatusFieldAbility`（范围状态）
+* `UnitSpawnAbility`（生成单位）
+* `ShieldRegenFieldAbility`（范围护盾回复）
+
+它们通常有自己的半径、回复速率、间隔时间等字段。Ability 不一定改变武器数值，但会改变单位的战场定位，因此比你想象中更“决定风格”。
 
 ```json
 "abilities": [
