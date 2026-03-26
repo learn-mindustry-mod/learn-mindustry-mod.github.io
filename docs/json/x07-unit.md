@@ -4,15 +4,83 @@
 
 ## UnitType 的核心字段
 
-单位 JSON 文件位于 `content/units`。`type` 决定单位的实体构造器，也就是“移动与碰撞的底层行为”。可用值包括 `flying`、`mech`、`legs`、`naval`、`payload`、`missile`、`tank`、`hover`、`tether`、`crawl`。例如“星辉”“天垠”属于 `flying`，“战锤”“爬虫”属于 `mech`，“天蝎”“死星”属于 `legs`，“梭鱼”“蛟龙”属于 `naval`，“巨像”“雷霆”“要塞”属于 `payload`，“围护”“征服”属于 `tank`。`type` 只是构造器，真正是否飞行还要看 `flying`、`lowAltitude`、`hovering` 等字段的组合，因此建议先对照原版单位理解差异。
+单位的 JSON 文件位于 `content/units`。
 
-基础运动字段包括 `speed`、`accel`、`drag` 与 `rotateSpeed`。`speed` 决定最大移动速度，`accel` 与 `drag` 决定起步与刹车的手感，`rotateSpeed` 决定转向速度。`hitSize` 影响单位的碰撞体积与受击范围，`health` 与 `armor` 决定生存能力。`range` 通常用于 AI 选择射程范围，如果写成负数会自动根据武器计算；这意味着你只要武器配置合理，`range` 可以不写。
+- **实体构造器** `type`
 
-采矿与建造能力由 `mineTier`、`mineSpeed` 与 `buildSpeed` 控制。`mineTier` 对应可开采的硬度等级，`mineSpeed` 决定采矿速度，`buildSpeed` 决定建造与修复速度。`itemCapacity` 决定携带物品的容量，`payloadCapacity` 决定载荷容量，后者常见于“巨像”这类载荷单位。`targetAir` 与 `targetGround` 控制自动索敌类型，`faceTarget` 决定单位是否转向目标，`omniMovement` 则影响是否允许“全向移动”。
+实体类型决定了单位使用UnitType的哪些数据，有什么渲染表现，有什么不同的行为，下表是所有可用的 `type` 及对应的原版单位例子:
 
-视觉与表现方面，`engineOffset` 与 `engineSize` 决定引擎喷口位置和大小，`trailLength` 与 `trailColor` 决定尾迹长度与颜色。声音相关字段包括 `deathSound`、`loopSound`、`moveSound`、`stepSound` 等，用于塑造单位的体感。`drawCell`、`drawShields`、`drawItems` 等字段控制 UI 与渲染细节。
+|  type   | 原版单位(例)  |  type   | 原版单位(例)       |
+|:-------:|----------|:-------:|---------------|
+| flying  | 独影，星辉    | missile | 悲怆导弹，创伤导弹     |
+|  mech   | 尖刀，新星，爬虫 |  tank   | 围护，征服         | 
+|  legs   | 天蝎，死星    |  hover  | 挣脱            |
+|  naval  | 梭鱼，海神    | tether  | 货运无人机         | 
+| payload | 巨像，要塞    |  crawl  | renale, latum |
 
-还有一些“规则型”的字段容易被忽略。`logicControllable` 与 `playerControllable` 决定单位能否被处理器或玩家直接控制，`useUnitCap` 决定是否受单位上限限制，`hittable` 与 `targetable` 决定能否被命中或锁定，`allowedInPayloads` 与 `pickupUnits` 则影响载荷交互。这些字段不会直接改变伤害，但会极大改变单位在战役中的定位，比如“不可选中但可伤害”的单位往往用于剧情或特殊机制。
+::: info
+**需要注意的是**：`type` 仅决定实体的类型，实际的行为依然可受数据的影响
+
+比如 `type: flying`，并不代表单位一定飞行，而是取决于单位的数据 `flying`。
+:::
+
+- **基础运动**
+  - `speed` - 最大移动速度
+  - `accel` - 起步的加速度
+  - `drag` - 移动阻力
+  - `rotateSpeed` - 转向速度 (度/帧)
+  - `hitSize` - 圆形碰撞箱的半径 (格)，用于处理碰撞与索敌
+  - `health` - 单位血量
+  - `armor` - 单位护甲
+  - `range` - 通常用作单位AI的索敌半径与靠近的半径，不填(或<0)会默认取武器最小范围
+
+- **采矿与建造能力**
+  - `mineTier` - 可采矿的硬度等级
+  - `mineSpeed` - 决定采矿速度
+  - `buildSpeed` - 决定建造速度
+  - `itemCapacity` - 携带物品的容量
+  - `payloadCapacity` - 载荷容量，仅用于 `payload` 实体的单位
+  - `targetAir` - 是否索敌空军
+  - `targetGround` - 是否索敌地面敌人
+  - `faceTarget` - 是否朝向敌人
+  - `ominiMovement` - 是否允许"全向移动"，否则会转弯移动
+
+- **视觉与表现方面**
+
+  引擎与尾迹:
+  - `engineOffset` - 引擎喷口的位置
+  - `engineSize` - 引擎喷口的大小
+  - `trailLength` - 尾迹长度
+  - `trailColor` - 尾迹颜色
+
+  音效相关:
+  - `deathSound` - 死亡音效
+  - `loopSound` - 在场循环音效
+  - `moveSound` - 移动音效
+  - `stepSound` - 步行音效
+
+  控制 UI 与渲染细节:
+  - `drawCell` - 是否显示 cell (单位的状态灯)
+  - `drawShields` - 是否显示护盾
+  - `drawItems` - 是否显示携带物品
+
+- **规则**
+  - `logicControllable` - 是否能被逻辑控制
+  - `playerControllable` - 是否能被玩家控制
+  - `useUnitCap` - 是否占用单位数量上限
+  - `hittable` - 能否被命中
+  - `targetable` - 能否被锁定
+  - `allowedInPayloads` - 能否作为载荷
+  - `pickupUnits` - 能否被单位拾取
+
+- **行为控制**
+  - `aiController` - 单位的默认 AI 控制器，例如 `FlyingAI` 或 `GroundAI`
+  - `defaultController` - 根据单位实体的状态决定最终控制器    
+      默认值是根据是否可被玩家控制、是否属于 AI 队伍条件，选择 `aiController`，或者 `CommandAI`(RTS AI)
+
+::: info
+JSON 只能复用原版已有的 AI，如需自定义行为控制，请使用 JavaScript / Java 编写。
+:::
 
 ### 一个最小单位示例
 
@@ -47,17 +115,55 @@
 
 ## 武器（Weapon）
 
-单位武器与炮塔非常相似，但更强调“挂载位置”和“开火方式”。`x/y` 决定武器挂点位置，`shootX/shootY` 决定枪口位置，`mirror` 决定是否左右镜像复制，`rotate` 决定武器是否随单位旋转，`top` 决定绘制层级。射击节奏由 `reload`、`shootCone`、`inaccuracy` 决定，若需要一次多发或延迟开火，可以写 `shoot` 子对象（如 `shots`、`shotDelay`、`firstShotDelay`、`spread`）。
+> “**_武器即工具_**”
 
-`bullet` 字段决定子弹类型与属性，写法与炮塔完全一致。武器贴图默认使用 `weapon-name.png`，热量贴图为 `-heat`，数据库预览图为 `-preview`。如果你的单位有多门武器，记得给不同武器取不同 `name`，以免贴图冲突。
+单位的武器与炮塔非常相似，是发射子弹的工具，不同的是：武器**挂载**在单位上，并且拥有其独特的**开火方式**。
 
-单位武器还有一组更偏“行为”的字段。`alternate` 控制左右武器是否交替射击，`continuous` 与 `alwaysContinuous` 决定是否持续发射（常用于持续激光或喷流）。`shootStatus` 与 `shootStatusDuration` 可以让单位在开火时给自己施加状态，例如短暂的护盾或加速；`ejectEffect` 与 `parentizeEffects` 则分别控制弹壳特效与特效跟随，让枪口表现更自然。对于高速或持续火力单位，这些字段常常比单纯堆 `damage` 更能体现风格。
+- **挂载位置**
+  - `x/y` - 武器挂载点（相对单位中心）
+  - `shootX/shootY` - 枪口位置（相对于挂载点）
+  - `mirror` - 是否左右镜像复制
+  - `rotate` - 是否随单位旋转
+  - `top` - 决定绘制层级
 
-武器也支持 `parts`（`DrawPart`）来做局部动画，和炮塔的用法几乎一致。你可以用 `reload`、`warmup`、`recoil` 等进度驱动枪口位移、光效或外壳开合，配合 `shootX/shootY` 微调出射位置。对于多武器单位，每个武器都能独立配置部件动画，这能显著提升“机体层次感”。
+- **开火方式**
+  - `reload` - 冷却时间
+  - `shootCone` - 起射的半角
+  - `inaccuracy` - 不稳定张角
+  - `continuous` - 是否持续发射，常用于持续激光或喷流
+  - `alwaysContinuous` - 无视冷却的 `continuous`
+  - `bullet` - 发射的子弹类型，与炮塔的子弹一致且共通
+  - `shoot` - 控制开火方式，是**发射子弹**的核心
+
+- **多武器的搭配开火**
+
+  左右镜像的武器往往不会死板地同时开火，而是互相配合，**轮流开火**。
+  - `otherSize` - 配合其他武器的**索引**（使用`mirror`的武器会设置到镜像武器上）
+  - `alternate` - 是否与其他的武器配合
+
+- **开火的影响**
+  - `shootStatus` - 开火时给单位施加状态，例如短暂的护盾或加速
+  - `shootStatusDuration` - 给单位施加状态的时长
+
+- **渲染与表现**
+  - `name` - 仅用作加载贴图
+  - `ejectEffect` - 弹壳特效
+  - `parentizeEffects` - 跟随的特效，可以让枪口表现更自然，对于高速或持续火力单位，特效的表现常常比单纯堆 `damage` 更能体现风格。
+  - `parts` - 部件动画，与炮塔的用法几乎一致。
+    你可以用 `reload`、`warmup`、`recoil` 等进度驱动枪口位移、光效或外壳开合，配合 `shootX/shootY` 微调出射位置。对于多武器单位，每个武器都能独立配置部件动画，这能显著提升“机体层次感”。
 
 ## 能力（Ability）
 
-Ability 是单位的“额外技能”，更新频率与单位一致。常见类型包括 `ForceFieldAbility`（护盾）、`RepairFieldAbility`（修复场）、`MoveEffectAbility`（移动特效）、`StatusFieldAbility`（范围状态）、`UnitSpawnAbility`（生成单位）、`ShieldRegenFieldAbility`（范围护盾回复）等。它们通常有自己的半径、回复速率、间隔时间等字段。Ability 不一定改变武器数值，但会改变单位的战场定位，因此比你想象中更“决定风格”。
+Ability 是单位的“额外技能”，常见类型包括：
+
+* `ForceFieldAbility`（护盾）
+* `RepairFieldAbility`（修复场）
+* `MoveEffectAbility`（移动特效）
+* `StatusFieldAbility`（范围状态）
+* `UnitSpawnAbility`（生成单位）
+* `ShieldRegenFieldAbility`（范围护盾回复）
+
+它们通常有自己的半径、回复速率、间隔时间等字段。Ability 不一定改变武器数值，但会改变单位的战场定位，因此比你想象中更“决定风格”。
 
 ```json
 "abilities": [
@@ -118,12 +224,6 @@ Ability 的参数通常围绕“范围、频率、强度”展开。以 `RepairF
 这个片段说明了两件事：一是电力弹药适合做“高持续但后勤轻量”的单位；二是预热与自我状态可以让单位的输出节奏更有层次，而不是单纯堆数值。
 
 需要注意的是，电力弹药本质上仍依赖电网或能源补给，战役中断电时这类单位会明显“掉火力”，设计时要预留补能途径。
-
-## AI 与行为控制
-
-`aiController` 可以指定单位的默认 AI 控制器，它通常是一个类名，例如 `FlyingAI` 或 `GroundAI`。`defaultController` 则用于覆盖更底层的控制器选择。实际运行时，单位会根据是否可被玩家控制、是否属于 AI 队伍等条件决定最终控制器，因此你在 JSON 里指定的 AI 只是“默认策略”。如果你需要完全自定义的行为，就必须转向 Java。
-
-如果你把 `playerControllable` 设为 `false`，单位将无法被玩家直接控制；`logicControllable` 设为 `false` 则会阻止处理器接管。对剧情单位或 Boss 来说，这能避免玩家“抢走”单位，但也意味着 AI 表现必须足够可靠。
 
 ## 单位工厂、重构厂与组装厂
 
