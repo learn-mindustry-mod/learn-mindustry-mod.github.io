@@ -17,9 +17,9 @@
 ```js
 const TBLY = new Planet("泰伯利亚", Planets.sun, 1, 3.3);
 TBLY.generator = extend(SerpuloPlanetGenerator, {
-	getDefaultLoadout() {
-		return Schematics.readBase64("bXNjaAF4nA3JMQ6AIBAAwQXFRr9i4XuMBR5XkCAYkP9LphwcbmLO/lHMwRq0SY3vF0sGluRvTQ17XoZNStU9d0na20gDduAHAc0Org==");
-	}
+    getDefaultLoadout() {
+        return Schematics.readBase64("bXNjaAF4nA3JMQ6AIBAAwQXFRr9i4XuMBR5XkCAYkP9LphwcbmLO/lHMwRq0SY3vF0sGluRvTQ17XoZNStU9d0na20gDduAHAc0Org==");
+    }
 });
 ```
 
@@ -27,13 +27,13 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json content/planets/tutorial-planet.json
 {
-	"localizedName": "示例行星",
-	"parent": "sun",
-	"radius": 1,
-	"orbitTime": 60,
-	"rotateTime": 30,
-	"atmosphereColor": "7db6ff",
-	"lightColor": "ffd37f"
+    "localizedName": "示例行星",
+    "parent": "sun",
+    "radius": 1,
+    "orbitTime": 60,
+    "rotateTime": 30,
+    "atmosphereColor": "7db6ff",
+    "lightColor": "ffd37f"
 }
 
 ```
@@ -58,9 +58,9 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json content/sectors/tutorial-sector.json
 {
-	"name": "示例区块",
-	"planet": "serpulo",
-	"sector": 15
+    "name": "示例区块",
+    "planet": "serpulo",
+    "sector": 15
 }
 
 ```
@@ -87,16 +87,16 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json
 {
-	"name": "电离层异常",
-	"type": "ParticleWeather",
-	"particleRegion": "circle-small",
-	"color": "c0ecff",
-	"density": 5000,
-	"statusGround": false,
-	"sound": "shootArc",
-	"soundVol": 4,
-	"statusDuration": 3,
-	"status": "unmoving"
+    "name": "电离层异常",
+    "type": "ParticleWeather",
+    "particleRegion": "circle-small",
+    "color": "c0ecff",
+    "density": 5000,
+    "statusGround": false,
+    "sound": "shootArc",
+    "soundVol": 4,
+    "statusDuration": 3,
+    "status": "unmoving"
 }
 ```
 
@@ -104,14 +104,14 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json
 {
-	"name": "腐蚀性尘降风",
-	"type": "ParticleWeather",
-	"attrs": {"spores": -0.5},
-	"color": "a0b46e",
-	"density": 3000,
-	"opacityMultiplier": 0.4,
-	"statusDuration": 10,
-	"status": "corroded"
+    "name": "腐蚀性尘降风",
+    "type": "ParticleWeather",
+    "attrs": {"spores": -0.5},
+    "color": "a0b46e",
+    "density": 3000,
+    "opacityMultiplier": 0.4,
+    "statusDuration": 10,
+    "status": "corroded"
 }
 ```
 
@@ -137,10 +137,10 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json content/blocks/environment/tutorial-ore.json
 {
-	"type": "OreBlock",
-	"name": "示例矿",
-	"itemDrop": "copper",
-	"variants": 3
+    "type": "OreBlock",
+    "name": "示例矿",
+    "itemDrop": "copper",
+    "variants": 3
 }
 
 ```
@@ -151,13 +151,13 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json
 {
-	"type": "OreBlock",
-	"name": "铬",
-	"itemDrop": "铬",
-	"playerUnmineable": true,
-	"oreDefault": true,
-	"oreThreshold": 0.9,
-	"oreScale": 20
+    "type": "OreBlock",
+    "name": "铬",
+    "itemDrop": "铬",
+    "playerUnmineable": true,
+    "oreDefault": true,
+    "oreThreshold": 0.9,
+    "oreScale": 20
 }
 ```
 
@@ -165,13 +165,13 @@ TBLY.generator = extend(SerpuloPlanetGenerator, {
 
 ```json
 {
-	"type": "floor",
-	"name": "雪沙",
-	"itemDrop": "sand",
-	"speedMultiplier": 0.95,
-	"attributes": {"oil": 0.5, "water": 0.2},
-	"variants": 2,
-	"playerUnmineable": true
+    "type": "floor",
+    "name": "雪沙",
+    "itemDrop": "sand",
+    "speedMultiplier": 0.95,
+    "attributes": {"oil": 0.5, "water": 0.2},
+    "variants": 2,
+    "playerUnmineable": true
 }
 ```
 

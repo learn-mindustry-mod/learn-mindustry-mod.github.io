@@ -20,12 +20,12 @@
 
 ```json content/statuses/tutorial-slow.json
 {
-	"name": "示例迟缓",
-	"description": "让单位减速并轻微受伤。",
-	"color": "7db6ff",
-	"speedMultiplier": 0.7,
-	"damage": 0.02,
-	"effect": "wet"
+    "name": "示例迟缓",
+    "description": "让单位减速并轻微受伤。",
+    "color": "7db6ff",
+    "speedMultiplier": 0.7,
+    "damage": 0.02,
+    "effect": "wet"
 }
 
 ```
@@ -54,21 +54,21 @@
 
 ```json
 {
-	"name": "急冻",
-	"color": "c0ecff",
-	"damage": 1.62,
-	"healthMultiplier": 0.7,
-	"speedMultiplier": 0.4,
-	"reloadMultiplier": 0.45,
-	"opposites": ["burning", "melting", "殁火"],
-	"effect": {
-		"type": "ParticleEffect",
-		"particles": 3,
-		"lifetime": 26,
-		"region": "饱和火力-三角形",
-		"colorFrom": "c0ecff",
-		"colorTo": "c0ecff"
-	}
+    "name": "急冻",
+    "color": "c0ecff",
+    "damage": 1.62,
+    "healthMultiplier": 0.7,
+    "speedMultiplier": 0.4,
+    "reloadMultiplier": 0.45,
+    "opposites": ["burning", "melting", "殁火"],
+    "effect": {
+        "type": "ParticleEffect",
+        "particles": 3,
+        "lifetime": 26,
+        "region": "饱和火力-三角形",
+        "colorFrom": "c0ecff",
+        "colorTo": "c0ecff"
+    }
 }
 ```
 
@@ -80,12 +80,12 @@
 
 ```js
 const 阳电 = extend(StatusEffect, "阳电", {
-	init() {
-		this.affinity(阴电, (unit, result, time) => {
-			unit.damagePierce(this.transitionDamage);
-			result.set(阴电, Math.min(time + result.time, 60));
-		});
-	}
+    init() {
+        this.affinity(阴电, (unit, result, time) => {
+            unit.damagePierce(this.transitionDamage);
+            result.set(阴电, Math.min(time + result.time, 60));
+        });
+    }
 });
 ```
 
@@ -101,14 +101,14 @@ const 阳电 = extend(StatusEffect, "阳电", {
 
 ```json
 "craftEffect": {
-	"type": "ParticleEffect",
-	"particles": 6,
-	"lifetime": 30,
-	"length": 6,
-	"sizeFrom": 2,
-	"sizeTo": 0,
-	"colorFrom": "ffffff",
-	"colorTo": "a0b4ff"
+    "type": "ParticleEffect",
+    "particles": 6,
+    "lifetime": 30,
+    "length": 6,
+    "sizeFrom": 2,
+    "sizeTo": 0,
+    "colorFrom": "ffffff",
+    "colorTo": "a0b4ff"
 }
 ```
 

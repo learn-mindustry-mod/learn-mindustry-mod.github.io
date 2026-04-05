@@ -4,14 +4,13 @@
 
 ## 通用语法
 
-这一部分将介绍一些JavaScript的通用语法规则,这些规则在任何JavaScript环境中都是适用的。这半节的内容都可以在[w3school的js教程](https://www.w3school.com.cn/js/index.asp)中找到,不过如果你懒,我也会在这里总结一些重要的语法规则。
+这一部分将介绍一些JavaScript的通用语法规则,这些规则在任何JavaScript环境中都是适用的。这节的内容都可以在[w3school的js教程](https://www.w3school.com.cn/js/index.asp)中找到,不过如果你懒,我也会在这里总结一些重要的语法规则。
 
 ### 变量类型
 
 JavaScript中有几种基本的数据类型:
 
-- **Number数字**: 用于表示浮点数。例如: `let x = 10.0;` 
-JavaScript中的数字类型没有整数和浮点数之分,然而编写mdt的java有,所有不要在应该填整数的地方填浮点数,以及抄源码的时候记得把数字末尾的`f`去掉。
+- **Number数字**: 用于表示浮点数。例如: `let x = 10.0;` JavaScript中的数字类型没有整数和浮点数之分,然而编写mdt的java有,所有不要在应该填整数的地方填浮点数,以及抄源码的时候记得把数字末尾的`f`去掉。
 - **String字符串**: 用于表示文本数据,由一系列字符组成。例如: `let name = "Mindustry";`
 - **Boolean**: 用于表示逻辑值,只有两个取值: `true` 和 `false`。例如: `let isActive = true;`
 - **Object对象**: 用于表示复杂数据结构,由键值对组成。例如:
@@ -84,6 +83,25 @@ let e = []; // 数组类型
 
 ```
 
+#### 变量的命名规则
+
+- 变量名必须以字母、下划线 `_` 或美元符号 `$` 开头,后面可以跟字母、数字、下划线或美元符号。
+- 变量名区分大小写,例如 `myVariable` 和 `myvariable` 是两个不同的变量。
+- 变量名不能是JavaScript的保留字,如 `let`, `const`, `if`, `else`, `for`, `while` 等。
+
+- 变量名最好和你写的mdt内容的name相同,比如:
+
+```javascript
+
+const triploid = new UnitType("triploid"); 
+const biomassSteel = new Item("biomass-steel",Color.valueOf("4e342e"));
+// 变量名和mdt内容的name相同,这样可以提高代码的可读性和可维护性
+
+```
+
+对于具体的内容我们习惯上使用小写字母开头的驼峰命名法,比如 `protein`,`biomassSteel` 等,
+而对于你自己构造的函数我们习惯上使用大写字母开头的驼峰命名法,比如 `Block`, `UnitType`, `DrawPart` 等。
+
 ### 运算符
 
 - **算术运算符**: `+`, `-`, `*`, `/`, `%` 等。例如:
@@ -141,6 +159,7 @@ let isNeitherTrue = false || false; // false
 let isNotTrue = !true; // false
 let isNotFalse = !false; // true
 ```
+
 - **赋值运算符**: `=`, `+=`, `-=`, `*=`, `/=`, `%=` 等。例如:
 
 ```javascript
@@ -223,4 +242,95 @@ for (let index in numbers) {
 // 注意for...of循环直接获取数组的元素,而for...in循环获取数组的索引
 ```
 
-以上就是JavaScript的一些基础语法规则,掌握这些规则将帮助你更好地编写mdt脚本。在接下来的章节中,我们将介绍一些更高级的JavaScript特性,如函数、对象、数组等,以及如何在mdt中使用它们。
+以上就是JavaScript的一些基础语法规则,如果你觉得你懂了,那么试着完成下面的小测:
+
+```javascript
+
+// 1. 声明一个变量,并给它赋值为一个字符串类型
+
+// 2. 预测下面代码的输出结果
+//(1)
+console.log(10 == '10');
+//(2) 
+console.log(10 === '10');
+//(3)
+console.log(true == 'false');
+//(4)
+console.log(10 > 5 && 5 > 3);
+//(5)
+console.log(10 > 5 || 5 < 3);
+//(6)
+console.log(10 % 3);
+
+//(7)
+let x = 1;
+for (let i = 1; i < 6; i++) {
+    x *= i;
+}
+console.log(x);
+
+//(8)
+let numbers = [1, 2, 3, 4, 5];
+for (let i = 1; i < 5; i++) {
+    console.log(numbers[i]);
+}
+
+// 3.指出下面节选代码中的错误并修正它
+
+// 错误代码1 
+
+// 假设a已经被声明并赋值了
+if (a => 5) {
+    console.log("a is greater than 5");
+} else if (a = 5) {
+    console.log("a is equal to 5");
+} else {
+    console.log("a is less than 5");
+}
+
+// 错误代码2
+let switch = false;
+if (switch) {
+    console.log("The switch is on");
+} else {
+    console.log("The switch is off");
+}
+
+
+```
+
+参考答案:
+
+```javascript
+
+// 1. 声明一个变量,并给它赋值为一个字符串类型
+let name = "Mindustry";
+// 2. 预测下面代码的输出结果
+//(1) true, == 不是严格比较,会进行类型转换
+//(2) false, === 是严格比较,不进行类型转换
+//(3) true, == 进行类型转换后, true和'false'都被转换成了true
+//(4) true, 10 > 5 是true, 5 > 3 是true, 所以 true && true 是true
+//(5) true, 10 > 5 是true, 5 < 3 是false, 所以 true || false 是true
+//(6) 1, 10 % 3 的结果是1
+//(7) 120, 1 * 1 = 1, 1 * 2 = 2, 2 * 3 = 6, 6 * 4 = 24, 24 * 5 = 120
+//(8) 2, 3, 4, 5, 因为数组索引从0开始,所以 numbers[1] 是2, numbers[2] 是3, numbers[3] 是4, numbers[4] 是5
+
+// 3.指出下面节选代码中的错误并修正它
+// 错误代码1
+
+if (a >= 5) { // 错误1: => 是一个语法错误,应该是 >=
+    console.log("a is biger than 5");
+} else if (a == 5) { // 错误2: = 是赋值运算符,应该是 ==
+    console.log("a is equal to 5");
+} else {
+    console.log("a is less than 5");
+}
+// 而且设计也有问题,无论a为何值,修改后的代码都会输出"a is biger than 5"或者"a is less than 5",因为条件a >= 5包含a == 5的情况
+
+
+// 错误代码2
+let switch = false;// switch是JavaScript的保留字,不能用作变量名
+
+// 修改后的代码
+let isSwitchOn = false; // 修改变量名为isSwitchOn,避免使用保留字
+```

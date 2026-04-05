@@ -30,32 +30,32 @@
 
 ```json content/blocks/tutorial-turret.json
 {
-	"type": "ItemTurret",
-	"name": "示例炮塔",
-	"description": "使用铜和石墨作为弹药。",
-	"size": 2,
-	"range": 120,
-	"reload": 30,
-	"rotateSpeed": 8,
-	"requirements": [
-		"copper/90",
-		"lead/60"
-	],
-	"ammoTypes": {
-		"copper": {
-			"type": "BasicBulletType",
-			"speed": 2.5,
-			"damage": 10,
-			"lifetime": 60
-		},
-		"graphite": {
-			"type": "BasicBulletType",
-			"speed": 3.2,
-			"damage": 20,
-			"lifetime": 55,
-			"ammoMultiplier": 4
-		}
-	}
+    "type": "ItemTurret",
+    "name": "示例炮塔",
+    "description": "使用铜和石墨作为弹药。",
+    "size": 2,
+    "range": 120,
+    "reload": 30,
+    "rotateSpeed": 8,
+    "requirements": [
+        "copper/90",
+        "lead/60"
+    ],
+    "ammoTypes": {
+        "copper": {
+            "type": "BasicBulletType",
+            "speed": 2.5,
+            "damage": 10,
+            "lifetime": 60
+        },
+        "graphite": {
+            "type": "BasicBulletType",
+            "speed": 3.2,
+            "damage": 20,
+            "lifetime": 55,
+            "ammoMultiplier": 4
+        }
+    }
 }
 
 ```
@@ -92,35 +92,35 @@
 
 ```json
 {
-	"type": "PowerTurret",
-	"name": "丁达尔",
-	"reload": 12,
-	"shoot": {
-		"type": "ShootBarrel",
-		"shots": 12,
-		"shotDelay": 4,
-		"barrels": [
-			5.5, 22.25, 0,
-			-5.5, 22.25, 0,
-			16, 21.25, 0,
-			-16, 21.25, 0
-		]
-	},
-	"shootType": {
-		"type": "BasicBulletType",
-		"damage": 106,
-		"speed": 22,
-		"lifetime": 25,
-		"pierce": true,
-		"trailLength": 50
-	},
-	"consumes": {
-		"power": 80,
-		"coolant": {
-			"amount": 2,
-			"optional": true
-		}
-	}
+    "type": "PowerTurret",
+    "name": "丁达尔",
+    "reload": 12,
+    "shoot": {
+        "type": "ShootBarrel",
+        "shots": 12,
+        "shotDelay": 4,
+        "barrels": [
+            5.5, 22.25, 0,
+            -5.5, 22.25, 0,
+            16, 21.25, 0,
+            -16, 21.25, 0
+        ]
+    },
+    "shootType": {
+        "type": "BasicBulletType",
+        "damage": 106,
+        "speed": 22,
+        "lifetime": 25,
+        "pierce": true,
+        "trailLength": 50
+    },
+    "consumes": {
+        "power": 80,
+        "coolant": {
+            "amount": 2,
+            "optional": true
+        }
+    }
 }
 ```
 
@@ -132,29 +132,29 @@
 
 ```json
 {
-	"type": "ItemTurret",
-	"name": "电极",
-	"ammoPerShot": 2,
-	"shoot": {
-		"type": "ShootPattern",
-		"firstShotDelay": 20
-	},
-	"ammoTypes": {
-		"copper": {
-			"type": "EmpBulletType",
-			"speed": 14,
-			"lifetime": 18,
-			"status": "阳电",
-			"statusDuration": 180,
-			"chargeEffect": {
-				"type": "MultiEffect",
-				"effects": [
-					{"type": "ParticleEffect", "particles": 13},
-					{"type": "ParticleEffect", "particles": 1}
-				]
-			}
-		}
-	}
+    "type": "ItemTurret",
+    "name": "电极",
+    "ammoPerShot": 2,
+    "shoot": {
+        "type": "ShootPattern",
+        "firstShotDelay": 20
+    },
+    "ammoTypes": {
+        "copper": {
+            "type": "EmpBulletType",
+            "speed": 14,
+            "lifetime": 18,
+            "status": "阳电",
+            "statusDuration": 180,
+            "chargeEffect": {
+                "type": "MultiEffect",
+                "effects": [
+                    {"type": "ParticleEffect", "particles": 13},
+                    {"type": "ParticleEffect", "particles": 1}
+                ]
+            }
+        }
+    }
 }
 ```
 
@@ -178,12 +178,12 @@
 
 ```json
 "parts": [
-	{
-		"type": "RegionPart",
-		"suffix": "-barrel",
-		"moveY": -1.5,
-		"progress": "warmup"
-	}
+    {
+        "type": "RegionPart",
+        "suffix": "-barrel",
+        "moveY": -1.5,
+        "progress": "warmup"
+    }
 ]
 ```
 
@@ -191,32 +191,32 @@
 
 ```json
 "drawer": {
-	"type": "DrawTurret",
-	"parts": [
-		{
-			"type": "RegionPart",
-			"suffix": "-中",
-			"progress": "recoil",
-			"heatProgress": "recoil",
-			"moveY": -10,
-			"under": true
-		},
-		{
-			"type": "ShapePart",
-			"progress": "warmup",
-			"y": -24,
-			"circle": true,
-			"radiusTo": 6
-		},
-		{
-			"type": "HaloPart",
-			"progress": "reload",
-			"y": -24,
-			"radius": 10,
-			"radiusTo": 0,
-			"strokeTo": 0.1
-		}
-	]
+    "type": "DrawTurret",
+    "parts": [
+        {
+            "type": "RegionPart",
+            "suffix": "-中",
+            "progress": "recoil",
+            "heatProgress": "recoil",
+            "moveY": -10,
+            "under": true
+        },
+        {
+            "type": "ShapePart",
+            "progress": "warmup",
+            "y": -24,
+            "circle": true,
+            "radiusTo": 6
+        },
+        {
+            "type": "HaloPart",
+            "progress": "reload",
+            "y": -24,
+            "radius": 10,
+            "radiusTo": 0,
+            "strokeTo": 0.1
+        }
+    ]
 }
 ```
 

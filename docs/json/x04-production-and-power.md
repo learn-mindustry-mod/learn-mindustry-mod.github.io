@@ -35,24 +35,24 @@
 
 ```json content/blocks/tutorial-drill.json
 {
-	"type": "Drill",
-	"name": "示例钻头",
-	"description": "慢速钻头，用于演示。",
-	"size": 2,
-	"tier": 2,
-	"drillTime": 300,
-	"liquidBoostIntensity": 1.6,
-	"requirements": [
-		"copper/50",
-		"lead/30"
-	],
-	"consumes": {
-		"liquid": {
-			"liquid": "water",
-			"amount": 0.05,
-			"booster": true
-		}
-	}
+    "type": "Drill",
+    "name": "示例钻头",
+    "description": "慢速钻头，用于演示。",
+    "size": 2,
+    "tier": 2,
+    "drillTime": 300,
+    "liquidBoostIntensity": 1.6,
+    "requirements": [
+        "copper/50",
+        "lead/30"
+    ],
+    "consumes": {
+        "liquid": {
+            "liquid": "water",
+            "amount": 0.05,
+            "booster": true
+        }
+    }
 }
 
 ```
@@ -69,22 +69,22 @@
 
 ```json
 {
-	"type": "Drill",
-	"name": "离子钻头",
-	"size": 3,
-	"tier": 8,
-	"drillTime": 50,
-	"hardnessDrillMultiplier": 40,
-	"liquidBoostIntensity": 1.6,
-	"consumes": {
-		"power": 3,
-		"liquid": {
-			"liquid": "water",
-			"amount": 0.11,
-			"booster": true,
-			"optional": true
-		}
-	}
+    "type": "Drill",
+    "name": "离子钻头",
+    "size": 3,
+    "tier": 8,
+    "drillTime": 50,
+    "hardnessDrillMultiplier": 40,
+    "liquidBoostIntensity": 1.6,
+    "consumes": {
+        "power": 3,
+        "liquid": {
+            "liquid": "water",
+            "amount": 0.11,
+            "booster": true,
+            "optional": true
+        }
+    }
 }
 ```
 
@@ -98,19 +98,19 @@
 
 ```json content/blocks/tutorial-solid-pump.json
 {
-	"type": "SolidPump",
-	"name": "示例抽水机",
-	"description": "在固态地面产出水。",
-	"size": 2,
-	"result": "water",
-	"pumpAmount": 0.12,
-	"requirements": [
-		"copper/60",
-		"lead/40"
-	],
-	"consumes": {
-		"power": 1.1
-	}
+    "type": "SolidPump",
+    "name": "示例抽水机",
+    "description": "在固态地面产出水。",
+    "size": 2,
+    "result": "water",
+    "pumpAmount": 0.12,
+    "requirements": [
+        "copper/60",
+        "lead/40"
+    ],
+    "consumes": {
+        "power": 1.1
+    }
 }
 
 ```
@@ -123,14 +123,14 @@
 
 ```json
 {
-	"type": "Pump",
-	"name": "潮汐泵",
-	"size": 4,
-	"liquidCapacity": 800,
-	"pumpAmount": 1,
-	"consumes": {
-		"power": 12
-	}
+    "type": "Pump",
+    "name": "潮汐泵",
+    "size": 4,
+    "liquidCapacity": 800,
+    "pumpAmount": 1,
+    "consumes": {
+        "power": 12
+    }
 }
 ```
 
@@ -144,15 +144,15 @@
 
 ```json
 {
-	"type": "SolidPump",
-	"name": "石油深井",
-	"pumpAmount": 0.201,
-	"result": "oil",
-	"attribute": "oil",
-	"baseEfficiency": 0.75,
-	"consumes": {
-		"power": 6.5
-	}
+    "type": "SolidPump",
+    "name": "石油深井",
+    "pumpAmount": 0.201,
+    "result": "oil",
+    "attribute": "oil",
+    "baseEfficiency": 0.75,
+    "consumes": {
+        "power": 6.5
+    }
 }
 ```
 
@@ -180,16 +180,16 @@
 
 ```json
 {
-	"type": "ConsumeGenerator",
-	"name": "增压励磁发电站",
-	"size": 3,
-	"itemDuration": 15,
-	"powerProduction": 38.5,
-	"consumes": {
-		"itemFlammable": {},
-		"itemExplode": {},
-		"liquid": "water/0.6"
-	}
+    "type": "ConsumeGenerator",
+    "name": "增压励磁发电站",
+    "size": 3,
+    "itemDuration": 15,
+    "powerProduction": 38.5,
+    "consumes": {
+        "itemFlammable": {},
+        "itemExplode": {},
+        "liquid": "water/0.6"
+    }
 }
 ```
 
@@ -201,16 +201,16 @@
 
 ```json
 {
-	"type": "ConsumeGenerator",
-	"name": "弧形裂变堆",
-	"itemDuration": 19.5,
-	"powerProduction": 550,
-	"consumes": {
-		"itemRadioactive": {},
-		"itemExplode": {},
-		"liquid": "纳米流体/0.9"
-	},
-	"generateEffect": "generatespark"
+    "type": "ConsumeGenerator",
+    "name": "弧形裂变堆",
+    "itemDuration": 19.5,
+    "powerProduction": 550,
+    "consumes": {
+        "itemRadioactive": {},
+        "itemExplode": {},
+        "liquid": "纳米流体/0.9"
+    },
+    "generateEffect": "generatespark"
 }
 ```
 

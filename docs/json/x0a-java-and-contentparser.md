@@ -76,13 +76,13 @@ new GenericCrafter("silicon-smelter"){{
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "silicon-smelter",
-	"craftTime": 60,
-	"outputItem": "silicon/1",
-	"consumes": {
-		"power": 0.5
-	}
+    "type": "GenericCrafter",
+    "name": "silicon-smelter",
+    "craftTime": 60,
+    "outputItem": "silicon/1",
+    "consumes": {
+        "power": 0.5
+    }
 }
 ```
 
@@ -104,18 +104,18 @@ weapons.add(new Weapon(){{
 
 ```json
 {
-	"weapons": [
-		{
-			"x": 4,
-			"y": 1,
-			"reload": 30,
-			"bullet": {
-				"type": "BasicBulletType",
-				"speed": 3,
-				"damage": 12
-			}
-		}
-	]
+    "weapons": [
+        {
+            "x": 4,
+            "y": 1,
+            "reload": 30,
+            "bullet": {
+                "type": "BasicBulletType",
+                "speed": 3,
+                "damage": 12
+            }
+        }
+    ]
 }
 ```
 

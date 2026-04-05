@@ -86,27 +86,27 @@ JSON 只能复用原版已有的 AI，如需自定义行为控制，请使用 Ja
 
 ```json content/units/tutorial-unit.json
 {
-	"type": "flying",
-	"name": "示例单位",
-	"description": "最基础的飞行单位。",
-	"speed": 2.6,
-	"health": 120,
-	"hitSize": 8,
-	"flying": true,
-	"weapons": [
-		{
-			"name": "tutorial-weapon",
-			"reload": 25,
-			"x": 3,
-			"y": 1,
-			"bullet": {
-				"type": "BasicBulletType",
-				"speed": 2.5,
-				"damage": 9,
-				"lifetime": 60
-			}
-		}
-	]
+    "type": "flying",
+    "name": "示例单位",
+    "description": "最基础的飞行单位。",
+    "speed": 2.6,
+    "health": 120,
+    "hitSize": 8,
+    "flying": true,
+    "weapons": [
+        {
+            "name": "tutorial-weapon",
+            "reload": 25,
+            "x": 3,
+            "y": 1,
+            "bullet": {
+                "type": "BasicBulletType",
+                "speed": 2.5,
+                "damage": 9,
+                "lifetime": 60
+            }
+        }
+    ]
 }
 
 ```
@@ -167,12 +167,12 @@ Ability 是单位的“额外技能”，常见类型包括：
 
 ```json
 "abilities": [
-	{
-		"type": "ForceFieldAbility",
-		"radius": 20,
-		"regen": 0.2,
-		"max": 80
-	}
+    {
+        "type": "ForceFieldAbility",
+        "radius": 20,
+        "regen": 0.2,
+        "max": 80
+    }
 ]
 ```
 
@@ -202,22 +202,22 @@ Ability 的参数通常围绕“范围、频率、强度”展开。以 `RepairF
 
 ```json
 {
-	"type": "flying",
-	"name": "雷鸣",
-	"ammoType": {
-		"type": "PowerAmmoType",
-		"totalPower": 8000
-	},
-	"ammoCapacity": 60,
-	"weapons": [
-		{
-			"name": "雷鸣1",
-			"shootWarmupSpeed": 0.13,
-			"minWarmup": 0.9,
-			"shootStatus": "shielded",
-			"shootStatusDuration": 50
-		}
-	]
+    "type": "flying",
+    "name": "雷鸣",
+    "ammoType": {
+        "type": "PowerAmmoType",
+        "totalPower": 8000
+    },
+    "ammoCapacity": 60,
+    "weapons": [
+        {
+            "name": "雷鸣1",
+            "shootWarmupSpeed": 0.13,
+            "minWarmup": 0.9,
+            "shootStatus": "shielded",
+            "shootStatusDuration": 50
+        }
+    ]
 }
 ```
 
@@ -243,17 +243,17 @@ Ability 的参数通常围绕“范围、频率、强度”展开。以 `RepairF
 
 ```json
 {
-	"type": "tank",
-	"name": "反击",
-	"health": 25600,
-	"armor": 30,
-	"ammoType": "surge-alloy",
-	"ammoCapacity": 120,
-	"immunities": ["burning", "shocked"],
-	"requirements": {
-		"block": "exponential-reconstructor",
-		"previous": "陆3"
-	}
+    "type": "tank",
+    "name": "反击",
+    "health": 25600,
+    "armor": 30,
+    "ammoType": "surge-alloy",
+    "ammoCapacity": 120,
+    "immunities": ["burning", "shocked"],
+    "requirements": {
+        "block": "exponential-reconstructor",
+        "previous": "陆3"
+    }
 }
 ```
 
@@ -265,17 +265,17 @@ Ability 的参数通常围绕“范围、频率、强度”展开。以 `RepairF
 
 ```json
 {
-	"type": "UnitAssembler",
-	"name": "悬浮战争工厂",
-	"plans": [
-		{
-			"unit": "竭泽",
-			"time": 4200,
-			"requirements": ["饱和火力-基础收容块/6"],
-			"liquidReq": ["cryofluid/0.6"]
-		}
-	],
-	"droneType": "组装机"
+    "type": "UnitAssembler",
+    "name": "悬浮战争工厂",
+    "plans": [
+        {
+            "unit": "竭泽",
+            "time": 4200,
+            "requirements": ["饱和火力-基础收容块/6"],
+            "liquidReq": ["cryofluid/0.6"]
+        }
+    ],
+    "droneType": "组装机"
 }
 ```
 
@@ -287,9 +287,9 @@ Ability 的参数通常围绕“范围、频率、强度”展开。以 `RepairF
 
 ```json
 "requirements": {
-	"block": "ground-factory",
-	"requirements": ["silicon/10", "lead/10"],
-	"time": 900
+    "block": "ground-factory",
+    "requirements": ["silicon/10", "lead/10"],
+    "time": 900
 }
 ```
 

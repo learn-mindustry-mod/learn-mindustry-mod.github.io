@@ -8,16 +8,16 @@
 
 ```json content/items/tutorial-item1.json
 {
-	"hardness": 4,
-	"cost": 8,
-	"color": "39C5BB",
-	"healthScaling": 1.4,
-	"alwaysUnlocked": false,
-	"radioactivity": 0,
-	"explosiveness": 0,
-	"flammability": 0,
-	"charge": 1.2,
-	"research": "copper"
+    "hardness": 4,
+    "cost": 8,
+    "color": "39C5BB",
+    "healthScaling": 1.4,
+    "alwaysUnlocked": false,
+    "radioactivity": 0,
+    "explosiveness": 0,
+    "flammability": 0,
+    "charge": 1.2,
+    "research": "copper"
 }
 
 ```
@@ -129,14 +129,14 @@ item.tutorial-json-mod-tutorial-item1.details = 我是灰色的，所以你看�
 
 ```json content/liquids/tutorial-fluid1.json
 {
-	"alwaysUnlocked": false,
-	"color": "39C5BB",
-	"flammability": 1.5,
-	"temperature": 0.5,
-	"heatCapacity": 0.5,
-	"viscosity": 0.8,
-	"explosiveness": 3.2,
-	"research": "oil"
+    "alwaysUnlocked": false,
+    "color": "39C5BB",
+    "flammability": 1.5,
+    "temperature": 0.5,
+    "heatCapacity": 0.5,
+    "viscosity": 0.8,
+    "explosiveness": 3.2,
+    "research": "oil"
 }
 
 ```

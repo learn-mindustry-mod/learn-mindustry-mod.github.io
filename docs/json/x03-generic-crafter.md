@@ -8,28 +8,28 @@
 
 ```json content/blocks/tutorial-graphite-press.json
 {
-	"type": "GenericCrafter",
-	"name": "示例石墨压制机",
-	"description": "把煤炭压成石墨的演示工厂。",
-	"size": 2,
-	"health": 180,
-	"category": "crafting",
-	"requirements": [
-		"copper/80",
-		"lead/40"
-	],
-	"craftTime": 60,
-	"consumes": {
-		"items": [
-			"coal/2"
-		],
-		"power": 1.2
-	},
-	"outputItem": {
-		"item": "graphite",
-		"amount": 1
-	},
-	"research": "graphite-press"
+    "type": "GenericCrafter",
+    "name": "示例石墨压制机",
+    "description": "把煤炭压成石墨的演示工厂。",
+    "size": 2,
+    "health": 180,
+    "category": "crafting",
+    "requirements": [
+        "copper/80",
+        "lead/40"
+    ],
+    "craftTime": 60,
+    "consumes": {
+        "items": [
+            "coal/2"
+        ],
+        "power": 1.2
+    },
+    "outputItem": {
+        "item": "graphite",
+        "amount": 1
+    },
+    "research": "graphite-press"
 }
 ```
 
@@ -43,9 +43,9 @@
 
 ```json
 "consumes": {
-	"items": [{"item": "sand", "amount": 2}],
-	"liquid": {"liquid": "water", "amount": 0.1, "optional": true, "booster": true},
-	"power": 2.4
+    "items": [{"item": "sand", "amount": 2}],
+    "liquid": {"liquid": "water", "amount": 0.1, "optional": true, "booster": true},
+    "power": 2.4
 }
 ```
 
@@ -83,24 +83,24 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "硝化反应器",
-	"outputLiquid": "硝化重油/0.3",
-	"craftTime": 60,
-	"liquidCapacity": 30,
-	"consumes": {
-		"power": 5,
-		"items": ["spore-pod/1"],
-		"liquid": "oil/0.3"
-	},
-	"drawer": {
-		"type": "DrawMulti",
-		"drawers": [
-			{"type": "DrawRegion", "suffix": "-bottom"},
-			{"type": "DrawLiquidTile", "drawLiquid": "硝化重油"},
-			"DrawDefault"
-		]
-	}
+    "type": "GenericCrafter",
+    "name": "硝化反应器",
+    "outputLiquid": "硝化重油/0.3",
+    "craftTime": 60,
+    "liquidCapacity": 30,
+    "consumes": {
+        "power": 5,
+        "items": ["spore-pod/1"],
+        "liquid": "oil/0.3"
+    },
+    "drawer": {
+        "type": "DrawMulti",
+        "drawers": [
+            {"type": "DrawRegion", "suffix": "-bottom"},
+            {"type": "DrawLiquidTile", "drawLiquid": "硝化重油"},
+            "DrawDefault"
+        ]
+    }
 }
 ```
 
@@ -126,18 +126,18 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "归中编织器",
-	"outputItem": {"item": "phase-fabric", "amount": 4},
-	"craftTime": 60,
-	"consumes": {
-		"power": 8.75,
-		"items": {"items": ["thorium/4", "sand/20", "裂位能/1"]}
-	},
-	"drawer": {
-		"type": "DrawMulti",
-		"drawers": ["DrawWeave", "DrawDefault"]
-	}
+    "type": "GenericCrafter",
+    "name": "归中编织器",
+    "outputItem": {"item": "phase-fabric", "amount": 4},
+    "craftTime": 60,
+    "consumes": {
+        "power": 8.75,
+        "items": {"items": ["thorium/4", "sand/20", "裂位能/1"]}
+    },
+    "drawer": {
+        "type": "DrawMulti",
+        "drawers": ["DrawWeave", "DrawDefault"]
+    }
 }
 ```
 
@@ -149,20 +149,20 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "激活液化器",
-	"outputLiquid": "纳米流体/0.9",
-	"craftTime": 120,
-	"liquidCapacity": 120,
-	"consumes": {
-		"power": 24,
-		"items": ["纳米核/9"],
-		"liquid": "water/1.2"
-	},
-	"drawer": {
-		"type": "DrawMulti",
-		"drawers": ["DrawLiquidTile", "DrawDefault"]
-	}
+    "type": "GenericCrafter",
+    "name": "激活液化器",
+    "outputLiquid": "纳米流体/0.9",
+    "craftTime": 120,
+    "liquidCapacity": 120,
+    "consumes": {
+        "power": 24,
+        "items": ["纳米核/9"],
+        "liquid": "water/1.2"
+    },
+    "drawer": {
+        "type": "DrawMulti",
+        "drawers": ["DrawLiquidTile", "DrawDefault"]
+    }
 }
 ```
 
@@ -174,10 +174,10 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "激发放射塔",
-	"outputItems": ["thorium/2", "裂位能/12"],
-	"craftTime": 60
+    "type": "GenericCrafter",
+    "name": "激发放射塔",
+    "outputItems": ["thorium/2", "裂位能/12"],
+    "craftTime": 60
 }
 ```
 
@@ -189,25 +189,25 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "大型冷冻机",
-	"outputLiquid": {"liquid": "cryofluid", "amount": 0.61},
-	"craftTime": 60,
-	"liquidCapacity": 60,
-	"updateEffect": "freezing",
-	"consumes": {
-		"power": 4,
-		"items": ["titanium/1"],
-		"liquid": "water/0.61"
-	},
-	"drawer": {
-		"type": "DrawMulti",
-		"drawers": [
-			{"type": "DrawRegion", "suffix": "-bottom"},
-			{"type": "DrawLiquidTile", "drawLiquid": "cryofluid"},
-			"DrawDefault"
-		]
-	}
+    "type": "GenericCrafter",
+    "name": "大型冷冻机",
+    "outputLiquid": {"liquid": "cryofluid", "amount": 0.61},
+    "craftTime": 60,
+    "liquidCapacity": 60,
+    "updateEffect": "freezing",
+    "consumes": {
+        "power": 4,
+        "items": ["titanium/1"],
+        "liquid": "water/0.61"
+    },
+    "drawer": {
+        "type": "DrawMulti",
+        "drawers": [
+            {"type": "DrawRegion", "suffix": "-bottom"},
+            {"type": "DrawLiquidTile", "drawLiquid": "cryofluid"},
+            "DrawDefault"
+        ]
+    }
 }
 ```
 
@@ -219,23 +219,23 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "爆破冲压炉",
-	"outputItem": {"item": "silicon", "amount": 10},
-	"craftTime": 30,
-	"consumes": {
-		"power": 10,
-		"items": ["blast-compound/1", "sand/10"]
-	},
-	"craftEffect": {
-		"type": "MultiEffect",
-		"effects": [
-			{"type": "ParticleEffect", "particles": 8, "sizeFrom": 8, "sizeTo": 0, "length": 35, "lifetime": 35},
-			{"type": "WaveEffect", "lifetime": 10, "sizeFrom": 0, "sizeTo": 45, "strokeFrom": 3, "strokeTo": 0}
-		]
-	},
-	"ambientSound": "explosion",
-	"ambientSoundVolume": 0.5
+    "type": "GenericCrafter",
+    "name": "爆破冲压炉",
+    "outputItem": {"item": "silicon", "amount": 10},
+    "craftTime": 30,
+    "consumes": {
+        "power": 10,
+        "items": ["blast-compound/1", "sand/10"]
+    },
+    "craftEffect": {
+        "type": "MultiEffect",
+        "effects": [
+            {"type": "ParticleEffect", "particles": 8, "sizeFrom": 8, "sizeTo": 0, "length": 35, "lifetime": 35},
+            {"type": "WaveEffect", "lifetime": 10, "sizeFrom": 0, "sizeTo": 45, "strokeFrom": 3, "strokeTo": 0}
+        ]
+    },
+    "ambientSound": "explosion",
+    "ambientSoundVolume": 0.5
 }
 ```
 
@@ -247,20 +247,20 @@
 
 ```json
 {
-	"type": "GenericCrafter",
-	"name": "纳米打印机",
-	"outputItem": "纳米核/1",
-	"craftTime": 20,
-	"consumes": {
-		"power": 15,
-		"items": ["titanium/1", "silicon/1"]
-	},
-	"research": {
-		"parent": "纳米组装机",
-		"objectives": [
-			{"type": "SectorComplete", "preset": "火山岛"}
-		]
-	}
+    "type": "GenericCrafter",
+    "name": "纳米打印机",
+    "outputItem": "纳米核/1",
+    "craftTime": 20,
+    "consumes": {
+        "power": 15,
+        "items": ["titanium/1", "silicon/1"]
+    },
+    "research": {
+        "parent": "纳米组装机",
+        "objectives": [
+            {"type": "SectorComplete", "preset": "火山岛"}
+        ]
+    }
 }
 ```
 
