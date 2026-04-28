@@ -50,7 +50,7 @@ Hjson相比JSON的改进包括：省略逗号、支持注释、支持键名无�
 Mindustry的所谓的json解析都是hjson解析，并且比hjson标准还要**宽松**。在Mindustry中HJSON和JSON没有区别，全部都是按照宽松的HJSON解析的。
 :::
 
-然后，找到`mod.hjson`文件，按照第三节的内容进行更改，特别要注意`minGameVersion`和`main`。`minGameVersion`最好随最好版本保持一致。而`main`必须是`src`下那个继承`mindustry.mod.Mod`的类的 **全限定名（Fully Qualified Name）** ，即“包名+类名”，例如`example.ExampleMod`。
+然后，找到`mod.hjson`文件，按照第三节的内容进行更改，特别要注意`minGameVersion`和`main`。`minGameVersion`最好随最新版本保持一致。而`main`必须是`src`下那个继承`mindustry.mod.Mod`的类的 **全限定名（Fully Qualified Name）** ，即“包名+类名”，例如`example.ExampleMod`。
 
 再次编译，把修改好的模组导入游戏当中，重启游戏，你就会在屏幕当中看到一只大大的青蛙或ohno（这取决你有没有修改`modName`），这说明你的模组可以在桌面端运行了。如果你想要生成安卓端也能运行的模组，请确保Android SDK已安装，并执行“other/deploy”。
 
