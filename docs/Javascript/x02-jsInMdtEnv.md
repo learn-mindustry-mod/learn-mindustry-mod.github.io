@@ -133,12 +133,6 @@ public Block(String name){}
 
 ```
 
-``` kotlin
-// Block类的构造函数
-open class Block(name: String)
-
-```
-
 :::
 
 于是你的extend()函数的调用就应该是:
@@ -161,22 +155,6 @@ public BulletType(float speed, float damage){
 }
 
 public BulletType(){}
-
-```
-
-``` kotlin
-
-open class BulletType {
-    var speed = 0f
-    var damage = 0f
-
-    constructor(speed: Float, damage: Float) {
-        this.speed = speed
-        this.damage = damage
-    }
-
-    constructor()
-}
 
 ```
 
@@ -208,25 +186,6 @@ public ShieldRegenFieldAbility(float amount, float max, float reload, float rang
     this.max = max;
     this.reload = reload;
     this.range = range;
-}
-
-```
-
-``` kotlin
-class ShieldRegenFieldAbility {
-    var amount = 0f
-    var max = 0f
-    var reload = 0f
-    var range = 0f
-
-    constructor()
-
-    constructor(amount: Float, max: Float, reload: Float, range: Float) {
-        this.amount = amount
-        this.max = max
-        this.reload = reload
-        this.range = range
-    }
 }
 
 ```

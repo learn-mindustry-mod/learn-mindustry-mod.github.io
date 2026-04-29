@@ -49,25 +49,6 @@ FrameBuffer(int width, int height, boolean hasDepth){/*...*/}
 FrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boolean hasStencil){/*...*/}
 ```
 
-``` kotlin
-/**2x2像素尺寸，格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
-constructor() {/*...*/}
-/**指定大小的格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
-constructor(width: Int, height: Int) {/*...*/}
-/**指定大小与格式的帧缓冲，无深度缓冲与模板缓冲*/
-constructor(format: Pixmap.Format, width: Int, height: Int) {/*...*/}
-/**指定大小与格式的帧缓冲，无模板缓冲
- * @param hasDepth 是否带有深度缓冲*/
-constructor(format: Pixmap.Format, width: Int, height: Int, hasDepth: Boolean) {/*...*/}
-/**指定大小的格式为RGBA8888的帧缓冲，无模板缓冲
- * @param hasDepth 是否带有深度缓冲*/
-constructor(width: Int, height: Int, hasDepth: Boolean) {/*...*/}
-/**指定大小与格式的帧缓冲
- * @param hasDepth 是否带有深度缓冲
- * @param hasStencil 是否带有模板缓冲*/
-constructor(format: Pixmap.Format, width: Int, height: Int, hasDepth: Boolean, hasStencil: Boolean) {/*...*/}
-```
-
 :::
 
 其中，类型为`Pixmap.Format`的参数`format`是一个枚举类型，它用于定义在颜色缓冲上的数据类型与数据到纹理的解析方式，枚举条目及释义如下表所列：
@@ -99,20 +80,6 @@ public void example(){
       true, //hasDepth
       true //hasStencil
   );//rgba8888格式的，大小为屏幕尺寸的带有深度缓冲与模板缓冲的帧缓冲
-}
-```
-
-``` kotlin
-fun example(){
-  val buffer1 = FrameBuffer() //尺寸为2x2，使用前必须通过resize(w, h)重设尺寸
-  val buffer2 = FrameBuffer(1024, 1024) //rgba8888格式的，大小为1024x1024的帧缓冲
-  val buffer3 = FrameBuffer(
-    format = Pixmap.Format.rgba8888,
-    width = Core.graphics.getWidth(),
-    height = Core.graphics.getHeight(),
-    hasDepth = true,
-    hasStencil = true
-  ) //rgba8888格式的，大小为屏幕尺寸的带有深度缓冲与模板缓冲的帧缓冲
 }
 ```
 
@@ -162,32 +129,6 @@ void example(){
 }
 ```
 
-``` kotlin
-val buffer = FrameBuffer()
-fun example(){
-  Fill.square(80f, 80f, 20f)//直接将四边形绘制到屏幕上
-  
-  //确保缓冲区尺寸
-  buffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight())
-  //绑定到缓冲区，并重置帧缓冲的颜色为透明
-  buffer.begin(Color.clear)
-
-  Fill.square(80f, 80f, 20f)//四边形会被绘制到帧缓冲中
-  
-  //解除绑定缓冲区（必要！）
-  buffer.end()
-  //获取纹理
-  val texture = buffer.getTexture()
-  //对纹理创建uv自0到1的完整纹理区域
-  val region = TextureRegion(texture)
-  //将帧缓冲中的图像绘制到屏幕左下角
-  Draw.rect(region, 120, 120, 240, 240)
-  //将帧缓冲的输出范围框出
-  Lines.stroke(4f)
-  Lines.rect(0f, 0f, 240f, 240f)
-}
-```
-
 :::
 
 它将会先在你的屏幕上绘制出一个白色的正方形，接着，这个正方形绘制到一个帧缓冲后，被缩放到左下角的一个正方形小框中：
@@ -232,26 +173,6 @@ void example(){
   buf1.end();//这会解除自buf1至buf3的所有帧缓冲绑定
   
   FrameBuffer.unbind();//直接解除所有帧缓冲绑定，而无需获取第一级别的帧缓冲
-  //慎用，这很可能会破坏渲染流程
-}
-```
-
-``` kotlin
-fun example(){
-  val buf1 = FrameBuffer()
-  val buf2 = FrameBuffer()
-  val buf3 = FrameBuffer()
-  
-  buf1.begin()
-    buf2.begin()
-      buf3.begin()//buf3.lastFrameBuffer -> buf2
-      
-    buf2.end()
-    buf3.end()//这将会导致buf2被再次绑定！
-  
-  buf1.end()//这会解除自buf1至buf3的所有帧缓冲绑定
-  
-  FrameBuffer.unbind()//直接解除所有帧缓冲绑定，而无需获取第一级别的帧缓冲
   //慎用，这很可能会破坏渲染流程
 }
 ```
@@ -304,28 +225,6 @@ public void drawPixelate(){
 }
 ```
 
-``` kotlin
-val pixelator = FrameBuffer().apply{
-  getTexture().setFilter(Texture.TextureFilter.nearest)
-}
-val region = TextureRegion()
-
-fun drawPixelate(){
-  val width = Core.graphics.width
-  val height = Core.graphics.height
-
-  pixelator.resize(width/4, height/4)
-  pixelator.begin(Color.clear)
-
-  draw()
-
-  pixelator.end()
-
-  region.set(pixelator.getTexture())
-  Draw.rect(region, width/2f, height/2f, width, height)
-}
-```
-
 :::
 
 将绘制中对`draw()`的调用更换为此处包围的`drawPixelate()`，最后的图像会明显的像素化：
@@ -359,30 +258,6 @@ public void register(){
     //对齐摄像机坐标，已省略
     //...
   });
-}
-```
-
-``` kotlin
-fun drawPixelate() {
-    //计算缓冲尺寸w与h，已省略
-    //...
-
-    buffer.resize(w, h)
-
-    buffer.begin(Color.clear)
-    renderer.draw()
-}
-
-fun register() {
-  Draw.draw(Layer.end) {
-    buffer.end()
-
-    Blending.disabled.apply()
-    buffer.blit(Shaders.screenspace)
-
-    //对齐摄像机坐标，已省略
-    //...
-  }
 }
 ```
 

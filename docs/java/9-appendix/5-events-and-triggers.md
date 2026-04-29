@@ -27,23 +27,6 @@ Events.on(EventType.Trigger.update, () -> {
 });
 ```
 
-``` kotlin
-import arc.Events
-import mindustry.game.EventType
-
-// 监听有数据的事件
-Events.on(EventType.BlockBuildEndEvent::class.java) { e ->
-    if (!e.breaking) {
-        // 这里可以安全读取 e.tile / e.team / e.unit / e.config
-    }
-}
-
-// 监听无数据的触发器
-Events.run(EventType.Trigger.update) {
-    // 每帧都会执行，慎用重逻辑
-}
-```
-
 :::
 
 触发器也可以用 `Events.run(Trigger.xxx, runnable)` 来注册，这种写法在原版里非常常见，本质仍是监听回调。需要强调的是：事件回调几乎都在主线程里执行，**不要在事件中做阻塞操作**；若确实需要，应该把耗时工作放入后台线程，或使用 `Core.app.post(...)` 回到主线程更新 UI / 游戏状态。

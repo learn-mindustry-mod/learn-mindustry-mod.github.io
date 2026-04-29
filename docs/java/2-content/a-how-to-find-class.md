@@ -64,17 +64,6 @@ public void load(){
 
 ```
 
-``` kotlin
-
-override fun load() {
-    super.load()
-
-    laser = Core.atlas.find("$name-beam", Core.atlas.find("power-beam"))
-    laserEnd = Core.atlas.find("$name-beam-end", Core.atlas.find("power-beam-end"))
-}
-
-```
-
 :::
 
 这段摘自`LongPowerNode.java`的代码展示了如何加载贴图：该方块会尝试加载名为`name + "-beam"`的贴图作为激光中段；`find()`方法的第二个参数表示，如果找不到第一个参数指定的贴图，则会**回滚（Fallback）**到`power-beam`这张贴图。*如果`power-beam`也找不到，则会回滚到`error`贴图（即`ohno`）；如果连`error`贴图也找不到，则表明`Core.atlas`已完全损坏，游戏将崩溃。*
@@ -107,33 +96,6 @@ public @Load(value = "@-#1-#2", lengths = {7, 4}) TextureRegion[][] regions;
 
 ```
 
-``` kotlin
-//把“select-arrow-small”贴图加载到selectArrowRegion中
-@Load("select-arrow-small")
-lateinit var selectArrowRegion: TextureRegion
-
-//把“$name-glow”贴图加载到glow中
-@Load("@-glow")
-lateinit var glow: TextureRegion
-
-//把“$namw-launch-arrow”贴图加载到arrowRegion中，如果找不到就回滚到“launch-arrow”
-@Load(value = "@-launch-arrow", fallback = "launch-arrow")
-lateinit var arrowRegion: TextureRegion
-
-//把“$name-1”、“$name-2”、“$name-3”加载到regions[]中
-@Load(value = "@-#", length = 3)
-lateinit var regions: Array<TextureRegion>
-
-//把“$name-1-1” “$name-1-2” “$name-1-3” “$name-1-4” “$name-2-1” “$name-2-2” “$name-2-3” “$name-2-4” ………… “$name-7-4”加载到regions[][]中
-@Load(value = "@-#1-#2", lengths = [7, 4])
-lateinit var regions: Array<Array<TextureRegion>>
-
-//把“$name-bottom-1” “$name-bottom-2” …… “$name-bottom-5”加载到botRegions[]中，哪个找不到就用“duct-bottom-$i”代替
-@Load(value = "@-bottom-#", length = 5, fallback = "duct-bottom-#")
-lateinit var botRegions: Array<TextureRegion>
-
-```
-
 :::
 
 你可以用`Content`的练习一下：
@@ -155,20 +117,6 @@ public void loadIcon(){
 }
 ```
 
-``` kotlin
-override fun loadIcon() {
-    fullIcon =
-        Core.atlas.find(fullOverride ?: "",
-        Core.atlas.find("${getContentType().name()}-$name-full",
-        Core.atlas.find("$name-full",
-        Core.atlas.find(name,
-        Core.atlas.find("${getContentType().name()}-$name",
-        Core.atlas.find("${name}1"))))))
-
-    uiIcon = Core.atlas.find("${getContentType().name()}-$name-ui", fullIcon)
-}
-```
-
 :::
 *请思考：物品的本体贴图到底有多少种命名方式？Mindustry每次大更新都没有模组负担，为什么Anuke还留着他们？*
 
@@ -186,16 +134,6 @@ public UnlockableContent(String name){
     this.description = Core.bundle.getOrNull(getContentType() + "." + this.name + ".description");
     this.details = Core.bundle.getOrNull(getContentType() + "." + this.name + ".details");
     this.unlocked = Core.settings != null && Core.settings.getBool(this.name + "-unlocked", false);
-}
-
-```
-
-``` kotlin
-constructor(name: String) : super(name) {
-    localizedName = Core.bundle.get("${getContentType()}.${this.name}.name", this.name)
-    description = Core.bundle.getOrNull("${getContentType()}.${this.name}.description")
-    details = Core.bundle.getOrNull("${getContentType()}.${this.name}.details")
-    unlocked = Core.settings != null && Core.settings.getBool("${this.name}-unlocked", false)
 }
 
 ```
@@ -229,17 +167,6 @@ public String localized(){
 public String getBundle(){
     var type = getClass();
     return "ability." + (type.isAnonymousClass() ? type.getSuperclass() : type).getSimpleName().replace("Ability", "").toLowerCase();
-}
-```
-
-``` kotlin
-fun localized(): String {
-    return Core.bundle.get(getBundle())
-}
-
-fun getBundle(): String {
-    val type = javaClass
-    return "ability." + (if (type.isAnonymousClass) type.superclass else type).simpleName.replace("Ability", "").lowercase()
 }
 ```
 
@@ -288,31 +215,6 @@ public class Env{
     any = 0xffffffff,
     //没有环境
     none = 0;
-}
-```
-
-``` kotlin
-object Env {
-    //处在星球上
-    const val terrestrial = 1
-    //在太空中，没有大气层
-    const val space = 1 shl 1
-    //在水下，首先要在星球上
-    const val underwater = 1 shl 2
-    //有孢子
-    const val spores = 1 shl 3
-    //环境就像火焰山
-    const val scorching = 1 shl 4
-    //有石油
-    const val groundOil = 1 shl 5
-    //有地下水
-    const val groundWater = 1 shl 6
-    //大气层中有氧气
-    const val oxygen = 1 shl 7
-    //所有环境，用来位掩码运算
-    const val any = -1
-    //没有环境
-    const val none = 0
 }
 ```
 

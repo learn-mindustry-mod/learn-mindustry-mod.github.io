@@ -12,12 +12,6 @@
 nodeRoot("tutorial", ModItems.tutorialItem, () -> {});
 ```
 
-``` kotlin
-nodeRoot("tutorial", ModItems.tutorialItem) {
-
-}
-```
-
 :::
 
 这样你就创建了一颗新的科技树。不要忘记给他分配名称。至于在战役科技界面的图标，则默认是根节点内容的贴图：
@@ -35,15 +29,6 @@ nodeRoot("tutorial", ModItems.tutorialItem, () -> {
     nodeProduce(ModLiquids.tutorialLiquid);
     node(ModBlocks.tutorialCrafter, () ->{});
 });
-```
-
-``` kotlin
-nodeRoot("tutorial", ModItems.tutorialItem) {
-    nodeProduce(ModLiquids.tutorialLiquid)
-    node(ModBlocks.tutorialCrafter) {
-
-    }
-}
 ```
 
 :::
@@ -91,35 +76,6 @@ Planets.serpulo.techTree = nodeRoot("serpulo", coreShard, () -> {
 
 ```
 
-``` kotlin
-Planets.serpulo.techTree = nodeRoot("serpulo", coreShard) {
-    node(router) {
-        node(advancedLaunchPad, Seq.with(SectorComplete(extractionOutpost))) {
-            node(landingPad) {
-                node(interplanetaryAccelerator, Seq.with(SectorComplete(planetaryTerminal)))
-            }
-        }
-        node(distributor)
-    }
-    node(groundZero) {
-        node(frozenForest, Seq.with(
-            SectorComplete(groundZero),
-            Research(junction),
-            Research(router)
-        )) {
-            node(craters, Seq.with(
-                SectorComplete(frozenForest),
-                Research(mender),
-                Research(combustionGenerator)
-            ))
-        }
-    }
-    nodeProduce(Items.copper) {
-        nodeProduce(Liquids.water)
-    }
-}
-```
-
 :::
 
 ## 挂载原版科技树
@@ -140,15 +96,6 @@ Planets.serpulo.techTree.each(node -> if(node.content == Items.surgeAlloy) tmp[0
 TechNode surgeAlloyN = tmp[0];
 ```
 
-``` kotlin
-var surgeAlloyN: TechNode? = null
-Planets.serpulo.techTree.each { node ->
-    if (node.content == Items.surgeAlloy) {
-        surgeAlloyN = node
-    }
-}
-```
-
 :::
 
 接下来，我们需要自己建立一个节点，然后设置新节点的`parent`和父节点的`children`即可：
@@ -159,15 +106,6 @@ Planets.serpulo.techTree.each { node ->
 TechNode fexAlloyN = nodeProduce(ModItems.fexAlloy, ()->{});
 fexAlloyN.parent = surgeAlloyN;
 surgeAlloyN.children.add(fexAlloyN);
-```
-
-``` kotlin
-// 确保节点已找到
-surgeAlloyN?.let { parentNode ->
-    val fexAlloyN = nodeProduce(ModItems.fexAlloy) { }
-    fexAlloyN.parent = parentNode
-    parentNode.children.add(fexAlloyN)
-}
 ```
 
 :::

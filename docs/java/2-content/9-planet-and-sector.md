@@ -12,10 +12,6 @@ Mindustry模组可分为原版拓展和新星球两种类型。添加新星球�
 new Planet("tutorial-planet", Planets.sun, 1f, 3);
 ```
 
-``` kotlin
-Planet("tutorial-planet", Planets.sun, 1f, 3)
-```
-
 :::
 
 构造方法的第一个参数是行星的名称；第二个参数是行星的公转中心，若为null则无公转中心；第三个参数是行星的半径，Serpulo和Erekir的半径均为1；第四个参数是 **星球网格（PlanetGrid）** 的 **细分（Subdivision）** 次数，当细分次数为0时，每个格子的中心是正二十面体的12个顶点，构成正十二面体，之后每次细分都将**顶点（Corner）**转化为六边形**格子（Tile）**。细分次数为1时，星球网格包含12个正五边形和20个正六边形，共32个区块。
@@ -158,10 +154,6 @@ Mindustry主要使用Simplex噪声算法。噪声算法通常定义了一个多�
 meshLoader = () -> new HexMesh(this, 6);
 ```
 
-``` kotlin
-meshLoader = Prov { HexMesh(this, 6) }
-```
-
 :::
 
 ### 数字区块的生成
@@ -190,10 +182,6 @@ meshLoader = Prov { HexMesh(this, 6) }
 new SectorPreset("testSector", Planets.serpulo, 15);
 ```
 
-``` kotlin
-SectorPreset("testSector", Planets.serpulo, 15)
-```
-
 :::
 
 ```properties bundle_zh_CN.properties
@@ -219,11 +207,6 @@ sector.tutorial-mod-testSector.details =
 ``` java
 new RainWeather("hailing");
 new ParticleWeather("gray-pall");
-```
-
-``` kotlin
-RainWeather("hailing")
-ParticleWeather("gray-pall")
 ```
 
 :::

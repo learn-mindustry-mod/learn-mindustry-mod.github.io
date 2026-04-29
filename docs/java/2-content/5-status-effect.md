@@ -14,10 +14,6 @@
 new StatusEffect("tutorial-status-effect-1");
 ```
 
-``` kotlin
-StatusEffect("tutorial-status-effect-1")
-```
-
 :::
 
 和往常一样，你需要给它分配贴图和文本。
@@ -71,23 +67,6 @@ wet = new StatusEffect("wet"){{
 }};
 ```
 
-``` kotlin
-val wet = StatusEffect("wet").apply {
-    color = Color.royal
-    speedMultiplier = 0.94f
-    effect = Fx.wet
-    effectChance = 0.09f
-    transitionDamage = 14
-
-    `init` {
-        affinity(shocked) { unit, result, time ->
-            unit.damage(transitionDamage)
-        }
-        opposite(burning, melting)
-    }
-}
-
-```
 <!----这段kt代码在154是跑不了的，但是笔者的pr使得在155能跑起来---->
 :::
 
@@ -97,10 +76,6 @@ val wet = StatusEffect("wet").apply {
 
 ``` java
 (参数列表) -> {函数体}
-```
-
-``` kotlin
-{ 参数列表 -> 函数体 }
 ```
 
 :::
@@ -113,32 +88,6 @@ val wet = StatusEffect("wet").apply {
 
 ::: details Kotlin 中的`trans`怎么办？
 这个方法是protected，在Java中可以直接使用，因为匿名类继承了父类。在Kotlin中，如果使用`apply()`等作用域函数，由于没有发生继承，无法直接访问protected方法。此时可以考虑以下两种方式：
-``` kotlin
-//法一：使用匿名类
-val wet1 = object : StatusEffect("wet") {
-    init{
-        `init`{
-            trans(melting){ unit, result, time ->
-                unit.damage(transitionDamage)
-            }
-        }
-    }
-}
-//法二：包装类
-class TutorialStatusEffect(name: String?) : StatusEffect(name){
-    fun transHelper(statusEffect: StatusEffect, transitionHandler: TransitionHandler){
-        trans(statusEffect, transitionHandler)
-    }
-}
-
-val wet2 = TutorialStatusEffect("wet").apply{
-    `init`{
-        transHelper(melting){ unit, result, time ->
-            unit.damage(transitionDamage)
-        }
-    }
-}
-```
 :::
 
 ## 特效
@@ -160,15 +109,6 @@ pulverizeMedium = new Effect(30, e -> {
 })
 ```
 
-``` kotlin
-pulverizeMedium = Effect(30f) { e ->
-    randLenVectors(e.id, 5, 3f + e.fin() * 8f) { x, y ->
-        color(Pal.stoneGray)
-        Fill.square(e.x + x, e.y + y, e.fout() + 0.5f, 45f)
-    }
-}
-```
-
 :::
 
 这个构造方法的第一个参数是特效的寿命，第二个参数也是一个Lambda表达式，用于放置具体的绘制方法。我们将在第五章深入介绍各种绘制方法的使用。
@@ -185,17 +125,6 @@ despawnEffect = hitEffect = new ExplosionEffect(){{
     waveStroke = 4f;
     waveRad = 40f;
 }};
-```
-
-``` kotlin
-despawnEffect = ExplosionEffect().apply {
-    waveColor = Pal.surge
-    smokeColor = Color.gray
-    sparkColor = Pal.sap
-    waveStroke = 4f
-    waveRad = 40f
-}
-hitEffect = despawnEffect
 ```
 
 :::
@@ -215,10 +144,6 @@ hitEffect = despawnEffect
 ::: code-group
 
 ``` java
-Vars.tree.loadSound("example-sound")
-```
-
-``` kotlin
 Vars.tree.loadSound("example-sound")
 ```
 

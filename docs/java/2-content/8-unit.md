@@ -18,13 +18,6 @@ new UnitType("tutorial-unit"){{
 }};
 ```
 
-``` kotlin
-UnitType("tutorial-unit").apply{
-    constructor = UnitEntity::create
-    EntityMapping.nameMap.put(name, constructor)
-}
-```
-
 :::
 
 - `UnitEntity::create`：普通飞行单位，如 `flare`、`alpha`，*在 JSON 中用 `flying` 表示*；
@@ -71,15 +64,6 @@ new UnitType("tutorial-unit"){{
         bullet = new BasicBulletType(2.5f, 9);
     }});
 }};
-```
-
-``` kotlin
-UnitType("tutorial-unit").apply{
-    constructor = UnitEntity::create
-    weapons.add(Weapon("tutorial-weapon").apply{
-        bullet = BasicBulletType(2.5f, 9)
-    })
-}
 ```
 
 :::
@@ -137,12 +121,6 @@ UnitTypes.mono.stances.add(item1mine);
 //省略若干单位
 ```
 
-``` kotlin
-val item1mine = ItemUnitStance(ModItems.item1)
-UnitTypes.mono.stances.add(item1mine)
-//省略若干单位
-```
-
 :::
 
 ## 单位 AI
@@ -194,19 +172,6 @@ groundFactory = new UnitFactory("ground-factory"){{
 }};
 ```
 
-``` kotlin
-val groundFactory = UnitFactory("ground-factory").apply {
-    requirements(Category.units, with(Items.copper, 50, Items.lead, 120, Items.silicon, 80))
-    plans = Seq.with(
-        UnitPlan(UnitTypes.dagger, 60f * 15, with(Items.silicon, 10, Items.lead, 10)),
-        UnitPlan(UnitTypes.crawler, 60f * 10, with(Items.silicon, 8, Items.coal, 10)),
-        UnitPlan(UnitTypes.nova, 60f * 40, with(Items.silicon, 30, Items.lead, 20, Items.titanium, 20))
-    )
-    size = 3
-    consumePower(1.2f)
-    researchCostMultiplier = 0.5f
-}
-```
 :::
 
 单位重构厂的类型为`mindustry.world.blocks.units.Reconstructor`。在 Mindustry 中，单位重构厂的消耗通过消耗器系统实现，其重构时间由`constructTime`字段控制，单位的升级路径则由`upgrades`字段定义。
@@ -237,30 +202,6 @@ tetrativeReconstructor = new Reconstructor("tetrative-reconstructor"){{
 }};
 ```
 
-``` kotlin
-val tetrativeReconstructor = Reconstructor("tetrative-reconstructor").apply {
-    requirements(Category.units, with(Items.lead, 4000, Items.silicon, 3000, Items.thorium, 1000, Items.plastanium, 600, Items.phaseFabric, 600, Items.surgeAlloy, 800))
-
-    size = 9
-    consumePower(25f)
-    consumeItems(with(Items.silicon, 1000, Items.plastanium, 600, Items.surgeAlloy, 500, Items.phaseFabric, 350))
-    consumeLiquid(Liquids.cryofluid, 3f)
-
-    constructTime = 60f * 60f * 4
-    createSound = Sounds.unitCreateBig
-
-    upgrades.addAll(
-        arrayOf(UnitTypes.antumbra, UnitTypes.eclipse),
-        arrayOf(UnitTypes.arkyid, UnitTypes.toxopid),
-        arrayOf(UnitTypes.scepter, UnitTypes.reign),
-        arrayOf(UnitTypes.sei, UnitTypes.omura),
-        arrayOf(UnitTypes.quad, UnitTypes.oct),
-        arrayOf(UnitTypes.vela, UnitTypes.corvus),
-        arrayOf(UnitTypes.aegires, UnitTypes.navanax)
-    )
-}
-```
-
 :::
 
 单位组装厂的类型为`mindustry.world.blocks.units.UnitAssembler`。该类型会生成若干无人机作为组装的先决条件，随后接收配方要求的载荷/物品/液体输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。配方的序号对应模块等级：第一个配方无需模块，第二个配方需要至少一个`tier=1`模块，第三个配方需要`tier=1`与`tier=2`连续覆盖，以此类推：
@@ -282,23 +223,6 @@ tankAssembler = new UnitAssembler("tank-assembler"){{
     consumePower(2.5f);
     consumeLiquid(Liquids.cyanogen, 9f / 60f);
 }};
-```
-
-``` kotlin
-val tankAssembler = UnitAssembler("tank-assembler").apply {
-    requirements(Category.units, with(Items.thorium, 500, Items.oxide, 150, Items.carbide, 80, Items.silicon, 650))
-    regionSuffix = "-dark"
-    size = 5
-            plans.add(
-        AssemblerUnitPlan(UnitTypes.vanquish, 60f * 50f, PayloadStack.list(UnitTypes.stell, 4, Blocks.tungstenWallLarge, 10)),
-        AssemblerUnitPlan(UnitTypes.conquer, 60f * 60f * 3f, PayloadStack.list(UnitTypes.locus, 6, Blocks.carbideWallLarge, 20))
-    )
-    areaSize = 13
-    researchCostMultiplier = 0.4f
-
-    consumePower(2.5f)
-    consumeLiquid(Liquids.cyanogen, 9f / 60f)
-}
 ```
 
 :::

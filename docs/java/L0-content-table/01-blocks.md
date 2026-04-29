@@ -36,15 +36,6 @@
 ::: code-group
 
 ``` java
-// TODO use completely different layer
-// TODO consume heat
-// TODO broken class!!!!!
-```
-
-``` kotlin
-// TODO use completely different layer
-// TODO consume heat
-// TODO broken class!!!!!
 ```
 
 :::

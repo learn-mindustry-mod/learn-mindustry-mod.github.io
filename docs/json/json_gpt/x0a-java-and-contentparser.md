@@ -15,13 +15,6 @@ public class Drill extends Block{
 }
 ```
 
-``` kotlin
-class Drill(name: String) : Block(name) {
-    var tier = 1
-    var drillTime = 300f
-}
-```
-
 :::
 
 `public` 表示公开字段，`int`/`float` 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。注意 Java 的 `float` 常带 `f` 后缀，表示这是浮点数而不是整数。
@@ -38,12 +31,6 @@ public void updateTile(){
 }
 ```
 
-``` kotlin
-fun updateTile() {
-    //每帧逻辑
-}
-```
-
 :::
 
 构造器名字与类名相同，常用于创建时设定基础值：
@@ -56,10 +43,6 @@ public Drill(String name){
 }
 ```
 
-``` kotlin
-constructor(name: String) : super(name)
-```
-
 :::
 
 你在 `core/src/mindustry/content/*.java` 里看到的写法，经常是“匿名内部类”初始化：
@@ -70,12 +53,6 @@ constructor(name: String) : super(name)
 new GenericCrafter("x"){ {
     craftTime = 60f;
 }}
-```
-
-``` kotlin
-GenericCrafter("x").apply {
-    craftTime = 60f
-}
 ```
 
 :::
@@ -97,11 +74,6 @@ requirements = ItemStack.with(Items.copper, 50, Items.lead, 30);
 consumes.add(new ConsumeItems(new ItemStack(Items.graphite, 2)));
 ```
 
-``` kotlin
-requirements = ItemStack.with(Items.copper, 50, Items.lead, 30)
-consumes.add(ConsumeItems(ItemStack(Items.graphite, 2)))
-```
-
 :::
 
 它们在 JSON 中对应 `"requirements": ["copper/50", "lead/30"]` 或 `consumes.items` 的写法。看到这些语句时，你就能反推 JSON 的结构。
@@ -120,14 +92,6 @@ new GenericCrafter("silicon-smelter"){{
     outputItem = new ItemStack(Items.silicon, 1);
     consumes.power(0.5f);
 }}
-```
-
-``` kotlin
-GenericCrafter("silicon-smelter").apply {
-    craftTime = 60f
-    outputItem = ItemStack(Items.silicon, 1)
-    consumes.power(0.5f)
-}
 ```
 
 :::
@@ -160,15 +124,6 @@ weapons.add(new Weapon(){{
     reload = 30f;
     bullet = new BasicBulletType(3f, 12);
 }});
-```
-
-``` kotlin
-weapons.add(Weapon().apply {
-    x = 4f
-    y = 1f
-    reload = 30f
-    bullet = BasicBulletType(3f, 12f)
-})
 ```
 
 :::
@@ -210,12 +165,6 @@ weapons.add(Weapon().apply {
 var type = json.getString("type", defaultType);
 var block = makeBlock(type, name);
 readFields(block, json);
-```
-
-``` kotlin
-val type = json.getString("type", defaultType)
-val block = makeBlock(type, name)
-readFields(block, json)
 ```
 
 :::

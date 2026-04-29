@@ -42,24 +42,6 @@ public void setStats(){
 }
 ```
 
-``` kotlin
-override fun setStats() {
-    stats.timePeriod = craftTime
-    super.setStats()
-    if ((hasItems && itemCapacity > 0) || outputItems != null) {
-        stats.add(Stat.productionTime, craftTime / 60f, StatUnit.seconds)
-    }
-
-    if (outputItems != null) {
-        stats.add(Stat.output, StatValues.items(craftTime, outputItems))
-    }
-
-    if (outputLiquids != null) {
-        stats.add(Stat.output, StatValues.liquids(1f, outputLiquids))
-    }
-}
-```
-
 :::
 
 ::: code-group
@@ -69,13 +51,6 @@ override fun setStats() {
 public void setStats(){
     super.setStats();
     stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond);
-}
-```
-
-``` kotlin
-override fun setStats() {
-    super.setStats()
-    stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond)
 }
 ```
 
@@ -95,21 +70,6 @@ public void setStats(){
 
     if(outputLiquid != null){
         stats.add(Stat.output, StatValues.liquid(outputLiquid.liquid, outputLiquid.amount * 60f, true));
-    }
-}
-```
-
-``` kotlin
-override fun setStats() {
-    stats.timePeriod = itemDuration
-    super.setStats()
-
-    if (hasItems) {
-        stats.add(Stat.productionTime, itemDuration / 60f, StatUnit.seconds)
-    }
-
-    if (outputLiquid != null) {
-        stats.add(Stat.output, StatValues.liquid(outputLiquid.liquid, outputLiquid.amount * 60f, true))
     }
 }
 ```
@@ -153,34 +113,6 @@ public void setStats(){
 }
 ```
 
-``` kotlin
-override fun setStats() {
-    super.setStats()
-
-    stats.add(Stat.size, "@x@", size, size)
-
-    if (synthetic()) {
-        stats.add(Stat.health, health, StatUnit.none)
-        if (armor > 0) {
-            stats.add(Stat.armor, armor, StatUnit.none)
-        }
-    }
-
-    if (canBeBuilt() && requirements.isNotEmpty()) {
-        stats.add(Stat.buildTime, buildTime / 60, StatUnit.seconds)
-        stats.add(Stat.buildCost, StatValues.items(false, requirements))
-    }
-
-    for (consumer in consumers) {
-        consumer.display(stats)
-    }
-
-    //Note: Power stats are added by the consumers.
-    if (hasLiquids) stats.add(Stat.liquidCapacity, liquidCapacity, StatUnit.liquidUnits)
-    if (hasItems && itemCapacity > 0) stats.add(Stat.itemCapacity, itemCapacity, StatUnit.items)
-}
-```
-
 :::
 
 从上方的代码中可以看出，`Block`类中添加的统计信息是所有方块通用的。这是因为所有方块都继承了`Block`类，并且在执行`setStats()`时都调用了`super.setStats()`，即执行其超类的`setStats()`方法。实际上，向统计信息中添加方块的贴图和名称是`Block`超类`UnlockableContent`中的`setStats()`执行的结果。继承机制使得子类可以复用超类中已有的代码。
@@ -203,13 +135,6 @@ override fun setStats() {
 public Content(){
     this.id = (short)Vars.content.getBy(getContentType()).size;
     Vars.content.handleContent(this);
-}
-```
-
-``` kotlin
-init {
-    id = Vars.content.getBy(getContentType()).size.toShort()
-    Vars.content.handleContent(this)
 }
 ```
 
@@ -240,9 +165,6 @@ public class LampBlock extends Block{
 }
 ```
 
-``` kotlin
-class LampBlock(name: String) : Block(name)
-```
 :::
 
 你需要将`update`字段设置为`true`，让方块拥有可更新的建筑实体并进入更新循环（例如`updateTile()`）。`Block`是否创建`Building`取决于`update`或`destructible`：若两者均为`false`，`tile.build`为`null`，只能静态绘制`Block#drawBase(Tile)`；若仅设置`destructible = true`，会有建筑实体但不参与更新循环。原版的环境方块、静态墙体等通常就处于这种“无更新实体/静态绘制”的状态。
@@ -265,17 +187,6 @@ public class LampBlock extends Block{
 }
 ```
 
-``` kotlin
-class LampBlock(name: String) : Block(name) {
-    init {
-        update = true
-    }
-    
-    open inner class LampBuild: Building() {
-        var light: Boolean = false
-    }
-}
-```
 :::
 
 这样，方块与建筑实体的代码区域便得以划分，它们分别对应`Block`中的方法和`Building`中的方法。后续的步骤是深入探究这两个区域中的方法。
@@ -298,10 +209,6 @@ class LampBlock(name: String) : Block(name) {
 
 ``` java
 Core.atlas.find("<modName>-<fileName>");
-```
-
-``` kotlin
-Core.atlas.find("<modName>-<fileName>")
 ```
 
 :::
@@ -338,26 +245,6 @@ public class LampBlock extends Block{
 }
 ```
 
-``` kotlin
-class LampBlock(name: String?) : Block(name) {
-    init {
-        update = true
-    }
-
-    var lightRegion: TextureRegion? = null
-    var darkRegion: TextureRegion? = null
-
-    override fun load() {
-        super.load()
-        lightRegion = Core.atlas.find("$name-light")
-        region = darkRegion = Core.atlas.find("$name-dark")
-    }
-    
-    open inner class LampBuild: Building() {
-        var light: Boolean = false
-    }
-}
-```
 :::
 
 这里我们把`darkRegion`也赋值到`region`中，后者是方块的默认贴图，默认会去读取名称与此内容相同的贴图，但是我们没有准备，所以需要我们手动赋值，否则我们将不得不重写所有绘制方法。
@@ -393,12 +280,6 @@ public class TutorialStatJ{
 }
 ```
 
-``` kotlin
-object TutorialStat {
-    val lightRadius = Stat("lightRadius", StatCat.function)
-}
-```
-
 :::
 
 接下来就可以在`setStats()`方法中添加新的Stat了，下列代码只展示此方法：
@@ -410,13 +291,6 @@ object TutorialStat {
 public void setStats(){
     super.setStats();
     stats.add(TutorialStat.lightRadius, 5f, StatUnit.blocks);
-}
-```
-
-``` kotlin
-override fun setStats() {
-    super.setStats()
-    stats.add(TutorialStat.lightRadius, 5f, StatUnit.blocks)
 }
 ```
 
@@ -478,19 +352,6 @@ public void setBars(){
 }
 ```
 
-``` kotlin
-override fun setBars() {
-    super.setBars()
-    addBar("light") { lamp: LampBuild ->
-        Bar(
-            { if (lamp.light) "灯开" else "灯关" },
-            { Pal.accent },
-            { if (lamp.light) 1f else 0f }
-        )
-    }
-}
-```
-
 :::
 
 ### 国际化
@@ -507,13 +368,6 @@ Core.bundle.get("misc.lightOn");
 Core.bundle.format("misc.light", "aaa", "bbb");
 ```
 
-``` kotlin
-//获取当前语言中键名为misc.lightOn的值
-Core.bundle.get("misc.lightOn")
-//获取当前语言中键名为misc.lightOn的值，并将其中的{0}替换成aaa，{1}替换成bbb
-Core.bundle.format("misc.light", "aaa", "bbb")
-```
-
 :::
 
 例如以上的代码可以做如下改写：
@@ -528,20 +382,6 @@ public void setBars(){
     addBar("light", (LampBuild lamp) -> new Bar(() -> lamp.light ? Core.bundle.get("misc.lampOn") : Core.bundle.get("misc.lampOff"), // [!code ++]
     () -> Pal.accent,
     () -> lamp.light ? 1f : 0f));
-}
-```
-
-``` kotlin
-override fun setBars() {
-    super.setBars()
-    addBar("light") { lamp: LampBuild ->
-        Bar(
-            { if (lamp.light) "灯开" else "灯关" }, // [!code --]
-            { if (lamp.light) Core.bundle.get("misc.lampOn") else Core.bundle.get("misc.lampOff") }, // [!code ++]
-            { Pal.accent },
-            { if (lamp.light) 1f else 0f }
-        )
-    }
 }
 ```
 
@@ -584,12 +424,6 @@ public void draw(){
 }
 ```
 
-``` kotlin
-override fun draw() {
-    Draw.rect(if (light) lightRegion else darkRegion, x, y)
-}
-```
-
 :::
 
 ### `drawLight()`
@@ -605,13 +439,6 @@ override fun draw() {
 public void drawLight(){
     super.drawLight();
     Drawf.light(x, y, 5f, Color.white, 1f);
-}
-```
-
-``` kotlin
-override fun drawLight() {
-    super.drawLight()
-    Drawf.light(x, y, 5f, Color.white, 1f)
 }
 ```
 
@@ -642,15 +469,6 @@ public static final Color mikuGreen = new Color("39c5bb");
 public void drawLight(){
     super.drawLight();
     Drawf.light(x, y, 5f, mikuGreen, 1f);
-}
-```
-
-``` kotlin
-val mikuGreen = Color("39c5bb")
-
-override fun drawLight() {
-    super.drawLight()
-    Drawf.light(x, y, 5f, mikuGreen, 1f)
 }
 ```
 
@@ -700,13 +518,6 @@ public void init(){
 }
 ```
 
-``` kotlin
-override fun init() {
-    lightRadius = 5f * Vars.tileSize
-    super.init()
-}
-```
-
 :::
 
 这里`lightRadius`的单位是世界单位（`1格=8世界单位`），因此我们通过Vars.tileSize进行单位换算。此外，我们必须让`super.init()`后执行，否则我们对`lightRadius`的更改就不会生效，因为使用`lightRadius`计算`clipSize`正是发生在`Block#init`方法中。
@@ -724,13 +535,6 @@ override fun init() {
 public void tapped(){
     super.tapped();
     light = !light;
-}
-```
-
-``` kotlin
-override fun tapped() {
-    super.tapped()
-    light = !light
 }
 ```
 
@@ -772,18 +576,6 @@ public void write(Writes write){
 }
 ```
 
-``` kotlin
-override fun read(read: Reads, revision: Byte) {
-    super.read(read, revision)
-    light = read.bool()
-}
-
-override fun write(write: Writes) {
-    super.write(write)
-    write.bool(light)
-}
-```
-
 :::
 
 #### 版本控制
@@ -804,17 +596,6 @@ public byte version(){
 public void read(Reads read, byte revision){
     super.read(read, revision);
     if(revision >= 1) light = read.bool();
-}
-```
-
-``` kotlin
-override fun version(): Byte {
-    return 1
-}
-
-override fun read(read: Reads, revision: Byte) {
-    super.read(read, revision)
-    if (revision >= 1) light = read.bool()
 }
 ```
 
@@ -845,17 +626,6 @@ public Object config(){
 }
 ```
 
-``` kotlin
-init {
-    update = true
-    config(Boolean::class.java) { build: LampBuild, state: Boolean? -> build.light = state!! }
-}
-
-override fun config(): Any? {
-    return light
-}
-```
-
 :::
 
 接下来，你需要在原来直接改变方块状态的地方改为调用方块的`configure()`方法：
@@ -868,14 +638,6 @@ public void tapped(){
     super.tapped();
     light = !light; // [!code --]
     configure(!light); // [!code ++]
-}
-```
-
-``` kotlin
-override fun tapped() {
-    super.tapped()
-    light = !light // [!code --]
-    configure(!light) // [!code ++]
 }
 ```
 
@@ -918,20 +680,6 @@ public void drawLight(){
     super.drawLight();
     Drawf.light(x, y, 5f, Color.white, 1f); // [!code --]
     Drawf.light(x, y, lampRadius, Color.white, 1f); // [!code ++]
-}
-```
-
-``` kotlin
-var lampRadius: Int = 5;
-override fun setStats() {
-    super.setStats()
-    stats.add(TutorialStatK.lightRadius, l5f, StatUnit.blocks) // [!code --]
-    stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks) // [!code ++]
-}
-    override fun drawLight() {
-    super.drawLight()
-    Drawf.light(x, y, 5f, Color.white, 1f) // [!code --]
-    Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f) // [!code ++]
 }
 ```
 
@@ -1060,91 +808,6 @@ public class LampBlockJ extends Block{
 }
 ```
 
-``` kotlin package example.world.blocks
-
-import arc.Core
-import arc.graphics.Color
-import arc.graphics.g2d.Draw
-import arc.graphics.g2d.TextureRegion
-import arc.util.io.Reads
-import arc.util.io.Writes
-import example.world.meta.TutorialStatK
-import mindustry.gen.Building
-import mindustry.graphics.Drawf
-import mindustry.graphics.Pal
-import mindustry.ui.Bar
-import mindustry.world.Block
-import mindustry.world.meta.StatUnit
-
-class LampBlockK(name: String?) : Block(name) {
-    var lampRadius: Int = 5;
-    init {
-        update = true
-        config(Boolean::class.java) { build: LampBlockJ.LampBuild, state: Boolean? -> build.light = state!! }
-    }
-
-    var lightRegion: TextureRegion? = null
-    var darkRegion: TextureRegion? = null
-
-    override fun load() {
-        super.load()
-        lightRegion = Core.atlas.find("$name-light")
-        darkRegion = Core.atlas.find("$name-dark")
-    }
-
-    override fun setStats() {
-        super.setStats()
-        stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks)
-    }
-
-    override fun setBars() {
-        super.setBars()
-        addBar("light") { lamp: LampBuild ->
-            Bar(
-                { if (lamp.light) "灯开" else "灯关" },
-                { Pal.accent },
-                { if (lamp.light) 1f else 0f }
-            )
-        }
-    }
-
-    open inner class LampBuild : Building() {
-        var light: Boolean = false
-        override fun draw() {
-            Draw.rect(if (light) lightRegion else darkRegion, x, y)
-        }
-
-        override fun drawLight() {
-            super.drawLight()
-            Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f)
-        }
-        override fun tapped() {
-            super.tapped()
-            configure(!light)
-        }
-
-        override fun version(): Byte {
-            return 1
-        }
-
-        override fun read(read: Reads, revision: Byte) {
-            super.read(read, revision)
-            if (revision >= 1) light = read.bool()
-        }
-
-        override fun write(write: Writes) {
-            super.write(write)
-            write.bool(light)
-        }
-
-        override fun config(): Any? {
-            return light
-        }
-    }
-}
-
-```
-
 :::
 
 最后一步，不要忘记给你的类新建一个实例：
@@ -1153,10 +816,6 @@ class LampBlockK(name: String?) : Block(name) {
 
 ``` java
 new LampBlock("lamp");
-```
-
-``` kotlin
-LampBlock("lamp")
 ```
 
 :::

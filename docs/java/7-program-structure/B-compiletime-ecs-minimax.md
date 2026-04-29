@@ -54,15 +54,6 @@ abstract class HealthComp{
 }
 ```
 
-``` kotlin
-@Component
-abstract class HealthComp {
-    var health = 1.0f
-    var maxHealth = 1.0f
-    var id = 0
-}
-```
-
 :::
 
 组件设计遵循以下约束：
@@ -92,12 +83,6 @@ abstract class HealthComp {
 @SyncField(clamped = true) float health; // 插值结果被 clamp 到 [0, max] 范围
 ```
 
-``` kotlin
-@SyncField(true) var x = 0f        // 使用 lerp 插值（线性插值）
-@SyncField(false) var angle = 0f     // 使用 slerp 插值（球面插值，适用于角度）
-@SyncField(clamped = true) var health = 0f // 插值结果被 clamp 到 [0, max] 范围
-```
-
 :::
 
 `@SyncField` 只能用于 `float` 类型字段。生成器会自动添加以下辅助字段：
@@ -109,13 +94,6 @@ abstract class HealthComp {
 private float x_LAST_ = 0f;
 private float x_TARGET_ = 0f;
 private transient float x_LASTUPDATE_ = 0f;
-```
-
-``` kotlin
-// 假设原字段为 x，则生成器会添加：
-private var x_LAST_ = 0f
-private var x_TARGET_ = 0f
-@Transient private var x_LASTUPDATE_ = 0f
 ```
 
 :::
@@ -130,10 +108,6 @@ private var x_TARGET_ = 0f
 @SyncLocal float mouseX; // 该字段由本地控制，不接受服务端广播
 ```
 
-``` kotlin
-@SyncLocal var mouseX = 0f // 该字段由本地控制，不接受服务端广播
-```
-
 :::
 
 该注解不会消除网络流量的读写，但会在读取快照时跳过本地覆盖。其设计目的是减少控制权切换时的视觉抖动。
@@ -146,10 +120,6 @@ private var x_TARGET_ = 0f
 
 ```java
 @NoSync float clientCache; // 仅客户端使用，不参与网络传输
-```
-
-``` kotlin
-@NoSync var clientCache = 0f // 仅客户端使用，不参与网络传输
 ```
 
 :::
@@ -167,11 +137,6 @@ private var x_TARGET_ = 0f
 ```java
 @EntityDef({Unitc.class, Flyerc.class})
 abstract class MyUnitDef{}
-```
-
-``` kotlin
-@EntityDef(value = [Unitc::class, Flyerc::class])
-abstract class MyUnitDef
 ```
 
 :::
@@ -222,17 +187,6 @@ abstract class MyUnitDef
 }
 ```
 
-``` kotlin
-@Component abstract class UnitComp {
-    var speed = 0f
-}
-
-@Component abstract class HealComp {
-    @Import var speed = 0f  // 引用 UnitComp 的 speed，不生成字段
-    var healAmount = 0f
-}
-```
-
 :::
 
 该机制的目的是避免字段复制。若 `HealComp` 需要使用其他组件的字段，只需声明依赖，无需重写字段定义。
@@ -253,13 +207,6 @@ abstract class MyUnitDef
 @Component abstract class A{ float value; }
 @Component abstract class B{
     @Import int value;  // 类型不匹配，编译报错
-}
-```
-
-``` kotlin
-@Component abstract class A { var value = 0f }
-@Component abstract class B {
-    @Import var value = 0  // 类型不匹配，编译报错
 }
 ```
 
@@ -299,22 +246,6 @@ abstract class MyUnitDef
 }
 ```
 
-``` kotlin
-@Component abstract class UnitComp {
-    fun update() {
-        // 基础更新逻辑
-    }
-}
-
-@Component abstract class Flyerc {
-    @MethodPriority(10f)
-    fun update() {
-        // 飞行单位的更新逻辑应覆盖基础逻辑
-        // 因优先级更高而被选中
-    }
-}
-```
-
 :::
 
 ### 6.3 无法解決的冲突
@@ -333,10 +264,6 @@ abstract class MyUnitDef
 
 ```java
 @EntityDef({Bulletc.class}, pooled = true, serialize = false)
-```
-
-``` kotlin
-@EntityDef(value = [Bulletc::class], pooled = true, serialize = false)
 ```
 
 :::
@@ -372,15 +299,6 @@ void reset(){
 }
 ```
 
-``` kotlin
-// 生成器自动生成类似代码
-fun reset() {
-    health = 1.0f         // 字段初始化值
-    x = 0f                // 基本类型归零
-    target = null         // 引用类型置 null
-}
-```
-
 :::
 
 设计 `reset()` 语义时应注意：
@@ -400,10 +318,6 @@ fun reset() {
 ::: code-group
 
 ```java
-@GroupDef(spatial = true, mapping = true, collide = true)
-```
-
-``` kotlin
 @GroupDef(spatial = true, mapping = true, collide = true)
 ```
 
@@ -436,21 +350,6 @@ class Laser{}
 class Effect{}
 @GroupDef(spatial = true)
 class Payload{}
-```
-
-``` kotlin
-@GroupDef(spatial = true, collide = true, mapping = true)
-class Bullet
-@GroupDef(spatial = true, collide = true, mapping = true)
-class Unit
-@GroupDef(spatial = true, mapping = true)
-class Building
-@GroupDef(spatial = true)
-class Laser
-@GroupDef(spatial = false, mapping = true)
-class Effect
-@GroupDef(spatial = true)
-class Payload
 ```
 
 :::
