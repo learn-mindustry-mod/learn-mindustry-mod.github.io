@@ -21,6 +21,8 @@
 
 例如，原版中设置方块在核心数据库显示内容的方法为`setStats()`，对于`GenericCrafter`、`Pump`、`ConsumeGenerator`三个类而言，内容分别如下：
 
+::: code-group
+
 ``` java
 @Override
 public void setStats(){
@@ -40,6 +42,28 @@ public void setStats(){
 }
 ```
 
+``` kotlin
+override fun setStats() {
+    stats.timePeriod = craftTime
+    super.setStats()
+    if ((hasItems && itemCapacity > 0) || outputItems != null) {
+        stats.add(Stat.productionTime, craftTime / 60f, StatUnit.seconds)
+    }
+
+    if (outputItems != null) {
+        stats.add(Stat.output, StatValues.items(craftTime, outputItems))
+    }
+
+    if (outputLiquids != null) {
+        stats.add(Stat.output, StatValues.liquids(1f, outputLiquids))
+    }
+}
+```
+
+:::
+
+::: code-group
+
 ``` java
 @Override
 public void setStats(){
@@ -47,6 +71,17 @@ public void setStats(){
     stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond);
 }
 ```
+
+``` kotlin
+override fun setStats() {
+    super.setStats()
+    stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond)
+}
+```
+
+:::
+
+::: code-group
 
 ``` java
 @Override
@@ -64,11 +99,30 @@ public void setStats(){
 }
 ```
 
+``` kotlin
+override fun setStats() {
+    stats.timePeriod = itemDuration
+    super.setStats()
+
+    if (hasItems) {
+        stats.add(Stat.productionTime, itemDuration / 60f, StatUnit.seconds)
+    }
+
+    if (outputLiquid != null) {
+        stats.add(Stat.output, StatValues.liquid(outputLiquid.liquid, outputLiquid.amount * 60f, true))
+    }
+}
+```
+
+:::
+
 对比各字段的含义与游戏内核心数据库页的具体显示内容，可以确认`setStats()`方法中的代码决定了显示内容。
 
 ![多态](imgs/generic.png)
 
 然而，另一方面，大部分显示内容并未在这些类中定义，这是面向对象编程的另一特征——继承——所导致的结果。以下为其基类`Block`中的相关定义：
+
+::: code-group
 
 ``` java
 @Override
@@ -99,6 +153,36 @@ public void setStats(){
 }
 ```
 
+``` kotlin
+override fun setStats() {
+    super.setStats()
+
+    stats.add(Stat.size, "@x@", size, size)
+
+    if (synthetic()) {
+        stats.add(Stat.health, health, StatUnit.none)
+        if (armor > 0) {
+            stats.add(Stat.armor, armor, StatUnit.none)
+        }
+    }
+
+    if (canBeBuilt() && requirements.isNotEmpty()) {
+        stats.add(Stat.buildTime, buildTime / 60, StatUnit.seconds)
+        stats.add(Stat.buildCost, StatValues.items(false, requirements))
+    }
+
+    for (consumer in consumers) {
+        consumer.display(stats)
+    }
+
+    //Note: Power stats are added by the consumers.
+    if (hasLiquids) stats.add(Stat.liquidCapacity, liquidCapacity, StatUnit.liquidUnits)
+    if (hasItems && itemCapacity > 0) stats.add(Stat.itemCapacity, itemCapacity, StatUnit.items)
+}
+```
+
+:::
+
 从上方的代码中可以看出，`Block`类中添加的统计信息是所有方块通用的。这是因为所有方块都继承了`Block`类，并且在执行`setStats()`时都调用了`super.setStats()`，即执行其超类的`setStats()`方法。实际上，向统计信息中添加方块的贴图和名称是`Block`超类`UnlockableContent`中的`setStats()`执行的结果。继承机制使得子类可以复用超类中已有的代码。
 
 ::: info 如何找到自己需要的方法？
@@ -113,12 +197,23 @@ public void setStats(){
 
 最后，但也是最重要的，游戏是如何知道我们新建了一个内容？Mindustry的机制是，在内容对象的构造过程中自动完成注册。如果一个类直接或间接继承自内容的基类`Content`，其构造方法必须调用超类的构造方法，这个调用链最终会执行到`Content`的构造方法中：
 
+::: code-group
+
 ``` java
 public Content(){
     this.id = (short)Vars.content.getBy(getContentType()).size;
     Vars.content.handleContent(this);
 }
 ```
+
+``` kotlin
+init {
+    id = Vars.content.getBy(getContentType()).size.toShort()
+    Vars.content.handleContent(this)
+}
+```
+
+:::
 
 这两行代码表明，游戏会通过内容管理器`Vars.content`为内容分配一个在其内容类型中唯一的id，并将内容自身注册到管理器中。在后续的加载过程中，该内容会与原版内容以相同的方式被处理。当玩家打开该物品的统计信息界面时，游戏会调用内容的`setStats()`方法来计算需要显示的信息，此时相关的代码逻辑才会被执行。
 
@@ -199,9 +294,17 @@ class LampBlock(name: String) : Block(name) {
 
 原版中几乎全部的显示效果都是使用贴图来呈现的，灯笼也不例外。你需要为灯笼准备一张点亮贴图和一张熄灭贴图。由于这次你需要自定义绘制过程，因此你不能再依赖游戏帮你引用贴图，而是需要自己引用贴图并编写绘制过程。你仍然需要把贴图放置在`assets/sprites/`目录下。你可以通过这样的语法来获得贴图的引用：
 
+::: code-group
+
 ``` java
 Core.atlas.find("<modName>-<fileName>");
 ```
+
+``` kotlin
+Core.atlas.find("<modName>-<fileName>")
+```
+
+:::
 
 在游戏加载贴图时，会自动把`sprites`文件夹下的贴图加上modName前缀。**因此务必加上modName前缀，或者使用`Vars.content.transformName()才能获得贴图`**这样获取的是一个类型为`TextureRegion`子类的、指向这张贴图的引用。
 
@@ -395,12 +498,23 @@ override fun setBars() {
 
 `I18nBundle`在游戏中是一个单例对象，其唯一的对象位于`Core.bundle`。使用时我们需要使用这样的语法：
 
+::: code-group
+
 ``` java
 //获取当前语言中键名为misc.lightOn的值
 Core.bundle.get("misc.lightOn");
 //获取当前语言中键名为misc.lightOn的值，并将其中的{0}替换成aaa，{1}替换成bbb
 Core.bundle.format("misc.light", "aaa", "bbb");
 ```
+
+``` kotlin
+//获取当前语言中键名为misc.lightOn的值
+Core.bundle.get("misc.lightOn")
+//获取当前语言中键名为misc.lightOn的值，并将其中的{0}替换成aaa，{1}替换成bbb
+Core.bundle.format("misc.light", "aaa", "bbb")
+```
+
+:::
 
 例如以上的代码可以做如下改写：
 
@@ -519,6 +633,8 @@ public void drawLight(){
 
 正确的做法是把这些值不变的对象找个地方缓存起来：
 
+::: code-group
+
 ``` java
 public static final Color mikuGreen = new Color("39c5bb");
 
@@ -528,6 +644,17 @@ public void drawLight(){
     Drawf.light(x, y, 5f, mikuGreen, 1f);
 }
 ```
+
+``` kotlin
+val mikuGreen = Color("39c5bb")
+
+override fun drawLight() {
+    super.drawLight()
+    Drawf.light(x, y, 5f, mikuGreen, 1f)
+}
+```
+
+:::
 
 你也可以像原版一样，建一个`Pal`类来存储用到的颜色。至于确实可变的对象，你也应该尽量把他们临时化或池化来减少对象创建。
 

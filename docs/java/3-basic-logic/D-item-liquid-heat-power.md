@@ -10,13 +10,25 @@ Mindustry中的各种资源从产生到消耗，中间必然会经历传输的�
 
 在原版中，物品传输遵循“先询问再传输”的原则。负责询问建筑是否可以接受物品的方法是`acceptItem(Building, Item)`。只有实体才可能拥有物品槽，进而可以参与物品传输系统，因此这些方法通常在`Building`中。建筑的默认行为如下，可见这个方法需要负责判断“建筑是否消耗此物品”和“物品槽中此物品的数量是否超过最大数量”。
 
+::: code-group
+
 ``` java
 public boolean acceptItem(Building source, Item item) {
     return block.consumesItem(item) && items.get(item) < getMaximumAccepted(item);
 }
 ```
 
+``` kotlin
+override fun acceptItem(source: Building, item: Item): Boolean {
+    return block.consumesItem(item) && items.get(item) < getMaximumAccepted(item)
+}
+```
+
+:::
+
 而实际传输的方法是`handleItem(Building, Item)`，它默认会委托到`items`中。此处以`Incinerator`为例，作为焚毁炉，最简单的焚毁方式就是直接无视输入：
+
+::: code-group
 
 ``` java
 @Override
@@ -26,6 +38,16 @@ public void handleItem(Building source, Item item){
     }
 }
 ```
+
+``` kotlin
+override fun handleItem(source: Building, item: Item) {
+    if (Mathf.chance(0.3)) {
+        effect.at(x, y)
+    }
+}
+```
+
+:::
 
 物品在中间环节的传输存在一个封装的方法`moveForward(Item)`，此方法可以将一个物品传输给前方的方块，返回值代表传输是否成功。传输失败的原因可能包括前方无建筑、前方建筑不属于本队伍或前方建筑拒绝接受物品。物品在各物流元件中的运输逻辑通过直接调用`acceptItem()`和`handleItem()`方法实现，未使用此封装方法。
 
@@ -71,6 +93,8 @@ Mindustry中的发电机和用电器均不能缓存电量，因此电量的传�
 
 当建筑被添加到电网中时，电网会立刻给建筑分配角色：
 
+::: code-group
+
 ``` java
   if(build.block.outputsPower && build.block.consumesPower && !build.block.consPower.buffered){
       producers.add(build);
@@ -84,7 +108,24 @@ Mindustry中的发电机和用电器均不能缓存电量，因此电量的传�
   }
 ```
 
+``` kotlin
+if (build.block.outputsPower && build.block.consumesPower && !build.block.consPower.buffered) {
+    producers.add(build)
+    consumers.add(build)
+} else if (build.block.outputsPower && build.block.consumesPower) {
+    batteries.add(build)
+} else if (build.block.outputsPower) {
+    producers.add(build)
+} else if (build.block.consumesPower && build.block.consPower != null) {
+    consumers.add(build)
+}
+```
+
+:::
+
 此外，电网还需要一个类型实体的角色来时刻更新它，这个实体即`PowerGraphUpdater`。此实体会在电网创建时被创建，电网消失时被销毁，负责在游戏更新实体时更新电网。
+
+::: code-group
 
 ``` java
 public void update(){
@@ -131,11 +172,61 @@ public void update(){
 }
 ```
 
+``` kotlin
+fun update() {
+    if (!consumers.isEmpty && consumers.first().cheating()) {
+        //when cheating, just set status to 1
+        for (tile in consumers) {
+            tile.power.status = 1f
+        }
+
+        lastPowerNeeded = 1f
+        lastPowerProduced = 1f
+        return
+    }
+
+    var powerNeeded = getPowerNeeded()
+    var powerProduced = getPowerProduced()
+
+    lastPowerNeeded = powerNeeded
+    lastPowerProduced = powerProduced
+
+    lastScaledPowerIn = (powerProduced + energyDelta) / Time.delta
+    lastScaledPowerOut = powerNeeded / Time.delta
+    lastCapacity = getTotalBatteryCapacity()
+    lastPowerStored = getBatteryStored()
+
+    powerBalance.add((lastPowerProduced - lastPowerNeeded + energyDelta) / Time.delta)
+    energyDelta = 0f
+
+    if (!(consumers.size == 0 && producers.size == 0 && batteries.size == 0)) {
+        var charged = false
+
+        if (!Mathf.equal(powerNeeded, powerProduced)) {
+            if (powerNeeded > powerProduced) {
+                val powerBatteryUsed = useBatteries(powerNeeded - powerProduced)
+                powerProduced += powerBatteryUsed
+                lastPowerProduced += powerBatteryUsed
+            } else if (powerProduced > powerNeeded) {
+                charged = true
+                powerProduced -= chargeBatteries(powerProduced - powerNeeded)
+            }
+        }
+
+        distributePower(powerNeeded, powerProduced, charged)
+    }
+}
+```
+
+:::
+
 方法大致可以分为三步：
 
 - 判断是否为无限火力，若为无限火力，给所有方块都供满电力；
 - 计算此刻的实际产电量、电力需要量、电池容量、电池储电量，并把它们根据帧数重整化；
 - 判断要存电还是放电，最后分配电量。
+
+::: code-group
 
 ``` java
 public void distributePower(float needed, float produced, boolean charged){
@@ -168,9 +259,44 @@ public void distributePower(float needed, float produced, boolean charged){
 }
 ```
 
+``` kotlin
+fun distributePower(needed: Float, produced: Float, charged: Boolean) {
+    //distribute even if not needed. this is because some might be requiring power but not using it; it updates consumers
+    val coverage = if (Mathf.zero(needed) && Mathf.zero(produced) && !charged && Mathf.zero(lastPowerStored)) 0f else if (Mathf.zero(needed)) 1f else Math.min(1f, produced / needed)
+    val items = consumers.items
+    for (i in 0 until consumers.size) {
+        val consumer = items[i]
+        //TODO how would it even be null
+        val cons = consumer.block.consPower
+        if (cons.buffered) {
+            if (!Mathf.zero(cons.capacity)) {
+                // Add an equal percentage of power to all buffers, based on the global power coverage in this graph
+                val maximumRate = cons.requestedPower(consumer) * coverage * consumer.delta()
+                consumer.power.status = Mathf.clamp(consumer.power.status + maximumRate / cons.capacity)
+            }
+        } else {
+            //valid consumers get power as usual
+            if (consumer.shouldConsumePower) {
+                consumer.power.status = coverage
+            } else { //invalid consumers get an estimate, if they were to activate
+                consumer.power.status = Math.min(1f, produced / (needed + cons.usage * consumer.delta()))
+                //just in case
+                if (consumer.power.status.isNaN()) {
+                    consumer.power.status = 0f
+                }
+            }
+        }
+    }
+}
+```
+
+:::
+
 实际上最后也就是让用电器的`status`变成`produced / needed`，而`status`会作为电力消耗器的委托。
 
 电池在整个流程中的处理是类似的：
+
+::: code-group
 
 ``` java
 public float chargeBatteries(float excess){
@@ -190,6 +316,27 @@ public float chargeBatteries(float excess){
     return Math.min(excess, capacity);
 }
 ```
+
+``` kotlin
+fun chargeBatteries(excess: Float): Float {
+    val capacity = getBatteryCapacity()
+    //how much of the missing in each battery % is charged
+    val chargedPercent = Math.min(excess / capacity, 1f)
+    if (Mathf.equal(capacity, 0f)) return 0f
+
+    val items = batteries.items
+    for (i in 0 until batteries.size) {
+        val battery = items[i]
+        //TODO why would it be 0
+        if (battery.enabled && battery.block.consPower.capacity > 0f) {
+            battery.power.status += (1f - battery.power.status) * chargedPercent
+        }
+    }
+    return Math.min(excess, capacity)
+}
+```
+
+:::
 
 从这里可以看出，电网中所有电池会被一个整体。
 
@@ -214,6 +361,8 @@ public float chargeBatteries(float excess){
 以上四个接口暴露的内容实际上都是方块的状态，因此你需要做的就是像原版一样用一个同名变量来实现它。在语法层面上，Java中的方法可以重载，但字段却无法重载，这就是这些接口存在的原因。以上接口的是`heatFrac()`和`sideHeat[]()`在原版中只用于绘制而没有用于运行逻辑。
 
 对于热量的消耗者而言，`sideHeat[]`的更新以及基于此计算方块实际可用热量的过程，可以在同一个方法`calculateHeat(float[])`中完成。由于`sideHeat[]`是一个对象引用，在方法内部修改其元素值会直接影响外部的数组状态。
+
+::: code-group
 
 ``` java
 public float calculateHeat(float[] sideHeat, IntSet cameFrom) {
@@ -250,11 +399,49 @@ public float calculateHeat(float[] sideHeat, IntSet cameFrom) {
 }
 ```
 
+``` kotlin
+fun calculateHeat(sideHeat: FloatArray, cameFrom: IntSet?): Float {
+    Arrays.fill(sideHeat, 0.0f)
+    cameFrom?.clear()
+    var heat = 0.0f
+    for (build in proximity) {
+        if (build != null && build.team == team && build is HeatBlock) {
+            val heater = build
+            val conductorBlock = build.block as? HeatConductor
+            val split = conductorBlock?.splitHeat == true
+            if (!build.block.rotate || (!split && (relativeTo(build) + 2) % 4 == build.rotation) || (split && relativeTo(build) != build.rotation)) {
+                val heatConductor = build as? HeatConductor.HeatConductorBuild
+                if (!(heatConductor != null && heatConductor.cameFrom.contains(id()))) {
+                    val diff = Math.min(Math.abs(build.x - x), Math.abs(build.y - y)) / tilesize
+                    val contactPoints = Math.min((block.size / 2.0f + build.block.size / 2.0f - diff).toInt(), Math.min(build.block.size, block.size))
+                    var add = heater.heat() / build.block.size * contactPoints
+                    if (split) {
+                        add /= 3.0f
+                    }
+                    sideHeat[Mathf.mod(relativeTo(build), 4)] += add
+                    heat += add
+                }
+                if (cameFrom != null) {
+                    cameFrom.add(build.id)
+                    heatConductor?.let { cameFrom.addAll(it.cameFrom) }
+                }
+                (heater as? HeatConductor.HeatConductorBuild)?.updateHeat()
+            }
+        }
+    }
+    return heat
+}
+```
+
+:::
+
 ::: info 反编译
 你如果使用IDEA自带的反编译的话，可能看到的源代码并不长成这样，但是两者是等效的。
 :::
 
 这段代码原来并不长这样，在添加热量路由器后Anuke禁止热量传输成环才改成这样的。我们可以先把其中的`cameFrom`去掉再观察它的逻辑：
+
+::: code-group
 
 ``` java
 public float calculateHeat(float[] sideHeat) {
@@ -281,6 +468,34 @@ public float calculateHeat(float[] sideHeat) {
     return heat;
 }
 ```
+
+``` kotlin
+fun calculateHeat(sideHeat: FloatArray): Float {
+    Arrays.fill(sideHeat, 0.0f)
+    var heat = 0.0f
+    for (build in proximity) {
+        if (build != null && build.team == team && build is HeatBlock) {
+            val heater = build
+            val conductorBlock = build.block as? HeatConductor
+            val split = conductorBlock?.splitHeat == true
+            if (!build.block.rotate || (!split && (relativeTo(build) + 2) % 4 == build.rotation) || (split && relativeTo(build) != build.rotation)) {
+                val diff = Math.min(Math.abs(build.x - x), Math.abs(build.y - y)) / tilesize
+                val contactPoints = Math.min((block.size / 2.0f + build.block.size / 2.0f - diff).toInt(), Math.min(build.block.size, block.size))
+                var add = heater.heat() / build.block.size * contactPoints
+                if (split) {
+                    add /= 3.0f
+                }
+                sideHeat[Mathf.mod(relativeTo(build), 4)] += add
+                heat += add
+                (heater as? HeatConductor.HeatConductorBuild)?.updateHeat()
+            }
+        }
+    }
+    return heat
+}
+```
+
+:::
 
 这段代码遍历了周围所有的方块，并筛选出其中本队的`HeatBlock`，再筛选中其中的不可旋转者（如钍堆）、面朝自己的热量传输机和不面朝自己的热量路由器，计算相邻面占其边长的比例，最后按比例添加到`sideHeat[]`和`heat`中，如果输入热量的建筑是热量传输机或热量路由器就再执行其的`updateHeat`方法。
 

@@ -43,6 +43,8 @@ Mindustry 的 ECS 由三条独立的主线构成，彼此职责明确：
 
 组件是一个带有 `@Component` 注解的抽象类，用于声明实体应当具备的字段。以下是 Mindustry 源码中的真实示例：
 
+::: code-group
+
 ```java
 @Component
 abstract class HealthComp{
@@ -51,6 +53,17 @@ abstract class HealthComp{
     int id = 0;
 }
 ```
+
+``` kotlin
+@Component
+abstract class HealthComp {
+    var health = 1.0f
+    var maxHealth = 1.0f
+    var id = 0
+}
+```
+
+:::
 
 组件设计遵循以下约束：
 
@@ -71,13 +84,25 @@ abstract class HealthComp{
 
 组件字段可使用 `@SyncField` 标记为网络同步字段：
 
+::: code-group
+
 ```java
 @SyncField(true) float x;        // 使用 lerp 插值（线性插值）
 @SyncField(false) float angle;   // 使用 slerp 插值（球面插值，适用于角度）
 @SyncField(clamped = true) float health; // 插值结果被 clamp 到 [0, max] 范围
 ```
 
+``` kotlin
+@SyncField(true) var x = 0f        // 使用 lerp 插值（线性插值）
+@SyncField(false) var angle = 0f     // 使用 slerp 插值（球面插值，适用于角度）
+@SyncField(clamped = true) var health = 0f // 插值结果被 clamp 到 [0, max] 范围
+```
+
+:::
+
 `@SyncField` 只能用于 `float` 类型字段。生成器会自动添加以下辅助字段：
+
+::: code-group
 
 ```java
 // 假设原字段为 x，则生成器会添加：
@@ -86,13 +111,30 @@ private float x_TARGET_ = 0f;
 private transient float x_LASTUPDATE_ = 0f;
 ```
 
+``` kotlin
+// 假设原字段为 x，则生成器会添加：
+private var x_LAST_ = 0f
+private var x_TARGET_ = 0f
+@Transient private var x_LASTUPDATE_ = 0f
+```
+
+:::
+
 ### 3.4 本地同步控制
 
 `@SyncLocal` 注解用于标记「仅本地有效」的同步字段：
 
+::: code-group
+
 ```java
 @SyncLocal float mouseX; // 该字段由本地控制，不接受服务端广播
 ```
+
+``` kotlin
+@SyncLocal var mouseX = 0f // 该字段由本地控制，不接受服务端广播
+```
+
+:::
 
 该注解不会消除网络流量的读写，但会在读取快照时跳过本地覆盖。其设计目的是减少控制权切换时的视觉抖动。
 
@@ -100,9 +142,17 @@ private transient float x_LASTUPDATE_ = 0f;
 
 `@NoSync` 注解用于标记完全不参与同步的字段：
 
+::: code-group
+
 ```java
 @NoSync float clientCache; // 仅客户端使用，不参与网络传输
 ```
+
+``` kotlin
+@NoSync var clientCache = 0f // 仅客户端使用，不参与网络传输
+```
+
+:::
 
 ---
 
@@ -112,10 +162,19 @@ private transient float x_LASTUPDATE_ = 0f;
 
 实体定义使用 `@EntityDef` 注解，指定实体由哪些组件组合而成：
 
+::: code-group
+
 ```java
 @EntityDef({Unitc.class, Flyerc.class})
 abstract class MyUnitDef{}
 ```
+
+``` kotlin
+@EntityDef(value = [Unitc::class, Flyerc::class])
+abstract class MyUnitDef
+```
+
+:::
 
 此处 `Unitc`、`Flyerc` 为组件对应的接口。接口名由生成器自动转换：`XxxComp` -> `Xxxc`。
 
@@ -150,6 +209,8 @@ abstract class MyUnitDef{}
 
 组件可通过 `@Import` 声明对其他组件字段的依赖，但不生成对应字段：
 
+::: code-group
+
 ```java
 @Component abstract class UnitComp{
     float speed;
@@ -160,6 +221,19 @@ abstract class MyUnitDef{}
     float healAmount;
 }
 ```
+
+``` kotlin
+@Component abstract class UnitComp {
+    var speed = 0f
+}
+
+@Component abstract class HealComp {
+    @Import var speed = 0f  // 引用 UnitComp 的 speed，不生成字段
+    var healAmount = 0f
+}
+```
+
+:::
 
 该机制的目的是避免字段复制。若 `HealComp` 需要使用其他组件的字段，只需声明依赖，无需重写字段定义。
 
@@ -173,12 +247,23 @@ abstract class MyUnitDef{}
 
 ### 5.3 常见错误
 
+::: code-group
+
 ```java
 @Component abstract class A{ float value; }
 @Component abstract class B{
     @Import int value;  // 类型不匹配，编译报错
 }
 ```
+
+``` kotlin
+@Component abstract class A { var value = 0f }
+@Component abstract class B {
+    @Import var value = 0  // 类型不匹配，编译报错
+}
+```
+
+:::
 
 ---
 
@@ -196,6 +281,8 @@ abstract class MyUnitDef{}
 
 ### 6.2 使用示例
 
+::: code-group
+
 ```java
 @Component abstract class UnitComp{
     void update(){
@@ -212,6 +299,24 @@ abstract class MyUnitDef{}
 }
 ```
 
+``` kotlin
+@Component abstract class UnitComp {
+    fun update() {
+        // 基础更新逻辑
+    }
+}
+
+@Component abstract class Flyerc {
+    @MethodPriority(10f)
+    fun update() {
+        // 飞行单位的更新逻辑应覆盖基础逻辑
+        // 因优先级更高而被选中
+    }
+}
+```
+
+:::
+
 ### 6.3 无法解決的冲突
 
 若优先级相同且均为显式声明，生成器会抛出编译错误，强制开发者手动解决冲突。
@@ -224,9 +329,17 @@ abstract class MyUnitDef{}
 
 对于生命周期短暂的实体（如子弹），可设置 `pooled = true` 以启用对象池：
 
+::: code-group
+
 ```java
 @EntityDef({Bulletc.class}, pooled = true, serialize = false)
 ```
+
+``` kotlin
+@EntityDef(value = [Bulletc::class], pooled = true, serialize = false)
+```
+
+:::
 
 ### 7.2 生命周期
 
@@ -248,6 +361,8 @@ Xxx.create()
 
 生成器为池化实体自动生成 `reset()` 方法：
 
+::: code-group
+
 ```java
 // 生成器自动生成类似代码
 void reset(){
@@ -256,6 +371,17 @@ void reset(){
     this.target = null;         // 引用类型置 null
 }
 ```
+
+``` kotlin
+// 生成器自动生成类似代码
+fun reset() {
+    health = 1.0f         // 字段初始化值
+    x = 0f                // 基本类型归零
+    target = null         // 引用类型置 null
+}
+```
+
+:::
 
 设计 `reset()` 语义时应注意：
 
@@ -271,9 +397,17 @@ void reset(){
 
 分组系统用于管理实体的更新策略和查询方式：
 
+::: code-group
+
 ```java
 @GroupDef(spatial = true, mapping = true, collide = true)
 ```
+
+``` kotlin
+@GroupDef(spatial = true, mapping = true, collide = true)
+```
+
+:::
 
 ### 8.2 参数说明
 
@@ -286,6 +420,8 @@ void reset(){
 ### 8.3 原版分组定义
 
 Mindustry 源码中定义的分组示例（`GroupDefs.java`）：
+
+::: code-group
 
 ```java
 @GroupDef(spatial = true, collide = true, mapping = true)
@@ -301,6 +437,23 @@ class Effect{}
 @GroupDef(spatial = true)
 class Payload{}
 ```
+
+``` kotlin
+@GroupDef(spatial = true, collide = true, mapping = true)
+class Bullet
+@GroupDef(spatial = true, collide = true, mapping = true)
+class Unit
+@GroupDef(spatial = true, mapping = true)
+class Building
+@GroupDef(spatial = true)
+class Laser
+@GroupDef(spatial = false, mapping = true)
+class Effect
+@GroupDef(spatial = true)
+class Payload
+```
+
+:::
 
 ### 8.4 `Groups.update()` 执行顺序
 

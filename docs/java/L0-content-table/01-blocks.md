@@ -33,11 +33,21 @@
 
 继承自 [`Block`]()
 
+::: code-group
+
 ``` java
 // TODO use completely different layer
 // TODO consume heat
 // TODO broken class!!!!!
 ```
+
+``` kotlin
+// TODO use completely different layer
+// TODO consume heat
+// TODO broken class!!!!!
+```
+
+:::
 **请勿使用！！！**
 
 ### `Door` 门&大门

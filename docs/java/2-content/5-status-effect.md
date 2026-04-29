@@ -93,9 +93,17 @@ val wet = StatusEffect("wet").apply {
 
 先来看两个方法在Java中的使用方式。`opposite()`是一个拥有变长参数的方法，接收一系列状态效果，然后将它们设置为与本状态效果冲突。`affinity()`的第一个参数是另一个状态效果，而第二个参数是完全没有见过的结构，有如下的形式：
 
+::: code-group
+
 ``` java
 (参数列表) -> {函数体}
 ```
+
+``` kotlin
+{ 参数列表 -> 函数体 }
+```
+
+:::
 
 我们把这种表达式称为**Lambda表达式**，又叫**匿名函数**。在这里你可以认为，传递函数其实就是传递“我要干什么”的信息。`affinity()`方法的含义是，“当本状态效果遇到了第一个参数对应的状态效果时，游戏会帮你执行一段你写的代码，同时游戏在这里给你的代码提供三条信息，用unit代表受影响的单位，用time代表第一个参数对应的状态效果的持续时长。在这里我们想让“潮湿”和“电击”在反应时给予单位14伤害，那我们只需要写`unit.damage(transitionDamage);`即可（因为在此作用域中`transitionDamage`是可见的）。
 
@@ -141,6 +149,8 @@ val wet2 = TutorialStatusEffect("wet").apply{
 
 在Java模组中，我们一般会直接使用Effect的基类构造方法：
 
+::: code-group
+
 ``` java
 pulverizeMedium = new Effect(30, e -> {
     randLenVectors(e.id, 5, 3f + e.fin() * 8f, (x, y) -> {
@@ -150,9 +160,22 @@ pulverizeMedium = new Effect(30, e -> {
 })
 ```
 
+``` kotlin
+pulverizeMedium = Effect(30f) { e ->
+    randLenVectors(e.id, 5, 3f + e.fin() * 8f) { x, y ->
+        color(Pal.stoneGray)
+        Fill.square(e.x + x, e.y + y, e.fout() + 0.5f, 45f)
+    }
+}
+```
+
+:::
+
 这个构造方法的第一个参数是特效的寿命，第二个参数也是一个Lambda表达式，用于放置具体的绘制方法。我们将在第五章深入介绍各种绘制方法的使用。
 
 Effect有一些模板化的子类，如`ExplosionEffect` `ParticleEffect` `SoundEffect` `WaveEffect`。这些子类的初衷是为了方便JSON模组创建特效的，但在Java模组中也可以使用：
+
+::: code-group
 
 ``` java
 despawnEffect = hitEffect = new ExplosionEffect(){{
@@ -163,6 +186,19 @@ despawnEffect = hitEffect = new ExplosionEffect(){{
     waveRad = 40f;
 }};
 ```
+
+``` kotlin
+despawnEffect = ExplosionEffect().apply {
+    waveColor = Pal.surge
+    smokeColor = Color.gray
+    sparkColor = Pal.sap
+    waveStroke = 4f
+    waveRad = 40f
+}
+hitEffect = despawnEffect
+```
+
+:::
 
 以下是对各个模板化子类的字段介绍：
 
@@ -176,9 +212,17 @@ despawnEffect = hitEffect = new ExplosionEffect(){{
 
 要想加载你自己的音效文件，你需要将后缀名为`ogg`或`mp3`的音效文件放入你的项目中的`assets/sounds/`文件夹下，然后在你想要加载位置填入以下内容，括号里不用填入文件的路径和后缀名：
 
+::: code-group
+
 ``` java
 Vars.tree.loadSound("example-sound")
 ```
+
+``` kotlin
+Vars.tree.loadSound("example-sound")
+```
+
+:::
 
 Sound还有一个子类`RandomSound`，拥有一个`sounds`属性，可以接受一个`Sound`的列表。在播放此音效时，会在`sounds`中随机选择一个音效进行播放。
 

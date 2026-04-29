@@ -117,12 +117,24 @@ BasicBulletType(1.5f, 9)
 
 示例：让炮管在开火后回缩，并在末段加一点呼吸抖动：
 
+::: code-group
+
 ``` java
 var part = new RegionPart("-barrel");
 part.progress = PartProgress.recoil;
 part.moveY = -3f;
 part.moves.add(new PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f));
 ```
+
+``` kotlin
+val part = RegionPart("-barrel").apply {
+    progress = PartProgress.recoil
+    moveY = -3f
+    moves.add(PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f))
+}
+```
+
+:::
 
 此处我们以魔灵为例，结合代码解析以上内容：
 
@@ -180,10 +192,21 @@ ItemTurret("tutorial-item-turret").apply {
 
 使用 `ammo` 方法声明子弹类型的示例如下：
 
+::: code-group
+
 ``` java
 ammo(Items.copper,  new BasicBulletType(3.5f, 18),
      Items.lead, new FlakBulletType(4.2f, 3))
 ```
+
+``` kotlin
+ammo(
+    Items.copper, BasicBulletType(3.5f, 18f),
+    Items.lead, FlakBulletType(4.2f, 3f)
+)
+```
+
+:::
 
 在炮塔建筑中，当物品进入炮塔的一瞬间就会变成弹药。
 

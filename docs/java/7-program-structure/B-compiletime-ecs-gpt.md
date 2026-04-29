@@ -113,6 +113,8 @@ Mindustry 的实体系统（单位、子弹、玩家、建筑等）并不是“�
 
 ### 最小示例（伪代码）
 
+::: code-group
+
 ```java
 @Component abstract class HealthComp{ float health; }
 @Component abstract class PosComp{ float x, y; }
@@ -120,6 +122,16 @@ Mindustry 的实体系统（单位、子弹、玩家、建筑等）并不是“�
 @EntityDef({Healthc.class, Posc.class})
 class DemoDef{}
 ```
+
+``` kotlin
+@Component abstract class HealthComp { var health = 0f }
+@Component abstract class PosComp { var x = 0f; var y = 0f }
+
+@EntityDef(value = [Healthc::class, Posc::class])
+class DemoDef
+```
+
+:::
 
 编译后会得到一个“同时实现 `Healthc` 和 `Posc`”的实体，并携带 `health/x/y` 字段。
 
@@ -172,11 +184,21 @@ class DemoDef{}
 
 ### 最小示例
 
+::: code-group
+
 ```java
 @EntityDef(value = {Decalc.class}, pooled = true, serialize = false)
 @Component(base = true)
 abstract class DecalComp{}
 ```
+
+``` kotlin
+@EntityDef(value = [Decalc::class], pooled = true, serialize = false)
+@Component(base = true)
+abstract class DecalComp
+```
+
+:::
 
 这会让实体具备：
 
@@ -220,10 +242,19 @@ abstract class DecalComp{}
 
 生成逻辑核心是：
 
+::: code-group
+
 ```java
 alpha = min(timeSinceUpdate / updateSpacing, 2f)
 current = lerp_or_slerp(last, target, alpha)
 ```
+
+``` kotlin
+alpha = min(timeSinceUpdate / updateSpacing, 2f)
+current = lerp_or_slerp(last, target, alpha)
+```
+
+:::
 
 并配有 `snapSync/snapInterpolation` 让实体在首次同步或控制切换时不出现巨大跳变。
 
@@ -287,10 +318,21 @@ current = lerp_or_slerp(last, target, alpha)
 
 在 `UnitComp` 里你会看到：
 
+::: code-group
+
 ```java
 @Import float x, y, rotation;
 @Import Team team;
 ```
+
+``` kotlin
+@Import var x = 0f
+@Import var y = 0f
+@Import var rotation = 0f
+@Import lateinit var team: Team
+```
+
+:::
 
 这些字段通常由 `PosComp`、`TeamComp` 等组件提供。
 

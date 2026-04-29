@@ -262,6 +262,8 @@ beamNode = new BeamNode("tutorial-beam-node").apply{
 
 ## 电池
 
+::: code-group
+
 ``` java
 batteryLarge = new Battery("tutorial-battery-large"){{
     requirements(Category.power, with(Items.titanium, 20, Items.lead, 50, Items.silicon, 30));
@@ -271,6 +273,17 @@ batteryLarge = new Battery("tutorial-battery-large"){{
 }};
 ```
 
+``` kotlin
+batteryLarge = Battery("tutorial-battery-large").apply {
+    requirements(Category.power, ItemStack.with(Items.titanium, 20, Items.lead, 50, Items.silicon, 30))
+    size = 3
+    consumePowerBuffered(50000f)
+    baseExplosiveness = 5f
+}
+```
+
+:::
+
 电池是用于缓存电力的，而其功能由`ConsumePowerBuffered`这一消耗器负责。电池也拥有drawer，默认会根据缓存电量变换电池的颜色，由于电池没有设置`progress`属性，所以大部分drawer无法生效。
 
 ## 其余电力方块
@@ -278,6 +291,8 @@ batteryLarge = new Battery("tutorial-battery-large"){{
 我们在上文提到了“标记类”这一名词，在电力系统中除了`PowerGenerator`用于标记发电机，还有两个标记类，分别是`PowerDistributor`和`PowerBlock`，这两个类设置了一些字段，如默认更新`update = true`，将方块的组别设置为`BlockGroup.power`。此外，电力源`PowerSource`和电力黑洞`PowerVoid`也在`mindustry.world.block.sandbox`包里。
 
 灯光方块`LightBlock`和电力方块在同一包里，它的工作就是用光亮照亮**黑暗**，但没有探开战争迷雾的功能。它的建筑可见性`BuildVisibility`稍有不同：
+
+::: code-group
 
 ``` java
 illuminator = new LightBlock("illuminator"){{
@@ -287,6 +302,17 @@ illuminator = new LightBlock("illuminator"){{
     consumePower(0.05f);
 }};
 ```
+
+``` kotlin
+illuminator = LightBlock("illuminator").apply {
+    requirements(Category.effect, BuildVisibility.lightingOnly, ItemStack.with(Items.graphite, 12))
+    brightness = 0.75f
+    radius = 140f
+    consumePower(0.05f)
+}
+```
+
+:::
 
 `PowerGraph`是一个完全不同的类，它并不是方块，而是一个表示电网的实体。在 Mindustry 中，相互连通的电力建筑拥有同一个电网，电网可以调度电力的产生、缓存和消耗。我们将在后文讲解电网的工作原理。
 

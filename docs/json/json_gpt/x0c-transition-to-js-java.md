@@ -94,6 +94,8 @@ Java 的另一个优势是“强类型与可读性”。当逻辑变复杂时，
 
 一个最小的 Java 入口大致是这样：
 
+::: code-group
+
 ```java
 public class MyMod extends Mod{
     @Override
@@ -102,6 +104,16 @@ public class MyMod extends Mod{
     }
 }
 ```
+
+``` kotlin
+class MyMod : Mod() {
+    override fun loadContent() {
+        // 在这里注册自定义内容或逻辑
+    }
+}
+```
+
+:::
 
 你可以在 `loadContent()` 中创建自定义方块、单位或规则，也可以在其他类中封装更复杂的行为，然后在这里统一加载。
 

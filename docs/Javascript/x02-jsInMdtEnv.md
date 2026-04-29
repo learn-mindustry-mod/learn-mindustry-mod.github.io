@@ -125,11 +125,21 @@ const acid = extend(Liquid,"acid",Color.valueOf("84a94b"),{
 
 举个例子:
 
+::: code-group
+
 ``` java
 // Block类的构造函数
 public Block(String name){}
 
 ```
+
+``` kotlin
+// Block类的构造函数
+open class Block(name: String)
+
+```
+
+:::
 
 于是你的extend()函数的调用就应该是:
 
@@ -141,6 +151,8 @@ const biomassWall = extend(Block,"name",{})
 
 而对于bullet类,它的构造函数是:
 
+::: code-group
+
 ``` java
 
 public BulletType(float speed, float damage){
@@ -151,6 +163,24 @@ public BulletType(float speed, float damage){
 public BulletType(){}
 
 ```
+
+``` kotlin
+
+open class BulletType {
+    var speed = 0f
+    var damage = 0f
+
+    constructor(speed: Float, damage: Float) {
+        this.speed = speed
+        this.damage = damage
+    }
+
+    constructor()
+}
+
+```
+
+:::
 
 ```javascript
 // 因此下面两种写法都是正确的,但第一种写法更简洁,第二种写法更清晰,你可以根据自己的喜好选择使用哪一种写法.
@@ -168,6 +198,8 @@ const acidBullet = extend(BulletType,{
 
 而对于某些参数较多的类,比如ShieldRegenFieldAbility,它的构造函数是:
 
+::: code-group
+
 ``` java
 public ShieldRegenFieldAbility(){}
 
@@ -179,6 +211,27 @@ public ShieldRegenFieldAbility(float amount, float max, float reload, float rang
 }
 
 ```
+
+``` kotlin
+class ShieldRegenFieldAbility {
+    var amount = 0f
+    var max = 0f
+    var reload = 0f
+    var range = 0f
+
+    constructor()
+
+    constructor(amount: Float, max: Float, reload: Float, range: Float) {
+        this.amount = amount
+        this.max = max
+        this.reload = reload
+        this.range = range
+    }
+}
+
+```
+
+:::
 
 ```javascript
 

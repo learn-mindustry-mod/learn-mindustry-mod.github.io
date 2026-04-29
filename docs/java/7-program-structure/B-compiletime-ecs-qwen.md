@@ -16,6 +16,8 @@
 
 实体是游戏世界中的基本对象，只包含一个唯一标识符，不包含任何逻辑或数据。在Mindustry中，实体是由组件组合构成的虚拟概念，其实体本身只是一个ID标识：
 
+::: code-group
+
 ```java
 // EntityComp作为所有实体的基础组件
 @Component
@@ -38,11 +40,37 @@ abstract class EntityComp {
 }
 ```
 
+``` kotlin
+// EntityComp作为所有实体的基础组件
+@Component
+@BaseComponent
+abstract class EntityComp {
+    @Transient private var added = false
+    @Transient var id = EntityGroup.nextId()
+
+    fun isAdded(): Boolean {
+        return added
+    }
+
+    fun add() {
+        added = true
+    }
+
+    fun remove() {
+        added = false
+    }
+}
+```
+
+:::
+
 实体的真正功能来自于附加的各种组件，例如一个单位实体可能包含位置组件(PosComp)、生命值组件(HealthComp)、武器组件(WeaponsComp)等。
 
 ### 组件（Component）
 
 组件包含数据和简单的逻辑操作，每个组件都专注于特定的功能，如位置、生命值等。Mindustry中的组件以抽象类的形式定义，并通过注解标注：
+
+::: code-group
 
 ```java
 @Component
@@ -70,11 +98,40 @@ abstract class PosComp implements Position {
 }
 ```
 
+``` kotlin
+@Component
+abstract class PosComp : Position {
+    @SyncField(true) @SyncLocal var x = 0f
+    @SyncField(true) @SyncLocal var y = 0f
+
+    fun set(x: Float, y: Float) {
+        this.x = x
+        this.y = y
+    }
+
+    fun trns(x: Float, y: Float) {
+        set(this.x + x, this.y + y)
+    }
+
+    override fun getX(): Float {
+        return x
+    }
+
+    override fun getY(): Float {
+        return y
+    }
+}
+```
+
+:::
+
 组件的设计遵循单一职责原则，每个组件只负责特定的功能。这种设计使得组件可以被灵活组合，构建出复杂的游戏对象。
 
 ### 系统（System）
 
 系统负责处理特定类型的组件数据，实现游戏逻辑。系统会查询具有特定组件组合的实体进行批量处理。例如，物理系统处理所有具有物理组件的实体，渲染系统处理所有需要绘制的实体：
+
+::: code-group
 
 ```java
 public class EntityGroup<T extends Entityc> {
@@ -94,6 +151,26 @@ public class EntityGroup<T extends Entityc> {
 }
 ```
 
+``` kotlin
+class EntityGroup<T : Entityc> {
+    private val array: Seq<T> = Seq()
+    private var tree: QuadTree? = null // 空间索引
+    private var map: IntMap<T>? = null // ID映射
+
+    fun update() {
+        for (index in 0 until array.size) {
+            array.items[index].update()
+        }
+    }
+
+    fun collide() {
+        collisions.collide(this as EntityGroup<out Hitboxc>)
+    }
+}
+```
+
+:::
+
 系统通过批量处理相同类型的组件，可以充分利用CPU缓存，提高运行效率。
 
 ## Mindustry实现细节
@@ -101,6 +178,8 @@ public class EntityGroup<T extends Entityc> {
 ### 注解驱动的代码生成
 
 Mindustry采用`@Component`注解定义组件，并通过编译时注解处理器自动生成相关代码。注解处理器在编译阶段分析源代码中的注解，自动生成所需的接口和实现类：
+
+::: code-group
 
 ```java
 @Component
@@ -146,11 +225,60 @@ abstract class HealthComp implements Entityc, Posc {
 }
 ```
 
+``` kotlin
+@Component
+abstract class HealthComp : Entityc, Posc {
+    companion object {
+        const val hitDuration = 9f
+    }
+
+    var health = 0f
+    @Transient var hitTime = 0f
+    @Transient var maxHealth = 1f
+    @Transient var dead = false
+
+    fun isValid(): Boolean {
+        return !dead && isAdded()
+    }
+
+    fun healthf(): Float {
+        return health / maxHealth
+    }
+
+    override fun update() {
+        hitTime -= Time.delta / hitDuration
+    }
+
+    fun kill() {
+        if (dead) return
+
+        health = Math.min(health, 0f)
+        dead = true
+        killed()
+        remove()
+    }
+
+    fun damage(amount: Float) {
+        if (health.isNaN()) health = 0f
+
+        health -= amount
+        hitTime = 1f
+        if (health <= 0 && !dead) {
+            kill()
+        }
+    }
+}
+```
+
+:::
+
 注解处理器会为上述组件生成对应的接口`Healthc`，包含所有public方法的声明。这种代码生成机制大大减少了手工编写重复代码的工作量。
 
 ### 实体分组管理
 
 通过`EntityGroup`类管理不同类型的实体集合，支持空间索引和ID映射：
+
+::: code-group
 
 ```java
 public class EntityGroup<T extends Entityc> implements Iterable<T> {
@@ -189,11 +317,50 @@ public class EntityGroup<T extends Entityc> implements Iterable<T> {
 }
 ```
 
+``` kotlin
+class EntityGroup<T : Entityc> : Iterable<T> {
+    private val array: Seq<T> = Seq() // 实体存储
+    private val viewport = Rect()
+    private var tree: QuadTree? = null // 空间索引（可选）
+    private var map: IntMap<T>? = null // ID映射（可选）
+
+    fun add(type: T?) {
+        if (type == null) throw RuntimeException("Cannot add a null entity!")
+        array.add(type)
+
+        if (mappingEnabled()) {
+            map?.put(type.id(), type)
+        }
+    }
+
+    fun remove(type: T?) {
+        if (clearing) return
+        if (type == null) throw RuntimeException("Cannot remove a null entity!")
+        val idx = array.indexOf(type, true)
+        if (idx != -1) {
+            array.remove(idx)
+
+            map?.remove(type.id())
+        }
+    }
+
+    fun update() {
+        for (index in 0 until array.size) {
+            array.items[index].update()
+        }
+    }
+}
+```
+
+:::
+
 实体分组管理器采用多种优化策略：Sequence作为底层存储结构提供高效的随机访问；QuadTree实现空间索引，加速空间查询；IntMap提供O(1)时间复杂度的ID查找。
 
 ### 组件接口生成
 
 注解处理器会为每个组件生成对应的接口，例如为`PosComp`生成`Posc`接口：
+
+::: code-group
 
 ```java
 // 生成的接口
@@ -213,11 +380,33 @@ public interface Posc extends Entityc, Position {
 }
 ```
 
+``` kotlin
+// 生成的接口
+interface Posc : Entityc, Position {
+    fun x(): Float
+    fun x(x: Float)
+
+    fun y(): Float
+    fun y(y: Float)
+
+    fun set(x: Float, y: Float)
+    fun trns(x: Float, y: Float)
+    fun tileX(): Int
+    fun tileY(): Int
+    fun floorOn(): Floor
+    // ... 其他方法
+}
+```
+
+:::
+
 生成的接口继承了`Entityc`基础接口和组件实现的其他接口，保证了类型安全和方法一致性。
 
 ### 序列化支持
 
 Mindustry通过`EntityIO`类实现实体数据的序列化和反序列化，支持版本兼容：
+
+::: code-group
 
 ```java
 void write(MethodSpec.Builder method, boolean write) throws Exception {
@@ -254,11 +443,50 @@ void write(MethodSpec.Builder method, boolean write) throws Exception {
 }
 ```
 
+``` kotlin
+fun write(method: MethodSpec.Builder, write: Boolean) {
+    if (write) {
+        // 写入版本号
+        st("write.s($L)", revisions.peek().version)
+        // 写入字段数据
+        for (field in revisions.peek().fields) {
+            io(field.type, "this." + field.name, false)
+        }
+    } else {
+        // 读取版本号
+        st("short REV = read.s()")
+
+        for (i in 0 until revisions.size) {
+            val rev = revisions.get(i)
+            if (i == 0) {
+                cont("if(REV == $L)", rev.version)
+            } else {
+                ncont("else if(REV == $L)", rev.version)
+            }
+
+            // 读取字段数据
+            for (field in rev.fields) {
+                io(field.type, if (presentFields.contains(field.name)) "this." + field.name + " = " else "", false)
+            }
+        }
+
+        // 处理未知版本
+        ncont("else")
+        st("throw new IllegalArgumentException("Unknown revision '" + REV + "' for entity type '" + name + "'")")
+        econt()
+    }
+}
+```
+
+:::
+
 序列化系统支持向前和向后兼容，通过版本号识别不同的数据格式，并自动进行转换处理。
 
 ### 网络同步机制
 
 Mindustry特别优化了网络同步机制，通过`@SyncField`注解标记需要同步的字段：
+
+::: code-group
 
 ```java
 @Component
@@ -271,6 +499,21 @@ abstract class PosComp implements Position {
     // 通过插值算法实现平滑同步效果
 }
 ```
+
+``` kotlin
+@Component
+abstract class PosComp : Position {
+    @SyncField(true) @SyncLocal var x = 0f
+    @SyncField(true) @SyncLocal var y = 0f
+
+    // 同步字段会生成对应的目标值和上一帧数值
+    // x_TARGET_ 用于存储目标值
+    // x_LAST_ 用于存储上一帧值
+    // 通过插值算法实现平滑同步效果
+}
+```
+
+:::
 
 同步系统采用差值同步策略，客户端只接收关键帧数据，通过插值算法计算中间状态，减少网络传输量并提高视觉流畅度。
 
@@ -309,6 +552,8 @@ abstract class PosComp implements Position {
 ## 实现示例
 
 一个完整的单位实体组件实现，展示了Mindustry中复杂实体的构建过程：
+
+::: code-group
 
 ```java
 // 单位组件定义
@@ -446,6 +691,157 @@ unit.team(Team.sharded);
 Groups.unit.add(unit);
 ```
 
+``` kotlin
+// 单位组件定义
+@Component(base = true)
+abstract class UnitComp : Healthc, Physicsc, Hitboxc, Statusc, Teamc,
+    Itemsc, Rotc, Unitc, Weaponsc, Drawc, Syncc, Shieldc, Displayable, Ranged,
+    Minerc, Builderc, Senseable, Settable {
+
+    companion object {
+        private val tmp1 = Vec2()
+        private val tmp2 = Vec2()
+        const val warpDst = 8f
+    }
+
+    @Import var dead = false
+    @Import var disarmed = false
+    @Import var x = 0f
+    @Import var y = 0f
+    @Import var rotation = 0f
+    @Import var maxHealth = 0f
+    @Import var drag = 0f
+    @Import var armor = 0f
+    @Import var hitSize = 0f
+    @Import var health = 0f
+    @Import var shield = 0f
+    @Import var ammo = 0f
+    @Import lateinit var team: Team
+    @Import var id = 0
+    @Import lateinit var vel: Vec2
+    @Import lateinit var mounts: Array<WeaponMount>
+    @Import lateinit var stack: ItemStack
+
+    private lateinit var controller: UnitController
+    var abilities: Array<Ability> = arrayOf()
+    var type: UnitType = UnitTypes.alpha
+    var spawnedByCore = false
+    var flag = 0.0
+
+    @Transient var trail: Trail? = null
+    @Transient var shadowAlpha = -1f
+    @Transient var healTime = 0f
+    @Transient var lastFogPos = 0
+
+    @SyncLocal var elevation = 0f
+    @Transient var drownTime = 0f
+    @Transient var splashTimer = 0f
+
+    fun checkTarget(targetAir: Boolean, targetGround: Boolean): Boolean {
+        return (isGrounded() && targetGround) || (isFlying() && targetAir)
+    }
+
+    fun isGrounded(): Boolean {
+        return elevation < 0.001f
+    }
+
+    fun isFlying(): Boolean {
+        return elevation >= 0.09f
+    }
+
+    fun moveAt(vector: Vec2, acceleration: Float) {
+        val t = tmp1.set(vector) // 目标速度
+        tmp2.set(t).sub(vel).limit(acceleration * vector.len() * Time.delta) // 插值加速
+        vel.add(tmp2)
+    }
+
+    fun speed(): Float {
+        val strafePenalty = if (isGrounded() || !isPlayer()) 1f else
+            Mathf.lerp(1f, type.strafePenalty, Angles.angleDist(vel().angle(), rotation) / 180f)
+        val boost = Mathf.lerp(1f, if (type.canBoost) type.boostMultiplier else 1f, elevation)
+        return type.speed * strafePenalty * boost * floorSpeedMultiplier()
+    }
+
+    override fun update() {
+        type.update(self())
+
+        // 更新溺水状态
+        updateDrowning()
+
+        // 更新能力系统
+        for (ability in abilities) {
+            ability.update(self())
+        }
+
+        // 更新轨迹
+        trail?.let { trail ->
+            trail.length = type.trailLength
+            val scale = if (type.useEngineElevation) elevation else 1f
+            val offset = type.engineOffset / 2f + type.engineOffset / 2f * scale
+            val cx = x + Angles.trnsx(rotation + 180, offset)
+            val cy = y + Angles.trnsy(rotation + 180, offset)
+            trail.update(cx, cy)
+        }
+
+        // AI控制更新只在服务端进行
+        if (!net.client() && !dead && shouldUpdateController()) {
+            controller.updateUnit()
+        }
+    }
+
+    fun updateDrowning() {
+        val floor = drownFloor()
+
+        if (floor != null && floor.isLiquid && floor.drownTime > 0 && canDrown()) {
+            drownTime += Time.delta / (hitSize / 8f * type.drownTimeMultiplier * floor.drownTime)
+            if (Mathf.chanceDelta(0.05f)) {
+                floor.drownUpdateEffect.at(x, y, hitSize, floor.mapColor)
+            }
+
+            if (drownTime >= 0.999f && !net.client()) {
+                kill()
+                Events.fire(UnitDrownEvent(self()))
+            }
+        } else {
+            drownTime -= Time.delta / 50f
+        }
+
+        drownTime = Mathf.clamp(drownTime)
+    }
+
+    override fun add() {
+        team.data().updateCount(type, 1)
+
+        // 检查单位上限
+        if (type.useUnitCap && count() > cap() && !spawnedByCore && !dead && !state.rules.editor) {
+            Call.unitCapDeath(self())
+            team.data().updateCount(type, -1)
+        }
+    }
+
+    override fun remove() {
+        team.data().updateCount(type, -1)
+        controller.removed(self())
+
+        // 确保轨迹正确显示消失效果
+        trail?.let { trail ->
+            if (trail.size() > 0) {
+                Fx.trailFade.at(x, y, trail.width(), if (type.trailColor == null) team.color else type.trailColor, trail.copy())
+            }
+        }
+    }
+}
+
+// 生成的实体类使用示例
+val unit = Unit.create()
+unit.type(UnitTypes.dagger)
+unit.set(100f, 100f)
+unit.team(Team.sharded)
+Groups.unit.add(unit)
+```
+
+:::
+
 这个示例展示了单位实体的复杂性：它实现了近20个不同的组件接口，每个接口代表一种特定的功能。通过这种设计，单位实体可以同时具备位置、生命值、物理、团队、武器等所有必要的功能。
 
 ## 编译时处理流程
@@ -472,6 +868,8 @@ Mindustry的ECS实现还包括许多高级特性：
 
 1. **对象池化**：通过Pools类实现对象复用，减少GC压力：
 
+::: code-group
+
 ```java
 // 实体创建方法使用对象池
 public static Unit create() {
@@ -479,7 +877,20 @@ public static Unit create() {
 }
 ```
 
+``` kotlin
+// 实体创建方法使用对象池
+companion object {
+    fun create(): Unit {
+        return Pools.obtain(Unit::class.java) { Unit() }
+    }
+}
+```
+
+:::
+
 2. **延迟释放**：避免在迭代过程中直接删除实体导致的问题：
+
+::: code-group
 
 ```java
 public void remove() {
@@ -487,6 +898,15 @@ public void remove() {
     // ... 删除逻辑
 }
 ```
+
+``` kotlin
+fun remove() {
+    if (clearing) return // 清理过程中不处理删除
+    // ... 删除逻辑
+}
+```
+
+:::
 
 3. **空间查询优化**：支持基于QuadTree的空间查询，加速碰撞检测和范围查询。
 

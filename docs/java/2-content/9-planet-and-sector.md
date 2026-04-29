@@ -152,9 +152,17 @@ Mindustry主要使用Simplex噪声算法。噪声算法通常定义了一个多�
 
 在定义所需的mesh后，应设置`meshLoader`和`cloudMeshLoader`，而非直接赋值给`mesh`和`cloudMesh`。`meshLoader`是一个类型为`Prov<GenericMesh>`的lambda表达式，通常按以下方式编写：
 
+::: code-group
+
 ``` java
 meshLoader = () -> new HexMesh(this, 6);
 ```
+
+``` kotlin
+meshLoader = Prov { HexMesh(this, 6) }
+```
+
+:::
 
 ### 数字区块的生成
 

@@ -12,6 +12,8 @@
 
 向方块中注册消耗器的方法正是`consume(Consume)`：
 
+::: code-group
+
 ``` java
 public <T extends Consume> T consume(T consume){
     if(consume instanceof ConsumePower){
@@ -24,9 +26,25 @@ public <T extends Consume> T consume(T consume){
 }
 ```
 
+``` kotlin
+fun <T : Consume> consume(consume: T): T {
+    if (consume is ConsumePower) {
+        //there can only be one power consumer
+        consumeBuilder.removeAll { b -> b is ConsumePower }
+        consPower = consume
+    }
+    consumeBuilder.add(consume)
+    return consume
+}
+```
+
+:::
+
 可见在`init()`前，添加的消耗器会先进入`consumeBuilder`这个动态的序列当中，方便添加、查找（`findConsumer(Boolf<Consume>)`）和删除（`removeConsumer(Consume)`和`removeConsumer(Boolf<Consume>)`）。而各种简写的方法本质上也是对`consume()`方法的再次封装。
 
 走出构造函数，接下来执行的就是`init()`方法了：
+
+::: code-group
 
 ``` java
 consumers = consumeBuilder.toArray(Consume.class);
@@ -39,6 +57,20 @@ for(Consume cons : consumers){
     cons.apply(this);
 }
 ```
+
+``` kotlin
+consumers = consumeBuilder.toArray(Consume::class.java)
+optionalConsumers = consumeBuilder.select { consume -> consume.optional && !consume.ignore() }.toArray(Consume::class.java)
+nonOptionalConsumers = consumeBuilder.select { consume -> !consume.optional && !consume.ignore() }.toArray(Consume::class.java)
+updateConsumers = consumeBuilder.select { consume -> consume.update && !consume.ignore() }.toArray(Consume::class.java)
+hasConsumers = consumers.isNotEmpty()
+
+for (cons in consumers) {
+    cons.apply(this)
+}
+```
+
+:::
 
 从此处看出，在初始化期`consumeBuilder`会按照是否可选与是否更新被添加到不同的数组中去，这些数组将会在消耗器更新时发挥作用。并且会执行各个消耗器的`apply(Block)`方法并将自身传递进去。实际上消耗器的`apply(Block)`方法可以认为是对方块的`init()`的扩展。
 
@@ -72,6 +104,8 @@ for(Consume cons : consumers){
 ### 消耗器的更新
 
 上文提到，所有方块的效率都是根据消耗器计算的，奠定了这个组件的基本地位。更新消耗器效率的代码就在`updateConsumption()`中：
+
+::: code-group
 
 ``` java {2,10,16}
 public void updateConsumption() {
@@ -125,6 +159,65 @@ public void updateEfficiencyMultiplier() {
 }
 ```
 
+``` kotlin
+fun updateConsumption() {
+    //无消耗器或无限火力模式下的路径
+    if (!block.hasConsumers || cheating()) {
+        potentialEfficiency = if (enabled && productionValid()) 1.0f else 0.0f
+        efficiency = if (shouldConsume()) potentialEfficiency else 0.0f
+        optionalEfficiency = efficiency
+        shouldConsumePower = true
+        updateEfficiencyMultiplier()
+        return
+    }
+    //未启用时的路径
+    if (!enabled) {
+        potentialEfficiency = 0.0f
+        efficiency = 0.0f
+        optionalEfficiency = 0.0f
+        shouldConsumePower = false
+        return
+    }
+    //有消耗器且启用的路径
+    val update = shouldConsume() && productionValid()
+    var minEfficiency = 1.0f
+    efficiency = 1.0f
+    optionalEfficiency = 1.0f
+    shouldConsumePower = true
+    for (cons in block.nonOptionalConsumers) {
+        val result = cons.efficiency(this)
+        if (cons != block.consPower && result <= 1.0E-7f) {
+            shouldConsumePower = false
+        }
+        minEfficiency = Math.min(minEfficiency, result)
+    }
+    for (cons in block.optionalConsumers) {
+        optionalEfficiency = Math.min(optionalEfficiency, cons.efficiency(this))
+    }
+    efficiency = minEfficiency
+    optionalEfficiency = Math.min(optionalEfficiency, minEfficiency)
+    potentialEfficiency = efficiency
+    if (!update) {
+        efficiency = 0.0f
+        optionalEfficiency = 0.0f
+    }
+    updateEfficiencyMultiplier()
+    if (update && efficiency > 0f) {
+        for (cons in block.updateConsumers) {
+            cons.update(this)
+        }
+    }
+}
+
+fun updateEfficiencyMultiplier() {
+    val scale = efficiencyScale()
+    efficiency *= scale
+    optionalEfficiency *= scale
+}
+```
+
+:::
+
 从这里可以看出，在非无限火力时，`efficiency`存储了必需消耗器中最低的效率，`optionalEfficiency`存储了非必需消耗器中最低的效率，并且基础最大值为1，在`updateEfficiencyMultiplier()`会将其再乘以`efficiencyScale()`，而后者在某些方块中会委托给`efficiencyMultiplier`，但并不总是。而`potentialEfficiency`存放的是无倍率时的潜在效率。这三种效率的状态变量中，`efficiency`在核心逻辑中被使用，另两种在特定方块的逻辑中发挥作用。
 
 值得注意的是，原版中电力的消耗始终是单独被拿出来考虑的。因此方块非电力消耗器的效率可以影响电力的消耗量。
@@ -132,6 +225,8 @@ public void updateEfficiencyMultiplier() {
 ## 工厂的更新
 
 书接上回，渲染和更新是方块实体最重要的两个功能。对于工厂来说，其更新逻辑是非常值得研究的。
+
+::: code-group
 
 ``` java
 @Override
@@ -167,7 +262,44 @@ public void updateTile(){
 }
 ```
 
+``` kotlin
+override fun updateTile() {
+    if (efficiency > 0) {
+
+        progress += getProgressIncrease(craftTime)
+        warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed)
+
+        //continuously output based on efficiency
+        if (outputLiquids != null) {
+            val inc = getProgressIncrease(1f)
+            for (output in outputLiquids) {
+                handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)))
+            }
+        }
+
+        if (wasVisible && Mathf.chanceDelta(updateEffectChance)) {
+            updateEffect.at(x + Mathf.range(size * updateEffectSpread), y + Mathf.range(size * updateEffectSpread))
+        }
+    } else {
+        warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed)
+    }
+
+    //TODO may look bad, revert to edelta() if so
+    totalProgress += warmup * Time.delta
+
+    if (progress >= 1f) {
+        craft()
+    }
+
+    dumpOutputs()
+}
+```
+
+:::
+
 如果刚才那个有点复杂，可以看这个去除绘制功能的版本：
+
+::: code-group
 
 ``` java
 @Override
@@ -208,6 +340,46 @@ public void craft(){
 }
 ```
 
+``` kotlin
+override fun updateTile() {
+    if (efficiency > 0) {
+        //增加进度
+        progress += getProgressIncrease(craftTime)
+        //不间断地输出流体
+        if (outputLiquids != null) {
+            val inc = getProgressIncrease(1f)
+            for (output in outputLiquids) {
+                handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)))
+            }
+        }
+    }
+    //判断进度是否达到1
+    if (progress >= 1f) craft()
+    //输出产品
+    dumpOutputs()
+}
+
+fun craft() {
+    //调用Consume#trigger
+    consume()
+
+    if (outputItems != null) {
+        for (output in outputItems) {
+            repeat(output.amount) {
+                offload(output.item)
+            }
+        }
+    }
+
+    if (wasVisible) {
+        craftEffect.at(x, y)
+    }
+    progress %= 1f
+}
+```
+
+:::
+
 方块的更新方法`updateTile()`是每一帧都会被执行的方法。凡是每时每刻都要变化的功能，都要放在方块的更新方法内。
 
 工厂的`updateTile()`中，主要做了4+1+1件事：
@@ -227,6 +399,8 @@ public void craft(){
 `warmup`是一个表示炉温的状态变量，在工厂长时间不工作时，炉温自然为0；在工厂开始进行工作后，炉温会逐渐平滑升高到1，并在工作过程中维持在1；在工厂中止工作后，炉温又会逐渐平滑落回0。例如，在原版的`DrawBubbles`中，气泡的透明度与`warmup`正相关，在完全不工作时不产生气泡，在开始工作时逐渐出现并最终维持在一定水平。
 
 而使`warmup`能够平滑变化的，正是`Mathf`下的插值函数，定义如下：
+
+::: code-group
 
 ``` java
 /** Approaches a value at linear speed. */
@@ -250,6 +424,30 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 }
 ```
 
+``` kotlin
+/** Approaches a value at linear speed. */
+fun approach(from: Float, to: Float, speed: Float): Float {
+    return from + Mathf.clamp(to - from, -speed, speed)
+}
+
+/** Approaches a value at linear speed. Multiplied by the delta. */
+fun approachDelta(from: Float, to: Float, speed: Float): Float {
+    return approach(from, to, Time.delta * speed)
+}
+
+/** Linearly interpolates between fromValue to toValue on progress position. */
+fun lerp(fromValue: Float, toValue: Float, progress: Float): Float {
+    return fromValue + (toValue - fromValue) * progress
+}
+
+/** Linearly interpolates between fromValue to toValue on progress position. Multiplied by Time.delta().*/
+fun lerpDelta(fromValue: Float, toValue: Float, progress: Float): Float {
+    return lerp(fromValue, toValue, clamp(progress * Time.delta))
+}
+```
+
+:::
+
 `approach`方法通过限制单次变化的幅度来实现平滑过渡。以从0变化到1为例，若不限制变化速率，数值会在一帧内直接变为1，只有将近0.02秒的变化时间，导致视觉上的突变。而使用原版默认的速率`0.019f`时，从0到1至少需要53帧（约1秒），在人眼的视觉暂留效应下，就能呈现出连续平滑的变化效果。
 
 至于`Time.delta`，则是代表上一帧到这一帧的时间间隔，通常为1/60秒（0.0167秒）。在Mindustry中，所有与时间相关的数值变化都应乘以`Time.delta`，以确保在**不同帧率下游戏行为保持一致**。例如，工厂的进度增加量`getProgressIncrease(craftTime)`就包含了`Time.delta`的计算，因此无论帧率高低，完成一次生产所需的时间都是固定的。
@@ -269,6 +467,8 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 ### 无法输出
 
 以上的代码只涉及正常工作和无输入时的工厂状态，在原版中工厂还存在“无法输出”的状态。这一状态是由`shouldConsume()`控制的。
+
+::: code-group
 
 ``` java
 @Override
@@ -302,6 +502,40 @@ public boolean shouldConsume(){
     return enabled;
 }
 ```
+
+``` kotlin
+override fun shouldConsume(): Boolean {
+    if (outputItems != null) {
+        for (output in outputItems) {
+            if (items.get(output.item) + output.amount > itemCapacity) {
+                return false
+            }
+        }
+    }
+    if (outputLiquids != null && !ignoreLiquidFullness) {
+        var allFull = true
+        for (output in outputLiquids) {
+            if (liquids.get(output.liquid) >= liquidCapacity - 0.001f) {
+                if (!dumpExtraLiquid) {
+                    return false
+                }
+            } else {
+                //if there's still space left, it's not full for all liquids
+                allFull = false
+            }
+        }
+
+        //if there is no space left for any liquid, it can't reproduce
+        if (allFull) {
+            return false
+        }
+    }
+
+    return enabled
+}
+```
+
+:::
 
 这个方法虽然长，但是读起来并不难，因此其实现并不是重点。重点在于这个方法控制着生产流程的启停，其返回的`noOutput`状态需要被正确理解和使用。例如，在你自己实现一种新的消耗器的时候，应该通过`effciency`去控制由于原料缺少造成的启停，而不是这个方法。
 

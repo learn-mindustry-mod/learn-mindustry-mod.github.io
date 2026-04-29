@@ -99,6 +99,8 @@ block.tutorial-mod-tutorial-crafter.details = Without factory you cannot spell "
 
 Anuke已经封装好了常用的消耗器的声明，这些方法的功能正如其字面义：
 
+::: code-group
+
 ``` java
 //每次生产消耗1个铜
 consumeItem(Items.copper,1);
@@ -112,9 +114,26 @@ consumeLiquids(LiquidStack.with(Liquids.water,1f,Liquids.slag,2f));
 consumePower(1f);
 ```
 
+``` kotlin
+//每次生产消耗1个铜
+consumeItem(Items.copper, 1)
+//每次生产消耗1个铜和2个铅
+consumeItems(ItemStack.with(Items.copper, 1, Items.lead, 2))
+//生产时每“刻”（见下）消耗1单位水
+consumeLiquid(Liquids.water, 1f)
+//生产时每刻消耗1单位水和2单位矿渣
+consumeLiquids(LiquidStack.with(Liquids.water, 1f, Liquids.slag, 2f))
+//生产时每刻消耗1单位电力
+consumePower(1f)
+```
+
+:::
+
 值得注意的是，流体和电量的消耗都是以 **刻（Tick）** 为单位的，而`1s = 60tick`，例如，`consumePower(60f)`实际上每秒消耗3600电力。因此，应当注意此处的单位换算问题，避免出现消耗速率意外扩大60倍的问题。
 
 以上只是消耗器字面上的用法。事实上，原版中火力发电机的燃料消耗、炮塔的冷却剂等也是消耗器的功能。这些“不正常”的消耗器并没有什么不同，也可以应用在工厂中。
+
+::: code-group
 
 ``` java
 //像火力发电机一样，消耗高燃烧性的物品，额外提升的工作效率由物品的燃烧性决定
@@ -125,6 +144,17 @@ consume(new ConsumeItemExplode());
 consume(new ConsumeCoolant(1f));
 ```
 
+``` kotlin
+//像火力发电机一样，消耗高燃烧性的物品，额外提升的工作效率由物品的燃烧性决定
+consume(ConsumeItemFlammable())
+//像火力发电机一样，遇到高爆炸性的物品会炸坏方块
+consume(ConsumeItemExplode())
+//像炮塔一样，使用冷却剂提高工作效率
+consume(ConsumeCoolant(1f))
+```
+
+:::
+
 Anuke没有封装这些特殊消耗器的“快速通道”，所以你需要用基本方法`consume()`来**注册（Register）**消耗器。查阅源代码可知，`consumeItem()`等方法也是对`consume()`方法的包装。本教程后续章节将会继续深入了解消耗器的相关机制，届时你可以创建自己的消耗器。
 
 最后仍要强调的是，一个类型为`GenericCrafter`的方块有且仅有一个配方，所有的消耗器都是这个配方的输入，自相矛盾的消耗器会导致方块无法正常工作。
@@ -132,6 +162,8 @@ Anuke没有封装这些特殊消耗器的“快速通道”，所以你需要用
 ## 输出项
 
 接下来，你可以为工厂添加输出项。`GenericCrafter`的输出是由`outputItem` `outputItems` `outputLiquid` `outputLiquids`声明的。
+
+::: code-group
 
 ``` java
 //每次生产输出1个铜
@@ -149,13 +181,41 @@ outputItem = LiquidStack.with(Liquids.water, 1f, ModItems.liquid1, 2f);
 //同时设置`outputItem`和`outputItems`会无视`outputItem`，流体同理。
 ```
 
+``` kotlin
+//每次生产输出1个铜
+outputItem = ItemStack(Items.copper, 1)
+//或
+//每次生产输出1个铜和2个本模组物品
+outputItems = ItemStack.with(Items.copper, 1, ModItems.item1, 2)
+
+//生产时每刻输出1单位水
+outputLiquids = arrayOf(LiquidStack(Liquids.water, 1f))
+//或
+//生产时每刻输出1单位水和1单位本模组流体
+outputLiquids = LiquidStack.with(Liquids.water, 1f, ModItems.liquid1, 2f)
+
+//同时设置`outputItem`和`outputItems`会无视`outputItem`，流体同理。
+```
+
+:::
+
 如果想要让工厂输出电力，可以让工厂消耗负的电量，但是不推荐这么做，因为兼容性较差。但如果想同时输出物品和发电则不得不这样做。
+
+::: code-group
 
 ``` java
 //不推荐
 //生产时每刻消耗-1单位电力，即输出1单位电力
 consumePower(-1f);
 ```
+
+``` kotlin
+//不推荐
+//生产时每刻消耗-1单位电力，即输出1单位电力
+consumePower(-1f)
+```
+
+:::
 
 至于输出热量，则需要调整方块的类型才能做到，见于下文。
 
@@ -173,11 +233,21 @@ consumePower(-1f);
 
 最基本的drawer是`DrawDefault`，可以绘制一张名称与本工厂相同的贴图。使用方式如下：
 
+::: code-group
+
 ``` java
 drawer = new DrarDefault();
 ```
 
+``` kotlin
+drawer = DrawDefault()
+```
+
+:::
+
 Drawer可以对绘制过程进行一定拓展，在`mindustry.world.draw`包中还有许多drawer可供使用。但是一个方块只有一个`drawer`字段，大部分drawer只能做一件事，需要配合使用。这时，你可以使用`DrawMulti`来对drawer进行组合：
+
+::: code-group
 
 ``` java
 drawer = new DrawMulti(
@@ -189,6 +259,19 @@ drawer = new DrawMulti(
                 new DrawGlowRegion()
                 );
 ```
+
+``` kotlin
+drawer = DrawMulti(
+    DrawRegion("-bottom"),
+    DrawLiquidTile(Liquids.water, 2f),
+    DrawBubbles(Color.valueOf("7693e3")),
+    DrawRegion(),
+    DrawLiquidOutputs(),
+    DrawGlowRegion()
+)
+```
+
+:::
 
 一个`DrawMulti`中可以包括多个drawer，这些drawer将会按照声明顺序从先到后，按照从下到上叠加绘制，最终获得较佳的效果。
 
@@ -287,6 +370,8 @@ Seperator("tutorial-seperator")
 
 和工厂类似的是，你可以设置`drawer`和`craftTime`。而分离器的产出及各产物概率是在`results`字段中。此时ItemStack中的`amount`不再表示数量，而是此物品所占的比例：
 
+::: code-group
+
 ``` java
 results = with(
                 Items.copper, 5,
@@ -295,6 +380,17 @@ results = with(
                 Items.titanium, 2
             );
 ```
+
+``` kotlin
+results = ItemStack.with(
+    Items.copper, 5,
+    Items.lead, 3,
+    Items.graphite, 2,
+    Items.titanium, 2
+)
+```
+
+:::
 
 总比例是`5+3+2+2 = 12`，则铜占其中的5/12。
 

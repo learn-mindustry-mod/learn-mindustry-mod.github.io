@@ -6,6 +6,8 @@
 
 Java 里的“内容定义”通常是一个类，字段就是配置项。比如：
 
+::: code-group
+
 ```java
 public class Drill extends Block{
     public int tier = 1;
@@ -13,11 +15,22 @@ public class Drill extends Block{
 }
 ```
 
+``` kotlin
+class Drill(name: String) : Block(name) {
+    var tier = 1
+    var drillTime = 300f
+}
+```
+
+:::
+
 `public` 表示公开字段，`int`/`float` 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。注意 Java 的 `float` 常带 `f` 后缀，表示这是浮点数而不是整数。
 
 `extends` 表示继承。`Drill extends Block` 的意思是“钻头拥有 Block 的所有字段”，所以你在 JSON 里看到的很多字段其实来自父类，比如 `size`、`health`、`requirements`。`super(name)` 是调用父类构造器，确保父类先完成初始化。源码里出现 `@Override` 时，代表子类重写了父类方法；`abstract` 表示抽象类不能直接实例化，必须用具体子类。
 
 方法是类里的“行为”，例如：
+
+::: code-group
 
 ```java
 public void updateTile(){
@@ -25,7 +38,17 @@ public void updateTile(){
 }
 ```
 
+``` kotlin
+fun updateTile() {
+    //每帧逻辑
+}
+```
+
+:::
+
 构造器名字与类名相同，常用于创建时设定基础值：
+
+::: code-group
 
 ```java
 public Drill(String name){
@@ -33,13 +56,29 @@ public Drill(String name){
 }
 ```
 
+``` kotlin
+constructor(name: String) : super(name)
+```
+
+:::
+
 你在 `core/src/mindustry/content/*.java` 里看到的写法，经常是“匿名内部类”初始化：
+
+::: code-group
 
 ```java
 new GenericCrafter("x"){ {
     craftTime = 60f;
 }}
 ```
+
+``` kotlin
+GenericCrafter("x").apply {
+    craftTime = 60f
+}
+```
+
+:::
 
 这一对大括号的含义就是“创建对象后马上设置字段”。JSON 本质上就是在做这件事。
 
@@ -51,10 +90,19 @@ new GenericCrafter("x"){ {
 
 源码里常见的“容器构造”也值得一看，例如：
 
+::: code-group
+
 ```java
 requirements = ItemStack.with(Items.copper, 50, Items.lead, 30);
 consumes.add(new ConsumeItems(new ItemStack(Items.graphite, 2)));
 ```
+
+``` kotlin
+requirements = ItemStack.with(Items.copper, 50, Items.lead, 30)
+consumes.add(ConsumeItems(ItemStack(Items.graphite, 2)))
+```
+
+:::
 
 它们在 JSON 中对应 `"requirements": ["copper/50", "lead/30"]` 或 `consumes.items` 的写法。看到这些语句时，你就能反推 JSON 的结构。
 
@@ -64,6 +112,8 @@ consumes.add(new ConsumeItems(new ItemStack(Items.graphite, 2)));
 
 把 Java 写法翻译成 JSON 是最实用的练习。例如 Java 中常见的写法：
 
+::: code-group
+
 ```java
 new GenericCrafter("silicon-smelter"){{
     craftTime = 60f;
@@ -71,6 +121,16 @@ new GenericCrafter("silicon-smelter"){{
     consumes.power(0.5f);
 }}
 ```
+
+``` kotlin
+GenericCrafter("silicon-smelter").apply {
+    craftTime = 60f
+    outputItem = ItemStack(Items.silicon, 1)
+    consumes.power(0.5f)
+}
+```
+
+:::
 
 对应的 JSON 大致是：
 
@@ -92,6 +152,8 @@ new GenericCrafter("silicon-smelter"){{
 
 同理，单位武器的写法也可以直接翻译：
 
+::: code-group
+
 ```java
 weapons.add(new Weapon(){{
     x = 4f; y = 1f;
@@ -99,6 +161,17 @@ weapons.add(new Weapon(){{
     bullet = new BasicBulletType(3f, 12);
 }});
 ```
+
+``` kotlin
+weapons.add(Weapon().apply {
+    x = 4f
+    y = 1f
+    reload = 30f
+    bullet = BasicBulletType(3f, 12f)
+})
+```
+
+:::
 
 对应 JSON 的结构就是：
 
@@ -131,11 +204,21 @@ weapons.add(new Weapon(){{
 
 从源码角度看，解析器的大致流程类似这样（伪代码）：
 
+::: code-group
+
 ```java
 var type = json.getString("type", defaultType);
 var block = makeBlock(type, name);
 readFields(block, json);
 ```
+
+``` kotlin
+val type = json.getString("type", defaultType)
+val block = makeBlock(type, name)
+readFields(block, json)
+```
+
+:::
 
 因此当你写错 `type`，解析器甚至无法创建对象，后续字段都会失效。
 

@@ -36,6 +36,8 @@ Mindustry 是由 Java 编写的。你所写的 JSON（或者 Hjson）文件，�
 假设我们想做一个炮塔，但想知道它还有没有除了 `reload` 以外的属性。
 1. 在仓库里找到 `core/src/mindustry/world/blocks/defense/turrets/ItemTurret.java`。
 2. 打开文件，在顶部你会看到类的定义和一大排变量声明：
+::: code-group
+
 ```java
 public class ItemTurret extends Turret {
     // ...
@@ -44,6 +46,17 @@ public class ItemTurret extends Turret {
     // ...
 }
 ```
+
+``` kotlin
+open class ItemTurret : Turret() {
+    // ...
+    var ammoPerShot = 1f
+    var maxAmmo = 30
+    // ...
+}
+```
+
+:::
 **看！** 这里写着 `public int maxAmmo = 30;`。这意味着你可以在你的 JSON 里写 `maxAmmo: 50` 来修改这个炮塔的最大弹药装载量！原版默认是 30。
 
 ::: tip 继承与通性 (Inheritance)

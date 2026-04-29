@@ -57,6 +57,8 @@ ECS 把一个实体拆解成多个组件，像搭积木一样组合：
 
 所有组件都定义在 `mindustry.entities.comp` 包下：
 
+::: code-group
+
 ```java
 // 基础组件：EntityComp - 所有实体都有的属性
 package mindustry.entities.comp;
@@ -96,6 +98,48 @@ abstract class HealthComp implements Entityc, Posc {
 }
 ```
 
+``` kotlin
+// 基础组件：EntityComp - 所有实体都有的属性
+package mindustry.entities.comp
+
+@Component
+abstract class EntityComp : Entityc {
+    var added = false
+    var id = EntityGroup.nextId()
+}
+
+// 位置组件：PosComp - 位置相关
+@Component(base = true)
+abstract class PosComp : Position {
+    @SyncField(true) @SyncLocal var x = 0f
+    @SyncField(true) @SyncLocal var y = 0f
+
+    fun set(x: Float, y: Float) {
+        this.x = x
+        this.y = y
+    }
+}
+
+// 生命组件：HealthComp - 生命值相关
+@Component
+abstract class HealthComp : Entityc, Posc {
+    var health = 0f
+    @Transient var hitTime = 0f
+    @Transient var maxHealth = 1f
+    @Transient var dead = false
+
+    fun damage(amount: Float) {
+        health -= amount
+        hitTime = 1f
+        if (health <= 0 && !dead) {
+            kill()
+        }
+    }
+}
+```
+
+:::
+
 ### 组件的注解
 
 | 注解 | 作用 |
@@ -114,6 +158,8 @@ abstract class HealthComp implements Entityc, Posc {
 
 所有实体都必须有的组件，提供最基本的属性：
 
+::: code-group
+
 ```java
 @Component
 abstract class EntityComp implements Entityc {
@@ -122,9 +168,21 @@ abstract class EntityComp implements Entityc {
 }
 ```
 
+``` kotlin
+@Component
+abstract class EntityComp : Entityc {
+    var added = false       // 是否已经添加到世界中
+    var id = EntityGroup.nextId()  // 唯一ID
+}
+```
+
+:::
+
 #### PosComp - 位置组件
 
 几乎所有实体都需要的位置信息，并且会触发网络同步：
+
+::: code-group
 
 ```java
 @Component(base = true)
@@ -145,9 +203,31 @@ abstract class PosComp implements Position {
 }
 ```
 
+``` kotlin
+@Component(base = true)
+abstract class PosComp : Position {
+    // @SyncField(true) 表示这个字段需要网络同步
+    // @SyncLocal 表示这个字段只在本地同步，不接收服务端覆盖
+    @SyncField(true) @SyncLocal var x = 0f
+    @SyncField(true) @SyncLocal var y = 0f
+
+    override fun getX(): Float {
+        return x
+    }
+
+    override fun getY(): Float {
+        return y
+    }
+}
+```
+
+:::
+
 #### HealthComp - 生命组件
 
 处理生命值和伤害逻辑：
+
+::: code-group
 
 ```java
 @Component
@@ -172,6 +252,31 @@ abstract class HealthComp implements Entityc, Posc {
 }
 ```
 
+``` kotlin
+@Component
+abstract class HealthComp : Entityc, Posc {
+    var health = 0f           // 当前生命值
+    @Transient var hitTime = 0f // 受击计时
+    @Transient var maxHealth = 1f  // 最大生命值
+    @Transient var dead = false // 是否死亡
+
+    fun kill() {
+        if (dead) return
+        health = Math.min(health, 0f)
+        dead = true
+        killed()  // 子类可以覆盖此方法
+        remove()  // 从世界中移除
+    }
+
+    fun heal(amount: Float) {
+        health += amount
+        clampHealth()  // 限制到 maxHealth 范围内
+    }
+}
+```
+
+:::
+
 ## Mindustry 的 Entity（实体）
 
 实体是组件的组合，通过 `@EntityDef` 注解声明。
@@ -181,6 +286,8 @@ abstract class HealthComp implements Entityc, Posc {
 看原版几种主要的实体：
 
 #### UnitComp - 单位实体
+
+::: code-group
 
 ```java
 @EntityDef({
@@ -212,9 +319,47 @@ abstract class UnitComp implements Healthc, Physicsc, Hitboxc, /*...*/ {
 }
 ```
 
+``` kotlin
+@EntityDef(value = [
+    Posc::class,       // 位置能力
+    Healthc::class,    // 生命能力
+    Teamc::class,      // 队伍能力
+    Itemsc::class,     // 物品携带能力
+    Rotc::class,       // 旋转能力
+    Unitc::class,      // 单位能力
+    Weaponsc::class,   // 武器能力
+    Drawc::class,      // 绘制能力
+    Syncc::class,      // 同步能力
+    Shieldc::class,    // 护盾能力
+    Minerc::class,     // 挖矿能力
+    Builderc::class,   // 建造能力
+    // ...还有更多
+])
+@Component(base = true)
+abstract class UnitComp : Healthc, Physicsc, Hitboxc /*...*/ {
+    @Import var dead = false
+    @Import var disarmed = false
+    @Import var x = 0f
+    @Import var y = 0f
+    @Import var rotation = 0f
+    @Import var maxHealth = 0f
+    @Import lateinit var team: Team
+    @Import var id = 0
+
+    private lateinit var controller: UnitController
+    var abilities: Array<Ability> = arrayOf()
+
+    // 其他字段...
+}
+```
+
+:::
+
 `@EntityDef` 的 value 是一个接口数组，每个接口对应一个组件。编译器会自动找到这些接口对应的组件类，并生成复合实体。
 
 #### BuildingComp - 建筑实体
+
+::: code-group
 
 ```java
 @EntityDef({
@@ -236,6 +381,28 @@ abstract class BuildingComp implements Entityc {
 }
 ```
 
+``` kotlin
+@EntityDef(value = [
+    Posc::class,
+    Healthc::class,
+    Teamc::class,
+    Timerc::class,
+    // ...
+])
+@Component(base = true)
+abstract class BuildingComp : Entityc {
+    @Transient lateinit var block: Block
+    @Transient var dead = false
+    @Transient var enabled = true
+    var health = 0f
+    @Transient var id = EntityGroup.nextId()
+
+    // 其他所有的方法和字段...
+}
+```
+
+:::
+
 ## 为什么是"编译时"的秘密武器
 
 传统 ECS 的痛点在于：
@@ -246,6 +413,8 @@ abstract class BuildingComp implements Entityc {
 ### 传统 ECS 的问题
 
 想象一个传统的 ECS 实现：
+
+::: code-group
 
 ```java
 // 运行时查找组件
@@ -258,6 +427,19 @@ Position pos = e.getComponent(Position.class);
 // 3. 缓存不命中 = 失败
 ```
 
+``` kotlin
+// 运行时查找组件
+val e: Entity = world.createEntity()
+val pos: Position = e.getComponent(Position::class.java)
+
+// 这通常意味着：
+// 1. 查询组件存储表（哈希表、数组等）
+// 2. 运行时分发
+// 3. 组件不存在 = 失败
+```
+
+:::
+
 在每秒 60 帧的游戏里，如果有几千个实体，每帧都这样查组件，性能会受影响。
 
 ### Mindustry 的解决方案
@@ -267,6 +449,8 @@ Mindustry 的解决方案是**编译时代码生成**。所有在编译时确定
 ### 生成的类是什么样子？
 
 看 `mindustry/gen/Unit.java`（这是生成后的类，不是源代码）：
+
+::: code-group
 
 ```java
 @SuppressWarnings("deprecation")
@@ -299,9 +483,44 @@ public class Unit extends UnitBase implements Posc, Healthc, /*...*/ {
 }
 ```
 
+``` kotlin
+@Suppress("DEPRECATION")
+class Unit : UnitBase(), Posc, Healthc /*...*/ {
+    // 所有字段都是 public 的，没有 Getter/Setter
+    var x = 0f
+    var y = 0f
+    var health = 0f
+    var maxHealth = 0f
+    lateinit var team: Team
+    var id = 0
+
+    // 生成的 update() 方法会把各组件的 update() 拼起来
+    override fun update() {
+        // PosComp.update() 的代码
+        // HealthComp.update() 的代码
+        // UnitComp.update() 的代码
+        // ...其他组件的 update() 代码
+    }
+
+    override fun remove() {
+        if (added) {
+            added = false
+            // 从各个组中移除
+            Groups.unit.removeIndex(this, index__unit)
+            Groups.all.removeIndex(this, index__all)
+            // ...
+        }
+    }
+}
+```
+
+:::
+
 ### EntityProcess 注解处理器
 
 注解处理器位于 `mindustry.annotations.entity.EntityProcess`，它在编译时扫描所有被 `@Component` 和 `@EntityDef` 标记的类，并生成对应的实体类。
+
+::: code-group
 
 ```java
 @SupportedAnnotationTypes({
@@ -329,6 +548,33 @@ public class EntityProcess extends BaseProcessor {
 }
 ```
 
+``` kotlin
+@SupportedAnnotationTypes(
+    "mindustry.annotations.Annotations.EntityDef",
+    "mindustry.annotations.Annotations.GroupDef",
+    "mindustry.annotations.Annotations.EntityInterface",
+    "mindustry.annotations.Annotations.BaseComponent"
+)
+class EntityProcess : BaseProcessor() {
+    // 初始化块
+    init {
+        rounds = 3
+    }
+
+    override fun process(env: RoundEnvironment) {
+        if (round == 1) {
+            // 生成组件接口
+        } else if (round == 2) {
+            // 处理实体定义
+        } else {
+            // 生成实体类
+        }
+    }
+}
+```
+
+:::
+
 ## 生成的接口
 
 每个组件会生成一个对应的接口（以 `c` 结尾）。
@@ -345,6 +591,8 @@ public class EntityProcess extends BaseProcessor {
 ### 接口的生成
 
 看生成后的 `Posc.java`：
+
+::: code-group
 
 ```java
 /**
@@ -377,6 +625,37 @@ public interface Posc extends Entityc {
 }
 ```
 
+``` kotlin
+/**
+ * Interface for [mindustry.entities.comp.PosComp]
+ */
+@EntityInterface
+@Suppress("DEPRECATION")
+interface Posc : Entityc {
+    fun x(): Float
+
+    fun y(): Float
+
+    fun x(x: Float)
+
+    fun y(y: Float)
+
+    fun set(x: Float, y: Float)
+
+    fun trns(x: Float, y: Float)
+
+    override fun getX(): Float {
+        return x()
+    }
+
+    override fun getY(): Float {
+        return y()
+    }
+}
+```
+
+:::
+
 ### `@EntityInterface` 注解
 
 这个注解标记一个接口是组件接口，注解处理器会识别它并生成对应的 getter/setter 方法。
@@ -386,6 +665,8 @@ public interface Posc extends Entityc {
 组件之间可以声明依赖关系，通过 `implements` 来指定。
 
 ### 依赖的定义
+
+::: code-group
 
 ```java
 @Component
@@ -399,6 +680,20 @@ abstract class PosComp implements Position {
 }
 ```
 
+``` kotlin
+@Component
+abstract class DamageComp : Healthc {
+    // DamageComp 依赖 Healthc，意味着任何拥有 DamageComp 的实体也必须拥有 HealthComp
+}
+
+@Component
+abstract class PosComp : Position {
+    // PosComp 实现了 Position 接口（Arc 框架的接口）
+}
+```
+
+:::
+
 ### 依赖的作用
 
 当一个组件依赖于另一个组件时：
@@ -409,6 +704,8 @@ abstract class PosComp implements Position {
 ### BaseComponent
 
 所有组件默认都会自动继承 `BaseComponent` 里定义的属性。
+
+::: code-group
 
 ```java
 @BaseComponent
@@ -422,6 +719,20 @@ abstract class Base {
 }
 ```
 
+``` kotlin
+@BaseComponent
+abstract class Base {
+    var added = false
+    var id = EntityGroup.nextId()
+
+    fun isAdded(): Boolean {
+        return added
+    }
+}
+```
+
+:::
+
 这意味着任何组件都会自动拥有 `added` 和 `id` 字段，除非被标记为不需要基础组件。
 
 ## 字段的导入
@@ -429,6 +740,8 @@ abstract class Base {
 ### `@Import` 注解
 
 `@Import` 注解用于标记需要从其他组件导入的字段。
+
+::: code-group
 
 ```java
 @Component
@@ -442,6 +755,22 @@ abstract class HealthComp implements Entityc, Posc {
     }
 }
 ```
+
+``` kotlin
+@Component
+abstract class HealthComp : Entityc, Posc {
+    @Import var dead = false
+    @Import var disarmed = false  // 从其他组件导入
+
+    fun damage(amount: Float) {
+        // 可以直接使用 imported 的字段
+        if (dead) return
+        health -= amount
+    }
+}
+```
+
+:::
 
 ### 为什么需要 `@Import`？
 
@@ -460,6 +789,8 @@ Mindustry 的冲突解决规则是：
 3. **有 `@Replace` 标记的方法**：优先级最高
 
 ### 优先级比较
+
+::: code-group
 
 ```java
 // 最高优先级
@@ -482,9 +813,34 @@ void update() {
 }
 ```
 
+``` kotlin
+// 最高优先级
+@Replace
+fun update() {
+    // 这个实现会被使用，替换其他实现
+}
+
+// 中等优先级
+@Override
+@MethodPriority(5f)
+fun update() {
+    // 排在默认方法前
+}
+
+// 默认优先级
+@Override
+fun update() {
+    // 排在最后
+}
+```
+
+:::
+
 ### 方法融合的输出
 
 当有多个组件实现了同名方法时，生成的代码会把它们按优先级排序，并组合成一个方法：
+
+::: code-group
 
 ```java
 @Override
@@ -503,9 +859,29 @@ public void update() {
 }
 ```
 
+``` kotlin
+override fun update() {
+    // PosComp 的 update()
+    run {
+        // ...PosComp.update() 的代码
+    }
+
+    // HealthComp 的 update()
+    run {
+        // ...HealthComp.update() 的代码
+    }
+
+    // ...其他组件的 update()
+}
+```
+
+:::
+
 ## `@ReadOnly` 注解
 
 标记字段为只读，生成的接口只有 getter 没有 setter。
+
+::: code-group
 
 ```java
 @Component
@@ -515,7 +891,19 @@ abstract class PosComp {
 }
 ```
 
+``` kotlin
+@Component
+abstract class PosComp {
+    @ReadOnly
+    var x = 0f
+}
+```
+
+:::
+
 生成的接口：
+
+::: code-group
 
 ```java
 float x();  // 只有 getter
@@ -524,9 +912,20 @@ float x();  // 只有 getter
 // void x(float x);  // 这行不会被生成
 ```
 
+``` kotlin
+fun x(): Float  // 只有 getter
+
+// 没有 setter
+// fun x(x: Float)  // 这一行不会被生成
+```
+
+:::
+
 ## `@Replace` 注解
 
 标记用本组件的实现替换其他组件的实现。
+
+::: code-group
 
 ```java
 @Component
@@ -538,9 +937,23 @@ abstract class MyComp {
 }
 ```
 
+``` kotlin
+@Component
+abstract class MyComp {
+    @Replace
+    fun draw() {
+        // 这个实现会替换其他组件的 draw() 方法
+    }
+}
+```
+
+:::
+
 ## `@SyncField` 注解
 
 标记字段需要网络同步。
+
+::: code-group
 
 ```java
 @Component
@@ -551,7 +964,24 @@ abstract class PosComp {
 }
 ```
 
+``` kotlin
+@Component
+abstract class PosComp {
+    @SyncField(true)   // true 表示需要线性同步
+    @SyncLocal         // local 表示只在本地同步，不接受服务端覆盖
+    var x = 0f
+
+    @SyncField(true)
+    @SyncLocal
+    var y = 0f
+}
+```
+
+:::
+
 生成的字段：
+
+::: code-group
 
 ```java
 // 原始字段
@@ -561,6 +991,18 @@ public float x, y;
 private transient float x__target;  // 目标值
 private transient float x__last;    // 上一次的值
 ```
+
+``` kotlin
+// 原始字段
+var x = 0f
+var y = 0f
+
+// 同步辅助字段（transient，不进入存档）
+@Transient private var x__target = 0f  // 目标值
+@Transient private var x__last = 0f    // 上一次的值
+```
+
+:::
 
 ## 总结
 

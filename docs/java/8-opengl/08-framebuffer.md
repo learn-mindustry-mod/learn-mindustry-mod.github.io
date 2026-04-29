@@ -28,6 +28,8 @@
 
 在arc中，帧缓冲被封装为类型`arc.graphics.gl.FrameBuffer`，需要一个帧缓冲只需要构造一个该类型的实例即可，它带有多个构造函数，定义了多种默认帧缓冲的模板：
 
+::: code-group
+
 ``` java
 /**2x2像素尺寸，格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
 FrameBuffer(){/*...*/}
@@ -46,6 +48,27 @@ FrameBuffer(int width, int height, boolean hasDepth){/*...*/}
  * @param hasStencil 是否带有模板缓冲*/
 FrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boolean hasStencil){/*...*/}
 ```
+
+``` kotlin
+/**2x2像素尺寸，格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
+constructor() {/*...*/}
+/**指定大小的格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
+constructor(width: Int, height: Int) {/*...*/}
+/**指定大小与格式的帧缓冲，无深度缓冲与模板缓冲*/
+constructor(format: Pixmap.Format, width: Int, height: Int) {/*...*/}
+/**指定大小与格式的帧缓冲，无模板缓冲
+ * @param hasDepth 是否带有深度缓冲*/
+constructor(format: Pixmap.Format, width: Int, height: Int, hasDepth: Boolean) {/*...*/}
+/**指定大小的格式为RGBA8888的帧缓冲，无模板缓冲
+ * @param hasDepth 是否带有深度缓冲*/
+constructor(width: Int, height: Int, hasDepth: Boolean) {/*...*/}
+/**指定大小与格式的帧缓冲
+ * @param hasDepth 是否带有深度缓冲
+ * @param hasStencil 是否带有模板缓冲*/
+constructor(format: Pixmap.Format, width: Int, height: Int, hasDepth: Boolean, hasStencil: Boolean) {/*...*/}
+```
+
+:::
 
 其中，类型为`Pixmap.Format`的参数`format`是一个枚举类型，它用于定义在颜色缓冲上的数据类型与数据到纹理的解析方式，枚举条目及释义如下表所列：
 
@@ -313,6 +336,8 @@ fun drawPixelate(){
 
 打开游戏本身实现像素化的工具类`mindustry.graphics.Pixelator`，查阅其两个核心方法:
 
+::: code-group
+
 ``` java
 public void drawPixelate(){
     //计算缓冲尺寸w与h，已省略
@@ -336,6 +361,32 @@ public void register(){
   });
 }
 ```
+
+``` kotlin
+fun drawPixelate() {
+    //计算缓冲尺寸w与h，已省略
+    //...
+
+    buffer.resize(w, h)
+
+    buffer.begin(Color.clear)
+    renderer.draw()
+}
+
+fun register() {
+  Draw.draw(Layer.end) {
+    buffer.end()
+
+    Blending.disabled.apply()
+    buffer.blit(Shaders.screenspace)
+
+    //对齐摄像机坐标，已省略
+    //...
+  }
+}
+```
+
+:::
 
 而这两个方法恰恰将整个游戏的世界渲染工作包含在了其中，这与我们前面所给出的例子的工作逻辑是**完全一致的**！而其中出现的帧缓冲的`buffer.blit(shader)`方法，其效用为使用参数提供的那个着色器，将帧缓冲的内容绘制在屏幕上，这等价于使用该着色器和帧缓冲中的纹理作为采样目标，去提交一个四个顶点分别为屏幕四个角的`Mesh`，而上述`Shaders.screenspace`就是简单的将纹理采样结果作为片段颜色进行染色。
 

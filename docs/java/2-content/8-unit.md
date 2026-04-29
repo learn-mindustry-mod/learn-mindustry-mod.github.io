@@ -129,11 +129,21 @@ UnitType("tutorial-unit").apply{
 
 关于单位采矿菜单中缺少模组矿物的问题，可通过注册新的`ItemUnitStance`并将其添加至单位姿态列表来解决：
 
+::: code-group
+
 ``` java
 ItemUnitStance item1mine = new ItemUnitStance(ModItems.item1);
 UnitTypes.mono.stances.add(item1mine);
 //省略若干单位
 ```
+
+``` kotlin
+val item1mine = ItemUnitStance(ModItems.item1)
+UnitTypes.mono.stances.add(item1mine)
+//省略若干单位
+```
+
+:::
 
 ## 单位 AI
 
