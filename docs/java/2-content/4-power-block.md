@@ -18,6 +18,12 @@ solarPanel = new SolarGenerator("tutorial-solar-panel"){{
     powerProduction = 0.12f;
 }};
 ```
+``` kotlin
+solarPanel = SolarGenerator("tutorial-solar-panel").apply{
+    requirements(Category.power, ItemStack.with(Items.lead, 10, Items.silicon, 8))
+    powerProduction = 0.12f
+}
+```
 :::
 
 ### 地热发电机（ThermalGenerator）
@@ -33,6 +39,14 @@ thermalGenerator = new ThermalGenerator("tutorial-thermal-generator"){{
     //设置为floating是为了能放置在矿渣地板上
     floating = true;
 }};
+```
+``` kotlin
+thermalGenerator = ThermalGenerator("tutorial-thermal-generator").apply{
+    requirements(Category.power, with(Items.copper, 40))
+    size = 2
+    //设置为floating是为了能放置在矿渣地板上
+    floating = true
+}
 ```
 :::
 
@@ -65,6 +79,19 @@ steamGenerator = new ConsumeGenerator("tutorial-steam-generator"){{
     consume(new ConsumeItemFlammable());
     consume(new ConsumeItemExplode());
 }}
+```
+
+``` kotlin
+steamGenerator = new ConsumeGenerator("tutorial-steam-generator").apply{
+    requirements(Category.power, with(Items.copper, 35))
+    powerProduction = 5.5f
+    itemDuration = 90f
+    consumeLiquid(Liquids.water, 0.1f)
+    hasLiquids = true
+    size = 2
+    consume(new ConsumeItemFlammable())
+    consume(new ConsumeItemExplode())
+}
 ```
 
 :::
@@ -116,6 +143,40 @@ fluxReactor = new VariableReactor("tutorial-flux-reactor"){{
 }};
 ```
 
+``` kotlin
+neoplasiaReactor = HeaterGenerator("tutorial-neoplasia-reactor").apply{
+    requirements(Category.power, with(Items.tungsten, 750))
+    size = 5
+    liquidCapacity = 80f
+    outputLiquid = new LiquidStack(Liquids.neoplasm, 20f / 60f)
+    //当输出流体条满时爆炸
+    explodeOnFull = true
+    heatOutput = 60f
+    powerProduction = 140f
+    itemDuration = 60f * 3f
+    itemCapacity = 10
+    consumeLiquid(Liquids.arkycite, 80f / 60f)
+    consumeLiquid(Liquids.water, 10f / 60f)
+    consumeItem(Items.phaseFabric)
+}
+
+thoriumReactor = NuclearReactor("tutorial-thorium-reactor").apply{
+    requirements(Category.power, with(Items.lead, 300))
+    itemDuration = 360f
+    powerProduction = 15f
+    heating = 0.02f
+    fuelItem = Items.thorium
+    consumeItem(Items.thorium)
+    consumeLiquid(Liquids.cryofluid, heating / coolantPower).update(false)
+}
+
+fluxReactor = VariableReactor("tutorial-flux-reactor").apply{
+    requirements(Category.power, with(Items.graphite, 300))
+    powerProduction = 265f
+    maxHeat = 150f
+    consumeLiquid(Liquids.cyanogen, 9f / 60f)
+}
+```
 :::
 
 ### 冲击反应堆（ImpactReactor）
@@ -135,6 +196,16 @@ impactReactor = new ImpactReactor("tutorial-impact-reactor"){{
 }};
 ```
 
+``` kotlin
+impactReactor = ImpactReactor("tutorial-impact-reactor").apply{
+    requirements(Category.power, with(Items.lead, 500))
+    powerProduction = 130f
+    itemDuration = 140f
+    consumePower(25f)
+    consumeItem(Items.blastCompound)
+    consumeLiquid(Liquids.cryofluid, 0.25f)
+}
+```
 :::
 
 ### 总结
@@ -168,6 +239,23 @@ beamNode = new BeamNode("tutorial-beam-node"){{
     consumePowerBuffered(1000f);
 }};
 ```
+``` kotlin
+powerNode = PowerNode("tutorial-power-node").apply{
+    requirements(Category.power, with(Items.copper, 2, Items.lead, 6))
+    maxNodes = 10
+    laserRange = 6
+    underBullets = true
+}
+
+beamNode = new BeamNode("tutorial-beam-node").apply{
+    requirements(Category.power, with(Items.beryllium, 8))
+    range = 10
+
+    //它们两个是一伙的
+    consumesPower = outputsPower = true
+    consumePowerBuffered(1000f)
+}
+```
 :::
 
 还有一个类型是二极管（`PowerDiode`），它可以让电力在两个电网之间单向传输。
@@ -183,6 +271,15 @@ batteryLarge = new Battery("tutorial-battery-large"){{
     consumePowerBuffered(50000f);
     baseExplosiveness = 5f;
 }};
+```
+
+``` kotlin
+batteryLarge = Battery("tutorial-battery-large").apply {
+    requirements(Category.power, ItemStack.with(Items.titanium, 20, Items.lead, 50, Items.silicon, 30))
+    size = 3
+    consumePowerBuffered(50000f)
+    baseExplosiveness = 5f
+}
 ```
 
 :::
@@ -204,6 +301,15 @@ illuminator = new LightBlock("illuminator"){{
     radius = 140f;
     consumePower(0.05f);
 }};
+```
+
+``` kotlin
+illuminator = LightBlock("illuminator").apply {
+    requirements(Category.effect, BuildVisibility.lightingOnly, ItemStack.with(Items.graphite, 12))
+    brightness = 0.75f
+    radius = 140f
+    consumePower(0.05f)
+}
 ```
 
 :::

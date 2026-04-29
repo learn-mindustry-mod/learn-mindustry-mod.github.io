@@ -47,6 +47,15 @@ public class ItemTurret extends Turret {
 }
 ```
 
+``` kotlin
+open class ItemTurret : Turret() {
+    // ...
+    var ammoPerShot = 1f
+    var maxAmmo = 30
+    // ...
+}
+```
+
 :::
 **看！** 这里写着 `public int maxAmmo = 30;`。这意味着你可以在你的 JSON 里写 `maxAmmo: 50` 来修改这个炮塔的最大弹药装载量！原版默认是 30。
 

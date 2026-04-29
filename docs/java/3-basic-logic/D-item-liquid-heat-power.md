@@ -18,6 +18,12 @@ public boolean acceptItem(Building source, Item item) {
 }
 ```
 
+``` kotlin
+override fun acceptItem(source: Building, item: Item): Boolean {
+    return block.consumesItem(item) && items.get(item) < getMaximumAccepted(item)
+}
+```
+
 :::
 
 而实际传输的方法是`handleItem(Building, Item)`，它默认会委托到`items`中。此处以`Incinerator`为例，作为焚毁炉，最简单的焚毁方式就是直接无视输入：
@@ -29,6 +35,14 @@ public boolean acceptItem(Building source, Item item) {
 public void handleItem(Building source, Item item){
     if(Mathf.chance(0.3)){
         effect.at(x, y);
+    }
+}
+```
+
+``` kotlin
+override fun handleItem(source: Building, item: Item) {
+    if (Mathf.chance(0.3)) {
+        effect.at(x, y)
     }
 }
 ```
@@ -94,6 +108,19 @@ Mindustry中的发电机和用电器均不能缓存电量，因此电量的传�
   }
 ```
 
+``` kotlin
+if (build.block.outputsPower && build.block.consumesPower && !build.block.consPower.buffered) {
+    producers.add(build)
+    consumers.add(build)
+} else if (build.block.outputsPower && build.block.consumesPower) {
+    batteries.add(build)
+} else if (build.block.outputsPower) {
+    producers.add(build)
+} else if (build.block.consumesPower && build.block.consPower != null) {
+    consumers.add(build)
+}
+```
+
 :::
 
 此外，电网还需要一个类型实体的角色来时刻更新它，这个实体即`PowerGraphUpdater`。此实体会在电网创建时被创建，电网消失时被销毁，负责在游戏更新实体时更新电网。
@@ -145,6 +172,52 @@ public void update(){
 }
 ```
 
+``` kotlin
+fun update() {
+    if (!consumers.isEmpty && consumers.first().cheating()) {
+        //when cheating, just set status to 1
+        for (tile in consumers) {
+            tile.power.status = 1f
+        }
+
+        lastPowerNeeded = 1f
+        lastPowerProduced = 1f
+        return
+    }
+
+    var powerNeeded = getPowerNeeded()
+    var powerProduced = getPowerProduced()
+
+    lastPowerNeeded = powerNeeded
+    lastPowerProduced = powerProduced
+
+    lastScaledPowerIn = (powerProduced + energyDelta) / Time.delta
+    lastScaledPowerOut = powerNeeded / Time.delta
+    lastCapacity = getTotalBatteryCapacity()
+    lastPowerStored = getBatteryStored()
+
+    powerBalance.add((lastPowerProduced - lastPowerNeeded + energyDelta) / Time.delta)
+    energyDelta = 0f
+
+    if (!(consumers.size == 0 && producers.size == 0 && batteries.size == 0)) {
+        var charged = false
+
+        if (!Mathf.equal(powerNeeded, powerProduced)) {
+            if (powerNeeded > powerProduced) {
+                val powerBatteryUsed = useBatteries(powerNeeded - powerProduced)
+                powerProduced += powerBatteryUsed
+                lastPowerProduced += powerBatteryUsed
+            } else if (powerProduced > powerNeeded) {
+                charged = true
+                powerProduced -= chargeBatteries(powerProduced - powerNeeded)
+            }
+        }
+
+        distributePower(powerNeeded, powerProduced, charged)
+    }
+}
+```
+
 :::
 
 方法大致可以分为三步：
@@ -162,6 +235,7 @@ public void distributePower(float needed, float produced, boolean charged){
     var items = consumers.items;
     for(int i = 0; i < consumers.size; i++){
         var consumer = items[i];
+        //TODO how would it even be null
         var cons = consumer.block.consPower;
         if(cons.buffered){
             if(!Mathf.zero(cons.capacity)){
@@ -178,6 +252,37 @@ public void distributePower(float needed, float produced, boolean charged){
                 //just in case
                 if(Float.isNaN(consumer.power.status)){
                     consumer.power.status = 0f;
+                }
+            }
+        }
+    }
+}
+```
+
+``` kotlin
+fun distributePower(needed: Float, produced: Float, charged: Boolean) {
+    //distribute even if not needed. this is because some might be requiring power but not using it; it updates consumers
+    val coverage = if (Mathf.zero(needed) && Mathf.zero(produced) && !charged && Mathf.zero(lastPowerStored)) 0f else if (Mathf.zero(needed)) 1f else Math.min(1f, produced / needed)
+    val items = consumers.items
+    for (i in 0 until consumers.size) {
+        val consumer = items[i]
+        //TODO how would it even be null
+        val cons = consumer.block.consPower
+        if (cons.buffered) {
+            if (!Mathf.zero(cons.capacity)) {
+                // Add an equal percentage of power to all buffers, based on the global power coverage in this graph
+                val maximumRate = cons.requestedPower(consumer) * coverage * consumer.delta()
+                consumer.power.status = Mathf.clamp(consumer.power.status + maximumRate / cons.capacity)
+            }
+        } else {
+            //valid consumers get power as usual
+            if (consumer.shouldConsumePower) {
+                consumer.power.status = coverage
+            } else { //invalid consumers get an estimate, if they were to activate
+                consumer.power.status = Math.min(1f, produced / (needed + cons.usage * consumer.delta()))
+                //just in case
+                if (consumer.power.status.isNaN()) {
+                    consumer.power.status = 0f
                 }
             }
         }
@@ -203,11 +308,31 @@ public float chargeBatteries(float excess){
     var items = batteries.items;
     for(int i = 0; i < batteries.size; i++){
         var battery = items[i];
+        //TODO why would it be 0
         if(battery.enabled && battery.block.consPower.capacity > 0f){
             battery.power.status += (1f - battery.power.status) * chargedPercent;
         }
     }
     return Math.min(excess, capacity);
+}
+```
+
+``` kotlin
+fun chargeBatteries(excess: Float): Float {
+    val capacity = getBatteryCapacity()
+    //how much of the missing in each battery % is charged
+    val chargedPercent = Math.min(excess / capacity, 1f)
+    if (Mathf.equal(capacity, 0f)) return 0f
+
+    val items = batteries.items
+    for (i in 0 until batteries.size) {
+        val battery = items[i]
+        //TODO why would it be 0
+        if (battery.enabled && battery.block.consPower.capacity > 0f) {
+            battery.power.status += (1f - battery.power.status) * chargedPercent
+        }
+    }
+    return Math.min(excess, capacity)
 }
 ```
 
@@ -274,6 +399,40 @@ public float calculateHeat(float[] sideHeat, IntSet cameFrom) {
 }
 ```
 
+``` kotlin
+fun calculateHeat(sideHeat: FloatArray, cameFrom: IntSet?): Float {
+    Arrays.fill(sideHeat, 0.0f)
+    cameFrom?.clear()
+    var heat = 0.0f
+    for (build in proximity) {
+        if (build != null && build.team == team && build is HeatBlock) {
+            val heater = build
+            val conductorBlock = build.block as? HeatConductor
+            val split = conductorBlock?.splitHeat == true
+            if (!build.block.rotate || (!split && (relativeTo(build) + 2) % 4 == build.rotation) || (split && relativeTo(build) != build.rotation)) {
+                val heatConductor = build as? HeatConductor.HeatConductorBuild
+                if (!(heatConductor != null && heatConductor.cameFrom.contains(id()))) {
+                    val diff = Math.min(Math.abs(build.x - x), Math.abs(build.y - y)) / tilesize
+                    val contactPoints = Math.min((block.size / 2.0f + build.block.size / 2.0f - diff).toInt(), Math.min(build.block.size, block.size))
+                    var add = heater.heat() / build.block.size * contactPoints
+                    if (split) {
+                        add /= 3.0f
+                    }
+                    sideHeat[Mathf.mod(relativeTo(build), 4)] += add
+                    heat += add
+                }
+                if (cameFrom != null) {
+                    cameFrom.add(build.id)
+                    heatConductor?.let { cameFrom.addAll(it.cameFrom) }
+                }
+                (heater as? HeatConductor.HeatConductorBuild)?.updateHeat()
+            }
+        }
+    }
+    return heat
+}
+```
+
 :::
 
 ::: info 反编译
@@ -307,6 +466,32 @@ public float calculateHeat(float[] sideHeat) {
         }
     }
     return heat;
+}
+```
+
+``` kotlin
+fun calculateHeat(sideHeat: FloatArray): Float {
+    Arrays.fill(sideHeat, 0.0f)
+    var heat = 0.0f
+    for (build in proximity) {
+        if (build != null && build.team == team && build is HeatBlock) {
+            val heater = build
+            val conductorBlock = build.block as? HeatConductor
+            val split = conductorBlock?.splitHeat == true
+            if (!build.block.rotate || (!split && (relativeTo(build) + 2) % 4 == build.rotation) || (split && relativeTo(build) != build.rotation)) {
+                val diff = Math.min(Math.abs(build.x - x), Math.abs(build.y - y)) / tilesize
+                val contactPoints = Math.min((block.size / 2.0f + build.block.size / 2.0f - diff).toInt(), Math.min(build.block.size, block.size))
+                var add = heater.heat() / build.block.size * contactPoints
+                if (split) {
+                    add /= 3.0f
+                }
+                sideHeat[Mathf.mod(relativeTo(build), 4)] += add
+                heat += add
+                (heater as? HeatConductor.HeatConductorBuild)?.updateHeat()
+            }
+        }
+    }
+    return heat
 }
 ```
 

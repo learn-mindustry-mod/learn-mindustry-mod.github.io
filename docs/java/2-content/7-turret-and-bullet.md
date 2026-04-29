@@ -22,6 +22,19 @@ new ItemTurret("tutorial-item-turret"){{
 }};
 ```
 
+``` kotlin
+ItemTurret("tutorial-item-turret").apply {
+    requirements(Category.turret, with(Items.copper, 39))
+    ammo(Items.copper, BasicBulletType(1.5f, 9))
+    shoot = ShootPattern()
+    drawer = DrawTurret().apply{
+        parts.add(RegionPart("-barrel"))
+    }
+    consumePower(40f)
+    coolant = consumeCoolant(0.1f)
+}
+```
+
 :::
 
 ## 子弹类型（BulletType）
@@ -34,6 +47,10 @@ new ItemTurret("tutorial-item-turret"){{
 
 ``` java
 new BasicBulletType(1.5f, 9);
+```
+
+``` kotlin
+BasicBulletType(1.5f, 9)
 ```
 
 :::
@@ -109,6 +126,14 @@ part.moveY = -3f;
 part.moves.add(new PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f));
 ```
 
+``` kotlin
+val part = RegionPart("-barrel").apply {
+    progress = PartProgress.recoil
+    moveY = -3f
+    moves.add(PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f))
+}
+```
+
 :::
 
 此处我们以魔灵为例，结合代码解析以上内容：
@@ -132,6 +157,19 @@ new ItemTurret("tutorial-item-turret"){{
     consumePower(40f);
     coolant = consumeCoolant(0.1f);
 }};
+```
+
+``` kotlin
+ItemTurret("tutorial-item-turret").apply {
+    requirements(Category.turret, with(Items.copper, 39))
+    ammo(Items.copper, BasicBulletType(1.5f, 9))
+    shoot = ShootPattern()
+    drawer = DrawTurret().apply{
+        parts.add(RegionPart("-barrel"))
+    }
+    consumePower(40f)
+    coolant = consumeCoolant(0.1f)
+}
 ```
 
 :::
@@ -159,6 +197,13 @@ new ItemTurret("tutorial-item-turret"){{
 ``` java
 ammo(Items.copper,  new BasicBulletType(3.5f, 18),
      Items.lead, new FlakBulletType(4.2f, 3))
+```
+
+``` kotlin
+ammo(
+    Items.copper, BasicBulletType(3.5f, 18f),
+    Items.lead, FlakBulletType(4.2f, 3f)
+)
 ```
 
 :::

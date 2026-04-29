@@ -15,6 +15,11 @@ new Drill("tutorial-drill");
 new BurstDrill("tutorial-drill");
 ```
 
+``` kotlin
+Drill("tutorial-drill")
+BurstDrill("tutorial-drill");
+```
+
 :::
 
 对于一个钻头来说，我们最关心的是它的钻探能力，这在游戏里的体现是`tier`，原版资源的硬度遵从下表：
@@ -40,6 +45,10 @@ new BurstDrill("tutorial-drill");
 ::: code-group
 
 ``` java
+(drillTime + hardnessDrillMultiplier * item.hardness) / drillMultipliers.get(item, 1f)
+```
+
+``` kotlin
 (drillTime + hardnessDrillMultiplier * item.hardness) / drillMultipliers.get(item, 1f)
 ```
 
@@ -77,6 +86,11 @@ new BeamDrill("tutorial-beam-drill");
 new WallCrafter("tutorial-wall-crafter");
 ```
 
+``` kotlin
+BeamDrill("tutorial-beam-drill")
+WallCrafter("tutorial-pump")
+```
+
 :::
 
 光束钻头和钻头的设置完全相同，区别在于光束钻头需要的贴图数量更多，但是大多数的贴图都有默认值，额外必需的只有`-top`和`-glow`贴图。
@@ -95,6 +109,10 @@ new WallCrafter("tutorial-wall-crafter");
 consumeLiquid(Liquids.water, 0.05f).boost();
 ```
 
+``` kotlin
+consumeLiquid(Liquids.water, 0.05f).boost()
+```
+
 :::
 
 ## 创建一个Pump
@@ -105,6 +123,10 @@ consumeLiquid(Liquids.water, 0.05f).boost();
 
 ``` java
 new Pump("tutorial-pump");
+```
+
+``` kotlin
+Pump("tutorial-pump")
 ```
 
 :::
@@ -132,6 +154,11 @@ block.tutorial-mod-tutorial-pump.details = WHY LIQUID TILE ALSO INFINITE
 ``` java
 new SolidPump("tutorial-solid-pump");
 new Fracker("tutorial-fracker");
+```
+
+``` kotlin
+SolidPump("tutorial-solid-pump")
+Fracker("tutorial-fracker")
 ```
 
 :::

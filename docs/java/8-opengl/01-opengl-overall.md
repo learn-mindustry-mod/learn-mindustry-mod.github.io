@@ -34,6 +34,18 @@ void example() {
 }
 ```
 
+``` kotlin
+fun example() {
+  Gl.clearColor(0.2f, 0.3f, 0.3f, 1.0f)
+  Gl.clear(Gl.colorBufferBit)
+
+  Gl.useProgram(shaderProgram)
+  Gl.bindVertexArray(VAO)
+
+  Gl.drawElements(Gl.triangles, 6, Gl.unsignedInt, 0)
+}
+```
+
 :::
 
 在`Gl`内定义了大量的操作函数与常量，这些常量会作为函数的参数，用于描述某些状态，我们现在还不需要去关心这些函数的具体作用，在你使用Gl的工作流时，代码的形式看起来就是这样一条一条对Gl中操作函数的调用。

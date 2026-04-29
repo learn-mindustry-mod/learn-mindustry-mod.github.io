@@ -123,6 +123,14 @@ Mindustry 的实体系统（单位、子弹、玩家、建筑等）并不是“�
 class DemoDef{}
 ```
 
+``` kotlin
+@Component abstract class HealthComp { var health = 0f }
+@Component abstract class PosComp { var x = 0f; var y = 0f }
+
+@EntityDef(value = [Healthc::class, Posc::class])
+class DemoDef
+```
+
 :::
 
 编译后会得到一个“同时实现 `Healthc` 和 `Posc`”的实体，并携带 `health/x/y` 字段。
@@ -184,6 +192,12 @@ class DemoDef{}
 abstract class DecalComp{}
 ```
 
+``` kotlin
+@EntityDef(value = [Decalc::class], pooled = true, serialize = false)
+@Component(base = true)
+abstract class DecalComp
+```
+
 :::
 
 这会让实体具备：
@@ -231,6 +245,11 @@ abstract class DecalComp{}
 ::: code-group
 
 ```java
+alpha = min(timeSinceUpdate / updateSpacing, 2f)
+current = lerp_or_slerp(last, target, alpha)
+```
+
+``` kotlin
 alpha = min(timeSinceUpdate / updateSpacing, 2f)
 current = lerp_or_slerp(last, target, alpha)
 ```
@@ -304,6 +323,13 @@ current = lerp_or_slerp(last, target, alpha)
 ```java
 @Import float x, y, rotation;
 @Import Team team;
+```
+
+``` kotlin
+@Import var x = 0f
+@Import var y = 0f
+@Import var rotation = 0f
+@Import lateinit var team: Team
 ```
 
 :::
