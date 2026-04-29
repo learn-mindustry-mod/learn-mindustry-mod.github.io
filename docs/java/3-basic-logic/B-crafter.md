@@ -26,17 +26,6 @@ public <T extends Consume> T consume(T consume){
 }
 ```
 
-``` kotlin
-fun <T : Consume> consume(consume: T): T {
-    if (consume is ConsumePower) {
-        //there can only be one power consumer
-        consumeBuilder.removeAll { b -> b is ConsumePower }
-        consPower = consume
-    }
-    consumeBuilder.add(consume)
-    return consume
-}
-```
 
 :::
 
@@ -58,17 +47,6 @@ for(Consume cons : consumers){
 }
 ```
 
-``` kotlin
-consumers = consumeBuilder.toArray(Consume::class.java)
-optionalConsumers = consumeBuilder.select { consume -> consume.optional && !consume.ignore() }.toArray(Consume::class.java)
-nonOptionalConsumers = consumeBuilder.select { consume -> !consume.optional && !consume.ignore() }.toArray(Consume::class.java)
-updateConsumers = consumeBuilder.select { consume -> consume.update && !consume.ignore() }.toArray(Consume::class.java)
-hasConsumers = consumers.isNotEmpty()
-
-for (cons in consumers) {
-    cons.apply(this)
-}
-```
 
 :::
 
@@ -159,62 +137,6 @@ public void updateEfficiencyMultiplier() {
 }
 ```
 
-``` kotlin
-fun updateConsumption() {
-    //无消耗器或无限火力模式下的路径
-    if (!block.hasConsumers || cheating()) {
-        potentialEfficiency = if (enabled && productionValid()) 1.0f else 0.0f
-        efficiency = if (shouldConsume()) potentialEfficiency else 0.0f
-        optionalEfficiency = efficiency
-        shouldConsumePower = true
-        updateEfficiencyMultiplier()
-        return
-    }
-    //未启用时的路径
-    if (!enabled) {
-        potentialEfficiency = 0.0f
-        efficiency = 0.0f
-        optionalEfficiency = 0.0f
-        shouldConsumePower = false
-        return
-    }
-    //有消耗器且启用的路径
-    val update = shouldConsume() && productionValid()
-    var minEfficiency = 1.0f
-    efficiency = 1.0f
-    optionalEfficiency = 1.0f
-    shouldConsumePower = true
-    for (cons in block.nonOptionalConsumers) {
-        val result = cons.efficiency(this)
-        if (cons != block.consPower && result <= 1.0E-7f) {
-            shouldConsumePower = false
-        }
-        minEfficiency = Math.min(minEfficiency, result)
-    }
-    for (cons in block.optionalConsumers) {
-        optionalEfficiency = Math.min(optionalEfficiency, cons.efficiency(this))
-    }
-    efficiency = minEfficiency
-    optionalEfficiency = Math.min(optionalEfficiency, minEfficiency)
-    potentialEfficiency = efficiency
-    if (!update) {
-        efficiency = 0.0f
-        optionalEfficiency = 0.0f
-    }
-    updateEfficiencyMultiplier()
-    if (update && efficiency > 0f) {
-        for (cons in block.updateConsumers) {
-            cons.update(this)
-        }
-    }
-}
-
-fun updateEfficiencyMultiplier() {
-    val scale = efficiencyScale()
-    efficiency *= scale
-    optionalEfficiency *= scale
-}
-```
 
 :::
 
@@ -251,7 +173,6 @@ public void updateTile(){
         warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
     }
 
-    //TODO may look bad, revert to edelta() if so
     totalProgress += warmup * Time.delta;
 
     if(progress >= 1f){
@@ -262,38 +183,6 @@ public void updateTile(){
 }
 ```
 
-``` kotlin
-override fun updateTile() {
-    if (efficiency > 0) {
-
-        progress += getProgressIncrease(craftTime)
-        warmup = Mathf.approachDelta(warmup, warmupTarget(), warmupSpeed)
-
-        //continuously output based on efficiency
-        if (outputLiquids != null) {
-            val inc = getProgressIncrease(1f)
-            for (output in outputLiquids) {
-                handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)))
-            }
-        }
-
-        if (wasVisible && Mathf.chanceDelta(updateEffectChance)) {
-            updateEffect.at(x + Mathf.range(size * updateEffectSpread), y + Mathf.range(size * updateEffectSpread))
-        }
-    } else {
-        warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed)
-    }
-
-    //TODO may look bad, revert to edelta() if so
-    totalProgress += warmup * Time.delta
-
-    if (progress >= 1f) {
-        craft()
-    }
-
-    dumpOutputs()
-}
-```
 
 :::
 
@@ -340,43 +229,6 @@ public void craft(){
 }
 ```
 
-``` kotlin
-override fun updateTile() {
-    if (efficiency > 0) {
-        //增加进度
-        progress += getProgressIncrease(craftTime)
-        //不间断地输出流体
-        if (outputLiquids != null) {
-            val inc = getProgressIncrease(1f)
-            for (output in outputLiquids) {
-                handleLiquid(this, output.liquid, Math.min(output.amount * inc, liquidCapacity - liquids.get(output.liquid)))
-            }
-        }
-    }
-    //判断进度是否达到1
-    if (progress >= 1f) craft()
-    //输出产品
-    dumpOutputs()
-}
-
-fun craft() {
-    //调用Consume#trigger
-    consume()
-
-    if (outputItems != null) {
-        for (output in outputItems) {
-            repeat(output.amount) {
-                offload(output.item)
-            }
-        }
-    }
-
-    if (wasVisible) {
-        craftEffect.at(x, y)
-    }
-    progress %= 1f
-}
-```
 
 :::
 
@@ -424,27 +276,6 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 }
 ```
 
-``` kotlin
-/** Approaches a value at linear speed. */
-fun approach(from: Float, to: Float, speed: Float): Float {
-    return from + Mathf.clamp(to - from, -speed, speed)
-}
-
-/** Approaches a value at linear speed. Multiplied by the delta. */
-fun approachDelta(from: Float, to: Float, speed: Float): Float {
-    return approach(from, to, Time.delta * speed)
-}
-
-/** Linearly interpolates between fromValue to toValue on progress position. */
-fun lerp(fromValue: Float, toValue: Float, progress: Float): Float {
-    return fromValue + (toValue - fromValue) * progress
-}
-
-/** Linearly interpolates between fromValue to toValue on progress position. Multiplied by Time.delta().*/
-fun lerpDelta(fromValue: Float, toValue: Float, progress: Float): Float {
-    return lerp(fromValue, toValue, clamp(progress * Time.delta))
-}
-```
 
 :::
 
@@ -503,37 +334,6 @@ public boolean shouldConsume(){
 }
 ```
 
-``` kotlin
-override fun shouldConsume(): Boolean {
-    if (outputItems != null) {
-        for (output in outputItems) {
-            if (items.get(output.item) + output.amount > itemCapacity) {
-                return false
-            }
-        }
-    }
-    if (outputLiquids != null && !ignoreLiquidFullness) {
-        var allFull = true
-        for (output in outputLiquids) {
-            if (liquids.get(output.liquid) >= liquidCapacity - 0.001f) {
-                if (!dumpExtraLiquid) {
-                    return false
-                }
-            } else {
-                //if there's still space left, it's not full for all liquids
-                allFull = false
-            }
-        }
-
-        //if there is no space left for any liquid, it can't reproduce
-        if (allFull) {
-            return false
-        }
-    }
-
-    return enabled
-}
-```
 
 :::
 

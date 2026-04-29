@@ -194,19 +194,6 @@ groundFactory = new UnitFactory("ground-factory"){{
 }};
 ```
 
-``` kotlin
-val groundFactory = UnitFactory("ground-factory").apply {
-    requirements(Category.units, with(Items.copper, 50, Items.lead, 120, Items.silicon, 80))
-    plans = Seq.with(
-        UnitPlan(UnitTypes.dagger, 60f * 15, with(Items.silicon, 10, Items.lead, 10)),
-        UnitPlan(UnitTypes.crawler, 60f * 10, with(Items.silicon, 8, Items.coal, 10)),
-        UnitPlan(UnitTypes.nova, 60f * 40, with(Items.silicon, 30, Items.lead, 20, Items.titanium, 20))
-    )
-    size = 3
-    consumePower(1.2f)
-    researchCostMultiplier = 0.5f
-}
-```
 :::
 
 单位重构厂的类型为`mindustry.world.blocks.units.Reconstructor`。在 Mindustry 中，单位重构厂的消耗通过消耗器系统实现，其重构时间由`constructTime`字段控制，单位的升级路径则由`upgrades`字段定义。
@@ -237,29 +224,6 @@ tetrativeReconstructor = new Reconstructor("tetrative-reconstructor"){{
 }};
 ```
 
-``` kotlin
-val tetrativeReconstructor = Reconstructor("tetrative-reconstructor").apply {
-    requirements(Category.units, with(Items.lead, 4000, Items.silicon, 3000, Items.thorium, 1000, Items.plastanium, 600, Items.phaseFabric, 600, Items.surgeAlloy, 800))
-
-    size = 9
-    consumePower(25f)
-    consumeItems(with(Items.silicon, 1000, Items.plastanium, 600, Items.surgeAlloy, 500, Items.phaseFabric, 350))
-    consumeLiquid(Liquids.cryofluid, 3f)
-
-    constructTime = 60f * 60f * 4
-    createSound = Sounds.unitCreateBig
-
-    upgrades.addAll(
-        arrayOf(UnitTypes.antumbra, UnitTypes.eclipse),
-        arrayOf(UnitTypes.arkyid, UnitTypes.toxopid),
-        arrayOf(UnitTypes.scepter, UnitTypes.reign),
-        arrayOf(UnitTypes.sei, UnitTypes.omura),
-        arrayOf(UnitTypes.quad, UnitTypes.oct),
-        arrayOf(UnitTypes.vela, UnitTypes.corvus),
-        arrayOf(UnitTypes.aegires, UnitTypes.navanax)
-    )
-}
-```
 
 :::
 
@@ -284,22 +248,6 @@ tankAssembler = new UnitAssembler("tank-assembler"){{
 }};
 ```
 
-``` kotlin
-val tankAssembler = UnitAssembler("tank-assembler").apply {
-    requirements(Category.units, with(Items.thorium, 500, Items.oxide, 150, Items.carbide, 80, Items.silicon, 650))
-    regionSuffix = "-dark"
-    size = 5
-            plans.add(
-        AssemblerUnitPlan(UnitTypes.vanquish, 60f * 50f, PayloadStack.list(UnitTypes.stell, 4, Blocks.tungstenWallLarge, 10)),
-        AssemblerUnitPlan(UnitTypes.conquer, 60f * 60f * 3f, PayloadStack.list(UnitTypes.locus, 6, Blocks.carbideWallLarge, 20))
-    )
-    areaSize = 13
-    researchCostMultiplier = 0.4f
-
-    consumePower(2.5f)
-    consumeLiquid(Liquids.cyanogen, 9f / 60f)
-}
-```
 
 :::
 

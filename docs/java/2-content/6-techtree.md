@@ -91,34 +91,6 @@ Planets.serpulo.techTree = nodeRoot("serpulo", coreShard, () -> {
 
 ```
 
-``` kotlin
-Planets.serpulo.techTree = nodeRoot("serpulo", coreShard) {
-    node(router) {
-        node(advancedLaunchPad, Seq.with(SectorComplete(extractionOutpost))) {
-            node(landingPad) {
-                node(interplanetaryAccelerator, Seq.with(SectorComplete(planetaryTerminal)))
-            }
-        }
-        node(distributor)
-    }
-    node(groundZero) {
-        node(frozenForest, Seq.with(
-            SectorComplete(groundZero),
-            Research(junction),
-            Research(router)
-        )) {
-            node(craters, Seq.with(
-                SectorComplete(frozenForest),
-                Research(mender),
-                Research(combustionGenerator)
-            ))
-        }
-    }
-    nodeProduce(Items.copper) {
-        nodeProduce(Liquids.water)
-    }
-}
-```
 
 :::
 

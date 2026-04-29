@@ -42,23 +42,6 @@ public void setStats(){
 }
 ```
 
-``` kotlin
-override fun setStats() {
-    stats.timePeriod = craftTime
-    super.setStats()
-    if ((hasItems && itemCapacity > 0) || outputItems != null) {
-        stats.add(Stat.productionTime, craftTime / 60f, StatUnit.seconds)
-    }
-
-    if (outputItems != null) {
-        stats.add(Stat.output, StatValues.items(craftTime, outputItems))
-    }
-
-    if (outputLiquids != null) {
-        stats.add(Stat.output, StatValues.liquids(1f, outputLiquids))
-    }
-}
-```
 
 :::
 
@@ -99,20 +82,6 @@ public void setStats(){
 }
 ```
 
-``` kotlin
-override fun setStats() {
-    stats.timePeriod = itemDuration
-    super.setStats()
-
-    if (hasItems) {
-        stats.add(Stat.productionTime, itemDuration / 60f, StatUnit.seconds)
-    }
-
-    if (outputLiquid != null) {
-        stats.add(Stat.output, StatValues.liquid(outputLiquid.liquid, outputLiquid.amount * 60f, true))
-    }
-}
-```
 
 :::
 
@@ -153,33 +122,6 @@ public void setStats(){
 }
 ```
 
-``` kotlin
-override fun setStats() {
-    super.setStats()
-
-    stats.add(Stat.size, "@x@", size, size)
-
-    if (synthetic()) {
-        stats.add(Stat.health, health, StatUnit.none)
-        if (armor > 0) {
-            stats.add(Stat.armor, armor, StatUnit.none)
-        }
-    }
-
-    if (canBeBuilt() && requirements.isNotEmpty()) {
-        stats.add(Stat.buildTime, buildTime / 60, StatUnit.seconds)
-        stats.add(Stat.buildCost, StatValues.items(false, requirements))
-    }
-
-    for (consumer in consumers) {
-        consumer.display(stats)
-    }
-
-    //Note: Power stats are added by the consumers.
-    if (hasLiquids) stats.add(Stat.liquidCapacity, liquidCapacity, StatUnit.liquidUnits)
-    if (hasItems && itemCapacity > 0) stats.add(Stat.itemCapacity, itemCapacity, StatUnit.items)
-}
-```
 
 :::
 
@@ -772,17 +714,6 @@ public void write(Writes write){
 }
 ```
 
-``` kotlin
-override fun read(read: Reads, revision: Byte) {
-    super.read(read, revision)
-    light = read.bool()
-}
-
-override fun write(write: Writes) {
-    super.write(write)
-    write.bool(light)
-}
-```
 
 :::
 
@@ -807,16 +738,6 @@ public void read(Reads read, byte revision){
 }
 ```
 
-``` kotlin
-override fun version(): Byte {
-    return 1
-}
-
-override fun read(read: Reads, revision: Byte) {
-    super.read(read, revision)
-    if (revision >= 1) light = read.bool()
-}
-```
 
 :::
 
@@ -1060,90 +981,6 @@ public class LampBlockJ extends Block{
 }
 ```
 
-``` kotlin package example.world.blocks
-
-import arc.Core
-import arc.graphics.Color
-import arc.graphics.g2d.Draw
-import arc.graphics.g2d.TextureRegion
-import arc.util.io.Reads
-import arc.util.io.Writes
-import example.world.meta.TutorialStatK
-import mindustry.gen.Building
-import mindustry.graphics.Drawf
-import mindustry.graphics.Pal
-import mindustry.ui.Bar
-import mindustry.world.Block
-import mindustry.world.meta.StatUnit
-
-class LampBlockK(name: String?) : Block(name) {
-    var lampRadius: Int = 5;
-    init {
-        update = true
-        config(Boolean::class.java) { build: LampBlockJ.LampBuild, state: Boolean? -> build.light = state!! }
-    }
-
-    var lightRegion: TextureRegion? = null
-    var darkRegion: TextureRegion? = null
-
-    override fun load() {
-        super.load()
-        lightRegion = Core.atlas.find("$name-light")
-        darkRegion = Core.atlas.find("$name-dark")
-    }
-
-    override fun setStats() {
-        super.setStats()
-        stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks)
-    }
-
-    override fun setBars() {
-        super.setBars()
-        addBar("light") { lamp: LampBuild ->
-            Bar(
-                { if (lamp.light) "灯开" else "灯关" },
-                { Pal.accent },
-                { if (lamp.light) 1f else 0f }
-            )
-        }
-    }
-
-    open inner class LampBuild : Building() {
-        var light: Boolean = false
-        override fun draw() {
-            Draw.rect(if (light) lightRegion else darkRegion, x, y)
-        }
-
-        override fun drawLight() {
-            super.drawLight()
-            Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f)
-        }
-        override fun tapped() {
-            super.tapped()
-            configure(!light)
-        }
-
-        override fun version(): Byte {
-            return 1
-        }
-
-        override fun read(read: Reads, revision: Byte) {
-            super.read(read, revision)
-            if (revision >= 1) light = read.bool()
-        }
-
-        override fun write(write: Writes) {
-            super.write(write)
-            write.bool(light)
-        }
-
-        override fun config(): Any? {
-            return light
-        }
-    }
-}
-
-```
 
 :::
 

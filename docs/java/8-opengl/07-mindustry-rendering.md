@@ -42,19 +42,6 @@ public abstract class Batch{
 }
 ```
 
-``` kotlin
-abstract class Batch {
-  //...
-
-  protected abstract fun draw(texture: Texture, spriteVertices: FloatArray, offset: Int, count: Int)
-  protected abstract fun draw(region: TextureRegion, x: Float, y: Float, originX: Float, originY: Float, width: Float, height: Float, rotation: Float)
-  protected fun draw(request: Runnable) {
-    request.run()
-  }
-
-  //...
-}
-```
 
 :::
 
@@ -136,43 +123,6 @@ public static void quad(float x1, float y1, float c1, float x2, float y2, float 
 }
 ```
 
-``` kotlin
-fun quad(x1: Float, y1: Float, c1: Float, x2: Float, y2: Float, c2: Float, x3: Float, y3: Float, c3: Float, x4: Float, y4: Float, c4: Float) {
-    val region = atlas.white()
-    val mcolor = Core.batch.packedMixColor
-    val u = region.u
-    val v = region.v
-    vertices[0] = x1
-    vertices[1] = y1
-    vertices[2] = c1
-    vertices[3] = u
-    vertices[4] = v
-    vertices[5] = mcolor
-
-    vertices[6] = x2
-    vertices[7] = y2
-    vertices[8] = c2
-    vertices[9] = u
-    vertices[10] = v
-    vertices[11] = mcolor
-
-    vertices[12] = x3
-    vertices[13] = y3
-    vertices[14] = c3
-    vertices[15] = u
-    vertices[16] = v
-    vertices[17] = mcolor
-
-    vertices[18] = x4
-    vertices[19] = y4
-    vertices[20] = c4
-    vertices[21] = u
-    vertices[22] = v
-    vertices[23] = mcolor
-
-    Draw.vert(region.texture, vertices, 0, vertices.size)
-}
-```
 
 :::
 
@@ -263,37 +213,6 @@ public class SpriteBatch extends Batch {
 }
 ```
 
-``` kotlin
-open class Batch {
-  //...
-
-  protected fun setupMatrices() {
-    //将变换矩阵与投影矩阵叠加
-    combinedMatrix.set(projectionMatrix).mul(transformMatrix)
-    shader.setUniformMatrix4("u_projTrans", combinedMatrix)
-  }
-}
-
-class SpriteBatch : Batch() {
-  //...
-
-  override fun flush() {
-    //...
-    shader.bind()
-    setupMatrices()
-
-    blending.apply()
-
-    lastTexture.bind()
-    val mesh: Mesh = this.mesh
-    mesh.setVertices(vertices, 0, idx)
-    //...
-    mesh.render(shader, Gl.triangles, 0, count)
-  }
-
-  //...
-}
-```
 
 :::
 

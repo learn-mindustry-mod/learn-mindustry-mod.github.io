@@ -212,24 +212,6 @@ public ShieldRegenFieldAbility(float amount, float max, float reload, float rang
 
 ```
 
-``` kotlin
-class ShieldRegenFieldAbility {
-    var amount = 0f
-    var max = 0f
-    var reload = 0f
-    var range = 0f
-
-    constructor()
-
-    constructor(amount: Float, max: Float, reload: Float, range: Float) {
-        this.amount = amount
-        this.max = max
-        this.reload = reload
-        this.range = range
-    }
-}
-
-```
 
 :::
 

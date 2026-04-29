@@ -98,45 +98,6 @@ abstract class HealthComp implements Entityc, Posc {
 }
 ```
 
-``` kotlin
-// 基础组件：EntityComp - 所有实体都有的属性
-package mindustry.entities.comp
-
-@Component
-abstract class EntityComp : Entityc {
-    var added = false
-    var id = EntityGroup.nextId()
-}
-
-// 位置组件：PosComp - 位置相关
-@Component(base = true)
-abstract class PosComp : Position {
-    @SyncField(true) @SyncLocal var x = 0f
-    @SyncField(true) @SyncLocal var y = 0f
-
-    fun set(x: Float, y: Float) {
-        this.x = x
-        this.y = y
-    }
-}
-
-// 生命组件：HealthComp - 生命值相关
-@Component
-abstract class HealthComp : Entityc, Posc {
-    var health = 0f
-    @Transient var hitTime = 0f
-    @Transient var maxHealth = 1f
-    @Transient var dead = false
-
-    fun damage(amount: Float) {
-        health -= amount
-        hitTime = 1f
-        if (health <= 0 && !dead) {
-            kill()
-        }
-    }
-}
-```
 
 :::
 
@@ -319,39 +280,6 @@ abstract class UnitComp implements Healthc, Physicsc, Hitboxc, /*...*/ {
 }
 ```
 
-``` kotlin
-@EntityDef(value = [
-    Posc::class,       // 位置能力
-    Healthc::class,    // 生命能力
-    Teamc::class,      // 队伍能力
-    Itemsc::class,     // 物品携带能力
-    Rotc::class,       // 旋转能力
-    Unitc::class,      // 单位能力
-    Weaponsc::class,   // 武器能力
-    Drawc::class,      // 绘制能力
-    Syncc::class,      // 同步能力
-    Shieldc::class,    // 护盾能力
-    Minerc::class,     // 挖矿能力
-    Builderc::class,   // 建造能力
-    // ...还有更多
-])
-@Component(base = true)
-abstract class UnitComp : Healthc, Physicsc, Hitboxc /*...*/ {
-    @Import var dead = false
-    @Import var disarmed = false
-    @Import var x = 0f
-    @Import var y = 0f
-    @Import var rotation = 0f
-    @Import var maxHealth = 0f
-    @Import lateinit var team: Team
-    @Import var id = 0
-
-    private lateinit var controller: UnitController
-    var abilities: Array<Ability> = arrayOf()
-
-    // 其他字段...
-}
-```
 
 :::
 
@@ -381,25 +309,6 @@ abstract class BuildingComp implements Entityc {
 }
 ```
 
-``` kotlin
-@EntityDef(value = [
-    Posc::class,
-    Healthc::class,
-    Teamc::class,
-    Timerc::class,
-    // ...
-])
-@Component(base = true)
-abstract class BuildingComp : Entityc {
-    @Transient lateinit var block: Block
-    @Transient var dead = false
-    @Transient var enabled = true
-    var health = 0f
-    @Transient var id = EntityGroup.nextId()
-
-    // 其他所有的方法和字段...
-}
-```
 
 :::
 
@@ -483,36 +392,6 @@ public class Unit extends UnitBase implements Posc, Healthc, /*...*/ {
 }
 ```
 
-``` kotlin
-@Suppress("DEPRECATION")
-class Unit : UnitBase(), Posc, Healthc /*...*/ {
-    // 所有字段都是 public 的，没有 Getter/Setter
-    var x = 0f
-    var y = 0f
-    var health = 0f
-    var maxHealth = 0f
-    lateinit var team: Team
-    var id = 0
-
-    // 生成的 update() 方法会把各组件的 update() 拼起来
-    override fun update() {
-        // PosComp.update() 的代码
-        // HealthComp.update() 的代码
-        // UnitComp.update() 的代码
-        // ...其他组件的 update() 代码
-    }
-
-    override fun remove() {
-        if (added) {
-            added = false
-            // 从各个组中移除
-            Groups.unit.removeIndex(this, index__unit)
-            Groups.all.removeIndex(this, index__all)
-            // ...
-        }
-    }
-}
-```
 
 :::
 
@@ -548,30 +427,6 @@ public class EntityProcess extends BaseProcessor {
 }
 ```
 
-``` kotlin
-@SupportedAnnotationTypes(
-    "mindustry.annotations.Annotations.EntityDef",
-    "mindustry.annotations.Annotations.GroupDef",
-    "mindustry.annotations.Annotations.EntityInterface",
-    "mindustry.annotations.Annotations.BaseComponent"
-)
-class EntityProcess : BaseProcessor() {
-    // 初始化块
-    init {
-        rounds = 3
-    }
-
-    override fun process(env: RoundEnvironment) {
-        if (round == 1) {
-            // 生成组件接口
-        } else if (round == 2) {
-            // 处理实体定义
-        } else {
-            // 生成实体类
-        }
-    }
-}
-```
 
 :::
 
@@ -625,34 +480,6 @@ public interface Posc extends Entityc {
 }
 ```
 
-``` kotlin
-/**
- * Interface for [mindustry.entities.comp.PosComp]
- */
-@EntityInterface
-@Suppress("DEPRECATION")
-interface Posc : Entityc {
-    fun x(): Float
-
-    fun y(): Float
-
-    fun x(x: Float)
-
-    fun y(y: Float)
-
-    fun set(x: Float, y: Float)
-
-    fun trns(x: Float, y: Float)
-
-    override fun getX(): Float {
-        return x()
-    }
-
-    override fun getY(): Float {
-        return y()
-    }
-}
-```
 
 :::
 

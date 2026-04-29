@@ -260,16 +260,6 @@ drawer = new DrawMulti(
                 );
 ```
 
-``` kotlin
-drawer = DrawMulti(
-    DrawRegion("-bottom"),
-    DrawLiquidTile(Liquids.water, 2f),
-    DrawBubbles(Color.valueOf("7693e3")),
-    DrawRegion(),
-    DrawLiquidOutputs(),
-    DrawGlowRegion()
-)
-```
 
 :::
 

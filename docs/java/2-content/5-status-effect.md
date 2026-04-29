@@ -71,23 +71,6 @@ wet = new StatusEffect("wet"){{
 }};
 ```
 
-``` kotlin
-val wet = StatusEffect("wet").apply {
-    color = Color.royal
-    speedMultiplier = 0.94f
-    effect = Fx.wet
-    effectChance = 0.09f
-    transitionDamage = 14
-
-    `init` {
-        affinity(shocked) { unit, result, time ->
-            unit.damage(transitionDamage)
-        }
-        opposite(burning, melting)
-    }
-}
-
-```
 <!----这段kt代码在154是跑不了的，但是笔者的pr使得在155能跑起来---->
 :::
 
@@ -160,14 +143,6 @@ pulverizeMedium = new Effect(30, e -> {
 })
 ```
 
-``` kotlin
-pulverizeMedium = Effect(30f) { e ->
-    randLenVectors(e.id, 5, 3f + e.fin() * 8f) { x, y ->
-        color(Pal.stoneGray)
-        Fill.square(e.x + x, e.y + y, e.fout() + 0.5f, 45f)
-    }
-}
-```
 
 :::
 
@@ -187,16 +162,6 @@ despawnEffect = hitEffect = new ExplosionEffect(){{
 }};
 ```
 
-``` kotlin
-despawnEffect = ExplosionEffect().apply {
-    waveColor = Pal.surge
-    smokeColor = Color.gray
-    sparkColor = Pal.sap
-    waveStroke = 4f
-    waveRad = 40f
-}
-hitEffect = despawnEffect
-```
 
 :::
 

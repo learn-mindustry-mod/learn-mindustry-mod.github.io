@@ -155,19 +155,6 @@ public void loadIcon(){
 }
 ```
 
-``` kotlin
-override fun loadIcon() {
-    fullIcon =
-        Core.atlas.find(fullOverride ?: "",
-        Core.atlas.find("${getContentType().name()}-$name-full",
-        Core.atlas.find("$name-full",
-        Core.atlas.find(name,
-        Core.atlas.find("${getContentType().name()}-$name",
-        Core.atlas.find("${name}1"))))))
-
-    uiIcon = Core.atlas.find("${getContentType().name()}-$name-ui", fullIcon)
-}
-```
 
 :::
 *请思考：物品的本体贴图到底有多少种命名方式？Mindustry每次大更新都没有模组负担，为什么Anuke还留着他们？*
@@ -190,15 +177,6 @@ public UnlockableContent(String name){
 
 ```
 
-``` kotlin
-constructor(name: String) : super(name) {
-    localizedName = Core.bundle.get("${getContentType()}.${this.name}.name", this.name)
-    description = Core.bundle.getOrNull("${getContentType()}.${this.name}.description")
-    details = Core.bundle.getOrNull("${getContentType()}.${this.name}.details")
-    unlocked = Core.settings != null && Core.settings.getBool("${this.name}-unlocked", false)
-}
-
-```
 
 :::
 
@@ -232,16 +210,6 @@ public String getBundle(){
 }
 ```
 
-``` kotlin
-fun localized(): String {
-    return Core.bundle.get(getBundle())
-}
-
-fun getBundle(): String {
-    val type = javaClass
-    return "ability." + (if (type.isAnonymousClass) type.superclass else type).simpleName.replace("Ability", "").lowercase()
-}
-```
 
 :::
 
@@ -291,30 +259,6 @@ public class Env{
 }
 ```
 
-``` kotlin
-object Env {
-    //处在星球上
-    const val terrestrial = 1
-    //在太空中，没有大气层
-    const val space = 1 shl 1
-    //在水下，首先要在星球上
-    const val underwater = 1 shl 2
-    //有孢子
-    const val spores = 1 shl 3
-    //环境就像火焰山
-    const val scorching = 1 shl 4
-    //有石油
-    const val groundOil = 1 shl 5
-    //有地下水
-    const val groundWater = 1 shl 6
-    //大气层中有氧气
-    const val oxygen = 1 shl 7
-    //所有环境，用来位掩码运算
-    const val any = -1
-    //没有环境
-    const val none = 0
-}
-```
 
 :::
 

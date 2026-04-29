@@ -362,29 +362,6 @@ public void register(){
 }
 ```
 
-``` kotlin
-fun drawPixelate() {
-    //计算缓冲尺寸w与h，已省略
-    //...
-
-    buffer.resize(w, h)
-
-    buffer.begin(Color.clear)
-    renderer.draw()
-}
-
-fun register() {
-  Draw.draw(Layer.end) {
-    buffer.end()
-
-    Blending.disabled.apply()
-    buffer.blit(Shaders.screenspace)
-
-    //对齐摄像机坐标，已省略
-    //...
-  }
-}
-```
 
 :::
 
