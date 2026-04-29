@@ -64,16 +64,6 @@ public void load(){
 
 ```
 
-``` kotlin
-
-override fun load() {
-    super.load()
-
-    laser = Core.atlas.find("$name-beam", Core.atlas.find("power-beam"))
-    laserEnd = Core.atlas.find("$name-beam-end", Core.atlas.find("power-beam-end"))
-}
-
-```
 
 :::
 
@@ -107,32 +97,6 @@ public @Load(value = "@-#1-#2", lengths = {7, 4}) TextureRegion[][] regions;
 
 ```
 
-``` kotlin
-//把“select-arrow-small”贴图加载到selectArrowRegion中
-@Load("select-arrow-small")
-lateinit var selectArrowRegion: TextureRegion
-
-//把“$name-glow”贴图加载到glow中
-@Load("@-glow")
-lateinit var glow: TextureRegion
-
-//把“$namw-launch-arrow”贴图加载到arrowRegion中，如果找不到就回滚到“launch-arrow”
-@Load(value = "@-launch-arrow", fallback = "launch-arrow")
-lateinit var arrowRegion: TextureRegion
-
-//把“$name-1”、“$name-2”、“$name-3”加载到regions[]中
-@Load(value = "@-#", length = 3)
-lateinit var regions: Array<TextureRegion>
-
-//把“$name-1-1” “$name-1-2” “$name-1-3” “$name-1-4” “$name-2-1” “$name-2-2” “$name-2-3” “$name-2-4” ………… “$name-7-4”加载到regions[][]中
-@Load(value = "@-#1-#2", lengths = [7, 4])
-lateinit var regions: Array<Array<TextureRegion>>
-
-//把“$name-bottom-1” “$name-bottom-2” …… “$name-bottom-5”加载到botRegions[]中，哪个找不到就用“duct-bottom-$i”代替
-@Load(value = "@-bottom-#", length = 5, fallback = "duct-bottom-#")
-lateinit var botRegions: Array<TextureRegion>
-
-```
 
 :::
 

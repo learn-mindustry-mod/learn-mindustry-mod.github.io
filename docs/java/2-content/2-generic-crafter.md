@@ -144,14 +144,6 @@ consume(new ConsumeItemExplode());
 consume(new ConsumeCoolant(1f));
 ```
 
-``` kotlin
-//像火力发电机一样，消耗高燃烧性的物品，额外提升的工作效率由物品的燃烧性决定
-consume(ConsumeItemFlammable())
-//像火力发电机一样，遇到高爆炸性的物品会炸坏方块
-consume(ConsumeItemExplode())
-//像炮塔一样，使用冷却剂提高工作效率
-consume(ConsumeCoolant(1f))
-```
 
 :::
 

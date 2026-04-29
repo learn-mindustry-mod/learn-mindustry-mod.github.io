@@ -164,23 +164,6 @@ abstract class PosComp implements Position {
 }
 ```
 
-``` kotlin
-@Component(base = true)
-abstract class PosComp : Position {
-    // @SyncField(true) 表示这个字段需要网络同步
-    // @SyncLocal 表示这个字段只在本地同步，不接收服务端覆盖
-    @SyncField(true) @SyncLocal var x = 0f
-    @SyncField(true) @SyncLocal var y = 0f
-
-    override fun getX(): Float {
-        return x
-    }
-
-    override fun getY(): Float {
-        return y
-    }
-}
-```
 
 :::
 

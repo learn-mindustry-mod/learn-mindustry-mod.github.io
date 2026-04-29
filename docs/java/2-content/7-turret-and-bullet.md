@@ -22,18 +22,6 @@ new ItemTurret("tutorial-item-turret"){{
 }};
 ```
 
-``` kotlin
-ItemTurret("tutorial-item-turret").apply {
-    requirements(Category.turret, with(Items.copper, 39))
-    ammo(Items.copper, BasicBulletType(1.5f, 9))
-    shoot = ShootPattern()
-    drawer = DrawTurret().apply{
-        parts.add(RegionPart("-barrel"))
-    }
-    consumePower(40f)
-    coolant = consumeCoolant(0.1f)
-}
-```
 
 :::
 
@@ -159,18 +147,6 @@ new ItemTurret("tutorial-item-turret"){{
 }};
 ```
 
-``` kotlin
-ItemTurret("tutorial-item-turret").apply {
-    requirements(Category.turret, with(Items.copper, 39))
-    ammo(Items.copper, BasicBulletType(1.5f, 9))
-    shoot = ShootPattern()
-    drawer = DrawTurret().apply{
-        parts.add(RegionPart("-barrel"))
-    }
-    consumePower(40f)
-    coolant = consumeCoolant(0.1f)
-}
-```
 
 :::
 

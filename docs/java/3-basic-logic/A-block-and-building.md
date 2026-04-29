@@ -55,12 +55,6 @@ public void setStats(){
 }
 ```
 
-``` kotlin
-override fun setStats() {
-    super.setStats()
-    stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond)
-}
-```
 
 :::
 
@@ -148,12 +142,6 @@ public Content(){
 }
 ```
 
-``` kotlin
-init {
-    id = Vars.content.getBy(getContentType()).size.toShort()
-    Vars.content.handleContent(this)
-}
-```
 
 :::
 
@@ -842,19 +830,6 @@ public void drawLight(){
 }
 ```
 
-``` kotlin
-var lampRadius: Int = 5;
-override fun setStats() {
-    super.setStats()
-    stats.add(TutorialStatK.lightRadius, l5f, StatUnit.blocks) // [!code --]
-    stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks) // [!code ++]
-}
-    override fun drawLight() {
-    super.drawLight()
-    Drawf.light(x, y, 5f, Color.white, 1f) // [!code --]
-    Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f) // [!code ++]
-}
-```
 
 :::
 

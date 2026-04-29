@@ -164,21 +164,6 @@ public BulletType(){}
 
 ```
 
-``` kotlin
-
-open class BulletType {
-    var speed = 0f
-    var damage = 0f
-
-    constructor(speed: Float, damage: Float) {
-        this.speed = speed
-        this.damage = damage
-    }
-
-    constructor()
-}
-
-```
 
 :::
 

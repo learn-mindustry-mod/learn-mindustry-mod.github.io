@@ -69,15 +69,6 @@ public static void rect(TextureRegion region, float x, float y, float w, float h
 //...
 ```
 
-``` kotlin
-//...
-
-fun rect(region: TextureRegion, x: Float, y: Float, w: Float, h: Float, originX: Float, originY: Float, rotation: Float) {
-    Core.batch.draw(region, x - w / 2f, y - h / 2f, originX, originY, w, h, rotation)
-}
-
-//...
-```
 
 :::
 
@@ -136,11 +127,6 @@ public static void vert(Texture texture, float[] vertices, int offset, int lengt
 }
 ```
 
-``` kotlin
-fun vert(texture: Texture, vertices: FloatArray, offset: Int, length: Int) {
-    Core.batch.draw(texture, vertices, offset, length)
-}
-```
 
 :::
 

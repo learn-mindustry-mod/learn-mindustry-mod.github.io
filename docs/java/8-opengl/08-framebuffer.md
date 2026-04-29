@@ -162,31 +162,6 @@ void example(){
 }
 ```
 
-``` kotlin
-val buffer = FrameBuffer()
-fun example(){
-  Fill.square(80f, 80f, 20f)//直接将四边形绘制到屏幕上
-  
-  //确保缓冲区尺寸
-  buffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight())
-  //绑定到缓冲区，并重置帧缓冲的颜色为透明
-  buffer.begin(Color.clear)
-
-  Fill.square(80f, 80f, 20f)//四边形会被绘制到帧缓冲中
-  
-  //解除绑定缓冲区（必要！）
-  buffer.end()
-  //获取纹理
-  val texture = buffer.getTexture()
-  //对纹理创建uv自0到1的完整纹理区域
-  val region = TextureRegion(texture)
-  //将帧缓冲中的图像绘制到屏幕左下角
-  Draw.rect(region, 120, 120, 240, 240)
-  //将帧缓冲的输出范围框出
-  Lines.stroke(4f)
-  Lines.rect(0f, 0f, 240f, 240f)
-}
-```
 
 :::
 

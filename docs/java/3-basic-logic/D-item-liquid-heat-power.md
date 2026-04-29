@@ -18,11 +18,6 @@ public boolean acceptItem(Building source, Item item) {
 }
 ```
 
-``` kotlin
-override fun acceptItem(source: Building, item: Item): Boolean {
-    return block.consumesItem(item) && items.get(item) < getMaximumAccepted(item)
-}
-```
 
 :::
 
@@ -39,13 +34,6 @@ public void handleItem(Building source, Item item){
 }
 ```
 
-``` kotlin
-override fun handleItem(source: Building, item: Item) {
-    if (Mathf.chance(0.3)) {
-        effect.at(x, y)
-    }
-}
-```
 
 :::
 

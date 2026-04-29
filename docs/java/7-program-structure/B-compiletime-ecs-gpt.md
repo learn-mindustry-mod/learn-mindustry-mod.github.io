@@ -192,11 +192,6 @@ class DemoDef
 abstract class DecalComp{}
 ```
 
-``` kotlin
-@EntityDef(value = [Decalc::class], pooled = true, serialize = false)
-@Component(base = true)
-abstract class DecalComp
-```
 
 :::
 

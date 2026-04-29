@@ -222,14 +222,6 @@ illuminator = new LightBlock("illuminator"){{
 }};
 ```
 
-``` kotlin
-illuminator = LightBlock("illuminator").apply {
-    requirements(Category.effect, BuildVisibility.lightingOnly, ItemStack.with(Items.graphite, 12))
-    brightness = 0.75f
-    radius = 140f
-    consumePower(0.05f)
-}
-```
 
 :::
 

@@ -40,27 +40,6 @@ abstract class EntityComp {
 }
 ```
 
-``` kotlin
-// EntityComp作为所有实体的基础组件
-@Component
-@BaseComponent
-abstract class EntityComp {
-    @Transient private var added = false
-    @Transient var id = EntityGroup.nextId()
-
-    fun isAdded(): Boolean {
-        return added
-    }
-
-    fun add() {
-        added = true
-    }
-
-    fun remove() {
-        added = false
-    }
-}
-```
 
 :::
 
@@ -261,23 +240,6 @@ public interface Posc extends Entityc, Position {
 }
 ```
 
-``` kotlin
-// 生成的接口
-interface Posc : Entityc, Position {
-    fun x(): Float
-    fun x(x: Float)
-
-    fun y(): Float
-    fun y(y: Float)
-
-    fun set(x: Float, y: Float)
-    fun trns(x: Float, y: Float)
-    fun tileX(): Int
-    fun tileY(): Int
-    fun floorOn(): Floor
-    // ... 其他方法
-}
-```
 
 :::
 
