@@ -52,8 +52,6 @@ status.tutorial-mod-tutorial-status-effect-1.details =
 
 StatusEffect类中有`opposite`和`affinity`字段。不过，这些字段的类型并不是简单的数组或`Seq`，而是`ObjectSet`，一种对象的“集合”类型，并且，这个字段只是用于显示，没有实际的冲突或反应功能。若想要设置冲突或反应功能，需要如下的语法：
 
-::: code-group
-
 ``` java
 wet = new StatusEffect("wet"){{
     color = Color.royal;
@@ -70,9 +68,6 @@ wet = new StatusEffect("wet"){{
     });
 }};
 ```
-
-<!----这段kt代码在154是跑不了的，但是笔者的pr使得在155能跑起来---->
-:::
 
 先来看两个方法在Java中的使用方式。`opposite()`是一个拥有变长参数的方法，接收一系列状态效果，然后将它们设置为与本状态效果冲突。`affinity()`的第一个参数是另一个状态效果，而第二个参数是完全没有见过的结构，有如下的形式：
 
@@ -132,8 +127,6 @@ val wet2 = TutorialStatusEffect("wet").apply{
 
 在Java模组中，我们一般会直接使用Effect的基类构造方法：
 
-::: code-group
-
 ``` java
 pulverizeMedium = new Effect(30, e -> {
     randLenVectors(e.id, 5, 3f + e.fin() * 8f, (x, y) -> {
@@ -143,14 +136,9 @@ pulverizeMedium = new Effect(30, e -> {
 })
 ```
 
-
-:::
-
 这个构造方法的第一个参数是特效的寿命，第二个参数也是一个Lambda表达式，用于放置具体的绘制方法。我们将在第五章深入介绍各种绘制方法的使用。
 
 Effect有一些模板化的子类，如`ExplosionEffect` `ParticleEffect` `SoundEffect` `WaveEffect`。这些子类的初衷是为了方便JSON模组创建特效的，但在Java模组中也可以使用：
-
-::: code-group
 
 ``` java
 despawnEffect = hitEffect = new ExplosionEffect(){{
@@ -161,9 +149,6 @@ despawnEffect = hitEffect = new ExplosionEffect(){{
     waveRad = 40f;
 }};
 ```
-
-
-:::
 
 以下是对各个模板化子类的字段介绍：
 

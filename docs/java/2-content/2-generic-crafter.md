@@ -133,8 +133,6 @@ consumePower(1f)
 
 以上只是消耗器字面上的用法。事实上，原版中火力发电机的燃料消耗、炮塔的冷却剂等也是消耗器的功能。这些“不正常”的消耗器并没有什么不同，也可以应用在工厂中。
 
-::: code-group
-
 ``` java
 //像火力发电机一样，消耗高燃烧性的物品，额外提升的工作效率由物品的燃烧性决定
 consume(new ConsumeItemFlammable());
@@ -143,9 +141,6 @@ consume(new ConsumeItemExplode());
 //像炮塔一样，使用冷却剂提高工作效率
 consume(new ConsumeCoolant(1f));
 ```
-
-
-:::
 
 Anuke没有封装这些特殊消耗器的“快速通道”，所以你需要用基本方法`consume()`来**注册（Register）**消耗器。查阅源代码可知，`consumeItem()`等方法也是对`consume()`方法的包装。本教程后续章节将会继续深入了解消耗器的相关机制，届时你可以创建自己的消耗器。
 
@@ -239,8 +234,6 @@ drawer = DrawDefault()
 
 Drawer可以对绘制过程进行一定拓展，在`mindustry.world.draw`包中还有许多drawer可供使用。但是一个方块只有一个`drawer`字段，大部分drawer只能做一件事，需要配合使用。这时，你可以使用`DrawMulti`来对drawer进行组合：
 
-::: code-group
-
 ``` java
 drawer = new DrawMulti(
                 new DrawRegion("-bottom"),
@@ -251,9 +244,6 @@ drawer = new DrawMulti(
                 new DrawGlowRegion()
                 );
 ```
-
-
-:::
 
 一个`DrawMulti`中可以包括多个drawer，这些drawer将会按照声明顺序从先到后，按照从下到上叠加绘制，最终获得较佳的效果。
 

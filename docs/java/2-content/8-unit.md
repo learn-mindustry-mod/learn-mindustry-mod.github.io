@@ -178,8 +178,6 @@ UnitTypes.mono.stances.add(item1mine)
 
 单位工厂的主要设置项是其`plans`字段，这个字段接收一个包含`UnitPlan`的`Seq`。`UnitPlan`的构造接受三个参数，分别为制造单位、生产时间和物品消耗。
 
-::: code-group
-
 ``` java
 groundFactory = new UnitFactory("ground-factory"){{
     requirements(Category.units, with(Items.copper, 50, Items.lead, 120, Items.silicon, 80));
@@ -194,11 +192,7 @@ groundFactory = new UnitFactory("ground-factory"){{
 }};
 ```
 
-:::
-
 单位重构厂的类型为`mindustry.world.blocks.units.Reconstructor`。在 Mindustry 中，单位重构厂的消耗通过消耗器系统实现，其重构时间由`constructTime`字段控制，单位的升级路径则由`upgrades`字段定义。
-
-::: code-group
 
 ``` java
 tetrativeReconstructor = new Reconstructor("tetrative-reconstructor"){{
@@ -224,12 +218,7 @@ tetrativeReconstructor = new Reconstructor("tetrative-reconstructor"){{
 }};
 ```
 
-
-:::
-
 单位组装厂的类型为`mindustry.world.blocks.units.UnitAssembler`。该类型会生成若干无人机作为组装的先决条件，随后接收配方要求的载荷/物品/液体输入，并在指定区域内生成新的单位。与其他载荷方块不同，此类型将载荷视为可消耗物资，并统一纳入消耗器系统进行管理。可设置的参数包括无人机单位类型`droneType`、无人机数量`dronesCreated`以及制造无人机所需时间`droneConstructTime`。其配方`plans`的设置方式与前述类型相似。配方的序号对应模块等级：第一个配方无需模块，第二个配方需要至少一个`tier=1`模块，第三个配方需要`tier=1`与`tier=2`连续覆盖，以此类推：
-
-::: code-group
 
 ``` java
 tankAssembler = new UnitAssembler("tank-assembler"){{
@@ -247,8 +236,5 @@ tankAssembler = new UnitAssembler("tank-assembler"){{
     consumeLiquid(Liquids.cyanogen, 9f / 60f);
 }};
 ```
-
-
-:::
 
 

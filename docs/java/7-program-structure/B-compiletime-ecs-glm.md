@@ -57,8 +57,6 @@ ECS 把一个实体拆解成多个组件，像搭积木一样组合：
 
 所有组件都定义在 `mindustry.entities.comp` 包下：
 
-::: code-group
-
 ```java
 // 基础组件：EntityComp - 所有实体都有的属性
 package mindustry.entities.comp;
@@ -97,9 +95,6 @@ abstract class HealthComp implements Entityc, Posc {
     }
 }
 ```
-
-
-:::
 
 ### 组件的注解
 
@@ -143,8 +138,6 @@ abstract class EntityComp : Entityc {
 
 几乎所有实体都需要的位置信息，并且会触发网络同步：
 
-::: code-group
-
 ```java
 @Component(base = true)
 abstract class PosComp implements Position {
@@ -163,9 +156,6 @@ abstract class PosComp implements Position {
     }
 }
 ```
-
-
-:::
 
 #### HealthComp - 生命组件
 
@@ -231,8 +221,6 @@ abstract class HealthComp : Entityc, Posc {
 
 #### UnitComp - 单位实体
 
-::: code-group
-
 ```java
 @EntityDef({
     Posc.class,       // 位置能力
@@ -263,14 +251,9 @@ abstract class UnitComp implements Healthc, Physicsc, Hitboxc, /*...*/ {
 }
 ```
 
-
-:::
-
 `@EntityDef` 的 value 是一个接口数组，每个接口对应一个组件。编译器会自动找到这些接口对应的组件类，并生成复合实体。
 
 #### BuildingComp - 建筑实体
-
-::: code-group
 
 ```java
 @EntityDef({
@@ -291,9 +274,6 @@ abstract class BuildingComp implements Entityc {
     // 建筑特有的方法和字段...
 }
 ```
-
-
-:::
 
 ## 为什么是"编译时"的秘密武器
 
@@ -342,8 +322,6 @@ Mindustry 的解决方案是**编译时代码生成**。所有在编译时确定
 
 看 `mindustry/gen/Unit.java`（这是生成后的类，不是源代码）：
 
-::: code-group
-
 ```java
 @SuppressWarnings("deprecation")
 public class Unit extends UnitBase implements Posc, Healthc, /*...*/ {
@@ -375,14 +353,9 @@ public class Unit extends UnitBase implements Posc, Healthc, /*...*/ {
 }
 ```
 
-
-:::
-
 ### EntityProcess 注解处理器
 
 注解处理器位于 `mindustry.annotations.entity.EntityProcess`，它在编译时扫描所有被 `@Component` 和 `@EntityDef` 标记的类，并生成对应的实体类。
-
-::: code-group
 
 ```java
 @SupportedAnnotationTypes({
@@ -410,9 +383,6 @@ public class EntityProcess extends BaseProcessor {
 }
 ```
 
-
-:::
-
 ## 生成的接口
 
 每个组件会生成一个对应的接口（以 `c` 结尾）。
@@ -429,8 +399,6 @@ public class EntityProcess extends BaseProcessor {
 ### 接口的生成
 
 看生成后的 `Posc.java`：
-
-::: code-group
 
 ```java
 /**
@@ -462,9 +430,6 @@ public interface Posc extends Entityc {
     }
 }
 ```
-
-
-:::
 
 ### `@EntityInterface` 注解
 

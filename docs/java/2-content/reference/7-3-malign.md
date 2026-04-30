@@ -1,5 +1,3 @@
-::: code-group
-
 ``` java
 malign = new PowerTurret("malign"){{
     requirements(Category.turret, with(Items.carbide, 200, Items.beryllium, 1000, Items.silicon, 500, Items.graphite, 500, Items.phaseFabric, 200));
@@ -341,6 +339,3 @@ malign = new PowerTurret("malign"){{
     shake = 3f;
 }};
 ```
-
-
-:::

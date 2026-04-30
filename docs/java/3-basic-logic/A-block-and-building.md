@@ -21,8 +21,6 @@
 
 例如，原版中设置方块在核心数据库显示内容的方法为`setStats()`，对于`GenericCrafter`、`Pump`、`ConsumeGenerator`三个类而言，内容分别如下：
 
-::: code-group
-
 ``` java
 @Override
 public void setStats(){
@@ -42,11 +40,6 @@ public void setStats(){
 }
 ```
 
-
-:::
-
-::: code-group
-
 ``` java
 @Override
 public void setStats(){
@@ -54,11 +47,6 @@ public void setStats(){
     stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond);
 }
 ```
-
-
-:::
-
-::: code-group
 
 ``` java
 @Override
@@ -76,16 +64,11 @@ public void setStats(){
 }
 ```
 
-
-:::
-
 对比各字段的含义与游戏内核心数据库页的具体显示内容，可以确认`setStats()`方法中的代码决定了显示内容。
 
 ![多态](imgs/generic.png)
 
 然而，另一方面，大部分显示内容并未在这些类中定义，这是面向对象编程的另一特征——继承——所导致的结果。以下为其基类`Block`中的相关定义：
-
-::: code-group
 
 ``` java
 @Override
@@ -116,9 +99,6 @@ public void setStats(){
 }
 ```
 
-
-:::
-
 从上方的代码中可以看出，`Block`类中添加的统计信息是所有方块通用的。这是因为所有方块都继承了`Block`类，并且在执行`setStats()`时都调用了`super.setStats()`，即执行其超类的`setStats()`方法。实际上，向统计信息中添加方块的贴图和名称是`Block`超类`UnlockableContent`中的`setStats()`执行的结果。继承机制使得子类可以复用超类中已有的代码。
 
 ::: info 如何找到自己需要的方法？
@@ -133,17 +113,12 @@ public void setStats(){
 
 最后，但也是最重要的，游戏是如何知道我们新建了一个内容？Mindustry的机制是，在内容对象的构造过程中自动完成注册。如果一个类直接或间接继承自内容的基类`Content`，其构造方法必须调用超类的构造方法，这个调用链最终会执行到`Content`的构造方法中：
 
-::: code-group
-
 ``` java
 public Content(){
     this.id = (short)Vars.content.getBy(getContentType()).size;
     Vars.content.handleContent(this);
 }
 ```
-
-
-:::
 
 这两行代码表明，游戏会通过内容管理器`Vars.content`为内容分配一个在其内容类型中唯一的id，并将内容自身注册到管理器中。在后续的加载过程中，该内容会与原版内容以相同的方式被处理。当玩家打开该物品的统计信息界面时，游戏会调用内容的`setStats()`方法来计算需要显示的信息，此时相关的代码逻辑才会被执行。
 
@@ -686,8 +661,6 @@ Mindustry的存档采取的是**流式（Stream）**存档，在文件中实际�
 
 向刚才这个建筑数据区块读写内容的方法即为`read()`和`write()`。如果想要向存档中添加数据，直接向这两个方法中添加内容即可：
 
-::: code-group
-
 ``` java
 @Override
 public void read(Reads read, byte revision){
@@ -702,16 +675,11 @@ public void write(Writes write){
 }
 ```
 
-
-:::
-
 #### 版本控制
 
 但此时你再打开原有的存档将会报错。提示的错误为`"Error reading region $name: read length mismatch. Expected: @; Actual: @`。根据上方存档原理，我们可以知道这是因为读取的字节数超过了区块中存储的字节数，即`read()`方法读多了。究其原因，是因为存档的区块数据中并没有`light`这一字节。像这样由于`read()` / `write()`方法更新导致无法读取的情况还有很多，规避这种问题的方法是通过`version()` / `revision` 为你的读取/写入协议添加版本控制。
 
 在写入实体数据前，游戏会先写入`version()`方法的返回值，读取时这个值将会作为`read()`的第二个参数传入。因此我们可以做这样的改写：
-
-::: code-group
 
 ``` java
 @Override
@@ -725,9 +693,6 @@ public void read(Reads read, byte revision){
     if(revision >= 1) light = read.bool();
 }
 ```
-
-
-:::
 
 ### 网络同步——`configure()` 系统
 
@@ -810,8 +775,6 @@ override fun tapped() {
 
 因此，可以对`LampBlock`类进行**抽象（Abstraction）**。抽象是指提取多个类之间的共性，将可变部分通过参数或配置机制进行控制，从而减少重复代码。例如，可以在`LampBlock`中定义一个字段`lampRadius`，用于控制照亮范围。这样，当需要不同范围的方块时，只需调整该字段的值，而无需创建新的类。
 
-::: code-group
-
 ``` java
 public int lampRadius = 5;
 
@@ -830,9 +793,6 @@ public void drawLight(){
 }
 ```
 
-
-:::
-
 抽象是编程中的重要概念，适当地使用抽象可以提高代码的健壮性。抽象程度过低可能导致代码冗余，增加调试和维护的难度；抽象程度过高则可能使代码结构过于复杂，降低可读性和可维护性。因此，保持适度的抽象水平是必要的。建议在可行的情况下，将可配置的部分提取为字段进行抽象。
 
 ## 结尾
@@ -846,8 +806,6 @@ public void drawLight(){
 - 新建此类的实例。
 
 下面我们给出上述代码的完整实现：
-
-::: code-group
 
 ``` java
 package example.world.blocks;
@@ -955,9 +913,6 @@ public class LampBlockJ extends Block{
     }
 }
 ```
-
-
-:::
 
 最后一步，不要忘记给你的类新建一个实例：
 

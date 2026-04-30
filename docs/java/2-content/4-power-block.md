@@ -66,8 +66,6 @@ thermalGenerator = ThermalGenerator("tutorial-thermal-generator").apply{
 
 这些消耗器原版并没有像普通消耗器一样封装接口，需要通过`consume()`方法注册。此外，发电机也可以使用普通消耗器，例如原版中的涡轮发电机就兼有`ConsumeItemFlammable`（消耗燃料）和`ConsumeLiquid`（消耗水）两个消耗器。
 
-::: code-group
-
 ``` java
 steamGenerator = new ConsumeGenerator("tutorial-steam-generator"){{
     requirements(Category.power, with(Items.copper, 35));
@@ -81,9 +79,6 @@ steamGenerator = new ConsumeGenerator("tutorial-steam-generator"){{
 }}
 ```
 
-
-:::
-
 ### 产热发电机（HeaterGenerator）、核反应堆（NuclearReactor）和不稳定反应堆（VariableReactor）
 
 这三种发电机并列的原因是，他们都会产生热量，但是产热的逻辑和热量充满后的逻辑不同。
@@ -93,8 +88,6 @@ steamGenerator = new ConsumeGenerator("tutorial-steam-generator"){{
 - 不稳定反应堆（VariableReactor）的热量与产热发电机相同，真正需要控制的是不稳定度。如果没有达到消耗器要求，就会增加不稳定度，且增加速度和减少速度为定值，当不稳定度充满后会产生爆炸。
 
 核反应堆（NuclearReactor）和不稳定反应堆（VariableReactor）都设置了`rebuildable`这一属性。这一属性设置为false将禁止使用重建功能建造此方块。
-
-::: code-group
 
 ``` java
 neoplasiaReactor = new HeaterGenerator("tutorial-neoplasia-reactor"){{
@@ -131,13 +124,9 @@ fluxReactor = new VariableReactor("tutorial-flux-reactor"){{
 }};
 ```
 
-:::
-
 ### 冲击反应堆（ImpactReactor）
 
 需要时间进行预热，这段时间需要电力输入。在冲击反应堆运行时，对电力输入从未停止，只是在计算实际发电量的时候扣除了耗电量。当消耗器和耗电无法满足时，会迅速把预热降到0。
-
-::: code-group
 
 ``` java
 impactReactor = new ImpactReactor("tutorial-impact-reactor"){{
@@ -150,8 +139,6 @@ impactReactor = new ImpactReactor("tutorial-impact-reactor"){{
 }};
 ```
 
-:::
-
 ### 总结
 
 到目前为此，我们已经见过十多种方块类型了，它们的类型（Kind）大致可分为三种：
@@ -163,8 +150,6 @@ impactReactor = new ImpactReactor("tutorial-impact-reactor"){{
 ## 电力节点
 
 电力节点有两种类型，一种是在圆形范围内、有连接数量限制、手动连接的电力节点`PowerNode`，一种是在范围里自动连接的激光节点`BeamNode`。此外还有`LongPowerNode`，只是在绘制上与电力节点稍有区别。你可以让电力节点缓存电力，原版在埃里克尔就是这么做的，因为那里没有电池用。
-
-::: code-group
 
 ``` java
 powerNode = new PowerNode("tutorial-power-node"){{
@@ -183,13 +168,10 @@ beamNode = new BeamNode("tutorial-beam-node"){{
     consumePowerBuffered(1000f);
 }};
 ```
-:::
 
 还有一个类型是二极管（`PowerDiode`），它可以让电力在两个电网之间单向传输。
 
 ## 电池
-
-::: code-group
 
 ``` java
 batteryLarge = new Battery("tutorial-battery-large"){{
@@ -200,9 +182,6 @@ batteryLarge = new Battery("tutorial-battery-large"){{
 }};
 ```
 
-
-:::
-
 电池是用于缓存电力的，而其功能由`ConsumePowerBuffered`这一消耗器负责。电池也拥有drawer，默认会根据缓存电量变换电池的颜色，由于电池没有设置`progress`属性，所以大部分drawer无法生效。
 
 ## 其余电力方块
@@ -210,8 +189,6 @@ batteryLarge = new Battery("tutorial-battery-large"){{
 我们在上文提到了“标记类”这一名词，在电力系统中除了`PowerGenerator`用于标记发电机，还有两个标记类，分别是`PowerDistributor`和`PowerBlock`，这两个类设置了一些字段，如默认更新`update = true`，将方块的组别设置为`BlockGroup.power`。此外，电力源`PowerSource`和电力黑洞`PowerVoid`也在`mindustry.world.block.sandbox`包里。
 
 灯光方块`LightBlock`和电力方块在同一包里，它的工作就是用光亮照亮**黑暗**，但没有探开战争迷雾的功能。它的建筑可见性`BuildVisibility`稍有不同：
-
-::: code-group
 
 ``` java
 illuminator = new LightBlock("illuminator"){{
@@ -221,9 +198,6 @@ illuminator = new LightBlock("illuminator"){{
     consumePower(0.05f);
 }};
 ```
-
-
-:::
 
 `PowerGraph`是一个完全不同的类，它并不是方块，而是一个表示电网的实体。在 Mindustry 中，相互连通的电力建筑拥有同一个电网，电网可以调度电力的产生、缓存和消耗。我们将在后文讲解电网的工作原理。
 

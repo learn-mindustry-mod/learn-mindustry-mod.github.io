@@ -50,8 +50,6 @@ Javadoc 是指一种特殊的注释标准，即以*开头的多行注释，有�
 
 原版中所有能绘制的贴图可以用一个`TextureRegion`来表示，而这种贴图都需要在`load()`期从`Core.atlas.find()`中掏出来，所以我们可以直接观察内容的`load()`方法来研究需要什么名称的贴图，如果方块有drawer，那么也可以对drawer作同样处理。例如：
 
-::: code-group
-
 ``` java
 
 @Override
@@ -64,9 +62,6 @@ public void load(){
 
 ```
 
-
-:::
-
 这段摘自`LongPowerNode.java`的代码展示了如何加载贴图：该方块会尝试加载名为`name + "-beam"`的贴图作为激光中段；`find()`方法的第二个参数表示，如果找不到第一个参数指定的贴图，则会**回滚（Fallback）**到`power-beam`这张贴图。*如果`power-beam`也找不到，则会回滚到`error`贴图（即`ohno`）；如果连`error`贴图也找不到，则表明`Core.atlas`已完全损坏，游戏将崩溃。*
 
 仅靠手动加载有时不够便捷，原版还提供了一个功能强大的**注解（Annotation）**`@Load`。Java 注解（Annotation）是 JDK5.0 引入的一种注释机制。此处 Anuke 使用的并非基础的“运行期注解”，而是功能更复杂的“编译期注解”，它具备**元编程（Meta-programing）**能力，可以自动生成代码。`@Load`注解处理器是原版注解处理器中相对简单的一个，目前无需深究其原理，因为注解处理器是原版源代码中较为复杂的部分。
@@ -74,8 +69,6 @@ public void load(){
 这里只需了解`@Load`各个参数的含义即可。如果只有一个参数，则该参数即为`value`，代表要加载的贴图“名称”，其中可以包含**插值（Interpolation）**：`@`代表方块的名称，`#`、`#1`、`#2`等代表循环的数字；如果有多个参数，还可能包含`fallback`参数，用于指定回滚的目标贴图名称；`length`与`#`搭配使用，指示其循环长度；`lengths`与`#1`、`#2`等搭配使用，所有数字均**从1开始计数**。
 
 比如：
-::: code-group
-
 ``` java
 //把“select-arrow-small”贴图加载到selectArrowRegion中
 public @Load("select-arrow-small") TextureRegion selectArrowRegion;
@@ -97,12 +90,7 @@ public @Load(value = "@-#1-#2", lengths = {7, 4}) TextureRegion[][] regions;
 
 ```
 
-
-:::
-
 你可以用`Content`的练习一下：
-
-::: code-group
 
 ``` java
 @Override
@@ -118,16 +106,11 @@ public void loadIcon(){
     uiIcon = Core.atlas.find(getContentType().name() + "-" + name + "-ui", fullIcon);
 }
 ```
-
-
-:::
 *请思考：物品的本体贴图到底有多少种命名方式？Mindustry每次大更新都没有模组负担，为什么Anuke还留着他们？*
 
 ## 原版Bundle格式
 
 关于语言的获取代码位于`UnlockableContent`中：
-
-::: code-group
 
 ``` java
 public UnlockableContent(String name){
@@ -140,9 +123,6 @@ public UnlockableContent(String name){
 }
 
 ```
-
-
-:::
 
 其中`getContentType()`就是上节提到的`ContentType`若干种。另外需要知道的是，在内容的name前面自动加`modName`是`Vars.content.transformName()`方法的功能。此时我们回顾一下各种内容的bundle格式就是极为合适的：
 
@@ -161,8 +141,6 @@ techtree.tutorial = 演示科技树
 
 并且我们会发现，这些内容的`name`并不再是连字符命名的，`command`和`stance`是小驼峰命名，而`ability` 干脆是**类名全小写化**，正如它的代码一样：
 
-::: code-group
-
 ``` java
 public String localized(){
     return Core.bundle.get(getBundle());
@@ -173,9 +151,6 @@ public String getBundle(){
     return "ability." + (type.isAnonymousClass() ? type.getSuperclass() : type).getSimpleName().replace("Ability", "").toLowerCase();
 }
 ```
-
-
-:::
 
 ## 其他我暂时不知道在哪里讲合适的东西
 
@@ -194,8 +169,6 @@ public String getBundle(){
 并且行星也有一个字段`defaultEnv`，默认值为`Env.terrestrial | Env.spores | Env.groundOil | Env.groundWater | Env.oxygen`。
 
 但是这些字段的值都是`int`类型的，意味着他们只是数字而已，事实也是如此，defaultEnv的值为`0b01110101`，也就是`117`。这说明，这里采用了某种机制在数字中隐藏了信息，实际上，这里使用的方法是**位掩码（Bitmask）**，通过把二进制数的某位设置为0或1来对标记进行设置。比如说，原版中所有`env`是这样定义的：
-
-::: code-group
 
 ``` java
 public class Env{
@@ -222,9 +195,6 @@ public class Env{
     none = 0;
 }
 ```
-
-
-:::
 
 具体来说，位掩码是这样操作的：
 - 首先我们要获得当前地图环境的`env`：`Vars.state.rules.env`（假设为默认值：`0b01110101`）

@@ -184,16 +184,11 @@ class DemoDef
 
 ### 最小示例
 
-::: code-group
-
 ```java
 @EntityDef(value = {Decalc.class}, pooled = true, serialize = false)
 @Component(base = true)
 abstract class DecalComp{}
 ```
-
-
-:::
 
 这会让实体具备：
 

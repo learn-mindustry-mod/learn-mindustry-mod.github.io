@@ -7,8 +7,6 @@ Mindustry 包含自动化与塔防（Tower Defense）元素。炮塔是防御体
 炮塔的基本构成包括子弹类型（BulletType）、射击方式（ShootPattern）、炮塔绘制器（Drawer）中的绘制部件（DrawPart）、冷却剂系统以及方块基础属性，下文将逐一说明。
 为了方便理解以下内容，这里提供一个最小模板：
 
-::: code-group
-
 ``` java
 new ItemTurret("tutorial-item-turret"){{
     requirements(Category.turret, with(Items.copper, 39));
@@ -21,9 +19,6 @@ new ItemTurret("tutorial-item-turret"){{
     coolant = consumeCoolant(0.1f);
 }};
 ```
-
-
-:::
 
 ## 子弹类型（BulletType）
 
@@ -132,8 +127,6 @@ val part = RegionPart("-barrel").apply {
 
 有了这些东西，是时候创建一个炮塔了。
 
-::: code-group
-
 ``` java
 new ItemTurret("tutorial-item-turret"){{
     requirements(Category.turret, with(Items.copper, 39));
@@ -146,9 +139,6 @@ new ItemTurret("tutorial-item-turret"){{
     coolant = consumeCoolant(0.1f);
 }};
 ```
-
-
-:::
 
 炮塔类型具有明确的专用性，这主要源于不同子弹类型在功能实现上的显著差异。
 炮塔的基类包括`BaseTurret`、`ReloadTurret`和`Turret`，其主要功能涵盖射程`range`（单位为像素，1格=8像素）、冷却时间`reload`、子弹容量`maxAmmo`的设置，以及上文在`BulletType`中已提及的部分字段。

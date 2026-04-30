@@ -421,8 +421,6 @@ fun reset() {
 
 Mindustry 源码中定义的分组示例（`GroupDefs.java`）：
 
-::: code-group
-
 ```java
 @GroupDef(spatial = true, collide = true, mapping = true)
 class Bullet{}
@@ -437,8 +435,6 @@ class Effect{}
 @GroupDef(spatial = true)
 class Payload{}
 ```
-
-:::
 
 ### 8.4 `Groups.update()` 执行顺序
 

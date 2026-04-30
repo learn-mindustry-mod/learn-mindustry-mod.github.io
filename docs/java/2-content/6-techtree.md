@@ -60,8 +60,6 @@ nodeRoot("tutorial", ModItems.tutorialItem) {
 
 以原版部分代码为例：
 
-::: code-group
-
 ``` java
 Planets.serpulo.techTree = nodeRoot("serpulo", coreShard, () -> {
     node(router, () -> {
@@ -90,9 +88,6 @@ Planets.serpulo.techTree = nodeRoot("serpulo", coreShard, () -> {
 });
 
 ```
-
-
-:::
 
 ## 挂载原版科技树
 

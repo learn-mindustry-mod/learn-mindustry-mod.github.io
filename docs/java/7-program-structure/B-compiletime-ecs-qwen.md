@@ -16,8 +16,6 @@
 
 实体是游戏世界中的基本对象，只包含一个唯一标识符，不包含任何逻辑或数据。在Mindustry中，实体是由组件组合构成的虚拟概念，其实体本身只是一个ID标识：
 
-::: code-group
-
 ```java
 // EntityComp作为所有实体的基础组件
 @Component
@@ -40,16 +38,11 @@ abstract class EntityComp {
 }
 ```
 
-
-:::
-
 实体的真正功能来自于附加的各种组件，例如一个单位实体可能包含位置组件(PosComp)、生命值组件(HealthComp)、武器组件(WeaponsComp)等。
 
 ### 组件（Component）
 
 组件包含数据和简单的逻辑操作，每个组件都专注于特定的功能，如位置、生命值等。Mindustry中的组件以抽象类的形式定义，并通过注解标注：
-
-::: code-group
 
 ```java
 @Component
@@ -77,16 +70,11 @@ abstract class PosComp implements Position {
 }
 ```
 
-
-:::
-
 组件的设计遵循单一职责原则，每个组件只负责特定的功能。这种设计使得组件可以被灵活组合，构建出复杂的游戏对象。
 
 ### 系统（System）
 
 系统负责处理特定类型的组件数据，实现游戏逻辑。系统会查询具有特定组件组合的实体进行批量处理。例如，物理系统处理所有具有物理组件的实体，渲染系统处理所有需要绘制的实体：
-
-::: code-group
 
 ```java
 public class EntityGroup<T extends Entityc> {
@@ -106,9 +94,6 @@ public class EntityGroup<T extends Entityc> {
 }
 ```
 
-
-:::
-
 系统通过批量处理相同类型的组件，可以充分利用CPU缓存，提高运行效率。
 
 ## Mindustry实现细节
@@ -116,8 +101,6 @@ public class EntityGroup<T extends Entityc> {
 ### 注解驱动的代码生成
 
 Mindustry采用`@Component`注解定义组件，并通过编译时注解处理器自动生成相关代码。注解处理器在编译阶段分析源代码中的注解，自动生成所需的接口和实现类：
-
-::: code-group
 
 ```java
 @Component
@@ -163,16 +146,11 @@ abstract class HealthComp implements Entityc, Posc {
 }
 ```
 
-
-:::
-
 注解处理器会为上述组件生成对应的接口`Healthc`，包含所有public方法的声明。这种代码生成机制大大减少了手工编写重复代码的工作量。
 
 ### 实体分组管理
 
 通过`EntityGroup`类管理不同类型的实体集合，支持空间索引和ID映射：
-
-::: code-group
 
 ```java
 public class EntityGroup<T extends Entityc> implements Iterable<T> {
@@ -211,16 +189,11 @@ public class EntityGroup<T extends Entityc> implements Iterable<T> {
 }
 ```
 
-
-:::
-
 实体分组管理器采用多种优化策略：Sequence作为底层存储结构提供高效的随机访问；QuadTree实现空间索引，加速空间查询；IntMap提供O(1)时间复杂度的ID查找。
 
 ### 组件接口生成
 
 注解处理器会为每个组件生成对应的接口，例如为`PosComp`生成`Posc`接口：
-
-::: code-group
 
 ```java
 // 生成的接口
@@ -240,16 +213,11 @@ public interface Posc extends Entityc, Position {
 }
 ```
 
-
-:::
-
 生成的接口继承了`Entityc`基础接口和组件实现的其他接口，保证了类型安全和方法一致性。
 
 ### 序列化支持
 
 Mindustry通过`EntityIO`类实现实体数据的序列化和反序列化，支持版本兼容：
-
-::: code-group
 
 ```java
 void write(MethodSpec.Builder method, boolean write) throws Exception {
@@ -285,9 +253,6 @@ void write(MethodSpec.Builder method, boolean write) throws Exception {
     }
 }
 ```
-
-
-:::
 
 序列化系统支持向前和向后兼容，通过版本号识别不同的数据格式，并自动进行转换处理。
 
@@ -361,8 +326,6 @@ abstract class PosComp : Position {
 ## 实现示例
 
 一个完整的单位实体组件实现，展示了Mindustry中复杂实体的构建过程：
-
-::: code-group
 
 ```java
 // 单位组件定义
@@ -499,9 +462,6 @@ unit.set(100, 100);
 unit.team(Team.sharded);
 Groups.unit.add(unit);
 ```
-
-
-:::
 
 这个示例展示了单位实体的复杂性：它实现了近20个不同的组件接口，每个接口代表一种特定的功能。通过这种设计，单位实体可以同时具备位置、生命值、物理、团队、武器等所有必要的功能。
 

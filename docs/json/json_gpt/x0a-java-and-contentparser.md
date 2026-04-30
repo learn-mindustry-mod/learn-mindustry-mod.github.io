@@ -6,16 +6,12 @@
 
 Java 里的“内容定义”通常是一个类，字段就是配置项。比如：
 
-::: code-group
-
 ```java
 public class Drill extends Block{
     public int tier = 1;
     public float drillTime = 300f;
 }
 ```
-
-:::
 
 `public` 表示公开字段，`int`/`float` 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。注意 Java 的 `float` 常带 `f` 后缀，表示这是浮点数而不是整数。
 
@@ -41,27 +37,19 @@ fun updateTile() {
 
 构造器名字与类名相同，常用于创建时设定基础值：
 
-::: code-group
-
 ```java
 public Drill(String name){
     super(name);
 }
 ```
 
-:::
-
 你在 `core/src/mindustry/content/*.java` 里看到的写法，经常是“匿名内部类”初始化：
-
-::: code-group
 
 ```java
 new GenericCrafter("x"){ {
     craftTime = 60f;
 }}
 ```
-
-:::
 
 这一对大括号的含义就是“创建对象后马上设置字段”。JSON 本质上就是在做这件事。
 

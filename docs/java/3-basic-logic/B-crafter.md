@@ -12,8 +12,6 @@
 
 向方块中注册消耗器的方法正是`consume(Consume)`：
 
-::: code-group
-
 ``` java
 public <T extends Consume> T consume(T consume){
     if(consume instanceof ConsumePower){
@@ -26,14 +24,9 @@ public <T extends Consume> T consume(T consume){
 }
 ```
 
-
-:::
-
 可见在`init()`前，添加的消耗器会先进入`consumeBuilder`这个动态的序列当中，方便添加、查找（`findConsumer(Boolf<Consume>)`）和删除（`removeConsumer(Consume)`和`removeConsumer(Boolf<Consume>)`）。而各种简写的方法本质上也是对`consume()`方法的再次封装。
 
 走出构造函数，接下来执行的就是`init()`方法了：
-
-::: code-group
 
 ``` java
 consumers = consumeBuilder.toArray(Consume.class);
@@ -46,9 +39,6 @@ for(Consume cons : consumers){
     cons.apply(this);
 }
 ```
-
-
-:::
 
 从此处看出，在初始化期`consumeBuilder`会按照是否可选与是否更新被添加到不同的数组中去，这些数组将会在消耗器更新时发挥作用。并且会执行各个消耗器的`apply(Block)`方法并将自身传递进去。实际上消耗器的`apply(Block)`方法可以认为是对方块的`init()`的扩展。
 
@@ -82,8 +72,6 @@ for(Consume cons : consumers){
 ### 消耗器的更新
 
 上文提到，所有方块的效率都是根据消耗器计算的，奠定了这个组件的基本地位。更新消耗器效率的代码就在`updateConsumption()`中：
-
-::: code-group
 
 ``` java {2,10,16}
 public void updateConsumption() {
@@ -137,9 +125,6 @@ public void updateEfficiencyMultiplier() {
 }
 ```
 
-
-:::
-
 从这里可以看出，在非无限火力时，`efficiency`存储了必需消耗器中最低的效率，`optionalEfficiency`存储了非必需消耗器中最低的效率，并且基础最大值为1，在`updateEfficiencyMultiplier()`会将其再乘以`efficiencyScale()`，而后者在某些方块中会委托给`efficiencyMultiplier`，但并不总是。而`potentialEfficiency`存放的是无倍率时的潜在效率。这三种效率的状态变量中，`efficiency`在核心逻辑中被使用，另两种在特定方块的逻辑中发挥作用。
 
 值得注意的是，原版中电力的消耗始终是单独被拿出来考虑的。因此方块非电力消耗器的效率可以影响电力的消耗量。
@@ -147,8 +132,6 @@ public void updateEfficiencyMultiplier() {
 ## 工厂的更新
 
 书接上回，渲染和更新是方块实体最重要的两个功能。对于工厂来说，其更新逻辑是非常值得研究的。
-
-::: code-group
 
 ``` java
 @Override
@@ -183,12 +166,7 @@ public void updateTile(){
 }
 ```
 
-
-:::
-
 如果刚才那个有点复杂，可以看这个去除绘制功能的版本：
-
-::: code-group
 
 ``` java
 @Override
@@ -229,9 +207,6 @@ public void craft(){
 }
 ```
 
-
-:::
-
 方块的更新方法`updateTile()`是每一帧都会被执行的方法。凡是每时每刻都要变化的功能，都要放在方块的更新方法内。
 
 工厂的`updateTile()`中，主要做了4+1+1件事：
@@ -251,8 +226,6 @@ public void craft(){
 `warmup`是一个表示炉温的状态变量，在工厂长时间不工作时，炉温自然为0；在工厂开始进行工作后，炉温会逐渐平滑升高到1，并在工作过程中维持在1；在工厂中止工作后，炉温又会逐渐平滑落回0。例如，在原版的`DrawBubbles`中，气泡的透明度与`warmup`正相关，在完全不工作时不产生气泡，在开始工作时逐渐出现并最终维持在一定水平。
 
 而使`warmup`能够平滑变化的，正是`Mathf`下的插值函数，定义如下：
-
-::: code-group
 
 ``` java
 /** Approaches a value at linear speed. */
@@ -276,9 +249,6 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 }
 ```
 
-
-:::
-
 `approach`方法通过限制单次变化的幅度来实现平滑过渡。以从0变化到1为例，若不限制变化速率，数值会在一帧内直接变为1，只有将近0.02秒的变化时间，导致视觉上的突变。而使用原版默认的速率`0.019f`时，从0到1至少需要53帧（约1秒），在人眼的视觉暂留效应下，就能呈现出连续平滑的变化效果。
 
 至于`Time.delta`，则是代表上一帧到这一帧的时间间隔，通常为1/60秒（0.0167秒）。在Mindustry中，所有与时间相关的数值变化都应乘以`Time.delta`，以确保在**不同帧率下游戏行为保持一致**。例如，工厂的进度增加量`getProgressIncrease(craftTime)`就包含了`Time.delta`的计算，因此无论帧率高低，完成一次生产所需的时间都是固定的。
@@ -298,8 +268,6 @@ public static float lerpDelta(float fromValue, float toValue, float progress){
 ### 无法输出
 
 以上的代码只涉及正常工作和无输入时的工厂状态，在原版中工厂还存在“无法输出”的状态。这一状态是由`shouldConsume()`控制的。
-
-::: code-group
 
 ``` java
 @Override
@@ -333,9 +301,6 @@ public boolean shouldConsume(){
     return enabled;
 }
 ```
-
-
-:::
 
 这个方法虽然长，但是读起来并不难，因此其实现并不是重点。重点在于这个方法控制着生产流程的启停，其返回的`noOutput`状态需要被正确理解和使用。例如，在你自己实现一种新的消耗器的时候，应该通过`effciency`去控制由于原料缺少造成的启停，而不是这个方法。
 

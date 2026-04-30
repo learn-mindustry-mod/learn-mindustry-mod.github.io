@@ -26,8 +26,6 @@ Mindustry的图形后台是OpenGL，那么也就是说使用那些工具绘制�
 
 Mindustry内部的渲染几乎完全依赖于批处理渲染，在`arc.Core`中保存了一个静态单例`Core.batch`存储游戏绘图工具使用的共享批处理渲染对象，这个对象究其核心方法即以下几个`draw`方法重载：
 
-::: code-group
-
 ``` java Batch.java
 public abstract class Batch{
   //...
@@ -42,9 +40,6 @@ public abstract class Batch{
 }
 ```
 
-
-:::
-
 三个`draw`方法重载分别对应了三种绘制方式：
 
 - 给定一个纹理，并手动传入顶点序列进行绘制
@@ -57,8 +52,6 @@ public abstract class Batch{
 
 例如我们最常用的`Draw.rect`绘制四边形图像的方法，跟随参数转移重载，它最基本的定义是这样的：
 
-::: code-group
-
 ``` java Draw.java
 //...
 
@@ -69,12 +62,7 @@ public static void rect(TextureRegion region, float x, float y, float w, float h
 //...
 ```
 
-
-:::
-
 这调用的就是`Batch`的矩形绘制方法，而另一个常用的例子`Fill.quad`绘制任意四边形的方法，它的定义是这样的：
-
-::: code-group
 
 ``` java Fill.java
 public static void quad(float x1, float y1, float c1, float x2, float y2, float c2, float x3, float y3, float c3, float x4, float y4, float c4){
@@ -114,21 +102,13 @@ public static void quad(float x1, float y1, float c1, float x2, float y2, float 
 }
 ```
 
-
-:::
-
 其中的`Draw.vert`转向的是：
-
-::: code-group
 
 ``` java Draw.java
 public static void vert(Texture texture, float[] vertices, int offset, int length){
     Core.batch.draw(texture, vertices, offset, length);
 }
 ```
-
-
-:::
 
 也就是调用的`Batch`的任意顶点序列绘制方法，我们通过`Fill`来绘制任意四边形时，实际上只是**构造包含这个四边形四个顶点信息的顶点序列，并将它提交给`Batch`进行绘制**。
 
@@ -164,8 +144,6 @@ public static void vert(Texture texture, float[] vertices, int offset, int lengt
 
 我们来看看在`SpriteBatch`中的`flush()`方法实现，我们省略掉所有细节，只看最重要的部分：
 
-::: code-group
-
 ``` java SpriteBatch.java
 public class Batch {
   //...
@@ -198,9 +176,6 @@ public class SpriteBatch extends Batch {
   //...
 }
 ```
-
-
-:::
 
 回忆一下我们前面几节所讲的内容，我们绘图时的一般过程是什么样的？绑定着色器，应用uniform变量（将投影与变换矩阵叠加后传入着色器），绑定纹理，然后通过`Mesh.render`提交顶点执行渲染。
 
