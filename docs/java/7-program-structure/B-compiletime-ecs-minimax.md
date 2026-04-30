@@ -438,21 +438,6 @@ class Effect{}
 class Payload{}
 ```
 
-``` kotlin
-@GroupDef(spatial = true, collide = true, mapping = true)
-class Bullet
-@GroupDef(spatial = true, collide = true, mapping = true)
-class Unit
-@GroupDef(spatial = true, mapping = true)
-class Building
-@GroupDef(spatial = true)
-class Laser
-@GroupDef(spatial = false, mapping = true)
-class Effect
-@GroupDef(spatial = true)
-class Payload
-```
-
 :::
 
 ### 8.4 `Groups.update()` 执行顺序

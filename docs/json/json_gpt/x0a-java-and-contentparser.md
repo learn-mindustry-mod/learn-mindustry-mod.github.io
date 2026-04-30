@@ -72,12 +72,6 @@ new GenericCrafter("x"){ {
 }}
 ```
 
-``` kotlin
-GenericCrafter("x").apply {
-    craftTime = 60f
-}
-```
-
 :::
 
 这一对大括号的含义就是“创建对象后马上设置字段”。JSON 本质上就是在做这件事。
