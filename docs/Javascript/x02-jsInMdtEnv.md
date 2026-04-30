@@ -133,12 +133,6 @@ public Block(String name){}
 
 ```
 
-``` kotlin
-// Block类的构造函数
-open class Block(name: String)
-
-```
-
 :::
 
 于是你的extend()函数的调用就应该是:

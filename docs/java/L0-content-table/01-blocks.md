@@ -38,9 +38,6 @@
 ``` java
 ```
 
-``` kotlin
-```
-
 :::
 **请勿使用！！！**
 
@@ -92,4 +89,3 @@
 - [`Door`](#door-门大门)
 - [`ShieldWall`](#shieldwall-盾墙)
 - [`Thruster`](#thruster-推进器残骸)
-

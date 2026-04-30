@@ -15,13 +15,6 @@ public class Drill extends Block{
 }
 ```
 
-``` kotlin
-class Drill(name: String) : Block(name) {
-    var tier = 1
-    var drillTime = 300f
-}
-```
-
 :::
 
 `public` 表示公开字段，`int`/`float` 是类型，右侧是默认值。JSON 里只要写同名字段即可覆盖默认值。注意 Java 的 `float` 常带 `f` 后缀，表示这是浮点数而不是整数。
@@ -54,10 +47,6 @@ fun updateTile() {
 public Drill(String name){
     super(name);
 }
-```
-
-``` kotlin
-constructor(name: String) : super(name)
 ```
 
 :::
