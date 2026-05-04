@@ -52,8 +52,6 @@ status.tutorial-mod-tutorial-status-effect-1.details =
 
 StatusEffect类中有`opposite`和`affinity`字段。不过，这些字段的类型并不是简单的数组或`Seq`，而是`ObjectSet`，一种对象的“集合”类型，并且，这个字段只是用于显示，没有实际的冲突或反应功能。若想要设置冲突或反应功能，需要如下的语法：
 
-::: code-group
-
 ``` java
 wet = new StatusEffect("wet"){{
     color = Color.royal;
@@ -71,31 +69,19 @@ wet = new StatusEffect("wet"){{
 }};
 ```
 
-``` kotlin
-val wet = StatusEffect("wet").apply {
-    color = Color.royal
-    speedMultiplier = 0.94f
-    effect = Fx.wet
-    effectChance = 0.09f
-    transitionDamage = 14
-
-    `init` {
-        affinity(shocked) { unit, result, time ->
-            unit.damage(transitionDamage)
-        }
-        opposite(burning, melting)
-    }
-}
-
-```
-<!----这段kt代码在154是跑不了的，但是笔者的pr使得在155能跑起来---->
-:::
-
 先来看两个方法在Java中的使用方式。`opposite()`是一个拥有变长参数的方法，接收一系列状态效果，然后将它们设置为与本状态效果冲突。`affinity()`的第一个参数是另一个状态效果，而第二个参数是完全没有见过的结构，有如下的形式：
+
+::: code-group
 
 ``` java
 (参数列表) -> {函数体}
 ```
+
+``` kotlin
+{ 参数列表 -> 函数体 }
+```
+
+:::
 
 我们把这种表达式称为**Lambda表达式**，又叫**匿名函数**。在这里你可以认为，传递函数其实就是传递“我要干什么”的信息。`affinity()`方法的含义是，“当本状态效果遇到了第一个参数对应的状态效果时，游戏会帮你执行一段你写的代码，同时游戏在这里给你的代码提供三条信息，用unit代表受影响的单位，用time代表第一个参数对应的状态效果的持续时长。在这里我们想让“潮湿”和“电击”在反应时给予单位14伤害，那我们只需要写`unit.damage(transitionDamage);`即可（因为在此作用域中`transitionDamage`是可见的）。
 
@@ -176,9 +162,17 @@ despawnEffect = hitEffect = new ExplosionEffect(){{
 
 要想加载你自己的音效文件，你需要将后缀名为`ogg`或`mp3`的音效文件放入你的项目中的`assets/sounds/`文件夹下，然后在你想要加载位置填入以下内容，括号里不用填入文件的路径和后缀名：
 
+::: code-group
+
 ``` java
 Vars.tree.loadSound("example-sound")
 ```
+
+``` kotlin
+Vars.tree.loadSound("example-sound")
+```
+
+:::
 
 Sound还有一个子类`RandomSound`，拥有一个`sounds`属性，可以接受一个`Sound`的列表。在播放此音效时，会在`sounds`中随机选择一个音效进行播放。
 

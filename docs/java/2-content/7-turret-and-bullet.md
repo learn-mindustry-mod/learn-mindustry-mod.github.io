@@ -7,8 +7,6 @@ Mindustry 包含自动化与塔防（Tower Defense）元素。炮塔是防御体
 炮塔的基本构成包括子弹类型（BulletType）、射击方式（ShootPattern）、炮塔绘制器（Drawer）中的绘制部件（DrawPart）、冷却剂系统以及方块基础属性，下文将逐一说明。
 为了方便理解以下内容，这里提供一个最小模板：
 
-::: code-group
-
 ``` java
 new ItemTurret("tutorial-item-turret"){{
     requirements(Category.turret, with(Items.copper, 39));
@@ -21,21 +19,6 @@ new ItemTurret("tutorial-item-turret"){{
     coolant = consumeCoolant(0.1f);
 }};
 ```
-
-``` kotlin
-ItemTurret("tutorial-item-turret").apply {
-    requirements(Category.turret, with(Items.copper, 39))
-    ammo(Items.copper, BasicBulletType(1.5f, 9))
-    shoot = ShootPattern()
-    drawer = DrawTurret().apply{
-        parts.add(RegionPart("-barrel"))
-    }
-    consumePower(40f)
-    coolant = consumeCoolant(0.1f)
-}
-```
-
-:::
 
 ## 子弹类型（BulletType）
 
@@ -117,12 +100,24 @@ BasicBulletType(1.5f, 9)
 
 示例：让炮管在开火后回缩，并在末段加一点呼吸抖动：
 
+::: code-group
+
 ``` java
 var part = new RegionPart("-barrel");
 part.progress = PartProgress.recoil;
 part.moveY = -3f;
 part.moves.add(new PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f));
 ```
+
+``` kotlin
+val part = RegionPart("-barrel").apply {
+    progress = PartProgress.recoil
+    moveY = -3f
+    moves.add(PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f))
+}
+```
+
+:::
 
 此处我们以魔灵为例，结合代码解析以上内容：
 
@@ -131,8 +126,6 @@ part.moves.add(new PartMove(PartProgress.recoil.delay(0.6f), 0f, -0.6f, 0f));
 ## 创建一个Turret
 
 有了这些东西，是时候创建一个炮塔了。
-
-::: code-group
 
 ``` java
 new ItemTurret("tutorial-item-turret"){{
@@ -146,21 +139,6 @@ new ItemTurret("tutorial-item-turret"){{
     coolant = consumeCoolant(0.1f);
 }};
 ```
-
-``` kotlin
-ItemTurret("tutorial-item-turret").apply {
-    requirements(Category.turret, with(Items.copper, 39))
-    ammo(Items.copper, BasicBulletType(1.5f, 9))
-    shoot = ShootPattern()
-    drawer = DrawTurret().apply{
-        parts.add(RegionPart("-barrel"))
-    }
-    consumePower(40f)
-    coolant = consumeCoolant(0.1f)
-}
-```
-
-:::
 
 炮塔类型具有明确的专用性，这主要源于不同子弹类型在功能实现上的显著差异。
 炮塔的基类包括`BaseTurret`、`ReloadTurret`和`Turret`，其主要功能涵盖射程`range`（单位为像素，1格=8像素）、冷却时间`reload`、子弹容量`maxAmmo`的设置，以及上文在`BulletType`中已提及的部分字段。
@@ -180,10 +158,21 @@ ItemTurret("tutorial-item-turret").apply {
 
 使用 `ammo` 方法声明子弹类型的示例如下：
 
+::: code-group
+
 ``` java
 ammo(Items.copper,  new BasicBulletType(3.5f, 18),
      Items.lead, new FlakBulletType(4.2f, 3))
 ```
+
+``` kotlin
+ammo(
+    Items.copper, BasicBulletType(3.5f, 18f),
+    Items.lead, FlakBulletType(4.2f, 3f)
+)
+```
+
+:::
 
 在炮塔建筑中，当物品进入炮塔的一瞬间就会变成弹药。
 

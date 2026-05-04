@@ -35,6 +35,8 @@ Java 源代码(.java)通过 javac 编译器编译成字节码文件(.class)，�
 - 布尔型：boolean
 - 及各类型表示的最大值和最小值
 
+::: code-group
+
 ``` java
 //这是单行注释，在编译的时候会被编译器忽略，不会保留到最终的class字节码中(字节码会在稍后说明)
 int abc;            //合法，声明了一个 类型为 int (整数、定点数) 的变量
@@ -44,7 +46,20 @@ double DDDd;        //合法。声明了一个 类型为 double (小数、双精
 object $obj;        //合法。声明了一个 类型为 object引用 的变量
 ```
 
+``` kotlin
+//这是单行注释，在编译的时候会被编译器忽略，不会保留到最终的class字节码中(字节码会在稍后说明)
+var abc: Int            //合法，声明了一个 类型为 Int (整数、定点数) 的变量
+var 233: Float          //不合法，因为是以数字开头
+var _f: Float           //合法。声明了一个 类型为 Float (小数、单精度浮点数) 的变量
+var DDDd: Double        //合法。声明了一个 类型为 Double (小数、双精度浮点数) 的变量
+var `$obj`: Any         //合法。声明了一个 类型为 Any引用 的变量
+```
+
+:::
+
 **变量与常量**：变量存储数据，常量用 final 修饰，值不可变。使用前需要**初始化（Initialization）**
+
+::: code-group
 
 ``` java
 int a = 10;                                            //将一个 int 变量 初始化为 10
@@ -53,7 +68,18 @@ object plum = new Object( );        //将一个 object引用 变量 初始化为
 String str = "Hello, plum!";        //将一个 String 变量 初始化为 字符串"Hello, plum!"
 ```
 
+``` kotlin
+var a = 10                                  //将一个 Int 变量 初始化为 10
+var f = 3.14f                               //将一个 Float 变量 初始化为 3.14
+val plum = Any()                            //将一个 Any引用 变量 初始化为 Any()——一个对象
+val str = "Hello, plum!"                    //将一个 String 变量 初始化为 字符串"Hello, plum!"
+```
+
+:::
+
 **运算符**：包括算术、关系、逻辑、位、赋值、条件运算符等，注意逻辑运算符的短路特性。
+
+::: code-group
 
 ``` java
 //本代码段完全符合 Java 语法，可以直接在您的IDEA里运行 (运行方式会在稍后的文章中说明)
@@ -77,6 +103,30 @@ b = ! false;        // b 的值为 true
 */
 ```
 
+``` kotlin
+//本代码段完全符合 Kotlin 语法，可以直接在您的IDEA里运行 (运行方式会在稍后的文章中说明)
+var r = 1 + 1    // r 的值为 2，此处声明了一个变量，类型为 Int (整数、定点数)
+r = 1 - 1        // r 的值为 0
+r = 3 * 2        // r 的值为 6
+r = 36 / 3       // r 的值为 12
+r = 11 / 5       // r 的值为 2，Int 的除法自动舍弃余数
+r = 9 % 2        // r 的值为 1，这是取余，返回 9 / 2 的余数
+
+var b = false    //布尔类型，只有两种值，true 和 false
+b = true && false    // b 的值为 false
+b = true || false    // b 的值为 true
+b = !false           // b 的值为 true
+/*这是多行注释
+对于布尔运算符：
+&& (和)—— 左右两个操作数均为 true 时，才返回 true，否则返回 false
+|| (或)——左右两个操作数至少有一个为true时，就返回 true。都没有为 true 则返回 false
+! (否)——取反，使 true 变为 false，false 变为 true。
+前一项值已经可以决定结果时，后一项根本就不会被计算
+*/
+```
+
+:::
+
 **流程控制**:
 - 分支结构：if-else、switch-case
 - 循环结构：for(含增强for)、while、do-while
@@ -87,6 +137,8 @@ b = ! false;        // b 的值为 true
 ### 函数或方法
 
 实例（Instance）的函数（Function）叫方法（Method）。
+::: code-group
+
 ``` java
 
 // 定义一个函数，有一个int 参数，返回值为 int 类型
@@ -105,6 +157,26 @@ bark( )                             //命令行或调试窗口显示：汪汪！
 
 ```
 
+``` kotlin
+
+// 定义一个函数，有一个Int 参数，返回值为 Int 类型
+fun multiply2(x: Int): Int {                //可以看作为 f (x) = x * 2
+  return x * 2                              //使用 return 关键字，返回函数的结果
+}
+// 函数调用
+val res = multiply2(5)                      //此时，res的值为 10
+
+// 定义一个无返回值，无参数的函数
+fun bark() {
+  println("汪汪！")                         //此处调用了Kotlin标准库的println函数
+}
+// 调用无返回值的函数
+bark()                                      //命令行或调试窗口显示：汪汪！
+
+```
+
+:::
+
 ### 面向对象编程核心
 
 **三大特征**：
@@ -113,6 +185,8 @@ bark( )                             //命令行或调试窗口显示：汪汪！
 - 多态：同一接口不同实现，包括重载`@Override`(编译时)和重写(运行时)
 
 示例代码：
+::: code-group
+
 ``` java
 // 封装示例
 class Person {
@@ -131,6 +205,26 @@ Animal a = new Dog();
 a.makeSound(); // 调用Dog的makeSound
 ```
 
+``` kotlin
+// 封装示例
+open class Person {
+    @JvmField
+    var name: String = ""
+    open fun getName(): String = name
+}
+
+// 继承示例
+class Student : Person() {
+    override fun getName(): String = super.getName()
+}
+
+// 多态示例
+val a: Animal = Dog()
+a.makeSound() // 调用Dog的makeSound
+```
+
+:::
+
 **其他概念**：
 - 类与对象：new创建对象实例
 - 构造方法：初始化对象，支持重载
@@ -145,6 +239,8 @@ a.makeSound(); // 调用Dog的makeSound
 - `String`类：不可变字符序列，使用字符串常量池
 - 原生容器类被Arc容器`arc.struct`取代，原生函数式接口被Arc函数式接口`arc.func`取代
   
+::: code-group
+
 ``` java
 Seq<Tile> tiles = new Seq<>();
 tiles.add(Vars.world.tile(1,1));
@@ -154,6 +250,18 @@ map.put(Items.copper, Blocks.copperWall);
 Cons<Tile> tileConsumer = t -> {Log.info(t.toString());};
 tiles.each(tileConsumer);
 ```
+
+``` kotlin
+val tiles = Seq<Tile>()
+tiles.add(Vars.world.tile(1, 1))
+val map = ObjectMap<Item, Block>()
+map.put(Items.copper, Blocks.copperWall)
+
+val tileConsumer = Cons<Tile> { t -> Log.info(t.toString()) }
+tiles.each(tileConsumer)
+```
+
+:::
 
 ### 命名规范
 - 类名：大驼峰，如 BlockStateManager

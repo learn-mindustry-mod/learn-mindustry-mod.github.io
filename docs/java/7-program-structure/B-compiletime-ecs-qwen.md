@@ -260,6 +260,8 @@ void write(MethodSpec.Builder method, boolean write) throws Exception {
 
 Mindustry特别优化了网络同步机制，通过`@SyncField`注解标记需要同步的字段：
 
+::: code-group
+
 ```java
 @Component
 abstract class PosComp implements Position {
@@ -271,6 +273,21 @@ abstract class PosComp implements Position {
     // 通过插值算法实现平滑同步效果
 }
 ```
+
+``` kotlin
+@Component
+abstract class PosComp : Position {
+    @SyncField(true) @SyncLocal var x = 0f
+    @SyncField(true) @SyncLocal var y = 0f
+
+    // 同步字段会生成对应的目标值和上一帧数值
+    // x_TARGET_ 用于存储目标值
+    // x_LAST_ 用于存储上一帧值
+    // 通过插值算法实现平滑同步效果
+}
+```
+
+:::
 
 同步系统采用差值同步策略，客户端只接收关键帧数据，通过插值算法计算中间状态，减少网络传输量并提高视觉流畅度。
 
@@ -472,6 +489,8 @@ Mindustry的ECS实现还包括许多高级特性：
 
 1. **对象池化**：通过Pools类实现对象复用，减少GC压力：
 
+::: code-group
+
 ```java
 // 实体创建方法使用对象池
 public static Unit create() {
@@ -479,7 +498,20 @@ public static Unit create() {
 }
 ```
 
+``` kotlin
+// 实体创建方法使用对象池
+companion object {
+    fun create(): Unit {
+        return Pools.obtain(Unit::class.java) { Unit() }
+    }
+}
+```
+
+:::
+
 2. **延迟释放**：避免在迭代过程中直接删除实体导致的问题：
+
+::: code-group
 
 ```java
 public void remove() {
@@ -487,6 +519,15 @@ public void remove() {
     // ... 删除逻辑
 }
 ```
+
+``` kotlin
+fun remove() {
+    if (clearing) return // 清理过程中不处理删除
+    // ... 删除逻辑
+}
+```
+
+:::
 
 3. **空间查询优化**：支持基于QuadTree的空间查询，加速碰撞检测和范围查询。
 

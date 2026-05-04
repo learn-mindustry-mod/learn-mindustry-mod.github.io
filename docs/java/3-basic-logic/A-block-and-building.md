@@ -199,9 +199,17 @@ class LampBlock(name: String) : Block(name) {
 
 原版中几乎全部的显示效果都是使用贴图来呈现的，灯笼也不例外。你需要为灯笼准备一张点亮贴图和一张熄灭贴图。由于这次你需要自定义绘制过程，因此你不能再依赖游戏帮你引用贴图，而是需要自己引用贴图并编写绘制过程。你仍然需要把贴图放置在`assets/sprites/`目录下。你可以通过这样的语法来获得贴图的引用：
 
+::: code-group
+
 ``` java
 Core.atlas.find("<modName>-<fileName>");
 ```
+
+``` kotlin
+Core.atlas.find("<modName>-<fileName>")
+```
+
+:::
 
 在游戏加载贴图时，会自动把`sprites`文件夹下的贴图加上modName前缀。**因此务必加上modName前缀，或者使用`Vars.content.transformName()才能获得贴图`**这样获取的是一个类型为`TextureRegion`子类的、指向这张贴图的引用。
 
@@ -395,12 +403,23 @@ override fun setBars() {
 
 `I18nBundle`在游戏中是一个单例对象，其唯一的对象位于`Core.bundle`。使用时我们需要使用这样的语法：
 
+::: code-group
+
 ``` java
 //获取当前语言中键名为misc.lightOn的值
 Core.bundle.get("misc.lightOn");
 //获取当前语言中键名为misc.lightOn的值，并将其中的{0}替换成aaa，{1}替换成bbb
 Core.bundle.format("misc.light", "aaa", "bbb");
 ```
+
+``` kotlin
+//获取当前语言中键名为misc.lightOn的值
+Core.bundle.get("misc.lightOn")
+//获取当前语言中键名为misc.lightOn的值，并将其中的{0}替换成aaa，{1}替换成bbb
+Core.bundle.format("misc.light", "aaa", "bbb")
+```
+
+:::
 
 例如以上的代码可以做如下改写：
 
@@ -519,6 +538,8 @@ public void drawLight(){
 
 正确的做法是把这些值不变的对象找个地方缓存起来：
 
+::: code-group
+
 ``` java
 public static final Color mikuGreen = new Color("39c5bb");
 
@@ -528,6 +549,17 @@ public void drawLight(){
     Drawf.light(x, y, 5f, mikuGreen, 1f);
 }
 ```
+
+``` kotlin
+val mikuGreen = Color("39c5bb")
+
+override fun drawLight() {
+    super.drawLight()
+    Drawf.light(x, y, 5f, mikuGreen, 1f)
+}
+```
+
+:::
 
 你也可以像原版一样，建一个`Pal`类来存储用到的颜色。至于确实可变的对象，你也应该尽量把他们临时化或池化来减少对象创建。
 
@@ -629,8 +661,6 @@ Mindustry的存档采取的是**流式（Stream）**存档，在文件中实际�
 
 向刚才这个建筑数据区块读写内容的方法即为`read()`和`write()`。如果想要向存档中添加数据，直接向这两个方法中添加内容即可：
 
-::: code-group
-
 ``` java
 @Override
 public void read(Reads read, byte revision){
@@ -645,27 +675,11 @@ public void write(Writes write){
 }
 ```
 
-``` kotlin
-override fun read(read: Reads, revision: Byte) {
-    super.read(read, revision)
-    light = read.bool()
-}
-
-override fun write(write: Writes) {
-    super.write(write)
-    write.bool(light)
-}
-```
-
-:::
-
 #### 版本控制
 
 但此时你再打开原有的存档将会报错。提示的错误为`"Error reading region $name: read length mismatch. Expected: @; Actual: @`。根据上方存档原理，我们可以知道这是因为读取的字节数超过了区块中存储的字节数，即`read()`方法读多了。究其原因，是因为存档的区块数据中并没有`light`这一字节。像这样由于`read()` / `write()`方法更新导致无法读取的情况还有很多，规避这种问题的方法是通过`version()` / `revision` 为你的读取/写入协议添加版本控制。
 
 在写入实体数据前，游戏会先写入`version()`方法的返回值，读取时这个值将会作为`read()`的第二个参数传入。因此我们可以做这样的改写：
-
-::: code-group
 
 ``` java
 @Override
@@ -679,19 +693,6 @@ public void read(Reads read, byte revision){
     if(revision >= 1) light = read.bool();
 }
 ```
-
-``` kotlin
-override fun version(): Byte {
-    return 1
-}
-
-override fun read(read: Reads, revision: Byte) {
-    super.read(read, revision)
-    if (revision >= 1) light = read.bool()
-}
-```
-
-:::
 
 ### 网络同步——`configure()` 系统
 
@@ -774,8 +775,6 @@ override fun tapped() {
 
 因此，可以对`LampBlock`类进行**抽象（Abstraction）**。抽象是指提取多个类之间的共性，将可变部分通过参数或配置机制进行控制，从而减少重复代码。例如，可以在`LampBlock`中定义一个字段`lampRadius`，用于控制照亮范围。这样，当需要不同范围的方块时，只需调整该字段的值，而无需创建新的类。
 
-::: code-group
-
 ``` java
 public int lampRadius = 5;
 
@@ -794,22 +793,6 @@ public void drawLight(){
 }
 ```
 
-``` kotlin
-var lampRadius: Int = 5;
-override fun setStats() {
-    super.setStats()
-    stats.add(TutorialStatK.lightRadius, l5f, StatUnit.blocks) // [!code --]
-    stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks) // [!code ++]
-}
-    override fun drawLight() {
-    super.drawLight()
-    Drawf.light(x, y, 5f, Color.white, 1f) // [!code --]
-    Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f) // [!code ++]
-}
-```
-
-:::
-
 抽象是编程中的重要概念，适当地使用抽象可以提高代码的健壮性。抽象程度过低可能导致代码冗余，增加调试和维护的难度；抽象程度过高则可能使代码结构过于复杂，降低可读性和可维护性。因此，保持适度的抽象水平是必要的。建议在可行的情况下，将可配置的部分提取为字段进行抽象。
 
 ## 结尾
@@ -823,8 +806,6 @@ override fun setStats() {
 - 新建此类的实例。
 
 下面我们给出上述代码的完整实现：
-
-::: code-group
 
 ``` java
 package example.world.blocks;
@@ -932,93 +913,6 @@ public class LampBlockJ extends Block{
     }
 }
 ```
-
-``` kotlin package example.world.blocks
-
-import arc.Core
-import arc.graphics.Color
-import arc.graphics.g2d.Draw
-import arc.graphics.g2d.TextureRegion
-import arc.util.io.Reads
-import arc.util.io.Writes
-import example.world.meta.TutorialStatK
-import mindustry.gen.Building
-import mindustry.graphics.Drawf
-import mindustry.graphics.Pal
-import mindustry.ui.Bar
-import mindustry.world.Block
-import mindustry.world.meta.StatUnit
-
-class LampBlockK(name: String?) : Block(name) {
-    var lampRadius: Int = 5;
-    init {
-        update = true
-        config(Boolean::class.java) { build: LampBlockJ.LampBuild, state: Boolean? -> build.light = state!! }
-    }
-
-    var lightRegion: TextureRegion? = null
-    var darkRegion: TextureRegion? = null
-
-    override fun load() {
-        super.load()
-        lightRegion = Core.atlas.find("$name-light")
-        darkRegion = Core.atlas.find("$name-dark")
-    }
-
-    override fun setStats() {
-        super.setStats()
-        stats.add(TutorialStatK.lightRadius, lampRadius.toFloat(), StatUnit.blocks)
-    }
-
-    override fun setBars() {
-        super.setBars()
-        addBar("light") { lamp: LampBuild ->
-            Bar(
-                { if (lamp.light) "灯开" else "灯关" },
-                { Pal.accent },
-                { if (lamp.light) 1f else 0f }
-            )
-        }
-    }
-
-    open inner class LampBuild : Building() {
-        var light: Boolean = false
-        override fun draw() {
-            Draw.rect(if (light) lightRegion else darkRegion, x, y)
-        }
-
-        override fun drawLight() {
-            super.drawLight()
-            Drawf.light(x, y, lampRadius.toFloat(), Color.white, 1f)
-        }
-        override fun tapped() {
-            super.tapped()
-            configure(!light)
-        }
-
-        override fun version(): Byte {
-            return 1
-        }
-
-        override fun read(read: Reads, revision: Byte) {
-            super.read(read, revision)
-            if (revision >= 1) light = read.bool()
-        }
-
-        override fun write(write: Writes) {
-            super.write(write)
-            write.bool(light)
-        }
-
-        override fun config(): Any? {
-            return light
-        }
-    }
-}
-
-```
-
-:::
 
 最后一步，不要忘记给你的类新建一个实例：
 

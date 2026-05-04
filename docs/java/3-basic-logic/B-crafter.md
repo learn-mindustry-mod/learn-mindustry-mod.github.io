@@ -156,7 +156,6 @@ public void updateTile(){
         warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
     }
 
-    //TODO may look bad, revert to edelta() if so
     totalProgress += warmup * Time.delta;
 
     if(progress >= 1f){

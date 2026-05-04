@@ -30,6 +30,127 @@ Mindustry作者网名的正确拼写是`Anuke`，而GitHub用户名为`Anuken`�
 
 打开项目后，请先暂停IDEA的所有活动（包括索引和下载gradle），先去找到`build.gradle`中的`mindustryVersion`变量，将其设置成最新的Mindustry版本。接下来，点击右边栏的Gradle图标，在弹出的窗口中点击刷新按钮。此过程可能需要耗费一段时间。如果此阶段出现网络错误（如`TimeOut` `Cannot find dependencies`等），可能需要 **改善网络条件** 。
 
+::: warning 注意
+Anuke 的旧模板在较新的构建环境下，经常会因为 **Kotlin 编译配置写法过旧、`archivesBaseName` 失效、Java 和 Kotlin 目标版本不一致** 而无法直接运行。可以通过修改 `build.gradle` 继续。
+
+<details>
+<summary>修改后的 build.gradle</summary>
+
+``` groovy
+version '1.0'
+
+buildscript{
+    repositories{
+        mavenCentral()
+    }
+    ext{
+        mindustryVersion = 'v150.1'
+        kotlinVersion = "2.2.0"
+        sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
+        modArtifactName = project.name
+    }
+    dependencies{
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: "kotlin"
+
+sourceSets.main.kotlin.srcDirs = ["src"]
+
+repositories{
+    mavenCentral()
+    maven{ url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven{ url "https://www.jitpack.io" }
+}
+
+dependencies{
+    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+    options.release = 8
+}
+
+task jarAndroid{
+    dependsOn "jar"
+    doLast{
+        if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.")
+
+        def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find{ f -> new File(f, "android.jar").exists() }
+        if(!platformRoot) throw new GradleException("No android.jar found. Ensure that you have an Android platform installed.")
+
+        def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
+
+        "d8 $dependencies --min-api 14 --output ${modArtifactName}Android.jar ${modArtifactName}Desktop.jar"
+            .execute(null, new File("$buildDir/libs"))
+            .waitForProcessOutput(System.out, System.err)
+    }
+}
+
+jar{
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveFileName = "${modArtifactName}Desktop.jar"
+
+    from{
+        configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
+    }
+
+    from(rootDir){
+        include "mod.hjson"
+    }
+
+    from("assets/"){
+        include "**"
+    }
+}
+
+task deploy(type: Jar){
+    dependsOn jarAndroid
+    dependsOn jar
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveFileName = "${modArtifactName}.jar"
+
+    from{
+        [
+            zipTree("$buildDir/libs/${modArtifactName}Desktop.jar"),
+            zipTree("$buildDir/libs/${modArtifactName}Android.jar")
+        ]
+    }
+
+    doLast{
+        delete{
+            delete "$buildDir/libs/${modArtifactName}Desktop.jar"
+            delete "$buildDir/libs/${modArtifactName}Android.jar"
+        }
+    }
+}
+```
+
+</details>
+
+如果遇到了工具链检查问题，可以删除下面的内容:
+
+``` groovy
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+```
+
+原因：这会强制 Gradle 在本机寻找 JDK 8。本机没有对应 JDK 时，构建会直接卡死在 toolchain 检查阶段。
+:::
+
 ![configure-mindustry-version](./imgs/configure-mindustry-version.png)
 
 接下来，在上方菜单“文件-项目结构”的“项目”子面中，设置“SDK”为你刚刚安装的Java 25，设置语言级别为对应的版本。
@@ -39,6 +160,34 @@ Mindustry作者网名的正确拼写是`Anuke`，而GitHub用户名为`Anuken`�
 然后，在软件右边栏中的Gradle图标，找到“build/jar”，尝试运行，并等待一段时间，直到游戏输出“BUILD SUCCESSFUL”的字样。这证明你的开发环境已经配置完毕了。
 
 ![try-jar](./imgs/try-jar.png)
+
+::: warning 注意
+如果刷新 Gradle 时始终卡在依赖下载，并出现 `PKIX path building failed`、`SSL handshake exception`、`Could not GET` 之类报错，这是 **Java 证书链、网络代理或 GitHub / Maven 仓库访问** 出了问题。可以先关闭**代理软件**试试直连。实在不行可以尝试从本地依赖加载
+
+此时直接改用本地 `libs` 依赖。操作步骤如下：
+
+1. 在项目根目录创建 `libs/`；
+2. 手动下载模板需要的依赖：
+   - `arc-core`：`https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository/com/github/Anuken/Arc/arc-core/v版本/arc-core-v版本.jar`
+   - `mindustry-core`：`https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository/com/github/Anuken/Mindustry/core/v版本/core-v版本.jar`
+
+   将上面的 `v版本` 替换为 `mindustryVersion` 对应的版本号，再把下载得到的 `.jar` 放进 `libs/`；
+3. 把原来的远程依赖：
+
+``` groovy
+compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+```
+
+替换成：
+
+``` groovy
+compileOnly fileTree(dir: "libs", include: ["*.jar"])
+```
+
+**注意：改用本地依赖后无法根据游戏版本的更新自动更新依赖**
+
+:::
 
 ::: info Hjson
 JSON 本应易于人类读写——理论上确实如此。但现实中，JSON 仍存在大量稍不注意就会犯错的陷阱。Hjson 是一种基于 JSON 的语法扩展，它并非要取代 JSON 或将其纳入 JSON 规范，而是旨在为人类提供更友好的交互界面：先由人工阅读编辑，再交由机器解析JSON数据。
@@ -141,5 +290,3 @@ java: true
 ![mod-browser-config](./imgs/mod-browser-config.png)
 
 模组浏览器每隔两小时更新一次，在更新后你就可以在模组浏览器中见到你的模组了。
-
-

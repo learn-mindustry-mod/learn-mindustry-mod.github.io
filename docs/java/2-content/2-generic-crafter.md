@@ -99,6 +99,8 @@ block.tutorial-mod-tutorial-crafter.details = Without factory you cannot spell "
 
 Anuke已经封装好了常用的消耗器的声明，这些方法的功能正如其字面义：
 
+::: code-group
+
 ``` java
 //每次生产消耗1个铜
 consumeItem(Items.copper,1);
@@ -111,6 +113,21 @@ consumeLiquids(LiquidStack.with(Liquids.water,1f,Liquids.slag,2f));
 //生产时每刻消耗1单位电力
 consumePower(1f);
 ```
+
+``` kotlin
+//每次生产消耗1个铜
+consumeItem(Items.copper, 1)
+//每次生产消耗1个铜和2个铅
+consumeItems(ItemStack.with(Items.copper, 1, Items.lead, 2))
+//生产时每“刻”（见下）消耗1单位水
+consumeLiquid(Liquids.water, 1f)
+//生产时每刻消耗1单位水和2单位矿渣
+consumeLiquids(LiquidStack.with(Liquids.water, 1f, Liquids.slag, 2f))
+//生产时每刻消耗1单位电力
+consumePower(1f)
+```
+
+:::
 
 值得注意的是，流体和电量的消耗都是以 **刻（Tick）** 为单位的，而`1s = 60tick`，例如，`consumePower(60f)`实际上每秒消耗3600电力。因此，应当注意此处的单位换算问题，避免出现消耗速率意外扩大60倍的问题。
 
@@ -133,6 +150,8 @@ Anuke没有封装这些特殊消耗器的“快速通道”，所以你需要用
 
 接下来，你可以为工厂添加输出项。`GenericCrafter`的输出是由`outputItem` `outputItems` `outputLiquid` `outputLiquids`声明的。
 
+::: code-group
+
 ``` java
 //每次生产输出1个铜
 outputItem = new ItemStack(Items.copper, 1);
@@ -149,13 +168,41 @@ outputItem = LiquidStack.with(Liquids.water, 1f, ModItems.liquid1, 2f);
 //同时设置`outputItem`和`outputItems`会无视`outputItem`，流体同理。
 ```
 
+``` kotlin
+//每次生产输出1个铜
+outputItem = ItemStack(Items.copper, 1)
+//或
+//每次生产输出1个铜和2个本模组物品
+outputItems = ItemStack.with(Items.copper, 1, ModItems.item1, 2)
+
+//生产时每刻输出1单位水
+outputLiquids = arrayOf(LiquidStack(Liquids.water, 1f))
+//或
+//生产时每刻输出1单位水和1单位本模组流体
+outputLiquids = LiquidStack.with(Liquids.water, 1f, ModItems.liquid1, 2f)
+
+//同时设置`outputItem`和`outputItems`会无视`outputItem`，流体同理。
+```
+
+:::
+
 如果想要让工厂输出电力，可以让工厂消耗负的电量，但是不推荐这么做，因为兼容性较差。但如果想同时输出物品和发电则不得不这样做。
+
+::: code-group
 
 ``` java
 //不推荐
 //生产时每刻消耗-1单位电力，即输出1单位电力
 consumePower(-1f);
 ```
+
+``` kotlin
+//不推荐
+//生产时每刻消耗-1单位电力，即输出1单位电力
+consumePower(-1f)
+```
+
+:::
 
 至于输出热量，则需要调整方块的类型才能做到，见于下文。
 
@@ -173,9 +220,17 @@ consumePower(-1f);
 
 最基本的drawer是`DrawDefault`，可以绘制一张名称与本工厂相同的贴图。使用方式如下：
 
+::: code-group
+
 ``` java
 drawer = new DrarDefault();
 ```
+
+``` kotlin
+drawer = DrawDefault()
+```
+
+:::
 
 Drawer可以对绘制过程进行一定拓展，在`mindustry.world.draw`包中还有许多drawer可供使用。但是一个方块只有一个`drawer`字段，大部分drawer只能做一件事，需要配合使用。这时，你可以使用`DrawMulti`来对drawer进行组合：
 
@@ -287,6 +342,8 @@ Seperator("tutorial-seperator")
 
 和工厂类似的是，你可以设置`drawer`和`craftTime`。而分离器的产出及各产物概率是在`results`字段中。此时ItemStack中的`amount`不再表示数量，而是此物品所占的比例：
 
+::: code-group
+
 ``` java
 results = with(
                 Items.copper, 5,
@@ -295,6 +352,17 @@ results = with(
                 Items.titanium, 2
             );
 ```
+
+``` kotlin
+results = ItemStack.with(
+    Items.copper, 5,
+    Items.lead, 3,
+    Items.graphite, 2,
+    Items.titanium, 2
+)
+```
+
+:::
 
 总比例是`5+3+2+2 = 12`，则铜占其中的5/12。
 

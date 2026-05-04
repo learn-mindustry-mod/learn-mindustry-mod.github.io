@@ -66,8 +66,6 @@ thermalGenerator = ThermalGenerator("tutorial-thermal-generator").apply{
 
 这些消耗器原版并没有像普通消耗器一样封装接口，需要通过`consume()`方法注册。此外，发电机也可以使用普通消耗器，例如原版中的涡轮发电机就兼有`ConsumeItemFlammable`（消耗燃料）和`ConsumeLiquid`（消耗水）两个消耗器。
 
-::: code-group
-
 ``` java
 steamGenerator = new ConsumeGenerator("tutorial-steam-generator"){{
     requirements(Category.power, with(Items.copper, 35));
@@ -81,21 +79,6 @@ steamGenerator = new ConsumeGenerator("tutorial-steam-generator"){{
 }}
 ```
 
-``` kotlin
-steamGenerator = new ConsumeGenerator("tutorial-steam-generator").apply{
-    requirements(Category.power, with(Items.copper, 35))
-    powerProduction = 5.5f
-    itemDuration = 90f
-    consumeLiquid(Liquids.water, 0.1f)
-    hasLiquids = true
-    size = 2
-    consume(new ConsumeItemFlammable())
-    consume(new ConsumeItemExplode())
-}
-```
-
-:::
-
 ### 产热发电机（HeaterGenerator）、核反应堆（NuclearReactor）和不稳定反应堆（VariableReactor）
 
 这三种发电机并列的原因是，他们都会产生热量，但是产热的逻辑和热量充满后的逻辑不同。
@@ -105,8 +88,6 @@ steamGenerator = new ConsumeGenerator("tutorial-steam-generator").apply{
 - 不稳定反应堆（VariableReactor）的热量与产热发电机相同，真正需要控制的是不稳定度。如果没有达到消耗器要求，就会增加不稳定度，且增加速度和减少速度为定值，当不稳定度充满后会产生爆炸。
 
 核反应堆（NuclearReactor）和不稳定反应堆（VariableReactor）都设置了`rebuildable`这一属性。这一属性设置为false将禁止使用重建功能建造此方块。
-
-::: code-group
 
 ``` java
 neoplasiaReactor = new HeaterGenerator("tutorial-neoplasia-reactor"){{
@@ -143,47 +124,9 @@ fluxReactor = new VariableReactor("tutorial-flux-reactor"){{
 }};
 ```
 
-``` kotlin
-neoplasiaReactor = HeaterGenerator("tutorial-neoplasia-reactor").apply{
-    requirements(Category.power, with(Items.tungsten, 750))
-    size = 5
-    liquidCapacity = 80f
-    outputLiquid = new LiquidStack(Liquids.neoplasm, 20f / 60f)
-    //当输出流体条满时爆炸
-    explodeOnFull = true
-    heatOutput = 60f
-    powerProduction = 140f
-    itemDuration = 60f * 3f
-    itemCapacity = 10
-    consumeLiquid(Liquids.arkycite, 80f / 60f)
-    consumeLiquid(Liquids.water, 10f / 60f)
-    consumeItem(Items.phaseFabric)
-}
-
-thoriumReactor = NuclearReactor("tutorial-thorium-reactor").apply{
-    requirements(Category.power, with(Items.lead, 300))
-    itemDuration = 360f
-    powerProduction = 15f
-    heating = 0.02f
-    fuelItem = Items.thorium
-    consumeItem(Items.thorium)
-    consumeLiquid(Liquids.cryofluid, heating / coolantPower).update(false)
-}
-
-fluxReactor = VariableReactor("tutorial-flux-reactor").apply{
-    requirements(Category.power, with(Items.graphite, 300))
-    powerProduction = 265f
-    maxHeat = 150f
-    consumeLiquid(Liquids.cyanogen, 9f / 60f)
-}
-```
-:::
-
 ### 冲击反应堆（ImpactReactor）
 
 需要时间进行预热，这段时间需要电力输入。在冲击反应堆运行时，对电力输入从未停止，只是在计算实际发电量的时候扣除了耗电量。当消耗器和耗电无法满足时，会迅速把预热降到0。
-
-::: code-group
 
 ``` java
 impactReactor = new ImpactReactor("tutorial-impact-reactor"){{
@@ -196,18 +139,6 @@ impactReactor = new ImpactReactor("tutorial-impact-reactor"){{
 }};
 ```
 
-``` kotlin
-impactReactor = ImpactReactor("tutorial-impact-reactor").apply{
-    requirements(Category.power, with(Items.lead, 500))
-    powerProduction = 130f
-    itemDuration = 140f
-    consumePower(25f)
-    consumeItem(Items.blastCompound)
-    consumeLiquid(Liquids.cryofluid, 0.25f)
-}
-```
-:::
-
 ### 总结
 
 到目前为此，我们已经见过十多种方块类型了，它们的类型（Kind）大致可分为三种：
@@ -219,8 +150,6 @@ impactReactor = ImpactReactor("tutorial-impact-reactor").apply{
 ## 电力节点
 
 电力节点有两种类型，一种是在圆形范围内、有连接数量限制、手动连接的电力节点`PowerNode`，一种是在范围里自动连接的激光节点`BeamNode`。此外还有`LongPowerNode`，只是在绘制上与电力节点稍有区别。你可以让电力节点缓存电力，原版在埃里克尔就是这么做的，因为那里没有电池用。
-
-::: code-group
 
 ``` java
 powerNode = new PowerNode("tutorial-power-node"){{
@@ -239,24 +168,6 @@ beamNode = new BeamNode("tutorial-beam-node"){{
     consumePowerBuffered(1000f);
 }};
 ```
-``` kotlin
-powerNode = PowerNode("tutorial-power-node").apply{
-    requirements(Category.power, with(Items.copper, 2, Items.lead, 6))
-    maxNodes = 10
-    laserRange = 6
-    underBullets = true
-}
-
-beamNode = new BeamNode("tutorial-beam-node").apply{
-    requirements(Category.power, with(Items.beryllium, 8))
-    range = 10
-
-    //它们两个是一伙的
-    consumesPower = outputsPower = true
-    consumePowerBuffered(1000f)
-}
-```
-:::
 
 还有一个类型是二极管（`PowerDiode`），它可以让电力在两个电网之间单向传输。
 

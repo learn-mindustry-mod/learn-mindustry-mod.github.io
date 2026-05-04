@@ -42,9 +42,17 @@ BurstDrill("tutorial-drill");
 
 这样，每种物品的钻探时间由下式决定，这表明物品硬度在钻探时间的影响可以通过设置的`hardnessDrillMultiplier`来改变，最终还要除以物品在`drillMultiplier`的值，如果没设置为就是`1f`：
 
+::: code-group
+
 ``` java
 (drillTime + hardnessDrillMultiplier * item.hardness) / drillMultipliers.get(item, 1f)
 ```
+
+``` kotlin
+(drillTime + hardnessDrillMultiplier * item.hardness) / drillMultipliers.get(item, 1f)
+```
+
+:::
 
 钻头的贴图设计具有特定结构。除了本体贴图 `tutorial-drill.png` 外，通常还需要以下两张贴图：`tutorial-drill-rotator.png`（转子部分）和 `tutorial-drill-top.png`（顶端定子部分）。这三部分分别对应钻头的**框架**、**可旋转的转子**以及**静止的顶端**。
 
@@ -95,9 +103,17 @@ WallCrafter("tutorial-pump")
 
 如果在有水的时候加强钻头，而不是必须消耗水才能工作，需要使用如下语法：
 
+::: code-group
+
 ``` java
 consumeLiquid(Liquids.water, 0.05f).boost();
 ```
+
+``` kotlin
+consumeLiquid(Liquids.water, 0.05f).boost()
+```
+
+:::
 
 ## 创建一个Pump
 

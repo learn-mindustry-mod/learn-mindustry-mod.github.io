@@ -144,7 +144,6 @@ public void distributePower(float needed, float produced, boolean charged){
     var items = consumers.items;
     for(int i = 0; i < consumers.size; i++){
         var consumer = items[i];
-        //TODO how would it even be null
         var cons = consumer.block.consPower;
         if(cons.buffered){
             if(!Mathf.zero(cons.capacity)){
@@ -182,7 +181,6 @@ public float chargeBatteries(float excess){
     var items = batteries.items;
     for(int i = 0; i < batteries.size; i++){
         var battery = items[i];
-        //TODO why would it be 0
         if(battery.enabled && battery.block.consPower.capacity > 0f){
             battery.power.status += (1f - battery.power.status) * chargedPercent;
         }

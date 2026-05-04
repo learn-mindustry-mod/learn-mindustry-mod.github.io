@@ -28,6 +28,8 @@
 
 在arc中，帧缓冲被封装为类型`arc.graphics.gl.FrameBuffer`，需要一个帧缓冲只需要构造一个该类型的实例即可，它带有多个构造函数，定义了多种默认帧缓冲的模板：
 
+::: code-group
+
 ``` java
 /**2x2像素尺寸，格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
 FrameBuffer(){/*...*/}
@@ -46,6 +48,27 @@ FrameBuffer(int width, int height, boolean hasDepth){/*...*/}
  * @param hasStencil 是否带有模板缓冲*/
 FrameBuffer(Pixmap.Format format, int width, int height, boolean hasDepth, boolean hasStencil){/*...*/}
 ```
+
+``` kotlin
+/**2x2像素尺寸，格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
+constructor() {/*...*/}
+/**指定大小的格式为RGBA8888的帧缓冲，无深度缓冲与模板缓冲*/
+constructor(width: Int, height: Int) {/*...*/}
+/**指定大小与格式的帧缓冲，无深度缓冲与模板缓冲*/
+constructor(format: Pixmap.Format, width: Int, height: Int) {/*...*/}
+/**指定大小与格式的帧缓冲，无模板缓冲
+ * @param hasDepth 是否带有深度缓冲*/
+constructor(format: Pixmap.Format, width: Int, height: Int, hasDepth: Boolean) {/*...*/}
+/**指定大小的格式为RGBA8888的帧缓冲，无模板缓冲
+ * @param hasDepth 是否带有深度缓冲*/
+constructor(width: Int, height: Int, hasDepth: Boolean) {/*...*/}
+/**指定大小与格式的帧缓冲
+ * @param hasDepth 是否带有深度缓冲
+ * @param hasStencil 是否带有模板缓冲*/
+constructor(format: Pixmap.Format, width: Int, height: Int, hasDepth: Boolean, hasStencil: Boolean) {/*...*/}
+```
+
+:::
 
 其中，类型为`Pixmap.Format`的参数`format`是一个枚举类型，它用于定义在颜色缓冲上的数据类型与数据到纹理的解析方式，枚举条目及释义如下表所列：
 
@@ -111,8 +134,6 @@ fun example(){
 
 以一段简单的程序为例，该程序将同一个四边形绘制任务缩放到屏幕左下角长宽240x240的范围内：
 
-::: code-group
-
 ``` java
 FrameBuffer buffer = new FrameBuffer();
 void example(){
@@ -138,34 +159,6 @@ void example(){
   Lines.rect(0f, 0f, 240f, 240f);
 }
 ```
-
-``` kotlin
-val buffer = FrameBuffer()
-fun example(){
-  Fill.square(80f, 80f, 20f)//直接将四边形绘制到屏幕上
-  
-  //确保缓冲区尺寸
-  buffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight())
-  //绑定到缓冲区，并重置帧缓冲的颜色为透明
-  buffer.begin(Color.clear)
-
-  Fill.square(80f, 80f, 20f)//四边形会被绘制到帧缓冲中
-  
-  //解除绑定缓冲区（必要！）
-  buffer.end()
-  //获取纹理
-  val texture = buffer.getTexture()
-  //对纹理创建uv自0到1的完整纹理区域
-  val region = TextureRegion(texture)
-  //将帧缓冲中的图像绘制到屏幕左下角
-  Draw.rect(region, 120, 120, 240, 240)
-  //将帧缓冲的输出范围框出
-  Lines.stroke(4f)
-  Lines.rect(0f, 0f, 240f, 240f)
-}
-```
-
-:::
 
 它将会先在你的屏幕上绘制出一个白色的正方形，接着，这个正方形绘制到一个帧缓冲后，被缩放到左下角的一个正方形小框中：
 

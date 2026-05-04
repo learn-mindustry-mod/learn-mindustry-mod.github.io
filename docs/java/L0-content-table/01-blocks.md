@@ -34,9 +34,6 @@
 继承自 [`Block`]()
 
 ``` java
-// TODO use completely different layer
-// TODO consume heat
-// TODO broken class!!!!!
 ```
 **请勿使用！！！**
 
@@ -88,4 +85,3 @@
 - [`Door`](#door-门大门)
 - [`ShieldWall`](#shieldwall-盾墙)
 - [`Thruster`](#thruster-推进器残骸)
-
