@@ -75,7 +75,7 @@
 
 ```
 
-通过js在方块中重写对应的方法，使用`this.super$method();`来调用父类方法：
+通过js在方块中重写对应的方法，使用`this.super$method()`来调用父类方法：
 
 ``` javascript
     var bottomRegion; //这是个全局变量,所有方块的bottomRegion都相同
