@@ -206,7 +206,7 @@
 ```
 
 ``` javascript
-    var bottomRegion;
+var bottomRegion;
 const ILrouter = extend(Router, "双传路由器", {
     load(){
         this.super$load();
