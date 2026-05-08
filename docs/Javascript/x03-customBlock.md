@@ -4,7 +4,7 @@
 
 ## 方块（Block）与建筑（Building）的区别
 
-在开始之前，确保你清楚方块（Block）与建筑（Building）的区别，参见[方块与建筑](/docs/java/3-basic-logic/A-block-and-building.md)：
+在开始之前，确保你清楚方块（Block）与建筑（Building）的区别，参见[方块与建筑](../java/3-basic-logic/A-block-and-building)：
 - 方块定义了通用的行为，方块的属性是所有同类建筑共用的。
 - 建筑是方块在世界中的具体实例，每个建筑的属性都是独立的，即使它们属于同一个方块。
 
