@@ -8,34 +8,6 @@
 - 方块定义了通用的行为，方块的属性是所有同类建筑共用的。
 - 建筑是方块在世界中的具体实例，每个建筑的属性都是独立的，即使它们属于同一个方块。
 
-## 明确js可以与json混用
-
-使用js定义了方块以后，依然能在json中定义该方块的属性。因此我们可以通过js定义方块实例，再通过json设定诸如`requirements`之类的属性。
-
-本例中的方块对应的json文件：
-
-``` json
-{
-    "name": "双传路由器",
-    "health": 90,
-    "speed": 3,
-    "floating": true,
-    "hasLiquids": true,
-    "liquidCapacity": 30,
-    "requirements": [
-        "metaglass/3",
-        "plastanium/1",
-        "surge-alloy/1"
-    ],
-    "category": "distribution",
-    "research": "双传交叉器"
-}
-```
-
-::: warning 注意
-同时使用js和json时，二者对应的文件名要相同，且json中不能添加`"type"`字段，否则会报错
-:::
-
 ## 创建方块对象
 
 创建任何一种新方块之前，先明确自己的需求，确定新方块要实现什么功能，明确要继承自哪个对象。
@@ -75,7 +47,7 @@
 
 ```
 
-通过js在方块中重写对应的方法，使用`this.super$method()`来调用父类方法：
+通过js在方块中重写对应的方法，使用`this.super$method()`来调用父类的方法：
 
 ``` javascript
     var bottomRegion; //这是个全局变量,所有方块的bottomRegion都相同
@@ -125,7 +97,7 @@
 
 ## 修改建筑中的方法
 
-与修改方法类似，建筑中的方法也可以通过js进行修改，达到自定义的效果。在本例中，我们希望双传路由器能够像液体路由器一样接受并分配液体，并且绘制对应液体。因此我们要修改`Router.RouterBuild`中对应的方法：
+与修改方块的方法类似，建筑中的方法也可以通过js进行修改，达到自定义的效果。在本例中，我们希望双传路由器能够像液体路由器一样接受并分配液体，并且绘制对应液体。因此我们要修改`Router.RouterBuild`中对应的方法：
 
 ``` javascript
     ILrouter.buildType = (() => {
@@ -175,6 +147,75 @@
         });
     });
 ```
+
+## 设定方块属性
+
+你需要为你的方块设定诸如`health`，`size`，`requirements`之类的属性，可以通过多种方式设定属性：
+
+在创建方块对象时直接设定：
+
+``` javascript
+    const ILrouter = extend(Router, "双传路由器", {
+        health: 90,
+        speed: 3,
+        floating: true,
+        hasLiquids: true,
+        liquidCapacity: 30,
+        requirments: 
+        requirements: ItemStack.with(
+            Items.metaglass, 3,
+            Items.plastanium, 1,
+            Items.surgeAlloy, 1
+        ),
+        category: Category.effect,
+        //各种方法...
+    });
+    //其他代码...
+```
+
+使用`Object.assign`设定：
+
+``` javascript
+    //其他代码...
+    Object.assign(ILrouter, {
+        health: 90,
+        speed: 3,
+        floating: true,
+        hasLiquids: true,
+        liquidCapacity: 30,
+        requirments: 
+        requirements: ItemStack.with(
+            Items.metaglass, 3,
+            Items.plastanium, 1,
+            Items.surgeAlloy, 1
+        ),
+        category: Category.effect
+    });
+```
+
+使用js定义了方块以后，你也依然能在`content`目录下用json定义诸如`requirements`的方块属性。本例就采用这种方式设定方块属性，对应的json文件：
+
+``` json
+{
+    "name": "双传路由器",
+    "health": 90,
+    "speed": 3,
+    "floating": true,
+    "hasLiquids": true,
+    "liquidCapacity": 30,
+    "requirements": [
+        "metaglass/3",
+        "plastanium/1",
+        "surge-alloy/1"
+    ],
+    "category": "distribution",
+    "research": "双传交叉器"
+}
+```
+
+::: warning 注意
+同时使用js和json时，二者对应的文件名要相同，且json中不能添加`"type"`字段，否则会报错
+:::
 
 ## 总结
 
@@ -229,12 +270,12 @@ const ILrouter = extend(Router, "双传路由器", {
 
 ILrouter.buildType = (() => {
     return extend(Router.RouterBuild, ILrouter, {
+        canControl(){
+            return false;
+        },
         acceptLiquid(source,liquid){
             if(this.liquids.current() == null) return false;
             return (this.liquids.current() == liquid || this.liquids.currentAmount() < 0.2);
-        },
-        canControl(){
-            return false;
         },
         draw(){
             Draw.rect(bottomRegion, this.x, this.y);
