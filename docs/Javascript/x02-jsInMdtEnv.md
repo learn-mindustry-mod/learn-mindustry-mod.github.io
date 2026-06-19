@@ -1,29 +1,30 @@
-# mdt环境下的js
+# JavaScript in the Mindustry Environment
 
-从这一节开始,我们将介绍在Mindustry中使用JavaScript编写模组时需要注意的一些特殊语法和环境相关的知识。这些内容可能不适用于其他JavaScript环境,但对于编写mdt模组来说是非常重要的。我们将介绍一些mdt特有的全局对象、函数以及一些常见的编程模式和技巧.
+Starting from this section, we'll cover some special syntax and environment-specific knowledge you need to know when writing mods in JavaScript for Mindustry. This content may not apply to other JavaScript environments, but it's essential for writing Mindustry mods. We'll introduce some Mindustry-specific global objects, functions, common programming patterns, and tips.
 
-## main.js文件和require函数
+## The main.js File and the require() Function
 
-在mdt中,js文件需要放在`scripts/`目录下,这个目录与json的`content/`目录同级,mdt只会识别和加载你的`main.js`文件,理论上你可以在这个文件中编写所有的代码,但一般不建议这样做.
-你也可以在`scripts/`目录下创建其他的js文件来组织你的代码,但这些文件需要在`main.js`中通过`require()`函数引入才能使用。
+In Mindustry, JS files go in the `scripts/` directory, which sits alongside the JSON `content/` directory. Mindustry only recognizes and loads your `main.js` file. Technically you could write all your code in this single file, but that's generally not recommended.
+
+You can create other JS files in the `scripts/` directory to organize your code, but these files must be imported via the `require()` function in `main.js` before they can be used.
 
 ```javascript
 // main.js
 
-require('item'); // 引入scripts/item.js文件
-require('block/wall'); // 引入scripts/block/wall.js文件
+require('item'); // Imports scripts/item.js
+require('block/wall'); // Imports scripts/block/wall.js
 
-// 上面的写法仅适用于单模组的情形,如果你加载了多个模组,你需要在路径前加上模组name来区分,比如:
+// The above works for single-mod setups. If you have multiple mods loaded, you need to prefix the path with the mod name to disambiguate:
 
-require('zerg/item'); // 引入虫族(zerg)的scripts/item.js文件
-require('vne/item'); // 引入原版瘤液拓展(vne)的scripts/item.js文件
+require('zerg/item'); // Imports scripts/item.js from the "zerg" mod
+require('vne/item'); // Imports scripts/item.js from the "vne" (Vanilla Neoplasm Expansion) mod
 
-// 如果你不标注模组name,mdt很可能会加载错误的文件.
+// If you don't specify the mod name, Mindustry may load the wrong file.
 ```
 
 ## exports
 
-在JavaScript中，只有全局变量/方法（例如Mindustry提供的print、extend等）可以跨脚本使用。脚本内定义的变量/方法属于局部变量/方法，不能被其他脚本文件获取。要实现跨脚本调用，必须先将指定的变量/方法导出。在mdt中，导出变量/方法的方式是将它们赋值给exports对象。例如：
+In JavaScript, only global variables/methods (e.g. Mindustry's built-in `print`, `extend`, etc.) can be used across scripts. Variables/methods defined within a script are local and cannot be accessed by other script files. To enable cross-script access, you must explicitly export the variables/methods. In Mindustry, you export by assigning them to the `exports` object. Example:
 
 ```javascript
 // item.js
@@ -56,10 +57,11 @@ Object.assign(biomassWall, {
 
 ```
 
-在上面的例子中，我们在item.js中定义了一个名为biomassSteel的Item对象，并将其导出。在wall.js中，我们通过require('vne/item')引入了item.js文件，并使用exports.biomassSteel来获取biomassSteel对象。这样，我们就可以在wall.js中使用biomassSteel对象的属性和方法了。
-需要注意的是，exports对象是一个普通的JavaScript对象，你可以在其中定义任意数量的属性和方法来导出。只要在其他脚本文件中通过require()函数引入了包含这些属性和方法的脚本，就可以通过exports对象来访问它们。
+In the example above, we defined a `biomassSteel` Item object in `item.js` and exported it. In `wall.js`, we imported `item.js` via `require('vne/item')` and accessed the `biomassSteel` object through `exports.biomassSteel`. This lets us use `biomassSteel`'s properties and methods in `wall.js`.
 
-在声明变量后,就直接使用exports导出是一个很好的习惯,这样可以让代码更清晰,也方便其他脚本文件调用.当然,你也可以在声明变量时直接将它们赋值给exports对象,例如:
+Note that `exports` is a plain JavaScript object — you can define any number of properties and methods in it to export. As long as another script imports the file via `require()`, it can access everything on the `exports` object.
+
+Exporting immediately after declaring a variable is a good habit — it keeps code clear and makes it easy for other scripts to call. You can also assign directly to `exports` at declaration time:
 
 ```javascript
 
@@ -67,19 +69,19 @@ exports.biomassSteel = new Item("biomass-steel", Color.valueOf("7EA341"));
 
 ```
 
-这种写法虽然更简洁,但这样就无法在声明变量后对它进行修改,也无法在同一个文件中直接使用,因此通常更推荐先声明再导出的写法.
+This is more concise, but you can't modify the variable after declaration, and you can't use it directly within the same file. So the declare-then-export pattern is generally recommended.
 
-## Object.assign()方法
+## The Object.assign() Method
 
-在上面的例子中,我们使用了Object.assign()方法来给biomassSteel对象添加了一些属性.虽然Object.assign()方法是JavaScript中的一个内置方法,而不是mdt特有的语法,但它在mdt中非常常用,因为它可以方便地给对象添加属性和方法,而不需要重复写对象名.例如:
+In the examples above, we used `Object.assign()` to add properties to the `biomassSteel` object. While `Object.assign()` is a built-in JavaScript method (not Mindustry-specific), it's extremely common in Mindustry modding because it conveniently adds properties and methods to objects without repeating the object name. Example:
 
 ```javascript
-//不用Object.assign()
+// Without Object.assign()
 const biomassSteel = new Item("biomass-steel", Color.valueOf("7EA341"));
 biomassSteel.cost = 2.5;
 biomassSteel.healthScaling = 2.2;
 
-//使用Object.assign()
+// With Object.assign()
 const biomassSteel = new Item("biomass-steel", Color.valueOf("7EA341"));
 Object.assign(biomassSteel, {
     cost: 2.5,
@@ -87,25 +89,25 @@ Object.assign(biomassSteel, {
 })
 ```
 
-给物品添加属性时,效率差距可能不大,但如果你需要给一个对象添加很多属性和方法,使用Object.assign()可以减少代码量,避免重复写对象名,让代码更简洁。
+The efficiency difference for a few properties is negligible, but when adding many properties and methods to an object, `Object.assign()` reduces code volume, avoids repeating the object name, and keeps code clean.
 
-## extend()函数
+## The extend() Function
 
-在mdt中,extend()函数是一个非常重要的函数,它可以用来创建一个新的对象,这个对象继承自一个已有的对象,并且可以添加新的属性和方法.
-不过,extend()函数的使用方法可能和你在其他JavaScript环境中使用的继承方式不太一样,所以我们需要专门介绍一下它的用法.
-例如:
+In Mindustry, `extend()` is a very important function. It creates a new object that inherits from an existing class and allows you to add new properties and methods.
+
+However, `extend()` may work differently from inheritance patterns you've seen in other JavaScript environments, so we need to cover it specifically. Example:
 
 ```javascript
 
-const acid = extend(Liquid,"acid",Color.valueOf("84a94b"),{
-    update(puddle){
-        if(puddle.tile != null && puddle.tile.build != null){
+const acid = extend(Liquid, "acid", Color.valueOf("84a94b"), {
+    update(puddle) {
+        if (puddle.tile != null && puddle.tile.build != null) {
             puddle.tile.build.damage(0.2)
             
             puddle.amount -= 0.2
             
-            if(Mathf.chanceDelta(0.05)){
-                Fx.mineSmall.at(puddle.x,puddle.y)
+            if (Mathf.chanceDelta(0.05)) {
+                Fx.mineSmall.at(puddle.x, puddle.y)
             }
         }
     },
@@ -120,26 +122,30 @@ const acid = extend(Liquid,"acid",Color.valueOf("84a94b"),{
 
 ```
 
-在上面的例子中,我们使用extend()函数创建了一个新的Liquid对象acid,这个对象继承自Liquid类,并且添加了一些新的属性和方法.其中,update()方法是一个特殊的方法,它会在每个游戏tick更新时被调用,我们可以在这个方法中编写一些逻辑来实现液体的特殊效果.
-需要注意的是,extend()函数的参数数量是可变的,但第一个参数必须是一个mdt(或者其他java模组)中的java类,最后一个参数必须是一个对象字面量,这个对象字面量中定义了新对象的属性和方法.其余的参数顺序参考java类的构造函数参数顺序.
+In this example, we used `extend()` to create a new Liquid object `acid` that inherits from the Liquid class and adds new properties and methods. The `update()` method is special — it's called every game tick, so you can write custom liquid behavior inside it.
 
-举个例子:
+Note that `extend()` takes a variable number of arguments, but:
+- The **first** argument must be a Java class from Mindustry (or another Java mod).
+- The **last** argument must be an object literal defining the new object's properties and methods.
+- Arguments in between follow the order of the Java class's constructor parameters.
+
+For example:
 
 ``` java
-// Block类的构造函数
+// Block class constructor
 public Block(String name){}
 
 ```
 
-于是你的extend()函数的调用就应该是:
+So your `extend()` call would be:
 
 ```javascript
 
-const biomassWall = extend(Block,"name",{})
+const biomassWall = extend(Block, "name", {})
 
 ```
 
-而对于bullet类,它的构造函数是:
+For the BulletType class, its constructor is:
 
 ``` java
 
@@ -153,20 +159,20 @@ public BulletType(){}
 ```
 
 ```javascript
-// 因此下面两种写法都是正确的,但第一种写法更简洁,第二种写法更清晰,你可以根据自己的喜好选择使用哪一种写法.
-const acidBullet = extend(BulletType,0.8,20,{
-    // 这里是属性和方法
+// Both of the following are correct. The first is more concise, the second is more explicit — use whichever you prefer.
+const acidBullet = extend(BulletType, 0.8, 20, {
+    // Properties and methods here
 })
 
-const acidBullet = extend(BulletType,{
+const acidBullet = extend(BulletType, {
     speed: 0.8,
     damage: 20,
-    // 这里是属性和方法
+    // Properties and methods here
 })
 
 ```
 
-而对于某些参数较多的类,比如ShieldRegenFieldAbility,它的构造函数是:
+For classes with many constructor parameters, like ShieldRegenFieldAbility:
 
 ``` java
 public ShieldRegenFieldAbility(){}
@@ -182,9 +188,9 @@ public ShieldRegenFieldAbility(float amount, float max, float reload, float rang
 
 ```javascript
 
-//下面的写法更清晰,也更容易修改参数。
-//ShieldRegenFieldAbility的参数较多,使用对象字面量可以减少对参数顺序的记忆负担。
-const shieldRegenField = extend(ShieldRegenFieldAbility,{
+// Using an object literal is clearer and easier to modify.
+// For classes with many parameters, object literals reduce the burden of remembering parameter order.
+const shieldRegenField = extend(ShieldRegenFieldAbility, {
     amount: 0.8,
     max: 20,
     reload: 60,
@@ -193,9 +199,10 @@ const shieldRegenField = extend(ShieldRegenFieldAbility,{
 
 ```
 
-## 小结
+## Summary
 
-在mdt环境下编写js时,我们需要注意一些特殊的语法和环境相关的知识.我们需要使用exports对象来导出变量和方法,使用require()函数来引入其他脚本文件,使用Object.assign()方法来给对象添加属性和方法,使用extend()函数来创建新的对象并继承已有的对象.掌握这些知识可以帮助你更好地编写mdt模组,让你的代码更清晰、更简洁、更高效.
-从下一节开始,将拆解一个简单的js模组,并介绍一些mdt中常用的全局对象和函数。
+When writing JS in the Mindustry environment, we need to be aware of some special syntax and environment-specific knowledge. We need to use the `exports` object to export variables and methods, the `require()` function to import other script files, `Object.assign()` to add properties and methods to objects, and `extend()` to create new objects that inherit from existing classes. Mastering these will help you write cleaner, more concise, and more efficient Mindustry mods.
 
-课后练习: 以js语言写一个简单的模组,至少包含一个物品和一个方块,并且方块要使用你新建的物品作为建造材料。欢迎在群里交流讨论作业,也欢迎提问讨论,我会尽力解答。
+Starting from the next section, we'll break down a simple JS mod and introduce some commonly used Mindustry global objects and functions.
+
+**Homework**: Write a simple mod in JS that includes at least one Item and one Block, where the Block uses your newly created Item as a build requirement. Feel free to share your work and ask questions in the group.

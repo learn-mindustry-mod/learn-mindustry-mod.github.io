@@ -1,19 +1,19 @@
-# JavaScript 基础语法
+# JavaScript Basic Syntax
 
-这一节我们将介绍 JavaScript 的基础语法,包括变量声明、数据类型、运算符、控制结构等内容。尽管我们的核心目的是写出能在Mindustry中运行的JavaScript代码,但理解这些基础语法对于编写高效、可维护的代码是非常重要的。
+In this section, we'll cover JavaScript basics — variable declarations, data types, operators, control structures, and more. Although our core goal is to write JavaScript that runs in Mindustry, understanding these fundamentals is essential for writing efficient and maintainable code.
 
-## 通用语法
+## General Syntax
 
-这一部分将介绍一些JavaScript的通用语法规则,这些规则在任何JavaScript环境中都是适用的。这节的内容都可以在[w3school的js教程](https://www.w3school.com.cn/js/index.asp)中找到,这里也总结了其中一些重要的语法规则。
+This part covers some universal JavaScript syntax rules that apply in any JavaScript environment. The content here can also be found in the [W3Schools JS tutorial](https://www.w3schools.com/js/); we've summarized the important rules below.
 
-### 变量类型
+### Data Types
 
-JavaScript中有几种基本的数据类型:
+JavaScript has several basic data types:
 
-- **Number数字**: 用于表示浮点数。例如: `let x = 10.0;` JavaScript中的数字类型没有整数和浮点数之分,然而编写mdt的java有,所有不要在应该填整数的地方填浮点数,以及抄源码的时候记得把数字末尾的`f`去掉。
-- **String字符串**: 用于表示文本数据,由一系列字符组成。例如: `let name = "Mindustry";`
-- **Boolean**: 用于表示逻辑值,只有两个取值: `true` 和 `false`。例如: `let isActive = true;`
-- **Object对象**: 用于表示复杂数据结构,由键值对组成。例如:
+- **Number**: Used to represent floating-point numbers. Example: `let x = 10.0;` — JavaScript's number type makes no distinction between integers and floats. However, Mindustry's Java does, so don't use floats where integers are expected, and remember to remove the trailing `f` when copying from source code.
+- **String**: Used to represent text data, consisting of a sequence of characters. Example: `let name = "Mindustry";`
+- **Boolean**: Represents logical values with only two possible values: `true` and `false`. Example: `let isActive = true;`
+- **Object**: Represents complex data structures, composed of key-value pairs. Example:
 
 ```javascript
 
@@ -22,136 +22,136 @@ let person = {
   age: 30
 };
 
-let block = new Block("block"); // mdt的方块,也是对象
+let block = new Block("block"); // A Mindustry block is also an object
 
 ```
 
-- **Array数组**: 用于表示有序的列表,可以包含任何类型的元素。例如:
+- **Array**: Represents an ordered list that can contain elements of any type. Example:
 
 ```javascript
 let numbers = [1, 2, 3, 4, 5];
 let mixed = [1, "two", true, { name: "Alice" }];
 ```
 
-注意数组索引从0开始,所以`numbers[0]`是1,而不是2。
+Note that array indices start at 0, so `numbers[0]` is 1, not 2.
 
-### 变量声明
+### Variable Declarations
 
-在JavaScript中,我们可以使用`var`, `let`, 或 `const`来声明变量。简单来说:
+In JavaScript, we can use `var`, `let`, or `const` to declare variables. In short:
 
-- `var` 是最早的变量声明方式,它有一些作用域上的问题,不推荐使用。**注意和mdt中常用的Vars区分开来**
-- `let` 块级作用域变量声明方式,推荐使用。一般用于for循环
-- `const` 用于声明常量,即值不能被重新赋值的变量。不要用它声明数字(`Number`)和字符串(`String`),而是用于声明对象(`Object`)和数组(`Array`)等复杂数据类型。
+- `var` is the oldest way to declare variables. It has scoping issues and is **not recommended**. **Note: do not confuse this with `Vars`, which is commonly used in Mindustry.**
+- `let` declares block-scoped variables. Recommended for general use, especially in `for` loops.
+- `const` declares constants — variables whose values cannot be reassigned. Don't use it for `Number` or `String` types; use it for complex types like `Object` and `Array`.
 
-我们一般这样声明变量:
+We typically declare variables like this:
 
 ```javascript
-let x = 10; // 数字类型
-let isActive = true; // 布尔类型
-let name = "Mindustry"; // 字符串类型 用得少
-const block = new Block("block"); // mdt的方块 对象类型
+let x = 10; // Number type
+let isActive = true; // Boolean type
+let name = "Mindustry"; // String type (less common)
+const block = new Block("block"); // Mindustry block — Object type
 
-// 理论上也可以不初始化变量,但不推荐
-let y; // 声明一个变量但不赋值
+// You can also declare without initializing, but it's not recommended
+let y; // Declares a variable without assigning a value
 
-//此处省略其他示例代码
+// Other example code omitted here
 
-y = 20; // 再给y赋值
+y = 20; // Assign a value to y later
 
 ```
 
-如你所见,我们在声明变量时并没有指定变量的类型,这是因为JavaScript是一种动态类型语言,变量的类型是根据赋值来确定的。你可以随时给一个变量赋不同类型的值,但这可能会导致代码难以维护和调试,因此建议在编写代码时保持变量类型的一致性。
+As you can see, we don't specify a type when declaring variables — this is because JavaScript is a dynamically typed language. A variable's type is determined by its assigned value. You can assign values of different types to the same variable at any time, but this can make code hard to maintain and debug, so it's best to keep variable types consistent.
 
 ```javascript
 
-let a; // a的类型是undefined
-a = 10; // a现在是一个数字
-a = "Hello"; // a现在是一个字符串
-a = true; // a现在是一个布尔值
+let a; // a's type is undefined
+a = 10; // a is now a number
+a = "Hello"; // a is now a string
+a = true; // a is now a boolean
 
 ```
 
-在编写代码时尽量保持变量类型的一致性,这样可以提高代码的可读性和可维护性。如果一个变量的类型已经确定但初始值不明确,建议在声明时给它一个合理的初始值,以明确变量的用途。
+When writing code, try to keep variable types consistent — this improves readability and maintainability. If a variable's type is known but its initial value isn't, give it a sensible default to clarify its purpose.
 
 ```javascript
 
-let a = 0; // 数字
-let b = ""; // 字符串
-let c = false; // 布尔值
-let d = {}; // object类型
-let e = []; // 数组类型
+let a = 0; // Number
+let b = ""; // String
+let c = false; // Boolean
+let d = {}; // Object type
+let e = []; // Array type
 
 ```
 
-#### 变量的命名规则
+#### Variable Naming Rules
 
-- 变量名必须以字母、下划线 `_` 或美元符号 `$` 开头,后面可以跟字母、数字、下划线或美元符号。
-- 变量名区分大小写,例如 `myVariable` 和 `myvariable` 是两个不同的变量。
-- 变量名不能是JavaScript的保留字,如 `let`, `const`, `if`, `else`, `for`, `while` 等。
+- Variable names must start with a letter, underscore `_`, or dollar sign `$`, followed by letters, digits, underscores, or dollar signs.
+- Variable names are case-sensitive — `myVariable` and `myvariable` are two different variables.
+- Variable names cannot be JavaScript reserved words like `let`, `const`, `if`, `else`, `for`, `while`, etc.
 
-- 变量名最好和你写的mdt内容的name相同,比如:
+- Variable names should ideally match the `name` of your Mindustry content. For example:
 
 ```javascript
 
 const triploid = new UnitType("triploid"); 
-const biomassSteel = new Item("biomass-steel",Color.valueOf("4e342e"));
-// 变量名和mdt内容的name相同,这样可以提高代码的可读性和可维护性
+const biomassSteel = new Item("biomass-steel", Color.valueOf("4e342e"));
+// Variable name matches the content name, improving readability and maintainability
 
 ```
 
-对于具体的内容我们习惯上使用小写字母开头的驼峰命名法,比如 `protein`,`biomassSteel` 等,
-而对于你自己构造的函数我们习惯上使用大写字母开头的驼峰命名法,比如 `Block`, `UnitType`, `DrawPart` 等。
+For specific content types, we conventionally use lowerCamelCase — e.g. `protein`, `biomassSteel`, etc.
+For functions you define yourself, we conventionally use UpperCamelCase — e.g. `Block`, `UnitType`, `DrawPart`, etc.
 
-理论上来说,中文是可以作为变量名的,不过如果你用中文变量名,你可能需要频繁切换输入法.
+Technically, Chinese characters can be used as variable names, but if you do, you'll be switching input methods constantly.
 
-### 运算符
+### Operators
 
-- **算术运算符**: `+`, `-`, `*`, `/`, `%` 等。例如:
+- **Arithmetic Operators**: `+`, `-`, `*`, `/`, `%`, etc. Example:
 
 ```javascript
 
 let sum = 10 + 5; // 15
 let difference = 10 - 5; // 5
-let product = 10 * 5; // 乘法 50
-let quotient = 10 / 5; // 除法 2
-let remainder = 10 % 3; // 取余 结果是1
+let product = 10 * 5; // Multiplication: 50
+let quotient = 10 / 5; // Division: 2
+let remainder = 10 % 3; // Modulo: result is 1
 
-let square = 5 ** 2; // 乘方 结果是25
-let square = Math.power(5,2); // 乘方的另一种写法 结果是25
+let square = 5 ** 2; // Exponentiation: result is 25
+let square = Math.pow(5, 2); // Another way to exponentiate: result is 25
 
-let a = 10 * 2 + 5; // 25,乘法优先级高于加法
-let b = (10 + 5) * 2; // 30,括号改变了运算顺序
+let a = 10 * 2 + 5; // 25 — multiplication has higher precedence than addition
+let b = (10 + 5) * 2; // 30 — parentheses change the order of operations
 
 let x = 10;
-x++; // 递增 x现在是11 for循环里好用
+x++; // Increment: x is now 11 — useful in for loops
 
-x--; // 递减 x现在是10
+x--; // Decrement: x is now 10
 
 ```
 
-- **比较运算符**: `==`, `===`, `!=`, `!==`, `<`, `>`, `<=`, `>=` 等。例如:
+- **Comparison Operators**: `==`, `===`, `!=`, `!==`, `<`, `>`, `<=`, `>=`, etc. Example:
 
 ```javascript
-let isEqual = (10 == "10"); // true, == 不是严格比较,会进行类型转换
+let isEqual = (10 == "10"); // true — == is not strict, performs type coercion
 let error1 = (10 = "10"); 
 /* 
-一个常见的语法错误,单等号是赋值运算符,而不是比较运算符
-如果你这样写了,你会得到一个SyntaxError: Invalid left-hand side in assignment错误
-这个错误有时会让人很头大,因为=在自然语言中是一个比较运算符,但实际上是一个赋值运算符
-而且mdt不会报这个错误的行号
+A common syntax error — single `=` is an assignment operator, not a comparison.
+If you write this, you'll get a SyntaxError: Invalid left-hand side in assignment.
+This error can be confusing because `=` looks like a comparison in natural language,
+but it's actually assignment. Also, Mindustry won't report the line number for this error.
 */
-let warning = (true == 'false'); // true, == 进行类型转换后, true和'false'都被转换成了true
+let warning = (true == 'false'); // true — after type coercion, both true and 'false' become true
 
-let isStrictEqual = (10 === "10"); // false, === 是严格比较,不进行类型转换
-let isNotEqual = (10 != "10"); // false, != 不是严格比较,会进行类型转换
-let isStrictNotEqual = (10 !== "10"); // true, !== 是严格比较
+let isStrictEqual = (10 === "10"); // false — === is strict, no type coercion
+let isNotEqual = (10 != "10"); // false — != is not strict, performs type coercion
+let isStrictNotEqual = (10 !== "10"); // true — !== is strict
 let isGreater = (10 > 5); // true
 let isLess = (10 < 5); // false
-let isGreaterOrEqual = (10 >= 10); // true 注意不要写成10 => 10,记住大于等于,先写大于号,再写等于号,不要反过来
+let isGreaterOrEqual = (10 >= 10); // true — don't write 10 => 10; remember: greater-than sign first, then equals sign
 let isLessOrEqual = (10 <= 5); // false
 ```
 
-- **逻辑运算符**: `&&` (逻辑与), `||` (逻辑或), `!` (逻辑非) 等。例如:
+- **Logical Operators**: `&&` (AND), `||` (OR), `!` (NOT), etc. Example:
 
 ```javascript
 let isTrue = true && true; // true
@@ -162,22 +162,22 @@ let isNotTrue = !true; // false
 let isNotFalse = !false; // true
 ```
 
-- **赋值运算符**: `=`, `+=`, `-=`, `*=`, `/=`, `%=` 等。例如:
+- **Assignment Operators**: `=`, `+=`, `-=`, `*=`, `/=`, `%=`, etc. Example:
 
 ```javascript
-let x = 10; // 赋值
-x += 5; // x现在是15,相当于 x = x +
-x -= 3; // x现在是12,相当于 x = x - 3
-x *= 2; // x现在是24,相当于 x = x * 2
-x /= 4; // x现在是6,相当于 x = x / 4
-x %= 4; // x现在是2,相当于 x = x % 4
+let x = 10; // Assignment
+x += 5; // x is now 15, same as x = x + 5
+x -= 3; // x is now 12, same as x = x - 3
+x *= 2; // x is now 24, same as x = x * 2
+x /= 4; // x is now 6, same as x = x / 4
+x %= 4; // x is now 2, same as x = x % 4
 ```
 
-- **其他运算符**: 还有一些其他的运算符,如三元运算符 `? :`, 位运算符 `&`, `|`, `^`, `~`, `<<`, `>>`, `>>>` 等,以及一些特殊的运算符如 `typeof`, `instanceof`, `in` 等。这些运算符在某些特定的情况下非常有用,但在编写mdt脚本时可能用得不多,所以我们暂时不深入介绍它们。
+- **Other Operators**: There are also ternary operator `? :`, bitwise operators `&`, `|`, `^`, `~`, `<<`, `>>`, `>>>`, and special operators like `typeof`, `instanceof`, `in`, etc. These are useful in certain situations but not commonly needed in Mindustry scripts, so we won't cover them in depth here.
 
-### if 和 for 语句
+### if and for Statements
 
-- **条件语句**: `if`, `else if`, `else` 等。例如:
+- **Conditional Statements**: `if`, `else if`, `else`, etc. Example:
 
 ```javascript
 let x = 10;
@@ -192,25 +192,25 @@ if (x > 10) {
 
 ```
 
-- **循环语句**: 有`for`, `while`, `do...while` 等。
+- **Loop Statements**: There are `for`, `while`, `do...while`, etc.
 
-对于大多数mdt脚本, `for` 循环通常足够使用,其他循环语句在mdt脚本中较少用到.
+For most Mindustry scripts, `for` loops are usually sufficient; other loop types are rarely used.
 
 ```javascript
-// for循环的语法是: for (初始化; 条件; 更新) { 代码块 }
-// 这是某个mdt脚本单位draw()里的一段代码,它使用了for循环来绘制一个旋转的圆弧
+// for loop syntax: for (initialization; condition; update) { code block }
+// This is from a Mindustry script's unit draw() method — it uses a for loop to draw rotating arcs
 for (let i = 0; i < 3; i++) {
     let rot = i * 360 / 3 + Time.time * 1;
     Lines.arc(unit.x, unit.y, range, 0.15, rot);
 }
 
-// 不用for循环的话,你就得写三段几乎一模一样的代码,这样不仅冗长,而且不易维护
+// Without a for loop, you'd need to write three nearly identical lines — verbose and hard to maintain
 
 Lines.arc(unit.x, unit.y, range, 0.15, 0 + Time.time * 1);
 Lines.arc(unit.x, unit.y, range, 0.15, 120 + Time.time * 1);
 Lines.arc(unit.x, unit.y, range, 0.15, 240 + Time.time * 1);
 
-//for循环也可用于批量创建对象,比如在mdt脚本里创建多个部件
+// for loops can also batch-create objects, e.g. multiple DrawParts in a Mindustry script
 for (let i = 0; i < 3; i++) {
     triploid.parts.add(
     Object.assign(new RegionPart("-blade"), {
@@ -223,15 +223,16 @@ for (let i = 0; i < 3; i++) {
         progress: DrawPart.PartProgress.warmup.delay(i * 0.2)
     }))
 }
-//这段代码创建了三个部件,它们的moveX、moveY、moveRot属性根据i的值不同而不同,如果不用for循环的话,你就得写三段几乎一模一样的代码,这样不仅冗长,而且不易维护
+// This code creates three parts with different moveX, moveY, moveRot values based on `i`.
+// Without a for loop, you'd need three nearly identical blocks of code.
 
-//如果你需要遍历一个数组或者对象的属性,你也可以使用for循环,比如:
+// You can also use for loops to iterate over arrays or object properties:
 let numbers = [1, 2, 3, 4, 5];
 for (let i = 0; i < numbers.length; i++) {
     console.log(numbers[i]);
 }
 
-//for...of循环或者for...in遍历数组时通常更简洁,例如:
+// for...of or for...in loops are usually more concise for array iteration:
 let numbers = [1, 2, 3, 4, 5];
 for (let number of numbers) {
     console.log(number);
@@ -241,16 +242,16 @@ for (let index in numbers) {
     console.log(numbers[index]);
 }
 
-// 注意for...of循环直接获取数组的元素,而for...in循环获取数组的索引
+// Note: for...of gets the array elements directly, while for...in gets the indices
 ```
 
-以上就是JavaScript的一些基础语法规则,如果你觉得你懂了,那么试着完成下面的小测:
+The above covers some basic JavaScript syntax rules. If you think you understand, try the mini-quiz below:
 
 ```javascript
 
-// 1. 声明一个变量,并给它赋值为一个字符串类型
+// 1. Declare a variable and assign it a string value.
 
-// 2. 预测下面代码的输出结果
+// 2. Predict the output of the following code:
 //(1)
 console.log(10 == '10');
 //(2) 
@@ -277,11 +278,11 @@ for (let i = 1; i < 5; i++) {
     console.log(numbers[i]);
 }
 
-// 3.指出下面节选代码中的错误并修正它
+// 3. Find and fix the errors in the following code snippets:
 
-// 错误代码1 
+// Error code 1 
 
-// 假设a已经被声明并赋值了
+// Assume `a` has been declared and assigned a value
 if (a => 5) {
     console.log("a is greater than 5");
 } else if (a = 5) {
@@ -290,7 +291,7 @@ if (a => 5) {
     console.log("a is less than 5");
 }
 
-// 错误代码2
+// Error code 2
 let switch = false;
 if (switch) {
     console.log("The switch is on");
@@ -301,38 +302,39 @@ if (switch) {
 
 ```
 
-参考答案:
+Reference answers:
 
 ```javascript
 
-// 1. 声明一个变量,并给它赋值为一个字符串类型
+// 1. Declare a variable and assign it a string value.
 let name = "Mindustry";
-// 2. 预测下面代码的输出结果
-//(1) true, == 不是严格比较,会进行类型转换
-//(2) false, === 是严格比较,不进行类型转换
-//(3) true, == 进行类型转换后, true和'false'都被转换成了true
-//(4) true, 10 > 5 是true, 5 > 3 是true, 所以 true && true 是true
-//(5) true, 10 > 5 是true, 5 < 3 是false, 所以 true || false 是true
-//(6) 1, 10 % 3 的结果是1
-//(7) 120, 1 * 1 = 1, 1 * 2 = 2, 2 * 3 = 6, 6 * 4 = 24, 24 * 5 = 120
-//(8) 2, 3, 4, 5, 因为数组索引从0开始,所以 numbers[1] 是2, numbers[2] 是3, numbers[3] 是4, numbers[4] 是5
 
-// 3.指出下面节选代码中的错误并修正它
-// 错误代码1
+// 2. Predict the output:
+//(1) true — == is not strict, performs type coercion
+//(2) false — === is strict, no type coercion
+//(3) true — after type coercion, both true and 'false' become true
+//(4) true — 10 > 5 is true, 5 > 3 is true, so true && true is true
+//(5) true — 10 > 5 is true, 5 < 3 is false, so true || false is true
+//(6) 1 — 10 % 3 equals 1
+//(7) 120 — 1 * 1 = 1, 1 * 2 = 2, 2 * 3 = 6, 6 * 4 = 24, 24 * 5 = 120
+//(8) 2, 3, 4, 5 — array indices start at 0, so numbers[1] is 2, numbers[2] is 3, numbers[3] is 4, numbers[4] is 5
 
-if (a >= 5) { // 错误1: => 是一个语法错误,应该是 >=
-    console.log("a is biger than 5");
-} else if (a == 5) { // 错误2: = 是赋值运算符,应该是 ==
+// 3. Find and fix errors:
+// Error code 1
+
+if (a >= 5) { // Error 1: => is a syntax error, should be >=
+    console.log("a is bigger than 5");
+} else if (a == 5) { // Error 2: = is assignment, should be ==
     console.log("a is equal to 5");
 } else {
     console.log("a is less than 5");
 }
-// 而且设计也有问题,无论a为何值,修改后的代码都会输出"a is biger than 5"或者"a is less than 5",因为条件a >= 5包含a == 5的情况
+// Also a design issue: regardless of the value of a, the fixed code will only print "a is bigger than 5" or "a is less than 5", because a >= 5 already covers a == 5.
 
 
-// 错误代码2
-let switch = false;// switch是JavaScript的保留字,不能用作变量名
+// Error code 2
+let switch = false; // switch is a JavaScript reserved word and cannot be used as a variable name
 
-// 修改后的代码
-let isSwitchOn = false; // 修改变量名为isSwitchOn,避免使用保留字
+// Fixed code
+let isSwitchOn = false; // Renamed to isSwitchOn to avoid using a reserved word
 ```

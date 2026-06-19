@@ -1,13 +1,12 @@
-# 常见报错及修复方法
+# Common Errors and Fixes
 
-mdt中错误可以大致分为两类: **编译错误** 和 **运行错误**;前者是在模组加载阶段发生的错误,会在`last-log.txt`文件中报告错误,后者是模组加载完成后游戏运行时发生的错误,通常会导致游戏崩溃,会在`crash/`目录下产生一个新的`crash_xxxx.txt`.
+Errors in Mindustry modding can be roughly divided into two categories: **compile errors** and **runtime errors**. Compile errors occur during mod loading and are reported in the `last-log.txt` file. Runtime errors occur after the mod has loaded and the game is running — they typically cause the game to crash and produce a new `crash_xxxx.txt` file in the `crash/` directory.
 
-本篇教程会截取这两种日志的关键部分来讲解如何辨别与修复它们.
+This tutorial will show excerpts from both types of logs and explain how to identify and fix them.
 
-## 常见编译错误
+## Common Compile Errors
 
 ``` json
-
 
 
 ```
