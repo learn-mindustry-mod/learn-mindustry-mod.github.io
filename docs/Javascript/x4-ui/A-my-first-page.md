@@ -25,7 +25,7 @@ Events.on(ClientLoadEvent, (e) => {
 
 <GridItem caption="Hello World">
 
-![](../imgs/hello-world.png)
+![](./imgs/hello-world.png)
 
 </GridItem>
 
