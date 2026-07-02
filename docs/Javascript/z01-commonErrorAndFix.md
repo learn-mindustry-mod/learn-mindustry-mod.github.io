@@ -6,9 +6,11 @@ mdt中错误可以大致分为两类: **编译错误** 和 **运行错误**;前�
 
 ## 常见编译错误
 
-编译错误大部分其实可以通过使用带有语法高亮的编辑器来避免,但如果你习惯使用纯文本编辑器,那么你就需要学会如何从日志中辨别错误的类型和位置了.下面是一些常见的编译错误及其修复方法.
+编译错误大部分是语法错误,因此可以通过使用带有语法高亮的编辑器来避免.
 
-## 缺少括号
+但如果你习惯使用纯文本编辑器,那么你就需要学会如何从日志中辨别错误的类型和位置了.下面是一些常见的编译错误及其修复方法.
+
+### 缺少括号
 
 ``` txt
 
@@ -83,7 +85,7 @@ Object.assign(desalination,{
 
 ```
 
-## 重复定义属性
+### 重复定义属性
 
 ``` txt
 
@@ -91,6 +93,8 @@ Object.assign(desalination,{
 [E] rhino.EvaluatorException: Property "hasPower" already defined in this object literal. (vne/distribution.js#173)
 
 ```
+
+这个错误提示说在`vne/distribution.js`文件的173行附近,在一个对象字面量中重复定义了`hasPower`属性.这通常是因为在使用Object.assign()方法给对象添加属性时,不小心重复定义了同一个属性.
 
 ```javascript
 
@@ -101,7 +105,7 @@ exports.nickelBridge = nickelBridge;
 Object.assign(nickelBridge, {
     fadeIn: false,
     moveArrows: false,
-    consumesPower: true,//这里已经定义了hasPower属性
+    consumesPower: false,//这里已经定义了hasPower属性
     range: 6,
     arrowSpacing: 6,
     transportTime: 10,
@@ -121,7 +125,27 @@ Object.assign(nickelBridge, {
 
 ```
 
-注意到,报错的是后面那个`hasPower`属性,而不是前面那个,所以我们只需要删除后面那个重复定义的属性就可以了吗?但其实往往来说后面的才是我们期望的属性值,所以我们应该删除前面那个重复定义的属性.
+注意到,报错的是后面那个`hasPower`属性,而不是前面那个,所以我们只需要删除后面那个重复定义的属性,对吗?
+
+这样改语法上是没错了,但往往来说后面的才是我们期望的属性值,所以我们应该删除前面那个重复定义的属性(也就是`consumesPower: false`)
 
 总之,我们需要保证在一个对象字面量中,同一个属性只能定义一次.
+
+## 常见运行错误
+
+相比于编译错误,运行错误难以在运行前就被发现,而是在游戏运行时才会发生.当游戏崩溃时,我们可以在`crash/`目录下找到一个新的`crash_xxxx.txt`文件,这个文件中包含了游戏崩溃时的堆栈信息,我们可以通过分析这些信息来定位问题.
+
+### 变量未定义
+
+这是最常见的运行错误之一,尤其是在mdt的js模组制作过程中.一方面,js不会在编译阶段检查变量是否定义,另一方面,复制而来的java代码中可能会有一些变量在js中并没有直接定义(通常要在前面加上Vars.或者this.才能使用),因此很容易出现变量未定义的情况.
+
+下面看个典型案例
+
+> 施工中...
+
+> miner看到了就整一个上去,我暂时还没有典型案例--pardon
+
+``` txt 
+
+```
 
