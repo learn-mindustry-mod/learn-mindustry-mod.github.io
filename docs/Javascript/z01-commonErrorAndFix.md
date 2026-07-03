@@ -142,8 +142,7 @@ Object.assign(nickelBridge, {
 下面看个典型案例
 
 > 施工中...
-
-> miner看到了就整一个上去,我暂时还没有典型案例--pardon
+> 有谁看到了就整一个上去,我暂时还没有典型案例--pardon
 
 ``` txt 
 
