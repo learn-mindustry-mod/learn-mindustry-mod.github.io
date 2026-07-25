@@ -112,6 +112,35 @@ Gradle的构建逻辑通过**构建脚本**定义，即项目文件下的文件`
 
 我们一般不需要配置太多关于Gradle的操作，如果对有关gradle的具体内容有兴趣，可以前往Gradle网站：[https://gradle.org/](https://gradle.org/)
 
+::: info **配置 Gradle 镜像（国内加速）**
+
+在国内网络环境下，直接下载 Gradle 依赖可能较慢或无响应。可在 `build.gradle` 的 `repositories` 中添加阿里云镜像：
+
+```groovy
+repositories{
+    maven{ url 'https://maven.aliyun.com/repository/public' }
+    maven{ url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    mavenCentral()
+    maven{ url 'https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository' }
+    maven{ url 'https://jitpack.io' }
+}
+```
+
+将阿里云镜像放在首位，可优先从国内源下载。如果仍遇到依赖下载超时，也可在 `~/.gradle/init.gradle` 中全局配置镜像：
+
+```groovy
+allprojects{
+    repositories{
+        maven{ url 'https://maven.aliyun.com/repository/public' }
+        maven{ url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        mavenLocal()
+        mavenCentral()
+    }
+}
+```
+
+:::
+
 ### Kotlin
 
 Kotlin是Java的延伸，你可以使用Kotlin来无缝编写运行在JVM上的项目，并与Java项目可以无缝衔接。
