@@ -99,6 +99,12 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 - 然后，你需要设置环境变量（请自行百度），设置为系统环境变量与用户环境变量均可。** 请注意！ **Mindustry所需的安卓环境变量和常规有所不同，你需要添加一个新的环境变量`ANDROID_HOME`（而不是ANDROID_SDK_HOME），并把他设置为设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`；
 - 最后，重启你的IDEA（如使用命令行需重启sh），使刚才所做的更改生效。
 
+::: info **Android SDK 下载加速**
+
+`sdkmanager` 本身没有 Gradle 那样的仓库镜像配置项。网络受限时，可以使用可用的 HTTP/HTTPS 代理，或从可信镜像手动下载 Android SDK Command-line Tools，再按上面的目录结构解压；不要把 Gradle 的 `repositories` 配置当作 Android SDK 镜像配置。
+
+:::
+
 ## Gradle和Kotlin
 
 ::: info
