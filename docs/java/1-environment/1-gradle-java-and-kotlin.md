@@ -90,13 +90,12 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 
 当然，这并不是唯一让模组能在安卓设备上运行的方法。你也可以考虑使用 **Github Action** 进行在线编译，见于[后文](./2-anuke-template.md)。
 
-我们将采用安装Android Studio的方式安装Android SDK：
+我们将采用 `sdkmanager` 命令行工具安装Android SDK（无需安装 Android Studio）：
 
-- 首先，访问[Google官网](https://developer.android.com/studio?hl=zh-cn)，下载最新的Android Studio；
-- 安装Android Studio，但不要安装`Android Virtual Device`（对Mindustry模组开发没有用处）；
-- 静待其安装完毕，找到Android Studio的设置（与IDEA类似），`Languages & Frameworks - Android SDK`，记下`Android SDK Location`；
-- 访问`Android SDK Location`/build-tools，记下里面最新的版本号；
-- 然后，你需要设置环境变量（请自行百度），设置为系统环境变量与用户环境变量均可。** 请注意！ **Mindustry所需的安卓环境变量和常规有所不同，你需要添加一个新的环境变量`ANDROID_HOME`（而不是ANDROID_SDK_HOME），并把他设置为设置为刚才的`Android SDK Location`。对于`PATH`，你需要追加`%ANDROID_HOME%\build-tools\刚才记下的版本号\`（Windows）或`$ANDROID_SDK_HOME/build-tools/刚才记下的版本号/`；
+- 首先，访问 [Android Studio 官网](https://developer.android.com/studio#command-tools)，下载 "Command line tools only"；
+- 解压下载的压缩包，进入 `cmdline-tools` 目录，创建一个名为 `latest` 的文件夹，将其中的内容全部移入 `latest` 文件夹中；
+- 在解压后的 Android SDK 目录中运行 `sdkmanager --licenses`（Windows）或 `./sdkmanager --licenses`（Linux/macOS），接受所有许可；
+- 设置环境变量 `ANDROID_HOME` 指向解压后的 Android SDK 目录；
 - 最后，重启你的IDEA（如使用命令行需重启sh），使刚才所做的更改生效。
 
 ## Gradle和Kotlin

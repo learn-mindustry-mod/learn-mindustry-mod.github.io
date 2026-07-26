@@ -244,6 +244,8 @@ for (let index in numbers) {
 // 注意for...of循环直接获取数组的元素,而for...in循环获取数组的索引
 ```
 
+## 小结
+
 以上就是JavaScript的一些基础语法规则,如果你觉得你懂了,那么试着完成下面的小测:
 
 ```javascript
