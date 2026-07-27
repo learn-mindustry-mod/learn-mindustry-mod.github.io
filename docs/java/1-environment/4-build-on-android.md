@@ -1,676 +1,435 @@
-# 如果你只有Android设备
-> [!IMPORTANT] 
-> 本教程需要一定Linux基础
+# 在 Android 上构建
 
-2025-03-17 Novarc
+> ***器不在大，能用则灵。***
 
-本教程将讲述在android手机上使用termux开发mdt mod的 基本配置 和 容器安装\
-由于部分设备不支持容器 也加入了如果不安装容器的一些配置方案(因为termux的路径系统 一些东西可能会有问题)
-
-# Termux配置
-> [!NOTE]
-> Termux是一个**适用于 Android 的终端模拟器，其环境类似于 Linux 环境**。 无需Root或设置即可使用。 Termux 会自动进行最小安装 - 使用 APT 包管理器即可获得其他软件包。
-
-> [!TIP]
-> 推荐新人使用功能更加强大的**ZeroTermux**\
-> **ZeroTermux**基于**Termux**进行修改，内置一键切换apt/pkg软件源、一键备份恢复等多种便捷功能\
-> 另外支持背景
-
-下面ZeroTermux和Termux二选一
-> [!TIP]
-> 建议熟悉后换成Termux
-:::: tabs
-
-::: tab ZeroTermux
-<GitHubCard repo="hanxinhao000/ZeroTermux"/>
-[官方下载站](https://d.icdown.club/repository/main/ZeroTermux/)
-[下载最新版](http://getzt.icdown.club/)
-::: details 预览
-![ZeroTermux Preview](./imgs/environment/zerotermux_preview.jpg)
-
+::: info
+本节面向只有 Android 设备、希望开发或构建 Mindustry Java/Kotlin 模组的读者。内容以 Termux 为主，也会介绍 Linux 容器、D8、Android SDK 和常用 IDE。
+如果你还不了解 Gradle、JDK 和官方模板，建议先阅读[Gradle 环境与 Java/Kotlin](1-gradle-java-and-kotlin)以及[使用 Anuke 提供的模板](2-anuke-template)。
 :::
 
-::: tab Termux
-<GitHubCard repo="termux/termux-app"/>
-[**github下载**](https://github.com/termux/termux-app/releases/download/v0.118.1/termux-app_v0.118.1+github-debug_arm64-v8a.apk)
-:::
+Android 设备并不只能编辑 JSON 或 JavaScript。Termux 可以提供命令行环境，Linux 容器可以补齐标准 Linux 用户空间；配置正确后，手机也能完成 Mindustry JVM 模组的编译。
 
-::::
-## Termux基础介绍
-- ~/
-  - .termux/， Termux配置
-   - termux.properties， termux基础配置
-   - colors.properties， 配色配置
-   - font.ttf， 字体 可以替换
-   - shell
-  - storage/， 挂载的外部储存卡
-   - download/， /storage/emulated/0/Download/
-   - documents/， /storage/emulated/0/Documents/
-   - ...
+不过，手机的存储、内存和散热条件有限。建议先完成一次命令行构建，再决定是否安装桌面环境和大型 IDE。
 
-挂载存储卡请运行`termux-setup-storage`
-## 基础配置(可选)
-### 小键配置
-修改~/.termux/termux.properties
-### 配色方案
-修改~/.termux/colors.properties
-### 字体设置
-修改~/.termux/font.ttf
-### ZeroTermux配置(可选)
-打开左菜单 自行配置
-### 镜像配置
-**清华源**
-::: code-group
+## 命令行基础
 
-```txt [ZeroTermux]
-打开左菜单选择切换源
+| 命令 | 作用 |
+| --- | --- |
+| `pwd` | 显示当前目录 |
+| `ls`、`ls -la` | 列出文件和隐藏文件 |
+| `cd path`、`cd ..`、`cd ~` | 进入目录、返回上级、回到主目录 |
+| `mkdir name` | 创建目录 |
+| `cp source target` | 复制文件或目录 |
+| `mv old new` | 移动或重命名 |
+| `rm file` | 删除文件；命令行没有回收站 |
+| `cat file` | 查看文本文件 |
+| `Ctrl+C` | 中止当前命令 |
+
+路径中包含空格时，请使用引号或反斜杠转义：
+
+```shell
+cd "My Mod Project"
+cd My\ Mod\ Project
 ```
 
-```shell [Termux图形界面]
+## 安装 Termux
+
+Termux 是 Android 上的终端模拟器，不需要 Root 权限。建议从项目 Releases 页面获取与设备架构匹配的版本，不要混用不同来源的 Termux 及插件。
+
+<GitHubCard repo="termux/termux-app"/>
+
+社区发行版也可以使用，例如 ZeroTermux。它提供了更方便的软件源和备份入口，但底层命令仍以 Termux 文档为准。
+
+<GitHubCard repo="hanxinhao000/ZeroTermux"/>
+
+首次启动后更新软件包，并授权访问共享存储：
+
+```shell
+pkg update && pkg upgrade
+termux-setup-storage
+```
+
+授权后，`~/storage/download/` 通常对应 Android 的 `Download` 目录。项目建议放在 Termux 私有目录或容器的 Linux 文件系统内，避免共享存储带来的权限、符号链接和文件监听问题。
+
+使用交互式换源工具：
+
+```shell
 termux-change-repo
 ```
 
-```shell [Termux命令行]
-sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/apt/termux-main stable main@' $PREFIX/etc/apt/sources.list
-apt update && apt upgrade
-```
 
+Termux 的可选配置位于 `~/.termux/`：
+
+- `termux.properties`：快捷键和终端行为；
+- `colors.properties`：配色；
+- `font.ttf`：终端字体。
+
+这些设置不会影响 Gradle 构建，可以在环境稳定后再调整。
+
+## Linux 容器
+
+不需要图形化 IDE 时，可以直接使用 Termux。需要 IntelliJ IDEA、标准 Linux 软件包或完整桌面环境时，再安装容器。
+
+- **PRoot**：不需要 Root，兼容性较好，但运行开销更大；
+- **chroot**：需要 Root，通常性能更好，但配置和权限管理更复杂。
+
+### TMOE
+
+:::tip
+TMOE已经停止维护了 ，不建议通过其安装容器，但可以使用它安装软件。
 :::
-# 容器安装
-部分国产安卓系统可能不支持容器\
-如果不想安装容器就跳过\
-安装容器后基本上就是相当于拥有了一个linux系统 配置模组开发环境和IDE可以参考前面的教程
 
-对于没有toot的 推荐使用PRoot
->[!NOTE]
->PRoot 是一个 chroot, mount –bind, 和 binfmt_misc 的用户空间实现。这意味着，用户不需要任何特殊权限和设置就可以使用任意目录作为新的根文件系统或者通过QEMU运行为其它CPU架构构建的程序。
+TMOE（More Optional Environments）可以辅助安装 PRoot/chroot 容器、桌面环境和常用工具。它的菜单会随版本变化，以下命令只表示启动方式：
 
-对于已root的 推荐使用chroot
->[!NOTE]
->Chroot 是一种修改当前进程及其子进程的可见根目录的操作。修改后，进程将不能访问该环境目录树以外的任何文件和命令，这种修改后的环境叫作 chroot jail（直译为 chroot 监狱）
-
-
-> [!TIP]
-> 由于直接使用proot/chroot安装比较麻烦 一些配置比较复杂 本教程使用Tmoe安装容器
-## Tmoe
->[!NOTE]
->**TMOE** More Optional Environments.
-
-<GitHubCard repo="2moe/tmoe"/>
-
-[官方文档](https://doc.tmoe.me/)\
-安装tmoe
-::: code-group
-
-```txt [ZeroTermux]
-打开左菜单选择`MOE全能`
-```
-
-```shell [Termux]
- if ! which curl; then pkg install;fi
+```shell
+pkg install curl
 curl -LO https://gitee.com/mo2/linux/raw/2/2.awk
 awk -f 2.awk
 ```
 
-:::
-后续使用`tmoe`或者`awk -f 2.awk`命名便可直接打开
-### 容器
-选择`proot/chroot容器`选择`arm64发行版列表`
-![容器](./imgs/environment/containers.jpg)
-> [!NOTE]
-> Arch Linux 是一个轻量级和高度可定制的 Linux 发行版，最初发布于 2002 年。与其他流行的发行版不同，Arch Linux 是一个简约的发行版，采用自己动手（DIY）的方式。它是为中高级 Linux 用户设计的，他们喜欢控制和灵活性而不是易用性
+进入菜单后选择容器，按设备架构安装发行版。Ubuntu/Debian 的资料较多，Arch Linux 更精简但需要自行处理更多配置。
 
-> [!NOTE]
-> Ubuntu 由 Canonical 创建，它是最受欢迎的 Linux 发行版之一，为所有用户和各种使用情况而设计。你可以将 Ubuntu 用于日常工作、开发环境、休闲浏览等方面。
+如果要运行图形化 IDE，还需要桌面环境和 VNC 服务。TMOE 可以辅助安装；VNC 客户端可以使用 AVNC：
 
-> [!TIP]
-> 似乎因为tmoe过老 arch安装过程似乎因为镜像问题速度有点慢了
-自行选择 推荐ArchLinux或者Ubuntu
-
-因为tmoe安装过程十分人性化\
-而且有中文 所以自己配置 记住认真选择\
-别没用的都安了\
-如果需要使用idea或者vsc(不算code-server)的请记得通过tmoe安装桌面并且安装vnc
-
-### tmoe tools
-在linux容器里运行tmoe选择tools即可进入tmoe tools辅助安装软件了
-
-### 图形化界面和VNC
-> [!NOTE]
-> VNC (Virtual Network Console)是虚拟网络控制台的缩写。它 是一款优秀的远程控制工具软件，由著名的 AT&T 的欧洲研究实验室开发的\
-直接启动tmoe tools来安装\
-本教程不介绍其他自行安装的方法
-
-### ZSH配置(可选)
-> [!NOTE]
-> 尽管Tmoe安装zsh比较方便\
-> 但是因为使用的是oh my zsh性能堪忧\
-> 推荐查看[Zsh配置教程]() 配置zsh+zinit
-
-打开TMOE Tools\
-找到ZSH\
-配色和主题自选
-::: details 预览
-预览为p10k
-![ZSH Preview](./imgs/environment/zsh_preview.jpg)
-:::
-### VNC客户端安装
-本教程使用AVNC客户端
-![AVNC SVG](https://github.tbedu.top/https://github.com/gujjwal00/avnc/raw/master/metadata/en-US/branding/wordmark.svg)
 <GitHubCard repo="gujjwal00/avnc"/>
-[github下载](https://github.com/gujjwal00/avnc/releases/download/v2.8.0/AVNC-2.8.0.apk)
 
-# 无容器配置
-无容器环境下的一些配置与linux相似但又区别 其他教程中的Termux分组指的就是无容器环境下的配置方案\
-自行参考其他教程
+图形化桌面会明显增加内存和耗电。低配置设备优先使用 Neovim，或把构建交给 GitHub Actions。
 
-## 使用tmoe配置zsh(可选)
-尽管tmoe一般是来安装容器的\
-不过也可以通过tmoe安装zsh美化终端\
-按照上面方法安装/打开tmoe\
-选择 **configure zsh美化终端**\
-后面操作和linux中使用tmoe配置zsh一样
+## 无容器环境
 
-# 常用IDE介绍
+无法运行容器时，仍可直接在 Termux 中使用 JDK、Git、Gradle Wrapper 和 Neovim：
 
-开发Mindustry Java Mod需要的IDE
-下面介绍一些常用IDE
+```shell
+pkg install git unzip openjdk-25 neovim
+java -version
+```
 
-下面是一个对比表格
-| IDE | 介绍 | 特征 | 建议 |
-| ------- | :---: | :------: | :-----: |
-| **IDEA** | 由JetBrains开发的专业Java/Kt IDE | 强大的功能 简单的配置 | 开发Java/Kt mod的最佳选择 |
-| **vscode** | 免费开源的多语音IDE | 需要安装插件配置 较为复杂 | 都能跑vsc了给我用idea去 |
-| **Neovim** | Vim的升级版本 | 需要复杂的配置 当然可以使用一些现有配置 | Termux无容器用户的必然选择 Linux命令行用户的选择 低配android跑linux的选择 |
-| **AndroidIDE** | 安卓平台上的Java Ide | 本质上是内置了一个Termux 外面提供GUI | 可以尝试但是问题较多 |
+Termux 的软件包名称与 Ubuntu/Arch 不完全相同，应先用 `pkg search` 查询。模板项目自带 Gradle Wrapper，进入项目根目录后使用 `./gradlew`，通常不需要全局安装 Gradle。
 
-> [!TIP]
-> 对于无容器的Termux仅能使用Neovim
-> 对于安装linux容器的Termux(需要安装桌面)
-> 如果配置好可以使用IDEA 6GB运存能基本使用了
-> 追求便利/现代可以使用Vscode/code-server
-> code-server网页操作上可能有点问题
-> 屏幕太小不好操控
-> 追求性能和操作可以使用Neovim
+无容器方案的限制主要是：部分桌面 Linux 软件无法运行，Android SDK 的组件也可能缺少对应架构版本。遇到 SDK 或 native 工具不兼容时，使用 Linux 容器或 GitHub Actions 构建更实际。
 
-# IDEA
-![Idea](https://www.jetbrains.com/idea/img/overview-heading-screenshot.png)
-**IntelliJ IDEA**
-[官网](https://www.jetbrains.com/zh-cn/idea/)
-## 介绍
-面向专业开发的 IDE
-适用于 Java 和 Kotlin
-- 卓越的 Java 和 Kotlin 体验 
-- 深度代码理解 在每个上下文中提供相关建议，实现极快的导航和智能体验。 
-- 开箱即用的无缝体验
+## 构建模组
 
-> [!NOTE]
-> IDEA分为Ultimate(专业版)/Community(社区版)
-> 专业版需要付费 功能更加强大
-> 但是对于mdt mod开发人员来讲社区版完全够用
-> 当然你可以通过education白嫖
+先完成[使用 Anuke 提供的模板](2-anuke-template)中的项目初始化，然后在项目根目录执行：
+
+```shell
+./gradlew tasks
+./gradlew jar
+```
+
+`jar` 通常生成桌面端模组。模板的 Android 任务会随版本变化，应以 `./gradlew tasks` 的实际输出为准；不要仅凭教程中的任务名判断。
+
+官方模板和本地示例通常将 Android 构建拆成三个步骤：
+
+1. `jar` 生成桌面端 JAR；
+2. `jarAndroid` 使用 D8 对 JAR 做 dex/desugar；
+3. `deploy` 合并桌面端和 Android 端产物。
+
+例如，本地 Mindustry 模组模板中的 `jarAndroid` 会检查 `ANDROID_HOME`、寻找包含 `android.jar` 的 platform，并调用 PATH 中的 `d8`；`deploy` 依赖它和 `jar` 后再生成最终 JAR。因此，任务名和参数必须以你使用的模板为准。
+
+## 只安装 D8
+
+如果目标只是构建大多数 Java/Kotlin 模组，而不是编译 Mindustry 本体，可以只安装 D8。Termux 软件源提供包时直接安装：
+
+```shell
+pkg search d8
+pkg install d8
+```
+
+在 Linux 容器中也可以通过下面脚本安装
+
+```shell
+VERSION=33.0.3
+wget -c "https://dl.google.com/android/repository/build-tools_r${VERSION}-linux.zip" -O "build-tools_r${VERSION}-linux.zip"
+unzip -q "build-tools_r${VERSION}-linux.zip" -d "build-tools-${VERSION}"
+sudo mkdir -p /usr/share/java
+sudo cp "build-tools-${VERSION}/android-13/lib/d8.jar" /usr/share/java/d8.jar
+sudo tee /usr/bin/d8 > /dev/null <<'EOF'
+#!/bin/bash
+exec java -Xmx2G -cp /usr/share/java/d8.jar com.android.tools.r8.D8 "$@"
+EOF
+sudo chmod +x /usr/bin/d8
+rm -rf "build-tools-${VERSION}" "build-tools_r${VERSION}-linux.zip"
+```
+
+确认路径后，可以直接调用：
+
+```shell
+d8 --help
+```
+
+另外我们需要对`build.gradle`修改，这边展示对官方模板的修改
+```groovy{7-14}
+//…
+tasks.register('jarAndroid'){// [!code focus:15]
+    dependsOn "jar"
+    def projectName = project.name
+
+    doLast{
+        //collect dependencies needed for desugaring
+        def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList()).collect{ "--classpath $it.path" }.join(" ")
+
+        def d8 = isWindows ? "d8.bat" : "d8"
+
+        //dex and desugar files - this requires d8 in your PATH
+        "$d8 $dependencies --min-api 14 --output ${projectName}Android.jar ${projectName}Desktop.jar"
+                .execute(null, new File("build/libs")).waitForProcessOutput(System.out, System.err)
+    }
+}
+//…
+```
+
+若模板需要 Android platform 的 `android.jar`，仅有 D8 仍然不够，还需安装 SDK platform。
+
+## Android SDK
+
+需要完整 Android SDK 时，目录通常包含：
+
+```text
+Sdk/
+├── build-tools/
+├── cmdline-tools/
+├── platform-tools/
+├── platforms/
+└── ndk/
+```
+
+Android SDK 官方命令行工具并不总是提供 Linux ARM64 构建。设备架构不匹配时，可以使用社区提供的兼容工具，或把构建放到 GitHub Actions；不要把 x86_64 的 native 工具直接当作 ARM64 工具使用。
+
+标准 Linux 环境中，命令行工具可以按以下结构放置：
+
+```shell
+mkdir -p "$HOME/Sdk/cmdline-tools/latest"
+cd "$HOME/Sdk/cmdline-tools"
+curl -L "https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip" -o tools.zip
+unzip -q tools.zip
+mv cmdline-tools/* latest/
+rmdir cmdline-tools
+rm tools.zip
+```
+
+然后设置环境变量并安装项目需要的组件。版本号应以模板的 Android Gradle Plugin 和构建脚本为准。
+```shell
+export ANDROID_HOME="$HOME/Sdk"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/35.0.0:$PATH"
+
+sdkmanager --licenses
+sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+```
+
+建议把环境变量写入 `~/.bashrc` 或当前 shell 对应的启动文件，并重新打开终端。`ANDROID_HOME` 必须指向 SDK 根目录，而不是 `cmdline-tools` 子目录。
+
+如果 Mindustry 本体构建报 `aapt2` 架构错误，还需要 ARM64 版本的 `aapt2`，从[android-sdk-tools releases](https://github.com/lzhiyong/android-sdk-tools/releases)获取，并在 `~/.gradle/gradle.properties` 中指定：
+
+```properties
+android.aapt2FromMavenOverride=/path/to/arm64/aapt2
+```
+
+这属于 Mindustry 本体 Android 构建的额外要求，不是所有模组构建都需要。
+
+## 编译 Mindustry 本体
+
+本节不是普通模组开发的必需步骤。编译本体前，应先熟悉 Gradle、Git、Linux 和 Mindustry 多模块项目。
+
+### Arc 依赖
+对于v159.7之前的版本，因为不存在ARM64所以需要本地构建Arc之后则不需要。
+Mindustry 的构建脚本会根据 Arc 版本配置依赖。部分版本会优先使用同级目录中的本地 `Arc` 仓库，因此可将两个仓库放在同一父目录：
+
+```text
+workspace/
+├── Arc/
+└── Mindustry/
+```
+
+Arc 的 native 构建还会涉及 jnigen 和平台库。不同版本的构建脚本差异较大，应直接查看当前版本的 `arc-core/build.gradle`，为其添加`Arm64`架构的编译。
+
+::: tip
+编译**Arc**的native时候 **Arc**会拉取部分库，你可以修改`arc-core/build.gradle`里面的github链接 ，添加镜像。
+:::
+
+### Android 目标
+
+Mindustry 本体的 Android 任务除了 SDK、build-tools、platform-tools 和 platforms，还可能需要与设备架构匹配的 `aapt2` 和 native 依赖。先列出任务，再运行目标任务：
+
+```shell
+./gradlew tasks
+./gradlew android:deploy
+```
 
 
-## 安装
-前往官网安装指定平台即可
-含容器的termux请安装linux arm64版本
-使用简单方便
+## IDE 选择
 
-## 推荐插件
-- Rainbow Brackets 彩虹括号插件 (超级推荐)
-- Color Highlighter 显示颜色代码 (超级推荐)
-- Translation 翻译插件
-- Key Promoter X 快捷键提示插件
-- CamelCase 驼峰命名和下划线命名转换
-- CodeGlance 显示代码缩略图
-- CheckStyle 代码风格检查插件
-- Save Actions 格式化代码插件
-- SonarLint 代码质量检查插件
-- Statistic 代码统计插件
-- IdeaVim Idea使用vim特征
+| IDE | 适用场景 | 注意事项 |
+| --- | --- | --- |
+| IntelliJ IDEA | 容器 + 桌面环境 | Java/Kotlin 支持完整，内存占用较高 |
+| VS Code / code-server | 容器或浏览器编辑 | 需要配置 Java/Kotlin 扩展和 Gradle |
+| Neovim | 无容器 Termux、低配置设备 | 轻量，但需要自行配置 LSP |
+| AndroidIDE | Android 原生环境 | 兼容性需按模板实际测试 |
 
-## 关于安卓设备
-安卓设备安装容器后即可跑IDEA 需要下载Linux arm64版本
-注意 配置要求较高 至少6GB运存
-::: details 预览
+选择 IDE 时，至少确认它能导入 Gradle 项目、跳转 Mindustry/Arc 源码、运行 Gradle 任务并查看完整日志。
+
+### IntelliJ IDEA
+
+[IntelliJ IDEA 官网](https://www.jetbrains.com/idea/)
+
+社区版足以完成常规 Mindustry Java/Kotlin 模组开发。在 Linux 容器中运行时，应选择与设备架构匹配的 Linux ARM64 版本，并先确认 VNC 桌面稳定。
+
+![IntelliJ IDEA](https://www.jetbrains.com/_assets/rr/overview-heading-screenshot-DoIGvmRc.webp)
+
+手机运存最好在 6 GB 以上。插件只安装确实需要的，例如 Rainbow Brackets、Translation、IdeaVim；插件越多，索引和内存开销越大。
+
 ![Idea Android](./imgs/preview/idea_android_preview.png)
-:::
 
-# Vscode/Code-server
+### VS Code / code-server
 
-# Neovim
-> [!IMPORTANT]
-> 需要Lua基础和vim基础
+VS Code 需要 Java、Kotlin 和 Gradle 相关扩展；code-server 通过浏览器提供编辑界面，更适合不方便运行完整桌面的设备。小屏触控操作可能不如终端编辑器高效。
 
-<GitHubCard repo="neovim/neovim"/>
+![Code server Android](./imgs/preview/codeserver_android_preview.jpg)
 
-![Neovim](./imgs/logos/neovim-logo.svg)
-Neovim 是一款现代化、高效且功能丰富的编辑器，完全兼容 Vim。它支持插件、图形界面、语言服务器协议（LSP）、Lua 编程语言等功能。
-Neovim配置主要使用Lua
+### Neovim
 
-vim/neovim的优势在于
-- 只用键盘很舒服
-- 高度可定制性
-- 一些高效功能
-- 轻量
-
->[!NOTE]
-> 需要注意的是使用vim/neovim能提高部分码字速度
-> 但对于大部分人来讲不能提高实际编码速度
-> 对于真正熟练的大佬才行
-> 编程的大部分时间在思考而非码字
-> 纯键盘化操作能带来舒适 繁琐操作鼠标会有一定麻烦
-
-::: details 预览
-AstroNvim
-![AstroNvim](./imgs/preview/astro_nvim_preview.jpg)
-
-:::
-
-# 命令行安装
-Nvim安装需要很多辅助的库\
-git,gcc,ripgrep,fd,unzip,tree-sitter,luarocks
-:::: tabs
-
-::: tab "Windows" id="windows"
-## 使用安装包
-[stable版本位置](https://github.com/neovim/neovim/releases/tag/stable)
-下面选择zip/msi安装
-- zip [github下载地址](https://github.com/neovim/neovim/releases/download/stable/nvim-win64.zip)
-自行解压
-- msi [github下载地址](https://github.com/neovim/neovim/releases/download/stable/nvim-win64.msi)
-自行运行
-
-## 从包管理工具安装
-关于包管理工具请看前面教程\
-环境安装
-### 使用Scoop
-```shell
-scoop install git gcc ripgrep fd unzip tree-sitter luarocks
-```
-```shell
-scoop install neovim
-```
-> [!NOTE]
-> **自行添加进环境变量**
-:::
-
-::: tab "Debian/Ubuntu" id="debian"
-```shell
-sudo apt install neovim
-```
-:::
-
-::: tab "Arch Linux" id="arch"
-```shell
-sudo pacman -S neovim
-```
-:::
-
-::: tab "Termux" id="termux"
 ```shell
 pkg install neovim
 ```
+
+Neovim 是 Vim 的现代化接班人，插件生态繁荣，支持 LSP、Lua 等先进特性。对于手机上的无容器环境，它几乎是唯一的专业级代码编辑器。
+
+**它的优势在哪？**
+- 纯键盘操作，熟悉后非常舒适
+- 高度可定制，一切尽在掌控
+- 轻得难以置信，适合低配设备
+
+::: info 现实一点
+Neovim 能提高你的*操作*速度，但不一定直接提高*编程*速度——毕竟大部分时间在思考。不过，它确实能让编码过程更享受。
 :::
 
-::::
+可以使用 AstroNvim 或 LazyVim 等预配置方案，也可以自行配置 LSP。Java 通常使用 Eclipse JDT Language Server；Kotlin 应使用与当前 Kotlin 版本匹配的官方 Kotlin LSP，而不是随意替换成第三方服务。
 
+<GitHubCard repo="neovim/neovim"/>
 
-> [!TIP]
-> 长期在图形化界面使用**neovim**非常非常推荐安装**GUI客户端**\
-> Termux无容器不支持GUI!\
-> 安卓上运行的Linux也不建议使用**GUI**
+无容器 Termux 可能需要在 jdtls 配置中填写可执行文件的绝对路径。若 LSP 无法导入 Gradle 多模块项目，先查看 jdtls 日志、JDK 版本和项目生成的 Gradle 配置，不要只重复安装插件。
 
-# GUI安装
-有非常多Neovim GUI客户端\
-下面给出一些
-## nvim-qt
-<GitHubCard repo="equalsraf/neovim-qt"/>
-
-:::: tabs
-
-::: tab "Windows" id="windows"
-> [!TIP]
-> 在Neovim 0.10.0开始 Neovim Qt不在和neovim捆绑在一起\
-> 在0.10.0之前 Neovim Qt包含在Neovim包里面
-
-## 使用安装包
-[最新版Release](https://github.com/equalsraf/neovim-qt/releases/latest)
-- [zip github 下载v0.2.19](https://github.com/equalsraf/neovim-qt/releases/download/v0.2.19/neovim-qt.zip)
-- [msi github 下载v0.2.19](https://github.com/equalsraf/neovim-qt/releases/download/v0.2.19/neovim-qt-installer.msi)
-> [!NOTE]
-> **自行添加进环境变量**
-## 从包管理工具安装
-```shell
-scoop install neovim-qt
-```
-:::
-
-::: tab "Debian/Ubuntu" id="debian"
-```shell
-sudo apt install neovim-qt
-```
-:::
-
-::: tab "Arch Linux" id="arch"
-```shell
-sudo pacman -S neovim-qt
-```
-:::
-
-::: tab "Termux" id="termux"
-无容器Termux无GUI不支持
-:::
-
-::::
-
-## neovide
-> [!NOTE]
-> neovide需要neovim `0.10`及以上
-
-<GitHubCard repo="neovide/neovide"/>
-:::: tabs
-
-::: tab "Windows" id="windows"
-## 使用安装包
-[最新版Release](https://github.com/neovide/neovide/releases/latest)
-- [zip github 下载v0.14.1](https://github.com/neovide/neovide/releases/download/0.14.1/neovide.exe.zip)
-- [msi github 下载v0.14.1](https://github.com/neovide/neovide/releases/download/0.14.1/neovide.msi)
-> [!NOTE]
-> **自行添加进环境变量**
-## 从包管理工具安装
-```shell
-scoop install neovide
-```
-:::
-
-::: tab "Debian/Ubuntu" id="debian"
-[最新版Release](https://github.com/neovide/neovide/releases/latest)\
-[x86 linux版github下载v0.14.1](https://github.com/neovide/neovide/releases/download/0.14.1/neovide-linux-x86_64.tar.gz)\
-貌似没有arm64的 需要自行构建
-:::
-
-::: tab "Arch Linux" id="arch"
-```shell
-sudo pacman -S neovide
-```
-如果需要在X11下运行 还需要`libxkbcommon-x11`
-```shell
-sudo pacman -S libxkbcommon-x11
-```
-:::
-
-::: tab "Termux" id="termux"
-无容器Termux无GUI不支持
-:::
-
-::::
-
-# 配置
-Neovim配置比较复杂\
-下面有一些常用的第三方配置
-
-# 镜像配置
-讲一些neovim常用管理插件通用的镜像配置\
-下面的`require().setup`有时候并不会直接出现
-自行寻找哪里配置配置选项
-## Lazy.nvim
-Lazy.nvim安装插件从github.com安装\
-在Lazy.nvim的setup文件(比如`lazy_setup.lua`)里面
-```lua{5}
-require("lazy").setup({
-...
-},{
-...
-  git = { url_format = "{镜像}/https://github.com/%s.git" },
--- 比如"https://github.tbedu.top/https://github.com/%s.git"
-...
-})
-```
-另外Lazy本身安装时候的镜像配置\
-找到`init.lua`将里面的`https://github.com`前面加上镜像就好了
-
-## Mason
-Mason安装部分包时候默认从github.com安装\
-找到Mason setup的位置\
-部分集成化配置(比如AstroNvim在`~/.local/share/nvim/lazy/AstroNvim/lua/astronvim/plugins/mason.lua`里面)自行寻找
-```lua{3}
-require("mason").setup({
-  ...
-  github = {download_url_template = "{镜像}/https://github.com/%s/releases/download/%s/%s",},
--- 比如"https://github.tbedu.top/https://github.com/%s/releases/download/%s/%s"
-  ...
-})
-```
-# AstroNvim
-
+### AstroNvim
+**AstroNvim** 是一个美观且功能丰富的 **Neovim** 配置方案，注重可扩展性和可用性。
+[官方文档](https://docs.astronvim.com/)
 <GitHubCard repo="AstroNvim/AstroNvim"/>
 
 ![AstroNvim](./imgs/logos/astro_logo.jpeg)
-::: details 预览
+
 ![AstroNvim](./imgs/preview/astro_nvim_preview.jpg)
-:::
-**AstroNvim** 是一个美观且功能丰富的 **Neovim** 配置方案，注重可扩展性和可用性。
-[官方文档](https://docs.astronvim.com/)
 
-## 需求
-- [Nerd Fonts](https://www.nerdfonts.com/font-downloads) 含有图标的字体
-- **Neovim** v0.9.5+ (不含nightly版)
-- 粘贴板管理器 (Linux用户)
-- 支持真彩色的终端
-- 可选
-  - [ripgrep](https://github.com/BurntSushi/ripgrep) - 实时全局搜索（通过 Telescope 插件，快捷键 `<Leader>fw`）
-  - [lazygit](https://github.com/jesseduffield/lazygit) - Git 终端可视化界面（快捷键 `<Leader>tl` 或 `<Leader>gg` 切换终端）
-  - [gdu](https://github.com/dundee/gdu) - 磁盘用量分析工具（快捷键 `<Leader>tu` 切换终端）
-  - [bottom](https://github.com/ClementTsang/bottom) - 进程监控器（快捷键 `<Leader>tt` 切换终端）
-  - [Python](https://www.python.org/) - Python 交互式终端（快捷键 `<Leader>tp` 切换）
-  - [Node.js](https://nodejs.org/) - 为多数 LSP 提供支持，同时开启 Node 交互式终端（快捷键 `<Leader>tn` 切换）
+### LazyVim
+**LazyVim** 是一个由 **lazy.nvim** 驱动的 Neovim 配置方案，开箱即用，启动极快，兼顾美观与效率。
+[官方文档](https://www.lazyvim.org/)
+<GitHubCard repo="LazyVim/LazyVim"/>
 
-## 安装
-使用[官方模板](https://github.com/AstroNvim/template)
-:::: tabs
+![LazyVim](./imgs/logos/lazyvim_logo.png)
 
-::: tab "Windows" id="windows"
-备份 原有配置(可选)
-```shell
-Move-Item $env:LOCALAPPDATA\nvim $env:LOCALAPPDATA\nvim.bak
-```
-进一步备份 (可选)
-```shell
-Move-Item $env:LOCALAPPDATA\nvim-data $env:LOCALAPPDATA\nvim-data.bak
-```
-安装
-```shell
-git clone --depth 1 https://github.com/AstroNvim/template $env:LOCALAPPDATA\nvim
-Remove-Item $env:LOCALAPPDATA\nvim\.git -Recurse -Force
-nvim #等待安装
-```
+::: tip
+上面的neovim里面使用的blink可能需要一点手动操作才能确保其安装
 :::
 
-::: tab "Debian/Ubuntu" id="debian"
-备份 原有配置(可选)
-```shell
-mv ~/.config/nvim ~/.config/nvim.bak
+### 镜像配置
+国内网络下，直接从 GitHub 拉取插件很慢。AstroNvim 使用 lazy.nvim 管理插件，可以配置镜像。
+找到 lazy_setup.lua（或类似的 setup 文件），在 lazy.setup() 的选项里加入：
+```lua{6}
+--…
+require("lazy").setup({-- [!code focus]
+--…
+},{-- [!code focus]
+--…
+  git = { url_format = "{镜像}/https://github.com/%s.git" },-- [!code focus]
+--…
+})-- [!code focus]
+--…
 ```
-进一步备份 (可选)
-```shell
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
-```
-安装
-```shell
-git clone --depth 1 https://github.com/AstroNvim/template ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-nvim #等待安装
-```
-:::
-
-::: tab "Arch Linux" id="arch"
-备份 原有配置(可选)
-```shell
-mv ~/.config/nvim ~/.config/nvim.bak
-```
-进一步备份 (可选)
-```shell
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
-```
-安装
-```shell
-git clone --depth 1 https://github.com/AstroNvim/template ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-nvim #等待安装
+另外Lazy本身安装时候的镜像配置，找到`init.lua`将里面的`https://github.com`前面加上镜像就好了
+以及 mason.nvim 的镜像（通常在 mason.lua 里）
+(对于AstroNvim则在`~/.local/share/nvim/lazy/AstroNvim/lua/astronvim/plugins/mason.lua`里面)
+```lua{4}
+--…
+require("mason").setup({-- [!code focus]
+--…
+  github = {download_url_template = "{镜像}/https://github.com/%s/releases/download/%s/%s",},-- [!code focus]
+--…
+})-- [!code focus]
+--…
 ```
 
-:::
+### AndroidIDE
+AIDE目前还有一些潜在问题
+图片由E 355416854提供
+![AndroidIDEPreview](./imgs/preview/android_ide_preview.jpg)
 
-::: tab "Termux" id="termux"
-备份 原有配置(可选)
-```shell
-mv ~/.config/nvim ~/.config/nvim.bak
-```
-进一步备份 (可选)
-```shell
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
-```
-安装
-```shell
-git clone --depth 1 https://github.com/AstroNvim/template ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-nvim #等待安装
-```
 
-:::
+## LSP
+对于没有使用**IDEA**的则需要配置**LSP**
+**LSP** 全称 **Language Server Protocol**，是一套由微软提出的开放标准，定义了编辑器（客户端）与语言服务器之间的通信协议。 它让编辑器能够以统一的方式获得**代码补全、跳转定义、错误诊断、悬停提示、代码格式化**等智能特性，而不必为每种语言重复造轮子。
 
-::::
-安装好后将`~/.config/nvim/lua/plugins/`下的每个文件首行
-```lua
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-```
-去掉激活文件
-## 特征
-- 通过 [AstroCommunity](https://github.com/AstroNvim/astrocommunity) 实现通用插件规范  
-- 使用 [Heirline](https://github.com/rebelot/heirline.nvim) 定制状态栏、窗口标题栏和标签栏  
-- 基于 [lazy.nvim](https://github.com/folke/lazy.nvim) 的插件管理  
-- 通过 [mason.nvim](https://github.com/williamboman/mason.nvim) 管理语言工具包  
-- [Neo-tree](https://github.com/nvim-neo-tree/neo-tree.nvim) 提供文件树导航  
-- [Cmp](https://github.com/hrsh7th/nvim-cmp) 实现智能代码补全  
-- [Gitsigns](https://github.com/lewis6991/gitsigns.nvim) 集成 Git 差异标记  
-- [Toggleterm](https://github.com/akinsho/toggleterm.nvim) 支持可切换终端  
-- 通过 [Telescope](https://github.com/nvim-telescope/telescope.nvim) 进行模糊搜索  
-- [Treesitter](https://github.com/nvim-treesitter/nvim-treesitter) 增强语法高亮  
-- 借助 [none-ls](https://github.com/nvimtools/none-ls.nvim) 实现代码格式化与静态检查  
-- [Native LSP](https://github.com/neovim/nvim-lspconfig) 提供语言服务器协议支持  
+Neovim 通过内置的 **LSP 客户端** 原生支持这一协议。配合 **nvim-lspconfig**、**mason.nvim** 等工具，可以轻松为 Java、Kotlin、Lua 等语言配置对应的语言服务器，获得接近 IDE 的开发体验。
 
-## 配置 
+像前面介绍的 **AstroNvim** 或 **LazyVim**，都已经将 LSP 的配置整合得相当完善，通常装好语言支持包就能直接使用。
+下面我们将介绍一些mod开发需要的lsp
 
-要开始自定义配置，您只需**将自己的 `nvim` 文件夹视为专属 Neovim 配置**！您还可以将其同步到 Git 仓库进行备份。AstroNvim 本质上是一个由 [Lazy](https://github.com/folke/lazy.nvim) 包管理器管理的插件，它提供了一系列预置插件及其配置。
+### Eclipse JDT LS (jdtls)
 
-### 启动模板
-如果你使用的是上面的安装方式\
-会得到下面的文件树
-
-- ~/.config/nvim/
-  - README.md
-  - init.lua 安装Lazy.nvim插件管理器 在这里修改lazy安装镜像
-  - lua/
-    - community.lua 导入AstroCommunity插件
-    - lazy_setup.lua 配置并启动lazy.nvim 这里修改Lazy安装其他插件时用镜像
-    - plugins/ 配置插件
-      - astrocore.lua
-      - astrolsp.lua
-      - astroui.lua
-      - mason.lua
-      - none-ls.lua
-      - treesitter.lua
-      - user.lua
-      - ... 
-    - polish.lua 最后执行Lua
-
-## 核心配置解析
-
-### 顶层文件 `init.lua`
-- **核心作用**：作为配置入口文件
-- **执行流程**：
-  1. 自动检测并安装 [`lazy.nvim`](https://github.com/folke/lazy.nvim) 插件管理器（若未安装）
-  2. 调用 `lua/lazy_setup.lua` 完成 AstroNvim 核心插件与用户插件的协同加载
-  3. 通过模块化设计实现配置分层管理
-
-### `plugins/` 插件目录结构
-- **核心配置**：前三个插件文件用于 AstroNvim 基础配置（如 `astronvim.lua`）
-- **增强配置**：后续四个文件用于扩展内置插件功能（如 `treesitter.lua` 优化语法解析）
-- **用户自定义**：默认通过 `user.lua` 集中管理插件，支持按需拆分为独立文件（推荐按插件名命名文件）
-
-### AstroCommunity 
-```lua title="lua/community.lua"
-return {
-  -- 添加社区插件规范仓库
-  "AstroNvim/astrocommunity",
-  --插件可以在https://github.com/AstroNvim/astrocommunity找到
-  --下面推荐一些常用插件
-  { import = "astrocommunity.pack.lua" },
-  -- Lua环境
-  { import = "astrocommunity.editing-support.neogen" },
-  -- 注解生成
-  { import = "astrocommunity.bars-and-lines.lualine-nvim" },
-  { import = "astrocommunity.bars-and-lines.bufferline-nvim" },
-  --更好的底部状态条
-  { import = "astrocommunity.colorscheme.tokyonight-nvim" },
-  -- tokyonight主题 Preview使用的
-  { import = "astrocommunity.color.transparent-nvim" },
-  -- 背景透明 :TransparentToggle激活
-}
-```
-## Java Lsp配置
-使用Neovim开发Java Mod使用\
-`eclipse-jdtls`作为Java的LSP
+**jdtls** 全称 **Eclipse JDT Language Server**，是 Eclipse 基金会为 Java 语言实现的官方 **LSP** 服务器。它直接复用了 Eclipse IDE 积累多年的 Java 解析内核，能为任何支持 LSP 的编辑器提供**代码补全、跳转定义、错误诊断、重构、格式化和查找引用**等高级功能。
 
 <GitHubCard repo="eclipse-jdtls/eclipse.jdt.ls"/>
 
-> [!IMPORTANT]
-> 较新版本的Jdtls不支持java 17\
-> 实测1.39.0版本可以运行\
-> arch linux如果想用pacman安装jdtls要学会降版本
+对于**Vscode**直接安装**java**插件 对于**neovim**直接使用**mason**安装
 
-### 通过Mason安装jdtls
-运行`:MasonInstall jdtls`即可
+:::info
+Jdtls的功能并不好 甚至有时候无法支持gradle多模块项目，有的时候莫名导入项目失败
+:::
 
-### 本地安装
-下载[https://download.eclipse.org/justj/?file=jdtls/milestones/1.39.0](https://download.eclipse.org/justj/?file=jdtls/milestones/1.39.0)里面的对应文件\
-自行解压 配置环境变量\
-运行`mkdir ~/.local/share/nvim/mason/packages/jdtls`诱骗Mason认为jdtls已经安装
+### Kotlin-lsp
+来自于**Kotlin**官方的lsp 基于**IDEA**开发 功能相较于其他kotlin lsp相当强大完整
+<GitHubCard repo="Kotlin/kotlin-lsp"/>
 
-## 无容器Termux特别注意
-> [!IMPORTANT] 
-> jdtls安装好后 因为Termux的路径系统问题需要调整
+对于**Vscode**直接安装仓库里面对应插件 对于**neovim**直接使用**mason**安装(注意不是kotlin-language-server)
+
+## 构建失败排查
+
+### 找不到 JDK
 
 ```shell
-vim ~/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs/jdtls.lua
-```
-修改文件
-```lua{6}
-...
-  return {
-    default_config = {
-        cmd = {
-            'python3',
-            '{到jdtls的绝对路径}',
-            '-configuration',--这行没变
-            ...
-          }
-      }
-}
-...
+java -version
+echo "$JAVA_HOME"
 ```
 
-# AndroidIDE
-AIDE目前还有一些潜在问题\
-可以试试
-::: details 预览
-图片由E 355416854提供
-![AndroidIDEPreview](./imgs/preview/android_ide_preview.jpg)
-:::
+JDK 版本必须满足模板和 Mindustry 版本要求。不要只按本页示例固定版本；以项目的 Gradle 脚本和错误信息为准。
+
+### 找不到 Android SDK 或 `android.jar`
+
+```shell
+echo "$ANDROID_HOME"
+find "$ANDROID_HOME/platforms" -name android.jar
+```
+
+确认 `ANDROID_HOME` 指向 SDK 根目录，并安装模板实际需要的 platform。
+
+### 找不到 `d8`
+
+```shell
+command -v d8
+d8 --version
+```
+
+确认 D8 可执行脚本在 PATH 中，且脚本使用的 Java 和 `d8.jar` 路径有效。
+
+### 依赖下载失败
+
+先确认网络、仓库地址和代理配置，再重新运行同一任务。不要一遇到失败就删除 Gradle 缓存；只有确认缓存损坏时才清理。
+
+### Android 设备上运行缓慢
+
+降低 IDE 索引和 Gradle 并发，关闭不必要的插件，把项目放在内部存储。若仍无法稳定构建，使用 GitHub Actions 或电脑构建通常更合适。
+
+## 小结
+
+- 只写代码和运行 Gradle：无容器 Termux + Neovim；
+- 需要标准 Linux 软件或 IDEA：Termux + PRoot/chroot 容器；
+- 只构建模组 Android 产物：优先准备模板要求的 D8，必要时再安装 SDK platform；
+- 编译 Mindustry 本体：额外检查 Arc、native 工具、ARM64 `aapt2` 和 Android 模块；
+- 无论使用哪种路线，都先运行 `./gradlew tasks` 和一次最小 `jar` 构建，确认环境可用后再扩展配置。
