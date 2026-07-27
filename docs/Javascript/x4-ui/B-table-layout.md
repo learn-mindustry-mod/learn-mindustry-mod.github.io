@@ -36,7 +36,7 @@ Events.on(ClientLoadEvent, (e) => {
 })
 ```
 
-页面上的图标 **间距(Padding)** 变紧凑了，而且似乎没有其他变化。
+页面上的图标间距变紧凑了，而且似乎没有其他变化。
 
 <Grid :gap="40">
     <GridItem caption="修改前">
@@ -129,7 +129,7 @@ Events.on(ClientLoadEvent, (e) => {
   dialog.cont.add("Mono is mining")
   dialog.cont.image(Items.copper.uiIcon)
 
-  // [!code focus:8]
+  // [!code focus:10]
   dialog.cont.table(null, (table) => {
     table.add("星辉和双管炮：") // [!code ++]
     table.image(UnitTypes.flare.uiIcon).pad(4)
@@ -192,7 +192,7 @@ dialog.cont.table(cons((table) => {}))
 
 </GridItem>
 
-2. `table.add` 和 `table.image` 函数的返回值是什么，为什么调用返回值`pad`函数就能调整间距?
+2. `table.add` 和 `table.image` 函数的返回值是什么，为什么调用返回值`pad`函数就能调整边距?
    - 这将在下一章 **表格布局(Table Layout)** 里深入讲解。
 
 ## Table Layout - 表格布局
@@ -226,7 +226,7 @@ Events.on(ClientLoadEvent, (e) => {
 
 ### Cell 单元格及其参数
 
-为了能让表格布局更加直观，本教程提供了一个用于可视化表格布局的工具函数，你可以在 [相关资源](./Z-resources.md) 里找到这个函数，下面，我们先加上部分可视化：
+为了能让表格布局更加直观，本教程提供了一个用于可视化表格布局的工具函数，你可以在 [相关资源](./Z-resources.md#工具函数) 里找到这个函数，下面，我们先加上部分可视化：
 
 ```js
 Events.on(ClientLoadEvent, (e) => {
@@ -256,7 +256,7 @@ Events.on(ClientLoadEvent, (e) => {
 
 // [!code focus:2]
 // [!code ++:2]
-// 把工具函数方这里就好了，以后的代码不会展示工具函数
+// 把工具函数放到底下就好了，之后的教程代码中将不再展示该工具函数
 function mountDebugElement(table, options){...}
 ```
 
@@ -268,16 +268,16 @@ function mountDebugElement(table, options){...}
 
 </GridItem>
 
-可以看到，表格布局就是把表格这个矩形，进行横纵划分成若干个区块，而且每个区块内都只有一个元素，这个**区块**正是一个重要概念：**单元格(Cell)**。
+可以看到，表格布局就是将表格这个矩形，横向和纵向划分成若干个区块，而且每个区块内都只有一个元素，这个**区块**正是一个重要概念：**单元格(Cell)**。
 
-我们调用 `table.image` `table.add` 函数的时候，它们的返回值都是**单元格(Cell)**。Cell 有很多布局参数，以下它们的介绍：
+我们调用 `table.image` `table.add` 函数的时候，它们的返回值都是**单元格(Cell)**。Cell 有很多布局参数，以下是它们的介绍：
 
 - `minWidth` `maxWidth`：宽度、最小宽度、最大宽度
 - `minHeight` `maxHeight`：高度、最小高度、最大高度
 - `expandX` `expandY`：单元格是否向X、Y占领空闲区域（空闲区域的概念先按住不表）
 - `colspan`：单元格占据的列宽（相当于“合并单元格”）
 - `uniformX` `uniformY`：是否与行或列统一长或宽
-- `pad`: 内间距
+- `pad`: 内边距
 
 上图的蓝色部分正是单元格的 **内边距(Pad)**。
 
@@ -285,9 +285,9 @@ function mountDebugElement(table, options){...}
 
 - 接下来，我们继续修改代码，让你体会一下单元格参数的修改：
 
-1. 给第一行第一列的 `星辉和双管炮：` 单元格的长宽调整为 200、100
+1. 给第一行第一列的 `星辉和双管炮：` 单元格的宽高调整为 200、100
 2. 让 `双管炮图标` 占据两列，即调整 colspan 为 2
-3. 增大 `水图标的内间距`，调为16
+3. 增大 `水图标的内边距`，调为16
 
 ```js
 Events.on(ClientLoadEvent, (e) => {
@@ -340,7 +340,7 @@ Events.on(ClientLoadEvent, (e) => {
 
 2. `双管炮图标` 占据了两列，并且图标居中。
 
-3. `水图标` 的内间距扩大了(蓝色区域)，把第二行的行高撑大了。
+3. `水图标` 的内边距扩大了(蓝色区域)，把第二行的行高撑大了。
 
 4. 此外，你可能还注意到，调整参数时，我们把函数的调用串了起来：`table.add().width().height()`，也就是说我们在调用 `add` 函数后，又能够继续调用 `width` `height` 函数。
 
@@ -356,8 +356,8 @@ Events.on(ClientLoadEvent, (e) => {
 
 下面是所用函数的解释：
 
-- `width(float)` 函数的作用是把参数 `minWidth` `maxWidth` 设置成了相同的值，`height` 函数也同理。
-- `pad(float)` 函数是同时调整上左下右的内间距`padTop(float)` `padLeft(float)` `padBottom(float)` `padRight(float)` 可以分别调整上左下右的内间距，而 `pad(float, float, float, float)` 可以同时单独调整上左下右的内间距。
+- `width(float)` 函数的作用是把参数 `minWidth` `maxWidth` 设置成了该值，`height` 函数也同理。
+- `pad(float)` 函数是同时调整上、左、下、右的内边距。此外，`padTop(float)` `padLeft(float)` `padBottom(float)` `padRight(float)` 可以分别调整上、左、下、右的内边距，而 `pad(float, float, float, float)` 也可以单独调整上、左、下、右的内边距。
 
 现在你应该对单元格参数 `minWidth` `maxWidth` `minHeight` `maxHeight` `colspan` `pad` 有了一定的理解，其他参数将在后续教程里涉及。
 
@@ -398,7 +398,7 @@ Events.on(ClientLoadEvent, (e) => {
 
 </GridItem>
 
-在把表格分成单元格后，表格就会根据单元格参数，为每一个UI元素分配大小和位置，下图额外展示了每个元素的边界。你可以看到，每个元素的边界不一定充满每个单元格，而且位置默认是单元格居中。
+将表格划分成单元格后，表格就会根据单元格参数，为每一个UI元素分配大小和位置，下图额外展示了每个元素的边界。你可以看到，每个元素的边界不一定充满每个单元格，而且位置默认是单元格居中。
 
 **单元格(Cell)** 还有一些参数用于调整元素在单元格内的布局信息，以下是部分参数及其介绍：
 
@@ -409,9 +409,9 @@ Events.on(ClientLoadEvent, (e) => {
 
 接下来，我们将继续修改代码，让你体会单元格内的元素布局：
 
-1. 让文字 `星辉和双管炮：` `水和图标：` 单元格内左对齐
-2. 让 `双管炮图标` `x图标` 在 Y 方向填充单元格
-3. 让 `水图标` 在 X 方向填充单元格
+1. 让文字 `星辉和双管炮：` 和 `水和图标：` 在单元格内左对齐
+2. 让 `双管炮图标` 和 `x图标` 在垂直方向（Y轴）填充单元格
+3. 让 `水图标` 在水平方向（X轴）填充单元格
 
 ```js
 Events.on(ClientLoadEvent, (e) => {
@@ -467,7 +467,7 @@ Events.on(ClientLoadEvent, (e) => {
 
 ## 小结
 
-现在，你应该对表格布局有了大概的理解：代码添加元素、描述何时换行、调整单元格的参数，表格按照代码的描述去划分单元格，每一个元素根据单元格参数去分配位置和大小。这样就完成了从代码到表格布局的过程。
+现在，你应该对表格布局有了大概的理解：代码添加元素、描述何时换行、调整单元格的参数，表格按照代码的描述去划分单元格，根据单元格参数去分配每个元素的位置和大小。这样就完成了从代码到表格布局的过程。
 
 <Grid>
 <GridItem height=150 caption="参数修改后">
