@@ -141,16 +141,16 @@ const status1 = extend(StatusEffect, "status1", {
 
 ---
 
-## 其他常用钩子与完整示例
+## 其他常用函数与完整示例
 
-除了 `update`，`StatusEffect` 还提供了其他可重写的钩子，例如：
+除了 `update`，`StatusEffect` 还提供了其他可重写的函数，例如：
 
 - `init()`：在状态效果初始化时执行，适合注册亲和/反应逻辑。
 - `applied(unit, time, extend)`：状态被施加时触发。
 - `onRemoved(unit)`：状态被移除时触发。
 - `draw(unit, time)`：自定义绘制逻辑。
 
-> 判定一个钩子是否可重写,你可以查看前面的标识,为`public`即可重写
+> 判定一个函数是否可重写,你可以查看前面的标识,为`public`即可重写
 
 下面是一个综合示例，展示了常见写法：
 
