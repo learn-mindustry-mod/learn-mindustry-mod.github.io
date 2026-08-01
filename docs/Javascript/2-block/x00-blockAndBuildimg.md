@@ -1,125 +1,148 @@
-# 方块与建筑
+# 方块与建筑 (Block & Building)
 
-从这一节开始,我们将开始学习mdt中最重要的成分--方块.
+从这一章开始，我们将学习 Mindustry 中最重要的部分——方块。
 
-但在这一章的开始,我想对萌新经常混淆的几个概念(`Block`、`BuildType`和`Building`)进行辨析.
+但在深入代码之前，必须先理清两个核心类：`Block`（方块模板）和 `Building`（方块实体）。很多萌新会把它们的用法混淆，导致代码写对了却无法生效。
 
-让我们通过下面这个例子来搞清它们的区别,这是一个萌新的求助,问我为啥墙体不会回血.
+让我们从一个真实的萌新求助案例开始：**“为什么我的墙体不会回血？”**
 
-``` javascript
-//错误示范
-const nickelWall = extend(Wall,"nickel-wall",{
-    updateTile(){
-        this.heal(0.1)//每秒恢复6点
+```javascript
+// 错误示范
+const nickelWall = extend(Wall, "nickel-wall", {
+    updateTile() { 
+        this.heal(0.1); // 每秒恢复6点
     },
     health: 360,
     armor: 1,
     size: 1,
-    alwaysUnlocked: true,
-    buildVisibility: BuildVisibility.shown,
-    category: Category.defense,
-    requirements: ItemStack.with(
-        item.nickel, 6,),
+    // ... 其他属性
 });
 exports.nickelWall = nickelWall;
 ```
 
-其实这就是一个典型的由于混淆了`Block`和`Building`导致的问题.即`updateTile`是`Building`类的一个方法,但是这位萌新将其放到了`Block`类中,而游戏每tick调用的是`Building`类的`updateTile`,导致这位萌新的代码根本就没有被执行.
+**为什么代码无效？**  
+因为 `updateTile` 是 `Building` 类的方法，但萌新却把它写到了 `Block` 类定义中。游戏每 `tick` 调用的只是方块实体（`Building`）的 `updateTile`，而 `Block` 里的 `updateTile` 永远不会被执行。
 
-> 其实还有一个问题:`Wall`类本身`update`为`false`,因此即使创建的是`Building`类的`updateTile`,这位萌新的代码依旧不会被执行.
+> **特别注意：** 即使你把 `updateTile` 正确写在了 `Building` 类中，如果你的 `Block` 定义里没有开启更新开关，`updateTile` 依然不会执行。在这里, `Wall` 类的 `update` 默认是 `false`，所以必须在 Block 上声明 `update: true` 才能让方块动起来。
 
-那么要怎么把`updateTile`写进`building`类里呢?其实很简单,像下面这样就可以了.
+---
 
-``` javascript
-const nickelWall = extend(Wall,"nickel-wall",{
-    update: true,
+## 正确写法与结构
+
+下面是我们修正后的标准写法：
+
+```javascript
+const nickelWall = extend(Wall, "nickel-wall", {
+    update: true,       // 必须开启更新！
     health: 360,
     armor: 1,
     size: 1,
-    alwaysUnlocked: true,
-    buildVisibility: BuildVisibility.shown,
-    category: Category.defense,
-    requirements: ItemStack.with(
-        item.nickel, 6,),
+    // ... 
 });
-exports.nickelWall = nickelWall;
-//Block和其对应的BuildType通常在一个文件中定义.
-nickelWall.buildType = prov(() => extend(Wall.WallBuild,nickelWall, {
-    updateTile(){
-        this.heal(0.1)//每秒恢复6点
+
+// 定义这个 Block 对应的 Building 实例
+nickelWall.buildType = prov(() => extend(Wall.WallBuild, nickelWall, {
+    updateTile() {
+        this.heal(0.1); // 这里才是真正生效的恢复逻辑
     }
 }));
 
+exports.nickelWall = nickelWall;
 ```
 
-buildType在Block里面，来指向新建建筑的函数，然后函数创建一个实例的Building对象，更新调用Building里面的update.
+`buildType` 是 Block 类中负责**建造建筑**的工厂字段。当方块在地图被放置时，游戏通过这个工厂创建一个 `Building` 实例，并挂在 `tile` 上。
 
-![方块与建筑的关系](./imgs/BlockAndBuilding.png)
+![基本关系](./imgs/BlockAndBuilding.png)
 
-## Block类
+---
 
-Block类是游戏中所有方块的父类,你可以将它理解为建造菜单和核心数据库中的那个元素.整个游戏里只有一份（每类方块一份），描述"它是什么"：尺寸、血量、贴图、建造需求、能否旋转、是否 update、消耗/产出规则、图鉴统计。它在加载时创建一次，之后基本只读.因此我们便不难理解,为什么`updateTile`写在`Block`里什么用都没有了.
+## Block类：静态的“设计图”
 
-> 唯一反常的是`setBars`方法.
+`Block` 类是游戏中所有方块的父类。你可以把它看作是**建造菜单里的选项**、**图鉴里的条目**，或者一份**工程图纸**。  
+游戏里每种方块**只有一份 `Block` 实例**，它是**只读且共享**的。它记录了“这个方块**是什么**”：
 
-## Building类
+- 尺寸大小、血量上限、贴图纹理
+- 建造需求、能否旋转、能否被超速驱动
+- 产出/消耗规则、图鉴统计数据
+- `update: true` 或 `false` 等静态开关
 
-Building类描述的是游戏场景中的各种方块实体,描述"它现在怎么样"：当前血量、库存、液体、电力、进度、朝向、队伍。游戏每tick对它调用 `updateTile()`，被击中时调用 `damage()`，绘制时调用 `draw()`。
+### 为什么 `updateTile` 不能写在 Block 里？
 
-## 联系
+因为 `Block` 只是图纸，图纸不会自己“动”，只有实际的建筑（实体）才会动。游戏每 `tick` 更新时不会读取 `Block` 的实例方法。而是 `Building` 的实例方法.
 
-两者的纽带在 `Tile`：放置时 `tile.setBlock(...)` 会调用 `Block.newBuilding()`（内部就是 `BuildType.get()`）创建出 Building 实例存入 `tile.Build`，而 `Building.Block` 又指回它的类型。
+---
 
-在前文中我们提到过,Block和其对应的BuildType通常在一个文件中定义.具体来说,让我们以`Wall.java`为例子,看看如何寻找对应的BuildType.
+## Building类：动态的“实体状态”
 
-``` java
-// Wall.java 节选
+`Building` 类描述的是**铺在地图上的那一个个实际的方块**。  
+它记录了“这个方块**现在怎么样**”：
 
-public class Wall extends Block{
-    /** Lighting chance. -1 to disable */
-    public float lightningChance = -1f;
-    public float lightningDamage = 20f;
-    public int lightningLength = 17;
-    public Color lightningColor = Pal.surge;
-    public Sound lightningSound = Sounds.shootArc;
+- 当前血量、当前库存（物品/液体）
+- 电力连接情况、生产进度条、所属队伍、朝向
+- 每 `tick` 被调用的 `updateTile()`
+- 被击中时触发 `damage()`
+- 绘制时调用 `draw()`
 
-    /** Bullet deflection chance. -1 to disable */
-    public float chanceDeflect = -1f;
-    public boolean flashHit;
-    public Color flashColor = Color.white;
-    public Sound deflectSound = Sounds.none;
+每一块放置在地图上的方块，都有一个独立的 `Building` 实例。这就是为什么我们之前会强调 **Block 要保存内存中共享的静态数据，而 Building 保存实例独有的动态数据**。这样可以避免大量建筑造成内存浪费（享元模式）。
 
-    public Wall(String name){
-        super(name);
-        solid = true;
-        destructible = true;
-        group = BlockGroup.walls;
-        buildCostMultiplier = 6f;
-        canOverdrive = false;
-        drawDisabled = false;
-        crushDamageMultiplier = 5f;
-        priority = TargetPriority.wall;
+---
 
-        //it's a wall of course it's supported everywhere
-        envEnabled = Env.any;
-    }
+## Block 与 Building 的特殊归属（反常识点）
 
-    // .......
+**新手很容易误认为：** 所有显示类的、绘制类的、UI类的，都应该写在 `Building` 里。**这是不对的。**
 
-    // 就是下面这一行,看到那个WallBuild,那就是我们想要的
-    public class WallBuild extends Building{
+有些看似作用于“方块”的方法，实际上属于静态的 `Block` 类：
+
+- `setStats()`：设置图鉴里的数据面板（耗能、产量等）。
+- `drawPlace()`：当你拿着方块悬停在地面时，绘制放置预览的效果（比如红/绿区域判定）。
+
+这些方法在 `Block` 里定义，是因为它们是**描述整个方块类型“特性”**的内容，而不是某一个建筑个体的具体状态。不依赖具体某个建筑的特定时刻的具体数据（血量、库存）的静态特性，都应该写在 Block 里。
+
+> `setBar`大概是个例外.它写在Block里,通过特定的方法获取属于这个Block的Building实例的特定参数来完成UI显示.
+
+---
+
+## 两者的桥梁：Tile 和 buildType
+
+方块最终是如何变成实体的？中间靠 `Tile` 网格坐标作为桥梁。
+
+1. 玩家在地图某个坐标放置方块。
+2. `tile.setBlock(block)` 被调用。
+3. 游戏会执行 `block.newBuilding()`（内部也就是你在 JS 里填写的 `buildType` 工厂函数）。
+4. 一个新的 `Building` 实例被创建，存入 `tile.build` 变量中。
+5. 这个 `Building` 实例内部又通过 `this.block` 指回它的模板 Block。
+
+四者的关系大概可以形象的理解为: `Block` 是图纸，`buildType` 是施工队，`Building`实例 是盖出来的大楼，`Tile` 是这块地基。
+
+---
+
+## 如何在 Java 源码中找到对应的 Building 类
+
+如果在阅读 Java 源码（例如 `Wall.java`）时，想找到对应方块的 `Building` 子类，它通常是 `Block` 类里的一个内部类。看下面的节选：
+
+```java
+public class Wall extends Block {
+    // ... Block 属性的定义
+
+    // 下面这个内部类就是它对应的 Building 实体
+    public class WallBuild extends Building {
         public float hit;
 
         @Override
-        public void draw(){
+        public void draw() {
             super.draw();
-
-            //......
-            
+            // ... 绘制逻辑
         }
-     }
+    }
 }
-
 ```
 
-不过注意一下,`WallBuild`不能直接用,而要在前面加上Block类名,即我们应该写`Wall.WallBuild`.
+在 JavaScript 中继承它时，需要加上外部类的限定名，即使用 `Wall.WallBuild`（如开头代码示例所示）。
+
+---
+
+## 总结：两者关系的架构本质
+
+- 享元模式：`Block` 是享元，被所有同类建筑共享，只存储**静态、不变、只读**的配置数据。
+- 实体模式：`Building` 是实体，存储**动态、多变、实例化**的实际状态。
+- 非典型“类型-对象”模式：抽象部分由 `Block` 充当类型，具体的 `Building` 充当对象，而 `buildType` 负责两者的桥接与实例化。用一句话总结：**Block 是游戏世界规则的制定者（图纸），Building 是这一规则的执行者和体现者（实体）。**
