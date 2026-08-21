@@ -1,0 +1,59 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // ConsumeGenerator 是消耗型发电机，通过消耗物品或液体发电。
+  type: "ConsumeGenerator",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 200,
+
+  // category: 建造分类。
+  category: "power",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/60",
+    "lead/40"
+  ],
+
+  // powerProduction: 发电量。
+  powerProduction: 4,
+
+  // itemDuration: 一份燃料可持续发电的时间（刻）。
+  itemDuration: 60,
+
+  // generateEffect: 发电时产生的特效。
+  generateEffect: "generatespark",
+
+  // consumes: 消耗配置。
+  consumes: {
+    // items: 每份燃料消耗的物品。
+    items: [
+      "coal/1"
+    ]
+  },
+
+  // consumesPower: 是否消耗电力。
+  consumesPower: false,
+
+  // outputsPower: 是否输出电力。
+  outputsPower: true,
+
+  // research: 科技树父节点。
+  research: "combustion-generator"
+}

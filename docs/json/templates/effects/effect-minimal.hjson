@@ -1,0 +1,42 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 特效类型。
+  // 可以使用 ParticleEffect、WaveEffect、MultiEffect 等。
+  type: "ParticleEffect",
+
+  // particles: 粒子数量。
+  particles: 8,
+
+  // sizeFrom: 粒子起始大小。
+  sizeFrom: 4,
+
+  // sizeTo: 粒子结束大小。
+  sizeTo: 0,
+
+  // length: 粒子飞行距离。
+  length: 30,
+
+  // lifetime: 粒子存活时间。
+  // 单位为刻。
+  lifetime: 30,
+
+  // colorFrom: 起始颜色。
+  colorFrom: "FFD580",
+
+  // colorTo: 结束颜色。
+  colorTo: "FF0000",
+
+  // lightColor: 发光颜色。
+  lightColor: "FFD580"}

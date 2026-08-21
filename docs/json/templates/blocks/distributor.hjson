@@ -1,0 +1,40 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // Distributor 是大型物品分发器，将物品平均分发到多个方向。
+  type: "Distributor",
+
+  // size: 方块尺寸。
+  // Distributor 通常为 3x3。
+  size: 3,
+
+  // health: 生命值。
+  health: 180,
+
+  // category: 建造分类。
+  category: "distribution",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/40",
+    "lead/30"
+  ],
+
+  // speed: 分发速度。
+  speed: 0.06,
+
+  // research: 科技树父节点。
+  research: "distributor"
+}

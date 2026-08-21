@@ -1,0 +1,47 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // PowerGenerator 是通用电力生产方块。
+  // 其他发电方块还有 ThermalGenerator、ConsumeGenerator、SolarGenerator 等。
+  type: "PowerGenerator",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 240,
+
+  // category: 建造分类。
+  category: "power",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/100",
+    "lead/50"],
+
+  // powerProduction: 发电量。
+  // 单位为电力单位/帧或刻，按游戏面板显示为准。
+  powerProduction: 2.5,
+
+  // consumesPower: 是否消耗电力。
+  // 发电方块通常为 false。
+  consumesPower: false,
+
+  // outputsPower: 是否输出电力。
+  // 发电方块通常为 true。
+  outputsPower: true,
+
+  // research: 科技树父节点。
+  research: "combustion-generator"}

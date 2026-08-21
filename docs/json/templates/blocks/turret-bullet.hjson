@@ -1,0 +1,85 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // ItemTurret 使用物品作为弹药。
+  type: "ItemTurret",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 640,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/120",
+    "lead/80",
+    "graphite/40"],
+
+  // range: 射程。
+  range: 130,
+
+  // reload: 装填时间。
+  reload: 35,
+
+  // inaccuracy: 散射角度。
+  inaccuracy: 0,
+
+  // shootCone: 允许开火的角度偏差。
+  shootCone: 5,
+
+  // targetAir: 是否以空中单位为目标。
+  targetAir: true,
+
+  // targetGround: 是否以地面单位为目标。
+  targetGround: true,
+
+  // ammo: 弹药配置。
+  ammo: {
+    graphite: {
+      // type: 子弹类型。
+      // 可以使用 BasicBulletType、MissileBulletType、RailBulletType 等。
+      type: "BasicBulletType",
+
+      // speed: 子弹飞行速度。
+      speed: 5,
+
+      // damage: 伤害值。
+      damage: 28,
+
+      // lifetime: 子弹存活时间。
+      // 单位为刻。
+      lifetime: 40,
+
+      // splashDamage: 溅射伤害。
+      splashDamage: 8,
+
+      // splashDamageRadius: 溅射范围。
+      splashDamageRadius: 18,
+
+      // hitEffect: 命中特效。
+      hitEffect: "explosion",
+
+      // despawnEffect: 消失特效。
+      despawnEffect: "explosion",
+
+      // trailEffect: 尾迹特效。
+      trailEffect: "incendTrail"}},
+
+  // research: 科技树父节点。
+  research: "scatter"}

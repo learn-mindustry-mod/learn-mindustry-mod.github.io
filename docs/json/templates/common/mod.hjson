@@ -1,0 +1,23 @@
+{
+  // name: 模组内部名称（Internal Name）。
+  // 对应 Java 中 Mod 元数据的 name 字段。
+  // 只建议使用小写英文字母、数字和连字符（-）。
+  name: "tutorial-template-mod",
+
+  // displayName: 玩家在模组列表中看到的显示名称。
+  // 可以使用中文、空格和特殊符号。
+  displayName: "教程模板模组",
+
+  // author: 模组作者名称。
+  author: "Learn-Mindustry-Mod",
+
+  // description: 模组详细介绍，显示在模组详情页。
+  description: "这是一个使用 Hjson 模板库创建的 Mindustry 模组。",
+
+  // version: 模组版本号。
+  version: "1.0.0",
+
+  // minGameVersion: 最低游戏版本号。
+  // 用于提示玩家至少需要哪个游戏版本才能运行本模组。
+  // v7 时代常见值为 136 或 146。
+  minGameVersion: "146"}

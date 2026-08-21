@@ -1,0 +1,56 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // GenericCrafter 是最通用的“把输入变成输出”的工厂方块。
+  type: "GenericCrafter",
+
+  // size: 方块尺寸。
+  // 2 表示 2x2 方块。
+  size: 2,
+
+  // health: 生命值。
+  health: 180,
+
+  // category: 建造分类。
+  // 可选值包括 crafting、defense、power、production、distribution 等。
+  category: "crafting",
+
+  // requirements: 建造需求。
+  // 可以使用 "物品/数量" 简写。
+  requirements: [
+    "copper/80",
+    "lead/40"],
+
+  // craftTime: 合成时间。
+  // 单位为刻（tick），60 刻约等于 1 秒。
+  craftTime: 60,
+
+  // consumes: 消耗配置。
+  // items 表示物品输入，power 表示电力消耗。
+  consumes: {
+    // items: 每轮合成消耗的物品。
+    items: [
+      "coal/2"],
+    // power: 持续电力消耗。
+    power: 1.2},
+
+  // outputItem: 合成产物。
+  // 也可以是 outputItems 或 outputLiquid。
+  outputItem: {
+    item: "graphite",
+    amount: 1},
+
+  // research: 科技树父节点。
+  research: "graphite-press"}

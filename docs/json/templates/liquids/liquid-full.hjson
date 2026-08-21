@@ -1,0 +1,83 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // color: 流体代表色。
+  color: "003380",
+
+  // gasColor: 气体颜色。
+  // 仅在 gas 为 true 时生效。
+  gasColor: "003380",
+
+  // barColor: UI 颜色。
+  // 不设置时默认使用 color。
+  barColor: "003380",
+
+  // lightColor: 发光颜色。
+  // 透明度决定发光强度。
+  lightColor: "003380",
+
+  // flammability: 可燃性。
+  // 控制装有此流体的方块或水洼遇火时的二次燃烧规模。
+  // 原版石油为 1。
+  flammability: 0,
+
+  // temperature: 温度。
+  // 0.5 为常温，也用于判断是否能作为冷却液。
+  temperature: 0.5,
+
+  // heatCapacity: 热容。
+  // 影响作为冷却液时的降温效果。
+  heatCapacity: 0.5,
+
+  // viscosity: 黏度。
+  // 控制水洼消失的速度。
+  viscosity: 0.5,
+
+  // explosiveness: 爆炸性。
+  // 控制装有此流体的方块或水洼遇火时的爆炸规模。
+  explosiveness: 0,
+
+  // coolant: 是否可当冷却液。
+  // false 时不会被当作冷却液使用。
+  coolant: true,
+
+  // gas: 是否为气体。
+  // true 为气体，false 为液体。
+  gas: false,
+
+  // boilPoint: 汽化阈值。
+  // 当环境温度超过此值时，流体会以气体形态泄漏。
+  boilPoint: 0.5,
+
+  // blockReactive: 是否与方块反应。
+  // 例如矿渣与水反应。
+  blockReactive: true,
+
+  // incinerable: 是否可被焚毁。
+  incinerable: true,
+
+  // moveThroughBlocks: 是否可渗透方块。
+  // true 时水洼可以穿过方块。
+  moveThroughBlocks: false,
+
+  // capPuddles: 是否限制水洼上限。
+  // false 时水洼可无限堆积。
+  capPuddles: true,
+
+  // hidden: 是否隐藏。
+  // true 时不会在资源选择界面等位置显示。
+  hidden: false,
+
+  // research: 科技树父节点。
+  research: "water"}

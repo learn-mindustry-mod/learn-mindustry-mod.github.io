@@ -1,0 +1,45 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // PowerNode 是电力节点，用于连接电力生产与消耗方块。
+  type: "PowerNode",
+
+  // size: 方块尺寸。
+  size: 1,
+
+  // health: 生命值。
+  health: 60,
+
+  // category: 建造分类。
+  category: "power",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/2",
+    "lead/2"
+  ],
+
+  // maxNodes: 最大连接数。
+  maxNodes: 5,
+
+  // laserRange: 激光连接范围。
+  laserRange: 6,
+
+  // laserColor: 激光颜色。
+  laserColor: "FFD580",
+
+  // research: 科技树父节点。
+  research: "power-node"
+}

@@ -1,0 +1,46 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // SolarGenerator 是太阳能发电机，不消耗物品即可持续发电。
+  type: "SolarGenerator",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 120,
+
+  // category: 建造分类。
+  category: "power",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/40",
+    "lead/30",
+    "silicon/30"
+  ],
+
+  // powerProduction: 发电量。
+  powerProduction: 0.6,
+
+  // consumesPower: 是否消耗电力。
+  consumesPower: false,
+
+  // outputsPower: 是否输出电力。
+  outputsPower: true,
+
+  // research: 科技树父节点。
+  research: "solar-panel"
+}

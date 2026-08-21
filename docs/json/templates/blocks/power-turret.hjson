@@ -1,0 +1,67 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // PowerTurret 是电力炮塔，消耗电力开火，不使用物品弹药。
+  type: "PowerTurret",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 600,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/100",
+    "lead/80",
+    "silicon/60"
+  ],
+
+  // range: 射程。
+  range: 120,
+
+  // reload: 装填时间。
+  reload: 30,
+
+  // shootType: 子弹类型。
+  // 可以在子弹对象中配置伤害、速度、特效等。
+  shootType: {
+    type: "BasicBulletType",
+    speed: 5,
+    damage: 30,
+    lifetime: 40
+  },
+
+  // shootCone: 允许开火的角度偏差。
+  shootCone: 5,
+
+  // targetAir: 是否攻击空中单位。
+  targetAir: true,
+
+  // targetGround: 是否攻击地面单位。
+  targetGround: true,
+
+  // consumes: 消耗配置。
+  consumes: {
+    // power: 每次开火消耗的电力。
+    power: 5
+  },
+
+  // research: 科技树父节点。
+  research: "arc"
+}

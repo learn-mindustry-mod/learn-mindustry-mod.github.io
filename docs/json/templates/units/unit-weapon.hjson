@@ -1,0 +1,64 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 单位类型。
+  type: "flying",
+
+  // health: 生命值。
+  health: 600,
+
+  // speed: 移动速度。
+  speed: 2.5,
+
+  // hitSize: 碰撞体积。
+  hitSize: 8,
+
+  // range: 索敌范围。
+  // 如果未设置，通常会根据武器射程自动计算。
+  range: 100,
+
+  // targetAir: 是否攻击空中单位。
+  targetAir: true,
+
+  // targetGround: 是否攻击地面单位。
+  targetGround: true,
+
+  // weapons: 武器列表。
+  weapons: [
+    {
+      // name: 武器名称。
+      name: "tutorial-template-weapon",
+
+      // bullet: 子弹配置。
+      bullet: {
+        type: "BasicBulletType",
+        speed: 5,
+        damage: 18,
+        lifetime: 50},
+
+      // reload: 装填时间。
+      reload: 20,
+
+      // x/y: 武器相对单位的位置偏移。
+      x: 0,
+      y: 2,
+
+      // rotate: 武器是否可旋转。
+      rotate: true,
+
+      // shootY: 开火点高度偏移。
+      shootY: 2}],
+
+  // research: 科技树父节点。
+  research: "flare"}

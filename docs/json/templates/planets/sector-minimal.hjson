@@ -1,0 +1,38 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 区块类型。
+  // 通常使用 Sector。
+  type: "Sector",
+
+  // name: 区块内部名称。
+  // 通常由文件名自动决定。
+
+  // planet: 所属行星。
+  // 填写行星的内部名称。
+  planet: "serpulo",
+
+  // sector: 区块坐标/编号。
+  // 用于定位行星上的具体区块。
+  sector: 0,
+
+  // difficulty: 难度。
+  // 数值越高越难。
+  difficulty: 1,
+
+  // alwaysUnlocked: 是否始终解锁。
+  alwaysUnlocked: false,
+
+  // research: 科技树父节点。
+  research: "groundZero"}

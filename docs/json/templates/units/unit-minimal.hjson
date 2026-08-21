@@ -1,0 +1,34 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 单位类型。
+  // 可使用 ground、flying、mech、legacy 等类型。
+  // 这里使用 flying 表示飞行单位。
+  type: "flying",
+
+  // health: 生命值。
+  health: 300,
+
+  // speed: 移动速度。
+  speed: 2,
+
+  // hitSize: 碰撞体积。
+  hitSize: 6,
+
+  // mineSpeed: 采集速度。
+  // 如果单位不采矿，可以不设置。
+  mineSpeed: 2,
+
+  // research: 科技树父节点。
+  research: "flare"}

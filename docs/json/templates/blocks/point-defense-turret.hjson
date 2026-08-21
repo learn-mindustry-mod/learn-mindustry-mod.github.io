@@ -1,0 +1,58 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // PointDefenseTurret 是点防御炮塔，用激光拦截来袭弹幕。
+  type: "PointDefenseTurret",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 500,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/80",
+    "lead/60",
+    "silicon/60"
+  ],
+
+  // range: 拦截范围。
+  range: 100,
+
+  // reload: 拦截冷却时间。
+  reload: 10,
+
+  // shootLength: 激光长度。
+  shootLength: 100,
+
+  // targetAir: 是否拦截空中弹幕。
+  targetAir: true,
+
+  // targetGround: 是否拦截地面弹幕。
+  targetGround: true,
+
+  // consumes: 消耗配置。
+  consumes: {
+    // power: 每次拦截消耗的电力。
+    power: 3
+  },
+
+  // research: 科技树父节点。
+  research: "parallax"
+}

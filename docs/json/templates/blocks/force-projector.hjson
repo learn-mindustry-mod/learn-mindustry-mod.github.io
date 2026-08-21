@@ -1,0 +1,53 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // ForceProjector 是力场投影仪，可以生成阻挡敌方弹幕的力场护盾。
+  type: "ForceProjector",
+
+  // size: 方块尺寸。
+  size: 3,
+
+  // health: 生命值。
+  health: 600,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/100",
+    "lead/100",
+    "titanium/100"
+  ],
+
+  // radius: 力场半径。
+  radius: 80,
+
+  // breakage: 护盾承受伤害上限。
+  // 受到过多伤害后护盾会暂时失效。
+  breakage: 300,
+
+  // cooldown: 护盾破碎后的冷却时间。
+  cooldown: 300,
+
+  // consumes: 消耗配置。
+  consumes: {
+    // power: 维持护盾每秒消耗的电力。
+    power: 3
+  },
+
+  // research: 科技树父节点。
+  research: "force-projector"
+}

@@ -1,0 +1,55 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // MendProjector 是修复投影仪，可以缓慢修复范围内的友方建筑。
+  type: "MendProjector",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 300,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/60",
+    "lead/50",
+    "silicon/40"
+  ],
+
+  // range: 修复范围。
+  range: 80,
+
+  // repairSpeed: 修复速度。
+  repairSpeed: 0.4,
+
+  // phaseRangeBoost: 相织布加成后的范围提升。
+  phaseRangeBoost: 20,
+
+  // phaseSpeedBoost: 相织布加成后的速度提升。
+  phaseSpeedBoost: 0.5,
+
+  // consumes: 消耗配置。
+  consumes: {
+    // power: 每秒消耗电力。
+    power: 2
+  },
+
+  // research: 科技树父节点。
+  research: "mend-projector"
+}

@@ -1,0 +1,51 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // 这里使用 Battery 作为电力存储/消耗相关方块示例。
+  // 如果是纯耗电方块，可使用 ConsumeGenerator 之外的逻辑方块或自定义类型。
+  type: "Battery",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 360,
+
+  // category: 建造分类。
+  category: "power",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/120",
+    "lead/80",
+    "silicon/40"],
+
+  // consumes: 消耗配置。
+  // 如果方块需要消耗电力，可以在这里配置 power。
+  consumes: {
+    // power: 电力消耗量。
+    // 如果该方块是电池，通常不消耗电力而是存储电力。
+    power: 0},
+
+  // consumesPower: 是否使用电力。
+  // 电池通常不消耗电力，而是存储电力。
+  consumesPower: false,
+
+  // outputsPower: 是否输出电力。
+  // 电池通常可以输出电力。
+  outputsPower: true,
+
+  // research: 科技树父节点。
+  research: "battery"}

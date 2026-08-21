@@ -1,0 +1,42 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // Conveyor 是基础传送带，用于运输物品。
+  type: "Conveyor",
+
+  // size: 方块尺寸。
+  size: 1,
+
+  // health: 生命值。
+  health: 40,
+
+  // category: 建造分类。
+  category: "distribution",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/1"
+  ],
+
+  // speed: 传送带速度。
+  // 数值越大，物品移动越快。
+  speed: 0.04,
+
+  // displayFlow: 是否显示物品流量。
+  displayFlow: true,
+
+  // research: 科技树父节点。
+  research: "conveyor"
+}

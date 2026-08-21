@@ -1,0 +1,29 @@
+{
+  // type: 方块类型。
+  // StaticWall 是静态环境墙，通常用于地图装饰或地形阻挡。
+  type: "StaticWall",
+
+  // name: 环境墙名称。
+  name: "Tutorial Environment Wall",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // variants: 贴图变体数量。
+  variants: 2,
+
+  // playerUnmineable: 玩家是否无法挖掘。
+  playerUnmineable: true,
+
+  // solid: 是否为实心方块。
+  solid: true,
+
+  // research: 科技树父节点。
+  // 环境方块通常不需要科技树。
+  research: "sand"
+}

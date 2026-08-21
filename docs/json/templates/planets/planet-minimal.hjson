@@ -1,0 +1,43 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 行星类型。
+  // 通常使用 Planet。
+  type: "Planet",
+
+  // name: 行星内部名称。
+  // 通常由文件名自动决定，这里不需要额外填写。
+
+  // radius: 行星半径。
+  radius: 1.0,
+
+  // generator: 行星生成器。
+  // 控制行星地形、区块等生成逻辑。
+  generator: {
+    type: "PlanetGenerator"},
+
+  // mesh: 行星表面网格。
+  // 可以使用 HexMesh、NoiseMesh 等。
+  mesh: {
+    type: "HexMesh"},
+
+  // cloudMesh: 云层网格。
+  cloudMesh: {
+    type: "CloudMesh"},
+
+  // alwaysUnlocked: 是否始终解锁。
+  alwaysUnlocked: false,
+
+  // research: 科技树父节点。
+  research: "serpulo"}

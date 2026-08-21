@@ -1,0 +1,45 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // Incinerator 是焚化炉，可以销毁输入的物品和液体。
+  type: "Incinerator",
+
+  // size: 方块尺寸。
+  size: 1,
+
+  // health: 生命值。
+  health: 60,
+
+  // category: 建造分类。
+  category: "effect",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/10",
+    "lead/10"
+  ],
+
+  // hasItems: 是否接受物品输入。
+  hasItems: true,
+
+  // hasLiquids: 是否接受液体输入。
+  hasLiquids: true,
+
+  // flameColor: 火焰颜色。
+  flameColor: "FFD580",
+
+  // research: 科技树父节点。
+  research: "incinerator"
+}

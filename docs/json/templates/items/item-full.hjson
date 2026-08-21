@@ -1,0 +1,58 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // color: 物品代表色。
+  // 控制物品在分类器、物品栏等界面中的显示颜色。
+  color: "39C5BB",
+
+  // flammability: 可燃性。
+  // 影响火力发电机发电量、容器或单位爆炸时的火焰规模。
+  // 原版煤炭为 1。
+  flammability: 0,
+
+  // explosiveness: 爆炸性。
+  // 影响爆炸伤害与爆炸规模。
+  // 原版爆炸混合物为 1。
+  explosiveness: 0,
+
+  // radioactivity: 放射性。
+  // 影响 RTG 发电机发电量。
+  // 原版钍为 1。
+  radioactivity: 0,
+
+  // charge: 放电性。
+  // 影响容器或单位爆炸时产生的电弧规模。
+  // 原版巨浪合金为 1。
+  charge: 0,
+
+  // hardness: 硬度。
+  // 影响以此物品为出产的矿物地板所需钻头等级。
+  // 铜为 1，钨为 5。
+  hardness: 1,
+
+  // cost: 建造时间权重。
+  // 方块建造时间 = Σ(物品数量 * 物品 cost)。
+  cost: 1,
+
+  // healthScaling: 生命值倍率。
+  // 会按比例累加到使用该物品建造的方块生命值中。
+  healthScaling: 1,
+
+  // alwaysUnlocked: 是否始终解锁。
+  // true 表示在科技树中默认解锁。
+  alwaysUnlocked: false,
+
+  // research: 科技树父节点。
+  // 填写原版或本模组中已存在内容的内部名称。
+  research: "copper"}

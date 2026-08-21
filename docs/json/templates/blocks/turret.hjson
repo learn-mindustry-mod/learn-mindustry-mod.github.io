@@ -1,0 +1,67 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // Turret 是炮塔基类，使用 ItemTurret 可以消耗弹药攻击。
+  type: "ItemTurret",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 500,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/100",
+    "lead/60"],
+
+  // range: 射程。
+  // 单位为格。
+  range: 110,
+
+  // reload: 装填时间。
+  // 单位为刻，数值越小射速越快。
+  reload: 30,
+
+  // inaccuracy: 散射角度。
+  // 数值越大弹道越分散。
+  inaccuracy: 2,
+
+  // shootCone: 允许开火的角度偏差。
+  // 数值越大炮塔越容易转向并开火。
+  shootCone: 8,
+
+  // targetAir: 是否以空中单位为目标。
+  targetAir: true,
+
+  // targetGround: 是否以地面单位为目标。
+  targetGround: true,
+
+  // ammo: 弹药配置。
+  // 物品弹药与该物品对应的子弹效果。
+  ammo: {
+    copper: {
+      // speed: 子弹速度。
+      speed: 4,
+      // damage: 伤害。
+      damage: 12,
+      // reloadMultiplier: 装填时间倍率。
+      reloadMultiplier: 1}},
+
+  // research: 科技树父节点。
+  research: "duo"}

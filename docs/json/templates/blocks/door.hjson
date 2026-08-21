@@ -1,0 +1,42 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // Door 是基础门，可以打开和关闭，允许或阻挡单位通过。
+  type: "Door",
+
+  // size: 方块尺寸。
+  size: 1,
+
+  // health: 生命值。
+  health: 300,
+
+  // category: 建造分类。
+  category: "defense",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/25",
+    "lead/25"
+  ],
+
+  // openSound: 开门音效。
+  openSound: "door",
+
+  // closeSound: 关门音效。
+  closeSound: "door",
+
+  // research: 科技树父节点。
+  research: "door"
+}

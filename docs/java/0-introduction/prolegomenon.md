@@ -4,13 +4,6 @@
 
 本篇教程旨在为mindustry mod开发初学者提供一个系统性教程，梳理游戏主体内容的脉络，经平滑的学习曲线来快速上手编写mindustry的模组。
 
-在你阅读本教程之前，你至少需要有如下的知识与素养：
-
-- <font style="color:red;">能够使用 Java / Kotlin / JavaScript 中至少一种编程语言编写程序</font>
-- 能够通过阅读**Java**源代码理解程序逻辑
-- 能够一边阅读一边实践
-- **一颗常在学习的心**
-
 ### 语言的选择
 
 通常来说，总共有且仅有三类“语言”可以用于Mindustry的模组编写，即JSON/Hjson、Javascript、Java及其他与Java互操作的JVM语言。本教程重点讲解的语言是Java和Kotlin（一门旨在成为“更好的Java”的语言）。关于语言的选择，本教程有以下建议：

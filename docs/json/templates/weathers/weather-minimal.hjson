@@ -1,0 +1,47 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 天气类型。
+  // 可以使用 RainWeather、SnowWeather、ParticleWeather、SandStorm 等。
+  type: "ParticleWeather",
+
+  // duration: 持续时间。
+  // 单位为刻。
+  duration: 3600,
+
+  // opacityMultiplier: 不透明度倍率。
+  // 控制天气覆盖层的透明度。
+  opacityMultiplier: 0.6,
+
+  // sound: 天气音效。
+  sound: "weather",
+
+  // soundVol: 音效音量。
+  soundVol: 0.5,
+
+  // status: 天气施加的状态效果。
+  status: "wet",
+
+  // statusDuration: 状态持续时间。
+  statusDuration: 600,
+
+  // statusAir: 是否对空中单位生效。
+  statusAir: true,
+
+  // statusGround: 是否对地面单位生效。
+  statusGround: true,
+
+  // research: 科技树父节点。
+  // 天气通常不需要科技树，可以按需设置。
+  research: "rain"}

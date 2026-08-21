@@ -1,0 +1,35 @@
+{
+  // type: 方块类型。
+  // Floor 是基础地板类型，用于自定义地表。
+  type: "Floor",
+
+  // name: 地板名称（可通过 bundle 本地化）。
+  name: "Tutorial Floor",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // itemDrop: 挖掘后掉落的物品。
+  itemDrop: "sand",
+
+  // playerUnmineable: 玩家是否无法手动挖掘。
+  playerUnmineable: false,
+
+  // variants: 贴图变体数量。
+  // 0 表示使用默认贴图，大于 0 表示随机使用多个变体。
+  variants: 0,
+
+  // speedMultiplier: 单位在上面移动的速度倍率。
+  speedMultiplier: 1,
+
+  // damage: 单位站在上面时每秒受到的伤害。
+  damage: 0,
+
+  // research: 科技树父节点。
+  research: "sand"
+}

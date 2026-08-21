@@ -1,0 +1,60 @@
+{
+
+  // name: 内容显示名称。
+  // 可以直接写在内容文件中，也可以通过 bundle 本地化。
+  name: "模板名称",
+
+  // description: 内容简介。
+  // 显示在游戏内内容详情页。
+  description: "这是一个模板示例。",
+
+  // details: 内容隐藏详情。
+  // 可通过游戏内界面查看。
+  details: "这是模板的隐藏详情。",
+
+  // type: 方块类型。
+  // Separator 是离心分离器，将一种输入物品分离为多种输出物品。
+  type: "Separator",
+
+  // size: 方块尺寸。
+  size: 2,
+
+  // health: 生命值。
+  health: 160,
+
+  // category: 建造分类。
+  category: "crafting",
+
+  // requirements: 建造需求。
+  requirements: [
+    "copper/40",
+    "lead/30"
+  ],
+
+  // craftTime: 分离一次所需时间（刻）。
+  craftTime: 40,
+
+  // results: 分离产物列表。
+  // 每一项都会按概率或固定数量产出。
+  results: [
+    {
+      item: "titanium",
+      amount: 1
+    },
+    {
+      item: "sand",
+      amount: 2
+    }
+  ],
+
+  // consumes: 消耗配置。
+  consumes: {
+    // items: 输入物品。
+    items: [
+      "scrap/5"
+    ]
+  },
+
+  // research: 科技树父节点。
+  research: "separator"
+}
