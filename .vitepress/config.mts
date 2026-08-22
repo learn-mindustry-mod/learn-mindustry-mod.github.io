@@ -58,6 +58,9 @@ function generateNav(name:string):VitePressSidebarOptions{
   resolvePath: "/"+name+"/",
   useTitleFromFileHeading: true,
   useFolderTitleFromIndexFile: true,
+  useFolderLinkFromIndexFile: true,
+  includeRootIndexFile: true,
+  manualSortFileNameByPriority: ["index.md"],
   includeEmptyFolder: true,
   excludePattern: ["imgs", "img", "readme", "guideline", "reference", "templates"],
   }
