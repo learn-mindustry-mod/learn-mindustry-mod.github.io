@@ -72,17 +72,16 @@ JSON（JavaScript Object Notation）是一种**标记语言**，它只负责存�
 | `Block` 方块 | `blocks` | 工厂、炮塔、钻头 |
 | `BulletType` 子弹 | `bullets` | 炮塔射出的弹药 |
 | `Liquid` 流体 | `liquids` | 水、石油、气体 |
-| `StatusEffect` 状态效果 | `statuses`（旧名 `status` 也行） | 燃烧、冰冻 |
+| `StatusEffect` 状态效果 | `status` | 燃烧、冰冻 |
 | `UnitType` 单位 | `units` | 机甲、飞机 |
-| `Weather` 天气 | `weather`（旧名 `weathers` 也行） | 下雨、下孢子 |
+| `Weather` 天气 | `weathers` | 下雨、下孢子 |
 | `SectorPreset` 区块 | `sectors` | 战役里的区块预设 |
 | `Planet` 星球 | `planets` | 自定义星球 |
 | `TeamEntry` 队伍 | `teams` | 自定义队伍 |
 | `UnitCommand` 单位指令 | `unitCommands` | 单位逻辑指令 |
 | `UnitStance` 单位姿态 | `unitStances` | 单位的 AI 姿态 |
 
-::: tip 两个小坑
-- 状态效果的正式文件夹名是 `statuses`，天气是 `weather`（单数）。旧教程沿用的 `status`、`weathers` 这种"错误复数"现在仍被兼容读取（源码 `Mods.loadContent` 会同时搜两个名字），但**推荐用正式名**。
+::: tip 一个小坑
 - `bundles`、`sprites`、`sprites-override`、`.git` 这几个文件夹被游戏标记为**特殊文件夹**（源码 `Mods.specialFolders`），不会被当成内容扫描，别把 JSON 塞进它们。
 :::
 
