@@ -2,7 +2,7 @@
 
 `StatusEffect` 类代表了游戏中的状态效果，例如“燃烧”、“电击”等。相较于物品和液体，状态效果的扩展性更强，但其基本逻辑与前者类似。
 
-关于如何从 Java 源代码中提取可用于 JSON 的接口，请参考 [从Java源代码中提取json可用接口](../../json/json_gemini/x09-how-to-find-class-and-field.md)，此处不再赘述。
+关于如何从 Java 源代码中提取可用于 JSON 的接口，请参考 [从Java源代码中提取json可用接口](../../json/json_1_gemini/x09-how-to-find-class-and-field.md)，此处不再赘述。
 
 本文主要介绍如何实现 JSON 无法完成的功能，即通过脚本（JavaScript）对状态效果进行深度定制。
 
