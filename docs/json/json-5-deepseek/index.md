@@ -43,15 +43,6 @@
 - [行星、区块、生成器、环境方块](./x08-planet-and-sector)
 - [如何找到自己需要的类和字段](./x09-how-to-find-class-and-field)
 - [Java语法初步、`ContentParser`的解析](./x0a-java-and-contentparser)
-- 原版所有类型和字段表（翻译版）：
-  - [方块（Block）字段表](./x0b-01-block)
-  - [物品与流体（Item/Liquid）字段表](./x0b-02-item-liquid)
-  - [消耗器与绘制器（Consume/DrawBlock）字段表](./x0b-03-consumer-drawer)
-  - [炮塔、子弹与DrawPart字段表](./x0b-04-turret-bullet-drawpart)
-  - [状态效果与特效（StatusEffect/Effect）字段表](./x0b-05-status-effect-fx)
-  - [单位与武器（UnitType/Weapon）字段表](./x0b-06-unit-weapon-ability)
-  - [行星、区块与环境方块（Planet/Sector）字段表](./x0b-07-planet-sector-environment)
-  - [天气（Weather）字段表](./x0b-08-weather)
 - [过渡到Javascript/Java](./x0c-transition-to-js-java)
 
 ## 联系方式
