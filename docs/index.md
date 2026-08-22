@@ -12,13 +12,13 @@ hero:
     alt: VitePress
   actions:
       - theme: brand
-        text: Java/Kotlin教程
+        text: Java/Kotlin
         link: /java/index
       - theme: brand
-        text: JavaScript教程
-        link: /Javascript/index
+        text: JavaScript
+        link: /javascript/index
       - theme: brand
-        text: Json教程
+        text: Json/DP
         link: /json/index
       - theme: brand
         text: 贴图

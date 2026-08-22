@@ -34,7 +34,7 @@ const viteConfig: UserConfig = {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Java", link: "/java" },
-      { text: "JavaScript", link: "/Javascript" },
+      { text: "JavaScript", link: "/javascript" },
       { text: "Json", link: "/json" },
       { text: "贴图", link: "/sprite" },
     ],
@@ -59,14 +59,14 @@ function generateNav(name:string):VitePressSidebarOptions{
   useTitleFromFileHeading: true,
   useFolderTitleFromIndexFile: true,
   includeEmptyFolder: true,
-  excludePattern: ["imgs", "readme","guideline","reference"],
+  excludePattern: ["imgs", "img", "readme", "guideline", "reference", "templates"],
   }
 }
 export default defineConfig(withSidebar(viteConfig,
   [
     generateNav("java"),
     generateNav("json"),
-    generateNav("Javascript"),
+    generateNav("javascript"),
     generateNav("sprite"),
   ])
 )

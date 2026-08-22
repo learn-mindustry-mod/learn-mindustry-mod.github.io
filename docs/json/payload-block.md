@@ -8,7 +8,7 @@
 
 这七种类型及相关类的继承关系如下图所示(箭头表示继承).
 
-![继承关系](./img/payloadBlock-1.png)
+![继承关系](./imgs/payloadBlock-1.png)
 
 ## PayloadConveyor和PayloadRouter
 
