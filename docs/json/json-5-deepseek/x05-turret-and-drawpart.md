@@ -190,7 +190,7 @@
 ```
 my-first-mod/
 ├─ content/
-│  ├─ items/copper.json
+│  ├─ items/enriched-copper.json
 │  ├─ liquids/hot-water.json
 │  ├─ blocks/better-copper-furnace.json
 │  ├─ blocks/better-drill.json

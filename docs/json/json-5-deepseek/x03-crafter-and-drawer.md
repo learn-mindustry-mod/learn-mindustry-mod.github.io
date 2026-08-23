@@ -122,7 +122,7 @@ v8 的消耗系统是一次大改。方块吃的东西——电、物品、流�
     ]
   }
   outputItems: [
-    my-first-mod-copper/1
+    my-first-mod-enriched-copper/1
   ]
 }
 ```
@@ -137,7 +137,7 @@ v8 的消耗系统是一次大改。方块吃的东西——电、物品、流�
 - `research: copper-wall`：挂在铜墙科技节点下（上一章讲过）。
 - `craftTime: 120`：2 秒生产一次。
 - `consumes: { power: 0.5, items: [copper/2] }`：每次生产吃 2 铜 + 0.5 电力。
-- `outputItems: [my-first-mod-copper/1]`：产出 1 个你自己的强化铜——注意这里写的是**完整内部名**（`my-first-mod-copper`），不是 `copper`。
+- `outputItems: [my-first-mod-enriched-copper/1]`：产出 1 个你自己的强化铜——注意这里写的是**完整内部名**（`my-first-mod-enriched-copper`），不是 `copper`。
 
 ---
 
@@ -192,11 +192,11 @@ drawer: [
 my-first-mod/
 ├─ mod.json
 ├─ content/
-│  ├─ items/copper.json
+│  ├─ items/enriched-copper.json
 │  ├─ liquids/hot-water.json
 │  └─ blocks/better-copper-furnace.json
 ├─ sprites/
-│  ├─ copper.png
+│  ├─ enriched-copper.png
 │  └─ better-copper-furnace.png
 └─ bundles/
    └─ bundle_zh_CN.properties

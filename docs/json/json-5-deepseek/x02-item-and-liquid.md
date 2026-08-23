@@ -23,14 +23,23 @@
 其中"模组内部名"就是 `mod.json` 里 `name` 转小写、空格换连字符的结果（上一章讲过）。举例：
 
 - 你的 `mod.json` 写了 `"name": "my-first-mod"`；
-- 你在 `content/items/copper.json` 里定义了一个物品；
-- 那么它的内部名就是 `my-first-mod-copper`。
+- 你在 `content/items/enriched-copper.json` 里定义了一个物品；
+- 那么它的内部名就是 `my-first-mod-enriched-copper`。
 
 这个内部名会被用在三个地方，请牢牢记住：
 
-1. **贴图**：`sprites/` 里放一张 `copper.png`，打包后它的贴图名自动变成 `my-first-mod-copper`，恰好和物品内部名对上，于是自动挂载。
-2. **语言文件**：`bundles/` 里的键是 `item.my-first-mod-copper.name`。
-3. **互相引用**：后面方块要消耗这个物品时，写 `my-first-mod-copper`，而不是 `copper`。
+1. **贴图**：`sprites/` 里放一张 `enriched-copper.png`，打包后它的贴图名自动变成 `my-first-mod-enriched-copper`，恰好和物品内部名对上，于是自动挂载。
+2. **语言文件**：`bundles/` 里的键是 `item.my-first-mod-enriched-copper.name`。
+3. **互相引用**：后面方块要消耗这个物品时，写 `my-first-mod-enriched-copper`，而不是 `copper`。
+
+::: warning 新内容的名字，千万别撞原版！
+`copper`、`water`、`mechanical-drill`……这些都是**已经存在的原版内容内部名**。如果你的内容文件也叫 `copper.json`，游戏**不会**新建物品，而是走**补丁（patch）机制**（源码 `ContentParser` 第 925 行）：文件名一旦命中原版内容，你写的字段会直接**覆盖到原版内容上**，你也不会得到 `my-first-mod-copper` 这个新物品。
+
+- **方块**有一个逃生舱：同名文件里若写了 `type` 字段，会被当成新方块（并收到一条警告）；不写 `type` 则是补丁。
+- **物品、流体、状态、单位等其余内容**：同名即补丁，**没有逃生舱**。
+
+结论：**新建内容的文件名，绝对不能和任何已存在的内容内部名相同**。想仿照原版做个"强化版"，换个词即可，比如这里用 `enriched-copper`（强化铜）而不是 `copper`。反过来，补丁机制也是《饱和火力》改原版方块的原理（它那 `duo.json` 就是补丁原版双联炮）——只有你**故意**想改原版时才用它。
+:::
 
 ::: warning 注意
 文件名就是内部名的一部分，所以**内容文件的文件名请只用小写英文字母和连字符**。像《饱和火力》那样给物品文件取中文名（`水桶.json`）虽然也能跑，但会让内部名变得奇怪，徒增麻烦。初学者别学这个。
@@ -56,7 +65,7 @@
 }
 ```
 
-照着它，我们在 `content/items/copper.json` 里写下自己的第一个物品：
+照着它，我们在 `content/items/enriched-copper.json` 里写下自己的第一个物品：
 
 ```hjson
 {
@@ -169,9 +178,9 @@
 
 规则（源码 `Mods.packSprites`）：`sprites/` 文件夹里的每一张 PNG，打包后的贴图名 = `模组内部名-文件名`。所以：
 
-- 你在 `sprites/` 放一张 `copper.png`；
-- 打包后它叫 `my-first-mod-copper`；
-- 而你的物品内部名恰好是 `my-first-mod-copper`；
+- 你在 `sprites/` 放一张 `enriched-copper.png`；
+- 打包后它叫 `my-first-mod-enriched-copper`；
+- 而你的物品内部名恰好是 `my-first-mod-enriched-copper`；
 - 游戏在 `UnlockableContent.loadIcon` 里按内部名去找这张图，**自动对上**。
 
 也就是说：**给物品配图，只需把 PNG 命名为和内容文件同名**，放进 `sprites/` 即可。流体同理。
@@ -191,12 +200,12 @@
 
 键的格式（源码 `UnlockableContent` 构造器）：`<类型>.<内部名>.name` 与 `.description`。其中 `<类型>` 是内容类型的枚举名：物品是 `item`，流体是 `liquid`，方块是 `block`，单位是 `unit`……
 
-例如给 `my-first-mod-copper` 写语言条目：
+例如给 `my-first-mod-enriched-copper` 写语言条目：
 
 ```properties
 # bundle_zh_CN.properties
-item.my-first-mod-copper.name = 强化铜
-item.my-first-mod-copper.description = 一种看起来更贵的铜。
+item.my-first-mod-enriched-copper.name = 强化铜
+item.my-first-mod-enriched-copper.description = 一种看起来更贵的铜。
 liquid.my-first-mod-hot-water.name = 热乎水
 ```
 
@@ -256,10 +265,10 @@ liquid.my-first-mod-hot-water.name = 热乎水
 my-first-mod/
 ├─ mod.json
 ├─ content/
-│  ├─ items/copper.json
+│  ├─ items/enriched-copper.json
 │  └─ liquids/hot-water.json
 ├─ sprites/
-│  └─ copper.png
+│  └─ enriched-copper.png
 └─ bundles/
    └─ bundle_zh_CN.properties
 ```
@@ -272,6 +281,6 @@ my-first-mod/
 
 这一章我们创建了物品和流体，并把四件事串成了一条线：**内部名**（`模组名-文件名`）是枢纽，它一头连着 `sprites/` 里的贴图，一头连着 `bundles/` 里的语言键，还决定了科技树里怎么引用。抓住这条线，后面所有内容类型都是同一套套路。
 
-**思考题**：如果你的模组内部名是 `my-first-mod`，文件叫 `copper.json`，那么它的贴图文件名应该叫什么？语言键应该是什么？
+**思考题**：如果你的模组内部名是 `my-first-mod`，文件叫 `enriched-copper.json`，那么它的贴图文件名应该叫什么？语言键应该是什么？
 
 下一章，我们进入方块的世界——用 `GenericCrafter` 造出第一个能自动生产的工厂，并顺便揭开"方块通性"和"消耗器"这两张隐藏的网。

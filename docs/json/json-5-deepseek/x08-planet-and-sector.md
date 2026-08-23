@@ -51,7 +51,7 @@
 {
   type: OreBlock
   name: 强化铜矿
-  itemDrop: my-first-mod-copper
+  itemDrop: my-first-mod-enriched-copper
   variants: 3
 }
 ```

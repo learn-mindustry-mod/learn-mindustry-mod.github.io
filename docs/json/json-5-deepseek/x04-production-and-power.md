@@ -195,13 +195,13 @@
 my-first-mod/
 ├─ mod.json
 ├─ content/
-│  ├─ items/copper.json
+│  ├─ items/enriched-copper.json
 │  ├─ liquids/hot-water.json
 │  ├─ blocks/better-copper-furnace.json
 │  ├─ blocks/better-drill.json
 │  └─ blocks/better-burner.json
 ├─ sprites/
-│  ├─ copper.png
+│  ├─ enriched-copper.png
 │  ├─ better-copper-furnace.png
 │  ├─ better-drill.png
 │  └─ better-burner.png

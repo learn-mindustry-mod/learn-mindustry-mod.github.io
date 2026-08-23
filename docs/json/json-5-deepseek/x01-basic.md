@@ -85,6 +85,12 @@ JSON（JavaScript Object Notation）是一种**标记语言**，它只负责存�
 - `bundles`、`sprites`、`sprites-override`、`.git` 这几个文件夹被游戏标记为**特殊文件夹**（源码 `Mods.specialFolders`），不会被当成内容扫描，别把 JSON 塞进它们。
 :::
 
+::: warning 文件名 = 内容名，别撞原版！
+`ContentParser` 会拿**文件名（不含扩展名）**去比对已存在的内容。如果你的文件名恰好和某个原版内容同名（比如 `copper.json`、`duo.json`），游戏**不会**新建内容，而是把你的字段**覆盖到原版内容上**——这就是"补丁（patch）机制"，《饱和火力》改原版方块靠的就是它。
+
+对初学者最重要的提醒：**新建内容时，文件名要避开所有原版内部名**，否则你以为是"新建"，实际是"改原版"。下一章讲内部名时会展开讲这条规则。
+:::
+
 ---
 
 ## JSON 与 Hjson：Mindustry 的方言
