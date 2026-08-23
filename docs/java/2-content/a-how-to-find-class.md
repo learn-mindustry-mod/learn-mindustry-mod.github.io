@@ -44,6 +44,42 @@ Javadoc 是指一种特殊的注释标准，即以*开头的多行注释，有�
 
 并不是所有字段都有Javadoc，这种情况是由两种原因引起的：一是Anuke犯懒没写；二是这个字段的名称已经完全表明字段的用途了，例如`GenericCrafter`的`ignoreLiquidFullness`，即字面意思是否忽略流体充满。另一方面，你也要利用IDEA提供的“查找用法”功能，当你不知道某一字段用处的时候，可以看看原版内容是如何设置这一字段的。
 
+## 从`setStats()`反推字段含义
+
+当 Javadoc 缺失、“查找用法”也看不出名堂时，还有一招屡试不爽：**去看这个类（及其父类）的`setStats()`方法**。
+
+`setStats()`是内容对象“自我汇报”的地方——每当玩家在核心数据库里点开它，游戏就会调用这个方法，把要展示的统计条目一条条加进统计面板。所以 **`setStats()`里的每一行`stats.add(...)`，都是一条“字段 → 含义”的线索**：它会把某个字段和一个人类能读懂的标签、单位绑定在一起，有时还顺带暴露了换算关系。
+
+举个例子，`Pump`（泵）的`setStats()`里有这么一行：
+
+``` java
+stats.add(Stat.output, 60f * pumpAmount * size * size, StatUnit.liquidSecond);
+```
+
+不用查任何文档，这行代码就把`pumpAmount`的含义交代清楚了：它是**每个格子、每个 tick** 的抽水量——先乘`size * size`（整台泵的占地面积），再乘`60`（tick 换算成秒），最后以`liquidSecond`（液体/秒）为单位展示。字段的物理意义、面积换算、显示单位，一次全齐。
+
+再看两个例子。`GenericCrafter`的`setStats()`：
+
+``` java
+stats.add(Stat.productionTime, craftTime / 60f, StatUnit.seconds);
+```
+
+说明`craftTime`是以 tick 计的生产耗时，除以 60 变成“秒”展示。`PowerGenerator`的`setStats()`：
+
+``` java
+stats.add(generationType, powerProduction * 60.0f, StatUnit.powerSecond);
+```
+
+说明`powerProduction`是“每 tick 发电量”，显示时乘 60 变成“每秒”。
+
+::: tip 顺带剧透：`Stat` 是什么
+上面那些`Stat.output`、`Stat.powerProduction`、`Stat.productionTime`，就是统计系统的“条目名”。它们来自`mindustry.world.meta.Stat`——注意它**不是枚举**，而是一个注册表式的类：`health`、`size`、`output`、`powerUse`、`range`、`reload`……全是它的`public static final`实例，每个实例挂着一个分类（`StatCat`，如`general`、`power`、`crafting`、`function`）和一个本地化键（`stat.xxx`，键名自动转小写）。
+
+`Stats.add()`有一大堆重载：`add(Stat, float, StatUnit)`（数字+单位）、`addPercent`（百分比）、`addMultModifier`（倍率修正）、`add(Stat, boolean)`、`add(Stat, ItemStack)`、`add(Stat, Liquid, amount, perSecond)`……复杂展示（物品列表、生产/消耗图示）则交给`StatValues`。单位制是`StatUnit`：`blocks`（格）、`powerSecond`（电力/秒）、`liquidSecond`（液体/秒）、`percent`……
+
+这里点到为止，`Stat`/`StatUnit`/`StatCat`/`StatValue`的完整机制，在第 3 章 `A-block-and-building.md` 的“统计与 UI 信息”一节有系统讲解。
+:::
+
 ## 根据类型查找所需的贴图
 
 使用某些类型，特别是贴图导数非常多的类型，会让我们分不清要添加哪些贴图。
