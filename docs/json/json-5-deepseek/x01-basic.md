@@ -42,6 +42,12 @@ JSON（JavaScript Object Notation）是一种**标记语言**，它只负责存�
 - `scripts/`：JavaScript 脚本，实现 JSON 做不到的特殊逻辑。
 - `icon.png` 或 `preview.png`：模组在游戏模组列表里的图标。
 
+::: tip 先分清"文件夹"和"文件"
+上面这些名字里，凡是以 `/` 结尾的（`content/`、`sprites/`、`bundles/`……）**都是文件夹（目录），不是文件**——`/` 就是"这是个装东西的容器"的标志，读到它就该明白"里面要放东西"。
+
+而且 `content/` 里面**只能放内容类型的子文件夹**（`items/`、`blocks/`、`liquids/`……）。JSON 内容文件必须进到**对应的子文件夹**里；直接丢在 `content/` 根目录下的 JSON **不会被加载**（源码 `Mods.loadContent` 只扫描以 ContentType 命名的子文件夹）。
+:::
+
 用《饱和火力 3.3.2.1》来对照。解压它的安装包，你会看到 `SFcontent/`、`sprites/`、`bundles/`、`mod.json`，还有 `classes.dex`、`kotlin/` 这些 Java 模组才有的东西。它的 `mod.json` 长这样：
 
 ```json
@@ -64,22 +70,32 @@ JSON（JavaScript Object Notation）是一种**标记语言**，它只负责存�
 
 ### `content/` 下的内容目录
 
-游戏按 `mindustry/ctype/ContentType.java` 里登记的**内容类型（ContentType）**来扫描 `content/` 下的子文件夹。v8 的完整对照如下：
+`content/` 里面**只放内容类型的子文件夹**。游戏会按 `mindustry/ctype/ContentType.java` 里登记的**内容类型（ContentType）**，逐个扫描对应的子文件夹（源码 `Mods.loadContent`）。
+
+但有一条更关键的规则要记住：**"有文件夹"不等于"能写 JSON"**。一个文件夹里的 JSON 到底能不能被解析，最终看的是 `ContentParser.parsers` 表（`ContentType → 解析器`）里有没有注册对应内容类型；没有注册的，放进 JSON 会直接报错 `No parsers for content type '...'`（源码 `ContentParser.parse` 第 1037 行）。v8 里**能注册为独立 JSON 内容**的类型如下：
 
 | 内容类型 | 文件夹名 | 存什么 |
 |---|---|---|
 | `Item` 物品 | `items` | 铜、铅之类 |
 | `Block` 方块 | `blocks` | 工厂、炮塔、钻头 |
-| `BulletType` 子弹 | `bullets` | 炮塔射出的弹药 |
 | `Liquid` 流体 | `liquids` | 水、石油、气体 |
-| `StatusEffect` 状态效果 | `status` | 燃烧、冰冻 |
+| `StatusEffect` 状态效果 | `statuses`（旧名 `status` 也行） | 燃烧、冰冻 |
 | `UnitType` 单位 | `units` | 机甲、飞机 |
-| `Weather` 天气 | `weathers` | 下雨、下孢子 |
+| `Weather` 天气 | `weather`（旧名 `weathers` 也行） | 下雨、下孢子 |
 | `SectorPreset` 区块 | `sectors` | 战役里的区块预设 |
 | `Planet` 星球 | `planets` | 自定义星球 |
 | `TeamEntry` 队伍 | `teams` | 自定义队伍 |
-| `UnitCommand` 单位指令 | `unitCommands` | 单位逻辑指令 |
-| `UnitStance` 单位姿态 | `unitStances` | 单位的 AI 姿态 |
+
+::: warning 三个"看着能放、其实不能"的文件夹
+`ContentType` 还定义了 `bullets`、`unitCommands`、`unitStances` 三个文件夹，但 **`ContentParser.parsers` 里没有注册它们的解析器**——往里面放 JSON 会直接报错：
+
+- **子弹（BulletType）**：不能单独成文件，只能**内联**在炮塔的 `ammoTypes`/`shootType`、单位武器的 `bullet` 字段里（后面的章节会看到）；
+- **单位指令（UnitCommand）/ 单位姿态（UnitStance）**：是代码定义的内容，JSON 模组无法新增，只能引用现成的。
+:::
+
+::: tip 内容文件里能写哪些键？
+一个内容 JSON 文件里能写什么键，同样由 `ContentParser` 说了算：一是该内容类型的解析器（上面那张表），二是 `readFields` 反射读到的**目标 Java 类的公开字段**；遇到 `Effect`、`Sound`、`Color`、`DrawPart`、`Interp` 这类特殊类型的字段，再由 `classParsers` 表（字段类型 → 解析器）里的专用解析器接手。换句话说：**想查一个内容能写什么，就去翻它对应的 Java 类**（第九章会教完整的反查方法）。
+:::
 
 ::: tip 一个小坑
 - `bundles`、`sprites`、`sprites-override`、`.git` 这几个文件夹被游戏标记为**特殊文件夹**（源码 `Mods.specialFolders`），不会被当成内容扫描，别把 JSON 塞进它们。
@@ -157,30 +173,7 @@ Hjson 给了很大自由，但有一条铁律：**所有标点（冒号 `:`、�
 
 理论到此为止，现在动手。在你喜欢的位置新建一个文件夹（比如 `my-first-mod`），在里面新建文本文件 `mod.json`。
 
-先看游戏**实际读取哪些字段**。`mod.json` 会被 `Mods.findMeta` 读进一个 `ModMeta` 对象（源码 `Mods.java` 内 `ModMeta` 类），v8 的完整字段如下：
-
-| 字段 | 类型 | 默认值 | 说明 |
-|---|---|---|---|
-| `name` | 字符串 | 无（必填） | **内部名称**，模组的唯一标识。游戏会把它转小写、空格换成连字符，得到 `internalName` |
-| `displayName` | 字符串 | 等于 `name` | 玩家在模组列表看到的显示名，可任意用中文 |
-| `description` | 字符串 | 无 | 详细介绍，支持换行与颜色标签 |
-| `subtitle` | 字符串 | 无 | 一句话副标题 |
-| `author` | 字符串 | 无 | 作者名 |
-| `version` | 字符串 | `"0"` | 模组版本号 |
-| `minGameVersion` | 字符串 | `"0"` | 最低游戏版本（build 号） |
-| `java` | 布尔 | `false` | 是否为 Java 模组 |
-| `main` | 字符串 | 无 | Java 模组的主类，如 `sf.SF` |
-| `iosCompatible` | 布尔 | `false` | 纯脚本模组是否兼容 iOS |
-| `repo` | 字符串 | 无 | GitHub 仓库 `作者/仓库名`，用于游戏内更新 |
-| `dependencies` | 字符串数组 | 空 | 强依赖的其他模组名 |
-| `softDependencies` | 字符串数组 | 空 | 软依赖（没有也能跑） |
-| `hidden` | 布尔 | `false` | 隐藏模组，只在服务器端/客户端生效，不能加内容 |
-| `texturescale` | 浮点 | `1.0` | 贴图缩放，值为"1x1 方块贴图的像素边长" |
-| `pregenerated` | 布尔 | `false` | 贴图已预处理，跳过渗色与图标生成 |
-| `contentOrder` | 字符串数组 | 无 | 指定内容加载顺序 |
-| `legacyCompatible` | 布尔 | `false` | 来自旧大版本、但仍兼容新版 |
-
-对纯 JSON 模组，我们只需要最基础的一小撮。请打开编辑器，输入：
+`mod.json` 会被 `Mods.findMeta` 读进一个 `ModMeta` 对象（源码 `Mods.java` 内 `ModMeta` 类）。它支持的字段不少，但**刚开始只需要六个**。请打开编辑器，输入：
 
 ```json
 {
@@ -198,12 +191,42 @@ Hjson 给了很大自由，但有一条铁律：**所有标点（冒号 `:`、�
 - `name`：**内部名称**，最重要的一个字段。游戏会把它转成小写、空格转连字符——源码 `ModMeta.cleanup` 里 `internalName = name.toLowerCase().replace(" ", "-")`。后续引用你自己的贴图、物品时，到处都要用到这个名字，**强烈建议只用小写英文字母和连字符**，从源头避免麻烦。
 - `displayName`：玩家看到的显示名，随便中文。
 - `author` 与 `description`：你的大名和模组介绍。
+- `version`：**模组版本号**，一个普通字符串（不写默认 `"0"`）。它有两个用途：一是**展示**——模组列表、崩溃报告、服务器列表里都会以 `模组名:版本` 的形式显示它（源码 `Mods.modNames`）；二是**更新检查**——当你在 `mod.json` 里填了 `repo`（GitHub 仓库）时，游戏会用语义化版本比较（源码 `Strings.checkNewerSemver`）拿它和仓库最新 release 对比，发现新版本就提示更新。所以格式虽然随便写都能跑，但建议用 `1.0`、`1.2.3` 这类 `主版本.次版本.修订号` 的形式，更新检查才靠谱。另外注意它**不能包含换行**（源码 `ModMeta` 会把第一个换行之后的内容截掉）。
 - `minGameVersion`：**最低游戏版本**。它的格式是"build 号"或"build.修订号"（源码 `Version.isAtLeast` 按 `.` 拆成整数比较）。游戏里显示的版本号就是你该填的依据。
 
 ::: tip 版本号从哪来？
 - **v7 稳定期**的 build 号大致是 `136`~`146`；**v8** 从 `147` 开始往后。源码里 `Vars.minModGameVersion = 136`、`Vars.minJavaModGameVersion = 154`，即：JSON 模组最早支持到 136，Java 模组最早到 154。
 - 上面的例子填 `155`，正是《饱和火力》用的 v8 build 号。**实践时填你自己实测过的最低版本**，别照抄。
 :::
+
+::: tip 先别贪多，其余字段以后用到再说
+`mod.json` 还有 `java`、`main`、`repo`、`dependencies`、`hidden` 等十来个可选字段，初学阶段**一个都用不上**。它们的作用整理在下面的进阶小节里，等真需要了（比如做 Java 模组、上架 GitHub）再回来查。
+:::
+
+### 进阶：`mod.json` 完整字段速查
+
+`ModMeta` 支持的全部字段如下，标注了类型与默认值。其中带 `java`/`main` 的是 Java 模组专属，带 `repo`/`dependencies` 的是发布相关，初学阶段全部跳过：
+
+| 字段 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `name` | 字符串 | 无（必填） | **内部名称**，模组的唯一标识。游戏会把它转小写、空格换成连字符，得到 `internalName` |
+| `displayName` | 字符串 | 等于 `name` | 玩家在模组列表看到的显示名，可任意用中文 |
+| `description` | 字符串 | 无 | 详细介绍，支持换行与颜色标签 |
+| `subtitle` | 字符串 | 无 | 一句话副标题 |
+| `author` | 字符串 | 无 | 作者名 |
+| `version` | 字符串 | `"0"` | 模组版本号，建议语义化版本如 `1.2.3` |
+| `minGameVersion` | 字符串 | `"0"` | 最低游戏版本（build 号） |
+| `java` | 布尔 | `false` | 是否为 Java 模组 |
+| `main` | 字符串 | 无 | Java 模组的主类，如 `sf.SF` |
+| `iosCompatible` | 布尔 | `false` | 纯脚本模组是否兼容 iOS |
+| `repo` | 字符串 | 无 | GitHub 仓库 `作者/仓库名`，用于游戏内更新 |
+| `dependencies` | 字符串数组 | 空 | 强依赖的其他模组名 |
+| `softDependencies` | 字符串数组 | 空 | 软依赖（没有也能跑） |
+| `hidden` | 布尔 | `false` | 隐藏模组，只在服务器端/客户端生效，不能加内容 |
+| `texturescale` | 浮点 | `1.0` | 贴图缩放，值为"1x1 方块贴图的像素边长" |
+| `pregenerated` | 布尔 | `false` | 贴图已预处理，跳过渗色与图标生成 |
+| `contentOrder` | 字符串数组 | 无 | 指定内容加载顺序 |
+| `legacyCompatible` | 布尔 | `false` | 来自旧大版本、但仍兼容新版 |
 
 ---
 
@@ -229,7 +252,7 @@ v8 的源码在 `Mods.resolveRoot` 里做了个小优化：如果压缩包根目
 
 ## 小结
 
-这一章我们做了三件事：配好了写作工具，摸清了模组的目录骨架（`content/` + 一堆特殊文件夹），并写下了能被游戏识别的 `mod.json`。其中 `name` 内部名和 `minGameVersion` 版本号是两个最容易踩坑、也最常被后来引用的概念。
+这一章我们做了三件事：配好了写作工具，摸清了模组的目录骨架（`content/` + 一堆特殊文件夹），并写下了能被游戏识别的 `mod.json`。其中 `name` 内部名和 `minGameVersion` 最低游戏版本是两个最容易踩坑、也最常被后来引用的概念。
 
 **思考题**：`content/` 下放物品的文件夹叫 `items`，放状态效果的文件夹，正式名是什么？为什么 `statuses` 和 `status` 两个名字都能用？
 
