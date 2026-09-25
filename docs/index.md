@@ -12,16 +12,23 @@ hero:
     alt: VitePress
   actions:
       - theme: brand
+        text: 入门
+        link: /get-started
+      - theme: alt
         text: Java/Kotlin
         link: /java/index
-      - theme: brand
+      - theme: alt
         text: JavaScript
         link: /javascript/index
-      - theme: brand
+      - theme: alt
         text: Json/DP
         link: /json/index
-      - theme: brand
+      - theme: alt
         text: 贴图
         link: /sprite/index
+      - theme: alt
+        text: Vibe
+        link: /vibe/A-index.md
+      
 
 ---

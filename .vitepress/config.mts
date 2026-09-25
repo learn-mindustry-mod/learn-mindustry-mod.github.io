@@ -62,7 +62,7 @@ function generateNav(name:string):VitePressSidebarOptions{
   includeRootIndexFile: true,
   manualSortFileNameByPriority: ["index.md"],
   includeEmptyFolder: true,
-  excludePattern: ["imgs", "img", "readme", "guideline", "reference", "templates"],
+  excludePattern: ["imgs", "readme", "guideline", "reference", "templates"],
   }
 }
 export default defineConfig(withSidebar(viteConfig,
