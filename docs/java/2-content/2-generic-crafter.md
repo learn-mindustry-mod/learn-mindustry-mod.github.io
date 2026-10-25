@@ -192,7 +192,7 @@ consumePower(-1f);
 最基本的drawer是`DrawDefault`，可以绘制一张名称与本工厂相同的贴图。使用方式如下：
 
 ``` java
-drawer = new DrarDefault();
+drawer = new DrawDefault();
 ```
 
 Drawer可以对绘制过程进行一定拓展，在`mindustry.world.draw`包中还有许多drawer可供使用。但是一个方块只有一个`drawer`字段，大部分drawer只能做一件事，需要配合使用。这时，你可以使用`DrawMulti`来对drawer进行组合：
@@ -213,7 +213,32 @@ drawer = new DrawMulti(
 
 ![neoplastic-reactor](imgs/neoplastic-reactor.gif)
 
-有的drawer会加载贴图。例如`DrawerDefault`需要一张与方块内部名相同的贴图，`DrawRegion`的有参构造器版本会需要一张内部名+特定后缀的贴图，`DrawGlowRegion`需要一张`-glow`为后缀的贴图。各个drawer所加载的贴图要求都会呈现在其`load()`方法。
+::: warning 叠了 DrawMulti 却忘掉 DrawDefault
+
+`DrawMulti` 只做一件事：把你列出的 drawer 按顺序挨个调用一遍。它**不会**自动帮你补一层主贴图。而主贴图只有 `DrawDefault`（或后缀为空的 `DrawRegion`）才负责绘制，所以一旦叠了几层 drawer 却漏掉 `DrawDefault`，方块就会整个"消失"——建造、生产、消耗全都正常，只是肉眼看不见，排查起来很容易卡住。
+
+```java
+// ✗ 结局：主贴图没了
+drawer = new DrawMulti(
+                new DrawWarmupRegion(),
+                new DrawLiquidRegion()
+                );
+
+// ✓ 把 DrawDefault 放在列表最前面
+drawer = new DrawMulti(
+                new DrawDefault(),
+                new DrawWarmupRegion(),
+                new DrawLiquidRegion()
+                );
+```
+
+上面那个 `DrawMulti` 示例之所以没写 `DrawDefault`，是因为它自己用了一个无参的 `new DrawRegion()` 来充当主贴图层——`DrawRegion` 的 `suffix` 默认为空字符串，`load()` 里找的是 `Core.atlas.find(block.name + suffix)`，也就是和 `DrawDefault` 同一张图。如果你不打算自己写主贴图层，直接补一个 `DrawDefault()` 就行。
+
+还有一个连带的坑：缺贴图是**不会报错**的。`Core.atlas.find()` 找不到时会返回 `error` 贴图，于是方块上凭空多出一块彩色方块、把原本的贴图盖住，症状和"忘写 DrawDefault"很像。看到主贴图不对劲时，先检查列表里有没有 `DrawDefault`，再核对每个 drawer 的 `load()` 要求的后缀贴图是否都齐全。
+
+:::
+
+有的drawer会加载贴图。例如`DrawDefault`需要一张与方块内部名相同的贴图，`DrawRegion`的有参构造器版本会需要一张内部名+特定后缀的贴图，`DrawGlowRegion`需要一张`-glow`为后缀的贴图。各个drawer所加载的贴图要求都会呈现在其`load()`方法。
 
 原版所有的drawer如下表：
 
@@ -287,18 +312,18 @@ drawer = new DrawMulti(
 - `heatOutput`：热量输出；
 - `warmupRate`：预热速度。
 
-## 创建一个Seperator
+## 创建一个Separator
 
-分离器的类型是`mindustry.world.blocks.production.Seperator`，它不是工厂，但是运行逻辑类似工厂。
+分离器的类型是`mindustry.world.blocks.production.Separator`，它不是工厂，但是运行逻辑类似工厂。
 
 ::: code-group
 
 ``` java
-new Seperator("tutorial-seperator");
+new Separator("tutorial-separator");
 ```
 
 ``` kotlin
-Seperator("tutorial-seperator")
+Separator("tutorial-separator")
 ```
 
 :::
