@@ -1,4 +1,4 @@
-# 泛光（Bloom）
+# 发光与泛光
 
 > ***“神说，要有光。”——《圣经·创世记》，以及每一位想让方块“亮起来”的模组作者***
 
@@ -20,7 +20,85 @@
 
 ---
 
-## 二、加色混合：最便宜、也最够用的“发光”
+## 二、先看清楚原版是怎么“攒着画”的
+
+在往画面里塞任何发光效果之前，得先知道原版并不是“一个方块一个方块地直接往屏幕上刷”。它先把一大批东西烘进长期存在的缓存对象里，然后靠一套延迟执行的绘制队列把缓存贴回屏幕。不理解这一层，你写的 `draw()` 什么时候被调用、调用了多少次、为什么“改了 z 却没反应”，都会变成玄学。
+
+### `Renderer` 里挂着哪些缓存
+
+`Renderer` 本身就不大，真正干重活的是它持有的这几个对象。`init()` 里创建、每帧按需重建/复用：
+
+| 缓存对象 | 字段 | 干什么 | 什么时候建 | 什么时候重建 / 失效 | 生效条件 |
+| --- | --- | --- | --- | --- | --- |
+| 世界方块渲染器 | `Renderer.blocks`（`BlockRenderer`） | 地板网格缓存 `floor`（`FloorRenderer` 的 `ChunkMesh[][][]`）、建筑雪碧缓存 `cacheChunks`（`CacheChunk` → 每个 `BuildingCacheLayer` 一张 `SpriteCache`，分块大小 `chunkSize = 30`）、阴影缓冲 `shadows`、黑暗缓冲 `dark`，以及四棵索引四叉树 `blockTree` / `blockCachedTree` / `blockLightTree` / `overlayTree` / `floorTree` | 随 `Renderer` 构造 | 方块变化时按脏块 `dirtyChunks` 重烘；相机换了队伍（`lastSeenTeam`）也会整体重烘 | 建筑缓存只收 `block.drawCached == true` 的方块，按 `block.buildingCacheLayer` 分层 |
+| 效果缓冲 | `Renderer.effectBuffer` | 护盾、建造光柱的离屏层，画完套 `Shaders.shield` / `Shaders.buildBeam` 再贴回来 | 字段处直接 `new`，常驻 | 每帧在 `animateWater || animateShields` 时 `resize` | `animateShields && Shaders.shield != null` |
+| 背景缓冲 | `Renderer.backgroundBuffer` | 星球背景（`state.rules.planetBackground`）的静态快照 | 第一次用到时才 `new` | 尺寸变了走 `resizeCheck` 重画；`dispose()` 时置 `null` | `state.rules.planetBackground != null` |
+| 泛光 | `Renderer.bloom` | 泛光的 FBO 加阈值/模糊用的着色器 | `setupBloom()` 里按设置项 `bloom` 决定建不建 | `toggleBloom()` 里 dispose 后重建；模糊遍数与强度每帧从设置里读 | `bloom != null` |
+| 光照 | `Renderer.lights`（`LightRenderer`） | 收集本帧所有光源，最后一次性降采样混合 | 常驻，`lights` 只是一个 `Seq<Runnable>` 加一个圆形光对象池 | `buffer` 每帧 `resize` 到 `1/scaling`（`scaling = 4`）；每帧画完 `lights.clear()` | `Vars.enableLight && state.rules.lighting && ambientLight.a > 0.0001f && renderer.drawLight` |
+| 自定义背景 | `Renderer.customBackgrounds` | 名字 → `Runnable` 的映射表 | `addCustomBackground(name, runnable)` 时登记，永不删除 | 常驻 | `state.rules.customBackgroundCallback` 命中某个已登记的键 |
+
+### 绘制请求队列：`draw()` 不是立刻执行的
+
+有了缓存之后，原版靠 `Draw.draw(z, runnable)` 把“往哪个 z 上画什么”排进队列：
+
+```java
+// SpriteBatch
+public void draw(Runnable request){
+    if(sort && !flushing){
+        // 排序模式下只是把请求存起来，记下 z 和当前混合模式
+        ...
+        return;
+    }
+    // 否则立刻执行
+}
+
+public void flush(){
+    if(!flushing){
+        flushing = true;
+        flushRequests();   // 按 z 排序，然后依次执行
+        flushing = false;
+    }
+    ... // 再真正提交顶点
+}
+```
+
+`Renderer.draw()` 里的顺序正好把这条规则说全了：开场 `Draw.sort(true)`，之后一整个世界的 `Draw.draw(...)` 都只是排进队列；一帧末尾 `Draw.reset()` → `Draw.flush()` → `Draw.sort(false)`，世界再一起执行掉，而之后的 UI 阶段不再延迟，画一条执行一条。
+
+```java
+Draw.sort(true);                              // 世界阶段：请求入队，按 z 排
+...
+Draw.draw(Layer.darkness, blocks::drawDarkness);
+if(bloom != null){
+    Draw.draw(Layer.bullet - 0.02f, bloom::capture);
+    Draw.draw(Layer.effect + 0.02f, bloom::render);
+}
+Draw.drawRange(Layer.shields, 1f, () -> effectBuffer.begin(Color.clear), () -> {
+    effectBuffer.end();
+    effectBuffer.blit(Shaders.shield);
+});
+Draw.draw(Layer.overlayUI, overlays::drawTop);
+if(state.rules.fog) Draw.draw(Layer.fogOfWar, fog::drawFog);
+...
+Draw.reset();
+Draw.flush();                                 // 世界阶段收尾：把队列全部跑完
+Draw.sort(false);                             // 之后的 UI：请求立刻执行
+```
+
+于是就有了两条必须记住的推论：
+
+1. **在 `draw()` 里读到的游戏状态，是“渲染时机”的状态，而不是“逻辑时机”的状态。** 逻辑更新和世界渲染是分开的两趟，别在 `draw()` 里改游戏状态、别在 `draw()` 里发网络包、别在 `draw()` 里加物品。
+2. **屏障会决定请求什么时候被执行。** 切着色器（`Draw.shader`）、开或关帧缓冲（`Framebuffer.begin/end`）、批次塞满、以及显式 `Draw.flush()`，都会让队列提前跑掉一部分。这也是为什么 `Draw.z(Layer.bullet)` 这种“改层级”的写法是有意义的——它改的是请求在队列里的排序键，而不是“现在马上”画在哪。
+
+<!-- 只是暂时丢在这里，未来目录会调整 -->
+
+### 为什么模组作者要关心这些
+
+- **建筑的 `draw()` 不是每帧都跑。** 只要 `block.drawCached == true`，你的绘制就被烘进 `SpriteCache`，只有在脏块重烘时才执行一次；紧接着的帧只是把那张缓存贴出来。所以拿 `draw()` 做“每帧推进的动画”在缓存方块上是不会动的，动画要么写进 `building.update()` → `build.recache()`，要么就别缓存。
+- **缓存会整块重建。** 方块变化会标脏该块、镜头第一次看到某个 chunk 会整块重烘、队伍的视野变化（`lastSeenTeam` 不同）也会触发重烘——所以别在 `draw()` 里存“上一帧的值”拿来做插值，你不一定拿得到上一帧。
+- **想真正每帧画、又不想被缓存吃掉**，可以挂 `Events.run(Trigger.draw, ...)`——它是在世界渲染阶段被 `Events.fire(Trigger.draw)` 触发的，位置就在 `Draw.sort(true)` 之后；也可以让方块不定制 `draw()`，改用 `UpdateRenderState` 这类逐帧渲染状态。
+- **自己开 FBO 时更要小心屏障。** `Framebuffer.begin()` 会把队列 flush 掉，你在排序模式下“先开缓冲再排队”是行不通的，必须像 `effectBuffer` 那样用 `Draw.drawRange()` 包住一段区间。
+
+## 三、加色混合：最便宜、也最够用的“发光”
 
 加色混合的规则很简单：**每个像素的最终颜色 = 底色 + 贴图颜色**。所以贴图上纯黑的地方等于完全透明，而越亮的像素叠加后越接近白色——这正是“发光”的视觉本质。
 
@@ -109,11 +187,8 @@ public class DrawPowerGlow extends DrawBlock{
 
 `Mathf.absin(time, scl, mag)` 是“正弦取绝对值再乘幅度”，正因为它取了绝对值，`0 → 峰值 → 0` 的节奏比纯 `sin` 更像灯光呼吸。`Time.time` 是全局游戏时间，用 `build.totalProgress()` 也行——区别在于前者全体同步，后者每个建筑各算各的。
 
-> **贴图找不到会怎样？** `Core.atlas.find("xxx")` 永远不返回 `null`，找不到时给的是 `error` 占位贴图（屏幕上会出现一个带叉的方块）。如果你希望“没有 `-glow` 贴图就干脆不画”，用 `Core.atlas.has(name)` 判断，或者 `find` 之后检查 `region.found()`。
 
----
-
-## 三、屏幕光照：让光真的照亮黑暗
+## 四、屏幕光照：让光真的照亮黑暗
 
 `Drawf.light` 只是往光照系统里塞一条请求，真正绘制在 `LightRenderer` 中完成：
 
@@ -151,11 +226,50 @@ public void drawLight(){
 
 这段是原版`照明器`（`LightBlock`）的实现，`smoothTime` 让亮度平滑过渡，`efficiency` 让它没电时变暗。顺带一提，`Block` 侧还有两个相关字段：`emitLight`（为 `true` 且该格子上没有建筑时，会调用 `Block.drawEnvironmentLight`，用于地形类光源）和 `lightColor`、`obstructsLight`（会不会遮挡光）。
 
-需要不规则形状（比如光带、环形护盾）时，用 `renderer.lights.add(Runnable)` 手动往光照层里画 `Lines` 或自定义图元即可，`LightRenderer.add` 还有接受 `TextureRegion` 和 `rotation` 的重载。
+### 不规则光带：圆拼不出来的时候
+
+`add(x, y, radius, color, opacity)` 只能画圆，`line(...)` 只能画直线段，所以碰到护盾弧、等离子流、闪电链、能量虹吸这种“沿着一条曲线发光”的东西时，得自己按路径铺。三种写法，按手里有什么来挑：
+
+**一、沿路径铺圆点。** 最稳、最不容易出错的一种：路径上每隔半径的一半左右放一个圆，重叠部分会按 `Gl.max` 取较大值（光照层用的是 `blendEquationSeparate(funcAdd, max)`），不会叠成刺眼的白块：
+
+```java
+renderer.lights.add(() -> {
+    int steps = 12;
+    for(int i = 0; i < steps; i++){
+        float p = i / (float)(steps - 1);
+        float px = x1 + (x2 - x1) * p;
+        float py = y1 + (y2 - y1) * p + Mathf.sin(Time.time * 0.06f + i * 0.6f) * 3f;
+        float fade = 1f - Math.abs(p - 0.5f) * 1.2f;   // 中间粗、两头细
+        renderer.lights.add(px, py, 40f * fade, color, 0.5f);
+    }
+});
+```
+
+注意 `add(Runnable)` 的 lambda 是每帧新建的（圆形光那边有 `circles` 池化，`Runnable` 没有），所以能直接用 `add(x, y, radius, ...)` 的地方就别包 lambda。
+
+**二、自己用 `Lines` 画带子。** 曲线本身能算出来（贝塞尔、圆弧、螺旋）时最省事，`Lines.stroke()` 控制半宽：
+
+```java
+renderer.lights.add(() -> {
+    Draw.color(Tmp.c1.set(color).a(0.6f));
+    Lines.stroke(7f);
+    Lines.curve(x1, y1, cx1, cy1, cx2, cy2, x2, y2, 24);   // 三次贝塞尔，24 段
+    Lines.stroke(1f);
+    Draw.color();                                          // 别把颜色漏给后面的光
+});
+```
+
+**三、直接用 `LightRenderer.line()` 画贴图带。** 它内部拿 `circle-mid` 和 `circle-end` 两张贴图拼出一个带端帽的四边形，`stroke` 是半宽。直线光带用它就够，曲线就沿路径连续调几次、接缝处再补一个圆点：
+
+```java
+renderer.lights.line(x1, y1, x2, y2, 6f, color, 0.7f);
+```
+
+如果形状完全不是“圆”也不是“带”（比如一片泪滴形的光、贴着贴图边缘的轮廓光），`LightRenderer.add(x, y, region, rotation, color, opacity)` 可以直接把任意 `TextureRegion` 塞进光照层，还带旋转。
 
 ---
 
-## 四、泛光 Bloom：让亮部溢出
+## 五、泛光（Bloom）：让亮部溢出
 
 前面两种手段都不会产生“糊出边界”的光晕，那是泛光的活儿。泛光做的事是：**截取画面 → 掐掉不够亮的像素 → 多次高斯模糊 → 把模糊结果加回屏幕**。
 
@@ -177,7 +291,14 @@ Draw.draw(Layer.effect + 0.02f, bloom::render);
 
 ### 想让自定义的东西泛光
 
-最直接的办法：在画特效的地方临时借一下这个区间。
+这个问题的答案完全取决于你现在站在哪个“绘制上下文”里，因为泛光的取景框就是 `Renderer.draw()` 中间那么一段：
+
+- **在 `Block.draw()` / `Building.draw()` 里画的。** 默认在 `Layer.block` 附近，既不在取景框里，还可能被 `drawCached` 烘进 `SpriteCache`（见第二节），两种原因都不泛光。
+- **在 `BulletType.draw`、`Effect.render`、`Fx` 里画的。** 本来就在 `Layer.bullet ~ Layer.effect` 之间，只要颜色够亮就自动泛光，什么都不用做。
+- **在 `Events.run(Trigger.draw, ...)` 里按 `Draw.z()` 自己排层画的。** 看你把 z 排到哪儿，排进区间才有。
+- **在 UI 里画的（`Table`、`Dialog` 的 `draw()`、HUD 的绘制回调）。** 那时 `Draw.sort(false)` 且泛光早已合成完毕，永远不泛光。
+
+所以“让自定义的东西泛光”这句话，多数时候其实是在说第一种情况。最直接的办法：临时把 z 借到区间里去。
 
 ```java
 float z = Draw.z();
@@ -218,7 +339,7 @@ if(renderer.bloom != null){                 // 必须判空！
 
 ---
 
-## 五、性能与常见翻车点
+## 六、性能与常见翻车点
 
 1. **混合模式切换会打断批次。** `Batch.setBlending()` 发现混合模式变了就会 flush，所以加色绘制要尽量集中在同一层级（这正是 `Layer.blockAdditive` 存在的理由）。
 2. **别在 `draw()` 里 `new` 任何东西。** 每帧都跑的代码里 `new Color(...)`、`new Runnable`、字符串拼接都会持续产生垃圾，用 `Tmp.c1`、静态常量和 `Core.atlas.find` 的缓存结果。
@@ -229,10 +350,13 @@ if(renderer.bloom != null){                 // 必须判空！
 
 ---
 
-## 六、检查清单
+## 七、检查清单
 
-- 我只是想让方块“看起来在发光”？→ 加色混合 + `-glow` 贴图，收工。
-- 我想让它在黑暗里照亮周围？→ `drawLight()` + `Drawf.light`，注意 `lighting` 和 `ambientLight`。
-- 我想让它像子弹一样有溢出光晕？→ 画到 `Layer.bullet ~ Layer.effect` 之间，或者自己开一个 `Bloom` 通道。
-- 画完之后画面一直发白/一直很亮？→ 检查有没有漏掉 `Draw.blend()`。
-- 夜间地图卡顿？→ 数一数每帧的 `Drawf.light` 调用和泛光区间里的绘制次数。
+动手之前，按这几句话对一下自己的需求，基本就不会走弯路：
+
+- **“我只是想让它看起来自己在亮。”** 那多半用不着泛光。给方块补一张 `-glow` 贴图，套 `DrawGlowRegion`，或者自己写一行加色 `draw()`，就够了。
+- **“我想让它真的照亮周围的黑暗。”** 这是光照的活。建筑重写 `drawLight()`，别的东西直接 `Drawf.light(...)`。但先确认地图真的开了光照，不然你写了也看不见。
+- **“我想让它像子弹、爆炸那样，亮到溢出去。”** 这才轮到泛光。最省事的做法是把绘制塞进 `Layer.bullet ~ Layer.effect` 之间；想要独占一条通道，就自己开一个 `Bloom`。
+- **“画完以后整个屏幕亮得发白。”** 八成是漏了 `Draw.blend()`；剩下两成是贴图本身太亮、或者 alpha 给得太高。
+- **“一进夜间地图就掉帧。”** 数一数每帧有多少次 `Drawf.light` / `renderer.lights.add`，再看看泛光区间里到底画了多少东西。能退回加色贴图解决的，就别留在光照和泛光里。
+- **“亮度怎么调都上不去。”** 颜色通道最后会被裁剪，靠加 alpha 加不上去。要么叠两层，要么把发光面积放大，要么去改 `bloomintensity`。
