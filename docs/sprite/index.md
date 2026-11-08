@@ -22,5 +22,4 @@
 
 # 联系我们
 
-教程QQ群:[L.M.M.无限责任天堂](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=LGT1dGUqX1TAmB00S4AGigWcsjr9yGzY&authKey=w7s9Qr22gRI%2FjkKRPw9yViDZu%2BGaAZwQQ2Fh8DrS2ZiydVYz9aZLS%2FYaW7kL%2FieX&noverify=0&group_code=497913479)
-
+教程QQ群:[L.M.M.数字当局答疑讨论群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=tQujiV4CrLKrR6XSAca3-VvydE-9lHiU&authKey=WYEUBQtDzUHwJJA5pWsYkwtMFqr%2FgeFpEIs4bRR%2F9e6Fcq53pQYppIsaNUJaB9M4&noverify=0&group_code=1130754532)
