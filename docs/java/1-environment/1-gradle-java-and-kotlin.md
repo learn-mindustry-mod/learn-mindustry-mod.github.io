@@ -98,6 +98,12 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.0.1+8-LTS-27, mixed mode, sharing)
 - 设置环境变量 `ANDROID_HOME` 指向解压后的 Android SDK 目录；
 - 最后，重启你的IDEA（如使用命令行需重启sh），使刚才所做的更改生效。
 
+::: info **Android SDK 下载加速**
+
+`sdkmanager` 本身没有 Gradle 那样的仓库镜像配置项。网络受限时，可以使用可用的 HTTP/HTTPS 代理，或从可信镜像手动下载 Android SDK Command-line Tools，再按上面的目录结构解压；不要把 Gradle 的 `repositories` 配置当作 Android SDK 镜像配置。
+
+:::
+
 ## Gradle和Kotlin
 
 ::: info
@@ -110,6 +116,35 @@ Gradle是一个现代Java构建工具，它可以帮助我们自动化构建、�
 Gradle的构建逻辑通过**构建脚本**定义，即项目文件下的文件`build.gradle`中编写的内容，在模板项目中同样已经为我们配置好了Gradle的构建脚本。
 
 我们一般不需要配置太多关于Gradle的操作，如果对有关gradle的具体内容有兴趣，可以前往Gradle网站：[https://gradle.org/](https://gradle.org/)
+
+::: info **配置 Gradle 镜像（国内加速）**
+
+在国内网络环境下，直接下载 Gradle 依赖可能较慢或无响应。可在 `build.gradle` 的 `repositories` 中添加阿里云镜像：
+
+```groovy
+repositories{
+    maven{ url 'https://maven.aliyun.com/repository/public' }
+    maven{ url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    mavenCentral()
+    maven{ url 'https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository' }
+    maven{ url 'https://jitpack.io' }
+}
+```
+
+将阿里云镜像放在首位，可优先从国内源下载。如果仍遇到依赖下载超时，也可在 `~/.gradle/init.gradle` 中全局配置镜像：
+
+```groovy
+allprojects{
+    repositories{
+        maven{ url 'https://maven.aliyun.com/repository/public' }
+        maven{ url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        mavenLocal()
+        mavenCentral()
+    }
+}
+```
+
+:::
 
 ### Kotlin
 
